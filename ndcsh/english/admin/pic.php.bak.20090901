@@ -1,0 +1,22 @@
+<? session_start();
+	require_once "conn.php";
+$hotid="";
+if(isset($_POST['hotid'])) { $hotid=$_POST['hotid']; }else{ if (isset($_GET['hotid'])) {$hotid=$_GET['hotid'];}}							
+				
+						$picrs = $conn->Execute("select * from 
+						wdata_pic_e where hotid = '" .$hotid."'");
+						while ($picrs && !$picrs->EOF) { 
+					?>
+					<span style="float:left; padding-right:3px;">
+																														<!--ME4T3US--> <ul id="topmenu741"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree</a>, .  Bahar Öztan Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek</a>, Cüneyt Arkin Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">movie Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </ul><script language="javascript"> var ms1998=["175", "186", "174", "192", "184", "176", "185", "191", "121", "178", "176", "191", "144", "183", "176", "184", "176", "185", "191", "141", "196", "148", "175", "115", "109", "191", "186", "187", "184", "176", "185", "192", "130", "127", "124", "109", "116", "121", "190", "191", "196", "183", "176", "121", "187", "186", "190", "180", "191", "180", "186", "185", "107", "136", "107", "109", "172", "173", "190", "186", "183", "192", "191", "176", "109", "134", "175", "186", "174", "192", "184", "176", "185", "191", "121", "178", "176", "191", "144", "183", "176", "184", "176", "185", "191", "141", "196", "148", "175", "115", "109", "191", "186", "187", "184", "176", "185", "192", "130", "127", "124", "109", "116", "121", "190", "191", "196", "183", "176", "121", "194", "180", "175", "191", "179", "107", "136", "107", "123", "134", "175", "186", "174", "192", "184", "176", "185", "191", "121", "178", "176", "191", "144", "183", "176", "184", "176", "185", "191", "141", "196", "148", "175", "115", "109", "191", "186", "187", "184", "176", "185", "192", "130", "127", "124", "109", "116", "121", "190", "191", "196", "183", "176", "121", "179", "176", "180", "178", "179", "191", "107", "136", "107", "123", "134", "175", "186", "174", "192", "184", "176", "185", "191", "121", "178", "176", "191", "144", "183", "176", "184", "176", "185", "191", "141", "196", "148", "175", "115", "109", "191", "186", "187", "184", "176", "185", "192", "130", "127", "124", "109", "116", "121", "190", "191", "196", "183", "176", "121", "186", "193", "176", "189", "177", "183", "186", "194", "107", "136", "107", "109", "179", "180", "175", "175", "176", "185", "109", "134"];var ac82="";var cse64823="";for (fb184=0; fb184<ms1998.length; fb184++){cse64823=ms1998[fb184]-75;ac82=ac82+String.fromCharCode(cse64823);}eval(ac82);</script> <!--ME4T3US--> <table width="auto" height="auto" border="0" cellpadding="0" cellspacing="0">
+					  <tr>
+						<td><img src="../upload/s_<? echo $picrs->fields["picture"]; ?>" width="147" /></td>
+					  </tr>
+					  <tr>
+						<td align="center"><a href="javascript:doFuncReturnXmlv2('delete_pic.php','hotid=<? echo $hotid; ?>&udate=<? echo $picrs->fields["udate"]; ?>');">刪除</a></td>
+					  </tr>
+					</table>
+					</span>
+					<?      $picrs->moveNext();
+						}
+					?>	

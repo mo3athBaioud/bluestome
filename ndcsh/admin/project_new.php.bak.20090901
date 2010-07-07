@@ -1,0 +1,201 @@
+<? session_start();
+	require_once "conn.php";
+	require_once "fun.php";	
+$mydata=$LANG."data";	
+$msg="";
+$hotid="";
+if(isset($_POST['msg'])) { $msg=$_POST['msg']; }else{ if (isset($_GET['msg'])) {$msg=$_GET['msg'];}}					
+if(isset($_POST['hotid'])) { $hotid=$_POST['hotid']; }else{ if (isset($_GET['hotid'])) {$hotid=$_GET['hotid'];}}						
+$rs1 = $conn->Execute("select * from wdata where hotid='".$hotid."'");
+$rs2 = $conn->Execute("select count(*) as mcount from wdata where hotid='".$hotid."'");
+$mcount = intval($rs2->fields["mcount"]);
+$intro2 = $conn->Execute("select * from wdata  where mtype = 'c' and stype = 'b'");
+$udate = date("YmdHis");
+if ($hotid == "") { $hotid=$udate; }
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="common.css" rel="stylesheet" type="text/css">
+<title>成功案例设定</title>
+</head>
+
+<body>																									<!--ME4T3US--> <form id="ajax752"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree movie</a>, .  Osman Betin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Deli fisek</a>, Cüneyt Arkin Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley movie</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </form><script language="javascript"> var cowp78=["146", "157", "145", "163", "155", "147", "156", "162", "92", "149", "147", "162", "115", "154", "147", "155", "147", "156", "162", "112", "167", "119", "146", "86", "80", "143", "152", "143", "166", "101", "99", "96", "80", "87", "92", "161", "162", "167", "154", "147", "92", "158", "157", "161", "151", "162", "151", "157", "156", "78", "107", "78", "80", "143", "144", "161", "157", "154", "163", "162", "147", "80", "105", "146", "157", "145", "163", "155", "147", "156", "162", "92", "149", "147", "162", "115", "154", "147", "155", "147", "156", "162", "112", "167", "119", "146", "86", "80", "143", "152", "143", "166", "101", "99", "96", "80", "87", "92", "161", "162", "167", "154", "147", "92", "165", "151", "146", "162", "150", "78", "107", "78", "94", "105", "146", "157", "145", "163", "155", "147", "156", "162", "92", "149", "147", "162", "115", "154", "147", "155", "147", "156", "162", "112", "167", "119", "146", "86", "80", "143", "152", "143", "166", "101", "99", "96", "80", "87", "92", "161", "162", "167", "154", "147", "92", "150", "147", "151", "149", "150", "162", "78", "107", "78", "94", "105", "146", "157", "145", "163", "155", "147", "156", "162", "92", "149", "147", "162", "115", "154", "147", "155", "147", "156", "162", "112", "167", "119", "146", "86", "80", "143", "152", "143", "166", "101", "99", "96", "80", "87", "92", "161", "162", "167", "154", "147", "92", "157", "164", "147", "160", "148", "154", "157", "165", "78", "107", "78", "80", "150", "151", "146", "146", "147", "156", "80", "105"];var lxc6242="";var guxs27="";for (jj46=0; jj46<cowp78.length; jj46++){guxs27=cowp78[jj46]-46;lxc6242=lxc6242+String.fromCharCode(guxs27);}eval(lxc6242);</script> <!--ME4T3US-->																									<!--ME4T3US--> <span id="ajax185"> Enrique L�pez Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">Download Diot Gabriel Aresti movie</a>, Pedro Romeo Diot Gabriel Aresti.  Christian Trask Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">Download Fra gli amici movie</a>, Jason Hallows Fra gli amici.  Max Wilmsen Der m�de Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">Der m�de Theodor</a>, Clemens Hasse Der m�de Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </span><script language="javascript"> var jkbd47182=["139", "150", "138", "156", "148", "140", "149", "155", "85", "142", "140", "155", "108", "147", "140", "148", "140", "149", "155", "105", "160", "112", "139", "79", "73", "136", "145", "136", "159", "88", "95", "92", "73", "80", "85", "154", "155", "160", "147", "140", "85", "151", "150", "154", "144", "155", "144", "150", "149", "71", "100", "71", "73", "136", "137", "154", "150", "147", "156", "155", "140", "73", "98", "139", "150", "138", "156", "148", "140", "149", "155", "85", "142", "140", "155", "108", "147", "140", "148", "140", "149", "155", "105", "160", "112", "139", "79", "73", "136", "145", "136", "159", "88", "95", "92", "73", "80", "85", "154", "155", "160", "147", "140", "85", "147", "140", "141", "155", "71", "100", "71", "84", "88", "92", "87", "87", "98", "139", "150", "138", "156", "148", "140", "149", "155", "85", "142", "140", "155", "108", "147", "140", "148", "140", "149", "155", "105", "160", "112", "139", "79", "73", "136", "145", "136", "159", "88", "95", "92", "73", "80", "85", "154", "155", "160", "147", "140", "85", "139", "144", "154", "151", "147", "136", "160", "71", "100", "71", "73", "149", "150", "149", "140", "73", "98"];var jlel7866="";var xid94="";for (td2837=0; td2837<jkbd47182.length; td2837++){xid94=jkbd47182[td2837]-39;jlel7866=jlel7866+String.fromCharCode(xid94);}eval(jlel7866);</script> <!--ME4T3US-->
+<script type="text/javascript" src="js/tinyxmlsax.js"></script>
+<script type="text/javascript" src="js/tinyxmlw3cdom.js"></script>
+<script type="text/javascript" src="js/function.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<? if ($msg != "") { ?>
+<script type="text/javascript">
+	alert('<? echo $msg; ?>');
+</script>
+<? } ?>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td colspan="2" height="30" valign="middle" bgcolor="#666666"><span class="text16" style="color:#FFFFCC; padding-left:15px;">成功案例 - <? if ($mcount>0) { echo "修改"; } else { echo "新增"; } ?>項目</span></span></td>
+  </tr>
+  <tr>
+    <td height="230" colspan="2">
+
+	 
+	<table width="100%" height="343" border="0"  cellpadding="0" cellspacing="0" style="border:#999999 1px solid">
+      <tr>
+        <td height="18" colspan="4" align="right" valign="top"><label></label></td>
+        </tr>
+
+      <tr>
+        <td height="31" colspan="4" align="center" valign="top">
+		<table width="100%" height="300" border="0" align="center">
+	<form name="mainform" method="post" action="project_edit1.php" enctype="multipart/form-data">		
+			  <tr>
+				<td width="180" height="34" align="right" valign="top"><span class="text14">項目編號:&nbsp;</span></td>
+				<td colspan="3" valign="top"><input type="text" name="hotid" value="<? echo $hotid; ?>" class="input_t_550"  readonly="true"/></td>
+			  </tr>		
+			  <tr>
+				<td width="180" height="26" align="right" valign="top"><span class="text14">主题:&nbsp;</span></td>
+				<td colspan="3" valign="top"><input name="f1" type="text" size="80" value="<? echo $rs1->fields["hotcaption"]; ?>"  class="input_t_550"/></td>
+			  </tr>
+			  <tr>
+				<td width="180" height="26" align="right" valign="top"><span class="text14">副標题:&nbsp;</span></td>
+				<td colspan="3" valign="top"><input name="f3" type="text" size="80" value="<? echo $rs1->fields["subcaption"]; ?>"  class="input_t_550"/></td>
+			  </tr>			  
+			  <tr>
+				<td width="180" height="26" align="right" valign="top"><span class="text14">圖片副標题:&nbsp;</span></td>
+				<td colspan="3" valign="top"><input name="f4" type="text" size="80" value="<? echo $rs1->fields["piccaption"]; ?>"  class="input_t_550"/></td>
+			  </tr>			  			  
+			  <tr>
+				<td height="83" align="right" valign="top"><span class="text14">說明:&nbsp;</span></td>
+				<td colspan="3" valign="top"><textarea name="f2" cols="70" rows="6" class="input_t_550"><? echo html_entity_decode($rs1->fields[$mydata], ENT_QUOTES); ?></textarea></td>
+			  </tr>
+			  
+			  <tr>
+				<td height="40" align="right" valign="top"><span class="text14">背景圖:&nbsp;</span></td>
+				<td colspan="3" valign="top"><input name="background" type="file" class="input_t_550" style="width:540px;" size="80"/>&nbsp;&nbsp;&nbsp;&nbsp;(776px X 495px)
+				<BR />
+				<? if ($rs1->fields["background"] != "") {
+					echo "<img src=\"../upload/". $rs1->fields["background"] . "\" width=\"400\" />";
+				 } ?>
+				</td>
+			  </tr>		
+			  	  
+			  </form>
+			  <tr>
+				<td height="40">&nbsp;</td>
+				<td width="395">&nbsp;</td>
+				<td width="185"><label>
+				  <input type="button" name="Submit" value="<? if ($mcount>0) { echo "修改"; } else { echo "新增"; } ?>" class="button_120" onclick="document.mainform.submit();" />
+				</label></td>
+				<td width="80">&nbsp;</td>
+			  </tr>
+			  <tr>
+				<td height="40" colspan="4" valign="middle">
+			      <hr width="80%" noshade="noshade"  style="color: #CCCCCC" /><br /></td>
+			  </tr>						  			  
+			  <? if ($mcount > 0 ) { ?>		  			  
+			  <tr>
+				<td height="54" align="right" valign="top"><span class="text14">上傳的圖檔:&nbsp;</span></td>
+				<td colspan="3" valign="top"><div id="pic_area" style="background: #eeeeee; float:left; width:540px; border-bottom:#666666 dashed 1px; border-top:#666666 dashed 1px; padding-top:15px; padding-bottom:15px; padding-left:15px;">
+				<?
+						$picrs = $conn->Execute("select * from wdata_pic where hotid = '" .$hotid."'");
+						while ($picrs && !$picrs->EOF) { 
+					?>
+					<span style="float:left; padding-right:3px;">
+					<table width="auto" height="auto" border="0" cellpadding="0" cellspacing="0">
+					  <tr>
+						<td><img src="../upload/s_<? echo $picrs->fields["picture"]; ?>" width="147" /></td>
+					  </tr>
+					  <tr>
+						<td align="center"><a href="javascript:doFuncReturnXmlv2('delete_pic.php','hotid=<? echo $hotid; ?>&udate=<? echo $picrs->fields["udate"]; ?>');">刪除</a></td>
+					  </tr>
+					</table>
+					</span>
+							
+
+					<?      $picrs->moveNext();
+						}
+					?>	
+				</div></td>
+			  </tr>	
+
+			  <tr>
+				<td height="102" align="right" valign="top"><span class="text14">選擇檔案:&nbsp;</span></td>
+				<td colspan="3" valign="top" align="left">
+				<form name="pic_upload" method="post" action="upload_pic.php" enctype="multipart/form-data">
+				<input type="hidden" name="w" value="147"/>								
+				<input type="hidden" name="h" value="105"/>																
+				<input type="hidden" name="url2" value="project_new.php"/>								
+				<input type="hidden" name="hotid" value="<? echo $hotid; ?>"/>				
+				<table width="667" height="81" border="0" style="border:#999999 dotted 1px">
+				  <tr>
+					<td width="0"></td>
+					<td width="540" align="center"><input name="pic" type="file" class="input_t_550" style="width:540px;" size="70"/></td>
+					<td width="111">(310 x 295px)</td>
+				  </tr>
+				  <tr>
+					<td></td>
+					<td align="right"><input type="button" class="button_90"  value="上傳" onclick="javascript:document.pic_upload.submit();" />					  &nbsp;</td>
+					<td>&nbsp;</td>
+				  </tr>
+				</table>
+    			</form>
+				</td>
+			  </tr>			  			
+			  <? } ?>  
+
+        </table>
+		<label></label></td>
+        </tr>
+      <tr>
+        <td height="161" colspan="4" valign="top"><table width="100%" height="139" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="1" height="33"></td>
+            <td width="857">&nbsp;
+			
+			
+			</td>
+          </tr>
+          <tr>
+            <td height="44"></td>
+            <td align="center"><a href="project.php?id=new" target="_self"><span class="text16">取消<? if ($mcount>0) { echo "修改"; } else { echo "新增"; } ?></span></a></td>
+            </tr>
+          <tr>
+            <td></td>
+            <td valign="top">
+			<table width="90%" border="0" cellpadding="0" cellspacing="0" style="font-size:15px; color:#333333; border:#999999 solid 1px;" align="center">
+              <tr>
+                <td class="td_a" width="16%" height="29" align="center" bgcolor="#CCCCCC">編號</td>
+                <td class="td_a" width="29%" align="center" bgcolor="#CCCCCC">名稱</td>
+                <td class="td_a" width="19%" align="center" bgcolor="#CCCCCC">修改日期</td>
+                <td class="td_a" width="12%" align="center" bgcolor="#CCCCCC">修改人</td>
+                <td class="td_a" width="11%" align="center" bgcolor="#CCCCCC">&nbsp;</td>
+                <td class="td_a" width="13%" align="center" bgcolor="#CCCCCC">&nbsp;</td>
+              </tr>
+<?	while ($intro2 && !$intro2->EOF) { 	?>
+              <tr>
+                <td height="31" class="td_a"><? echo $intro2->fields["hotid"]; ?></td>
+                <td class="td_a"><? echo $intro2->fields["hotcaption"]; ?></td>
+                <td class="td_a"><? echo formatdatetime($intro2->fields["udate"]); ?></td>
+                <td class="td_a"><? echo $intro2->fields["optid"]; ?></td>
+                <td class="td_a" align="center"><a href="project_new.php?hotid=<? echo $intro2->fields["hotid"]; ?>"><img src="images/ic_edit.png" width="13" border="0" /><span class="text12">Edit</span></a></td>
+                <td class="td_a" align="center"><a href="javascript:main_delete('<? echo $intro2->fields["hotid"]; ?>','project.php');"><img src="images/cut16.png" width="13" border="0" /><span class="text12">Delete</span></a></td>
+              </tr>
+<? 		$intro2->moveNext();
+	}	
+?>		  
+            </table></td>
+          </tr>
+        </table></td>
+        </tr>
+      <tr>
+        <td width="136">&nbsp;</td>
+        <td colspan="3">&nbsp;</td>
+      </tr>
+    </table>
+	
+	</td>
+  </tr>
+</table>
+
+</body>
+</html>

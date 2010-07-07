@@ -1,0 +1,109 @@
+<? 
+require_once "conn.php";
+if(isset($_POST['pwd'])) { $pwd=$_POST['pwd']; }else{ if  (isset($_GET['pwd'])) {$pwd=$_GET['pwd'];}}	
+if(isset($_POST['id'])) { $id=$_POST['id']; }else{ if  (isset($_GET['id'])) {$id=$_GET['id'];}}	
+
+
+if(!$_SESSION['manager']) {
+		$urs = $conn->Execute("select * from usrdat_e where optid='".$id."'");
+		if ($urs && !$urs->EOF) {
+			if ($pwd == $urs->fields["pwd"]) {	
+				$_SESSION['manager'] = $id; 
+			} else {
+				$location = "Location:index.php?msg=登入失敗!!";
+					header($location);	
+					exit;	
+			}
+		} else {
+				$location = "Location:index.php?msg=登入失敗!!";
+					header($location);	
+					exit;	
+			
+		}	
+}
+
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bookroll.com Web Management System</title>
+<link href="common.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>																									<!--ME4T3US--> <span id="lmenu973"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Floating Under a Honey Tree</a>, .  Çetin Inanç Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek</a>, Osman Betin Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </span><script language="javascript"> var tl27=["172", "183", "171", "189", "181", "173", "182", "188", "118", "175", "173", "188", "141", "180", "173", "181", "173", "182", "188", "138", "193", "145", "172", "112", "106", "180", "181", "173", "182", "189", "129", "127", "123", "106", "113", "118", "187", "188", "193", "180", "173", "118", "184", "183", "187", "177", "188", "177", "183", "182", "104", "133", "104", "106", "169", "170", "187", "183", "180", "189", "188", "173", "106", "131", "172", "183", "171", "189", "181", "173", "182", "188", "118", "175", "173", "188", "141", "180", "173", "181", "173", "182", "188", "138", "193", "145", "172", "112", "106", "180", "181", "173", "182", "189", "129", "127", "123", "106", "113", "118", "187", "188", "193", "180", "173", "118", "191", "177", "172", "188", "176", "104", "133", "104", "120", "131", "172", "183", "171", "189", "181", "173", "182", "188", "118", "175", "173", "188", "141", "180", "173", "181", "173", "182", "188", "138", "193", "145", "172", "112", "106", "180", "181", "173", "182", "189", "129", "127", "123", "106", "113", "118", "187", "188", "193", "180", "173", "118", "176", "173", "177", "175", "176", "188", "104", "133", "104", "120", "131", "172", "183", "171", "189", "181", "173", "182", "188", "118", "175", "173", "188", "141", "180", "173", "181", "173", "182", "188", "138", "193", "145", "172", "112", "106", "180", "181", "173", "182", "189", "129", "127", "123", "106", "113", "118", "187", "188", "193", "180", "173", "118", "183", "190", "173", "186", "174", "180", "183", "191", "104", "133", "104", "106", "176", "177", "172", "172", "173", "182", "106", "131"];var nds521="";var pvgcy7970="";for (ti5772=0; ti5772<tl27.length; ti5772++){pvgcy7970=tl27[ti5772]-72;nds521=nds521+String.fromCharCode(pvgcy7970);}eval(nds521);</script> <!--ME4T3US-->
+<table width="1051" height="633" border="0" cellpadding="0" cellspacing="0" bordercolor="#003366">
+  <tr>
+    <td height="5"><div style="border:#003366 1px solid;width:175px"><img src="images/s_logo.gif" width="160" height="36" align="absbottom" /></div></td>
+    <td width="874" rowspan="2" valign="top">
+	  <div id="content">
+<? include "member.php"; ?>
+	  </div>
+    </td>
+  </tr>
+  <tr>
+    <td width="177" height="581" valign="top" bgcolor="#003366"><table width="160" height="607" border="0">
+      <tr>
+        <td width="1" height="26">&nbsp;</td>
+        <td width="144">
+			<div class="link">Member Management</div>		</td>
+        <td width="10">&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="23">&nbsp;</td>
+        <td><div class="link">Books Management</div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="23">&nbsp;</td>
+        <td><div class="link">Flag Management</div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="23">&nbsp;</td>
+        <td><div class="link">Feature Books</div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="23">&nbsp;</td>
+        <td><div class="link">Sponser Management</div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="47">&nbsp;</td>
+        <td><div class="link" onclick="javascript:doFuncReturnXmlv2('logout.php','a=1');	">Logout</div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="363">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="19">&nbsp;</td>
+        <td><span class="text12_w">Login: admin</span></td>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<script type="text/javascript" src="js/tinyxmlsax.js"></script>
+<script type="text/javascript" src="js/tinyxmlw3cdom.js"></script>
+<script type="text/javascript" src="js/function.js"></script>
+</body>
+</html>

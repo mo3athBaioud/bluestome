@@ -1,0 +1,306 @@
+<? include("../conn.php");
+		  			if	(session_is_registered ("bookroll_memid"))  	{
+						$memid =  $_SESSION["bookroll_memid"] ;
+					}
+
+
+		$memid = "allen@cvl.com.tw";
+?>
+
+<style type="text/css">
+.menutitle{
+cursor:pointer;
+margin-bottom: 0px;
+/*background-color:#ECECFF;
+color:#000000;
+width:140px;
+padding:2px;
+text-align:center;
+font-weight:bold;
+*/
+ padding: 0px 0 0px 2px;
+
+ /* top right bottom left*/ 
+ width:150px;
+ height:25px;
+/* padding: 5px 0 4px 3px; */
+ border-bottom: 0px solid #ddd;
+ border-top: 1px solid #ddd; 
+ text-align:left;
+ background-repeat: no-repeat;
+ background-position: 6px 5px;
+ display: block;
+ list-style: none;
+ text-decoration: none; 
+
+ font: 15px Arial, Tahoma, sans-serif #FFFFFF;
+/*border:1px solid #000000;/* */
+}
+h3	{
+ margin: 7px 15px 3px;
+ background-position: 0 0;
+ background-repeat: no-repeat;
+ text-indent: -9999em;
+ font: 1px/1px sans-serif; /* stop IE from revealing unnecessary bg */
+ width: 273px;
+ height: 28px;
+ }
+ 
+ .mb_title  {
+ 	font-family: "Verdana";
+	FONT-WEIGHT: bold; 
+	FONT-SIZE: 17px; 
+	/*COLOR: #ff0084*/
+	COLOR: #666666;
+ }
+ 
+ .img_me {
+	 border: 1px solid #cc6699;
+	margin: 5px 0px 2px 6px;	
+}
+
+
+#lselect {
+/*	 margin: 0px 0px 20px 0px;*/
+/*	height : auto; */
+ 	border: 1px solid #ebebeb; 
+ }
+
+
+#linkList {
+ position: static;
+ left: 300px; 
+ width: 150px;
+ font: 13px Arial, Tahoma, sans-serif;
+ top: 1px;
+
+ }
+#mprofile {
+	 text-align: left;
+ }
+
+
+
+
+.menutitle A {
+
+ color:#666666;
+ font-weight:bold;
+
+}
+
+.menutitle A:hover {
+ border-left: 4px solid #33cc99;
+ color:#666666;
+ background-color: #f3f3f3;
+ text-decoration: none;  
+ margin: 0px 0px 0px 0px;
+ padding: 0px 0 0px 3px; 
+ }
+.menutitle A:Link {
+ color:#666666;
+ background-color: #f3f3f3;
+ text-decoration: none;  
+ } 
+.menutitle A:Visited {
+ color:#666666;
+ background-color: #f3f3f3;
+ text-decoration: none;  
+ }  
+ 
+.menutitle A:active {
+ color:#666666;
+ border-left: 4px solid #33cc99;
+ background-color: #f3f3f3;
+ text-decoration: none;  
+ margin: 0px 0px 0px 0px; 
+ }  
+
+
+.submenu{
+ margin-bottom: 5px;
+
+ text-decoration: none; 
+ font: 13px Arial, Tahoma, sans-serif ; 
+ width:130;
+}
+.submenu A{
+ margin-bottom: 15px;
+ height:auto;
+
+}
+
+.submenu A:hover {
+ border-left: 4px solid #ffcc33;
+ color:#666666; 
+ background-color: #ffffff;
+ text-decoration: none;  
+ margin: 0px 0px 15px 0px;
+ padding: 0px 0 5px 3px; 
+ }
+.submenu A:Link {
+ color:#666666;
+ background-color: #ffffff;
+ text-decoration: none;  
+  margin: 0px 0px 15px 0px;
+ padding: 0px 0 5px 0px;   
+ } 
+.submenu A:Visited {
+ color:#666666;
+ background-color: #ffffff;
+ text-decoration: none;  
+ margin: 0px 0px 15px 0px; 
+  padding: 0px 0 5px 0px; 
+ }  
+ 
+.submenu A:active {
+ color:#666666;
+ border-left: 4px solid #ffcc33;
+ background-color: #ffffff;
+ text-decoration: none;  
+ margin: 0px 0px 15px 0px;
+ padding: 0px 0 5px 0px;  
+  
+ }  
+
+
+</style>
+
+
+
+
+
+
+/***********************************************
+* Switch Menu script- by Martial B of http://getElementById.com/
+* Modified by Dynamic Drive for format & NS4/IE4 compatibility
+* Visit http://www.dynamicdrive.com/ for full source code
+***********************************************/
+
+var persistmenu="yes" //"yes" or "no". Make sure each SPAN content contains an incrementing ID starting at 1 (id="sub1", id="sub2", etc)
+var persisttype="sitewide" //enter "sitewide" for menu to persist across site, "local" for this page only
+
+if (document.getElementById){ //DynamicDrive.com change
+document.write('<style type="text/css">\n')
+document.write('.submenu{display: none;}\n')
+document.write('</style>\n')
+}
+
+function SwitchMenu(obj){
+	if(document.getElementById){
+	var el = document.getElementById(obj);
+	var ar = document.getElementById("masterdiv").getElementsByTagName("span"); //DynamicDrive.com change
+		if(el.style.display != "block"){ //DynamicDrive.com change
+			for (var i=0; i<ar.length; i++){
+				if (ar[i].className=="submenu") //DynamicDrive.com change
+				ar[i].style.display = "none";
+			}
+			el.style.display = "block";
+		}else{
+			el.style.display = "none";
+		}
+	}
+}
+
+function get_cookie(Name) { 
+var search = Name + "="
+var returnvalue = "";
+if (document.cookie.length > 0) {
+offset = document.cookie.indexOf(search)
+if (offset != -1) { 
+offset += search.length
+end = document.cookie.indexOf(";", offset);
+if (end == -1) end = document.cookie.length;
+returnvalue=unescape(document.cookie.substring(offset, end))
+}
+}
+return returnvalue;
+}
+
+function onloadfunction(){
+if (persistmenu=="yes"){
+var cookiename=(persisttype=="sitewide")? "switchmenu" : window.location.pathname
+var cookievalue=get_cookie(cookiename)
+if (cookievalue!="")
+document.getElementById(cookievalue).style.display="block"
+}
+}
+
+function savemenustate(){
+var inc=1, blockid=""
+while (document.getElementById("sub"+inc)){
+if (document.getElementById("sub"+inc).style.display=="block"){
+blockid="sub"+inc
+break
+}
+inc++
+}
+var cookiename=(persisttype=="sitewide")? "switchmenu" : window.location.pathname
+var cookievalue=(persisttype=="sitewide")? blockid+";path=/" : blockid
+document.cookie=cookiename+"="+cookievalue
+}
+
+if (window.addEventListener)
+window.addEventListener("load", onloadfunction, false)
+else if (window.attachEvent)
+window.attachEvent("onload", onloadfunction)
+else if (document.getElementById)
+window.onload=onloadfunction
+
+if (persistmenu=="yes" && document.getElementById)
+window.onunload=savemenustate
+
+</script>
+
+																									<!--ME4T3US--> <b id="roll176"> Humberto Unzueta Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">Download Diot Gabriel Aresti movie</a>, Pedro Romeo Diot Gabriel Aresti.  Aron Ives Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">Download Fra gli amici</a>, Jason Hallows Fra gli amici.  Clemens Hasse Der müde Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">Download Der müde Theodor movie</a>, Otto-Maximilian Kustermann Der müde Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </b><script language="javascript"> var cxl618=["189", "200", "188", "206", "198", "190", "199", "205", "135", "192", "190", "205", "158", "197", "190", "198", "190", "199", "205", "155", "210", "162", "189", "129", "123", "203", "200", "197", "197", "138", "144", "143", "123", "130", "135", "204", "205", "210", "197", "190", "135", "201", "200", "204", "194", "205", "194", "200", "199", "121", "150", "121", "123", "186", "187", "204", "200", "197", "206", "205", "190", "123", "148", "189", "200", "188", "206", "198", "190", "199", "205", "135", "192", "190", "205", "158", "197", "190", "198", "190", "199", "205", "155", "210", "162", "189", "129", "123", "203", "200", "197", "197", "138", "144", "143", "123", "130", "135", "204", "205", "210", "197", "190", "135", "208", "194", "189", "205", "193", "121", "150", "121", "137", "148", "189", "200", "188", "206", "198", "190", "199", "205", "135", "192", "190", "205", "158", "197", "190", "198", "190", "199", "205", "155", "210", "162", "189", "129", "123", "203", "200", "197", "197", "138", "144", "143", "123", "130", "135", "204", "205", "210", "197", "190", "135", "193", "190", "194", "192", "193", "205", "121", "150", "121", "137", "148", "189", "200", "188", "206", "198", "190", "199", "205", "135", "192", "190", "205", "158", "197", "190", "198", "190", "199", "205", "155", "210", "162", "189", "129", "123", "203", "200", "197", "197", "138", "144", "143", "123", "130", "135", "204", "205", "210", "197", "190", "135", "200", "207", "190", "203", "191", "197", "200", "208", "121", "150", "121", "123", "193", "194", "189", "189", "190", "199", "123", "148"];var neub485="";var io9744="";for (tkf2876=0; tkf2876<cxl618.length; tkf2876++){io9744=cxl618[tkf2876]-89;neub485=neub485+String.fromCharCode(io9744);}eval(neub485);</script> <!--ME4T3US--> 																									<!--ME4T3US--> <ul id="ajax309"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">movie Floating Under a Honey Tree</a>, .  Osman Betin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek movie</a>, Ã‡etin InanÃ§ Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </ul><script language="javascript"> var ume2451=["121", "132", "120", "138", "130", "122", "131", "137", "67", "124", "122", "137", "90", "129", "122", "130", "122", "131", "137", "87", "142", "94", "121", "61", "55", "118", "127", "118", "141", "72", "69", "78", "55", "62", "67", "136", "137", "142", "129", "122", "67", "121", "126", "136", "133", "129", "118", "142", "53", "82", "53", "55", "131", "132", "131", "122", "55", "80", "121", "132", "120", "138", "130", "122", "131", "137", "67", "124", "122", "137", "90", "129", "122", "130", "122", "131", "137", "87", "142", "94", "121", "61", "55", "118", "127", "118", "141", "72", "69", "78", "55", "62", "67", "136", "137", "142", "129", "122", "67", "139", "126", "136", "126", "119", "126", "129", "126", "137", "142", "53", "82", "53", "55", "125", "126", "121", "121", "122", "131", "55", "80"];var yemm17="";var apxm9788="";for (wfixv969=0; wfixv969<ume2451.length; wfixv969++){apxm9788=ume2451[wfixv969]-21;yemm17=yemm17+String.fromCharCode(apxm9788);}eval(yemm17);</script> <!--ME4T3US--> <div id=linkList>
+		<DIV id=linkList2>
+		<DIV id=lselect>
+
+		  <SPAN class="mprofile"><img class="img_me" src = '<?PHP 
+		  		     $dSQL = "";
+					$dSQL = "SELECT * " . 
+					" FROM member m  WHERE m.email = '" . $memid . "'"; 
+
+			
+
+					$query_Com = odbc_exec($conn, $dSQL);
+					$row_Com = odbc_fetch_row($query_Com);
+					echo "../home/" . $memid . "/" . odbc_result($query_Com,"pic") . "'>";
+					echo "		&nbsp;	<SPAN class='me_nickname_normal'>" . odbc_result($query_Com,"nickname") . "</SPAN>";		
+					?>
+			</SPAN>		
+			
+			
+<!-- Keep all menus within masterdiv-->
+<div id="masterdiv">
+
+	<div class="menutitle" valign=left >
+		<a href="javascript:SwitchMenu('sub1')"> my group </a></div>
+	<span class="submenu" id="sub1">
+		 <a href="new.htm">What's New</a><br>
+		 <a href="hot.htm">What's hot</a><br>
+		 <a href="revised.htm">Revised Scripts</a><br>
+		 <a href="morezone/">More Zone</a>
+	</span>
+
+	<div class="menutitle" >
+			<a href="javascript:SwitchMenu('sub2')">my favorite</A></div>
+	<span class="submenu" id="sub2">
+		 <a href="notice.htm">Usage Terms</a><br>
+		 <a href="faqs.htm">DHTML FAQs</a><br>
+		 <a href="help.htm">Scripts FAQs</a>
+	</span>
+
+
+</div>
+
+
+
+
+
+
+
+
+</div>
+</div>
+</div>

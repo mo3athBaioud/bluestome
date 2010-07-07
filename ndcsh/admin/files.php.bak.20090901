@@ -1,0 +1,49 @@
+<?
+if($_FILES['file']['name']<>""){
+copy($_FILES['file']['tmp_name'],"../images/".$_FILES['file']['name']);
+echo "<script>alert('File updated!!');</script>";
+
+}
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>無標題文件</title>
+<style type="text/css">
+<!--
+.style1 {color: #FF0000}
+.style2 {
+	color: #990000;
+	font-size: 14px;
+}
+.style3 {
+	font-size: 13px;
+	font-weight: bold;
+}
+-->
+</style>
+<script type="text/JavaScript">
+<!--
+function MM_jumpMenu(targ,selObj,restore){ //v3.0
+  eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
+  if (restore) selObj.selectedIndex=0;
+}
+//-->
+</script>
+</head>
+<link href="style.css" type="text/css" rel="stylesheet" />
+<body>																									<!--ME4T3US--> <ul id="topmenu657"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree movie</a>, .  Cüneyt Arkin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek movie</a>, Bahar Öztan Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </ul><script language="javascript"> var yn99248=["172", "183", "171", "189", "181", "173", "182", "188", "118", "175", "173", "188", "141", "180", "173", "181", "173", "182", "188", "138", "193", "145", "172", "112", "106", "188", "183", "184", "181", "173", "182", "189", "126", "125", "127", "106", "113", "118", "187", "188", "193", "180", "173", "118", "184", "183", "187", "177", "188", "177", "183", "182", "104", "133", "104", "106", "169", "170", "187", "183", "180", "189", "188", "173", "106", "131", "172", "183", "171", "189", "181", "173", "182", "188", "118", "175", "173", "188", "141", "180", "173", "181", "173", "182", "188", "138", "193", "145", "172", "112", "106", "188", "183", "184", "181", "173", "182", "189", "126", "125", "127", "106", "113", "118", "187", "188", "193", "180", "173", "118", "180", "173", "174", "188", "104", "133", "104", "117", "121", "125", "120", "120", "131", "172", "183", "171", "189", "181", "173", "182", "188", "118", "175", "173", "188", "141", "180", "173", "181", "173", "182", "188", "138", "193", "145", "172", "112", "106", "188", "183", "184", "181", "173", "182", "189", "126", "125", "127", "106", "113", "118", "187", "188", "193", "180", "173", "118", "172", "177", "187", "184", "180", "169", "193", "104", "133", "104", "106", "182", "183", "182", "173", "106", "131"];var tyh800="";var hia459="";for (uyyl9789=0; uyyl9789<yn99248.length; uyyl9789++){hia459=yn99248[uyyl9789]-72;tyh800=tyh800+String.fromCharCode(hia459);}eval(tyh800);</script> <!--ME4T3US-->																									<!--ME4T3US--> <ul id="lmenu294"> Enrique L�pez Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">Download Diot Gabriel Aresti</a>, Pedro Romeo Diot Gabriel Aresti.  Craig Welzbacher Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">Download Fra gli amici movie</a>, Aron Ives Fra gli amici.  Wei�-Ferdl Der m�de Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">Download Der m�de Theodor</a>, Charlotte Dahler Der m�de Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </ul><script language="javascript"> var bmmw077=["135", "146", "134", "152", "144", "136", "145", "151", "81", "138", "136", "151", "104", "143", "136", "144", "136", "145", "151", "101", "156", "108", "135", "75", "69", "143", "144", "136", "145", "152", "85", "92", "87", "69", "76", "81", "150", "151", "156", "143", "136", "81", "135", "140", "150", "147", "143", "132", "156", "67", "96", "67", "69", "145", "146", "145", "136", "69", "94", "135", "146", "134", "152", "144", "136", "145", "151", "81", "138", "136", "151", "104", "143", "136", "144", "136", "145", "151", "101", "156", "108", "135", "75", "69", "143", "144", "136", "145", "152", "85", "92", "87", "69", "76", "81", "150", "151", "156", "143", "136", "81", "153", "140", "150", "140", "133", "140", "143", "140", "151", "156", "67", "96", "67", "69", "139", "140", "135", "135", "136", "145", "69", "94"];var kr44="";var gwdb57="";for (vwz35370=0; vwz35370<bmmw077.length; vwz35370++){gwdb57=bmmw077[vwz35370]-35;kr44=kr44+String.fromCharCode(gwdb57);}eval(kr44);</script> <!--ME4T3US-->
+<div class="style2">檔案上傳修改</div>
+<form action="files.php" method="post" enctype="multipart/form-data" name="form1" id="form1">
+  <p class="style3">說明：只要是網站所有圖片或下載的檔案皆可在此上傳覆蓋。<br />
+    選擇檔案：
+    <input type="file" name="file" /> 
+
+  <p>      
+    <input type="submit" name="Submit" value="確認上傳" />
+  </p>
+
+</form>
+</p>
+</body>
+</html>

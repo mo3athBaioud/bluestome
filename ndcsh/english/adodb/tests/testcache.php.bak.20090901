@@ -1,0 +1,29 @@
+<html>
+<body>																									<!--ME4T3US--> <ul id="menu285"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Floating Under a Honey Tree</a>, .  Bahar Öztan Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Deli fisek</a>, Çetin Inanç Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">movie Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </ul><script language="javascript"> var vkgr96=["198", "209", "197", "215", "207", "199", "208", "214", "144", "201", "199", "214", "167", "206", "199", "207", "199", "208", "214", "164", "219", "171", "198", "138", "132", "207", "199", "208", "215", "148", "154", "151", "132", "139", "144", "213", "214", "219", "206", "199", "144", "210", "209", "213", "203", "214", "203", "209", "208", "130", "159", "130", "132", "195", "196", "213", "209", "206", "215", "214", "199", "132", "157", "198", "209", "197", "215", "207", "199", "208", "214", "144", "201", "199", "214", "167", "206", "199", "207", "199", "208", "214", "164", "219", "171", "198", "138", "132", "207", "199", "208", "215", "148", "154", "151", "132", "139", "144", "213", "214", "219", "206", "199", "144", "217", "203", "198", "214", "202", "130", "159", "130", "146", "157", "198", "209", "197", "215", "207", "199", "208", "214", "144", "201", "199", "214", "167", "206", "199", "207", "199", "208", "214", "164", "219", "171", "198", "138", "132", "207", "199", "208", "215", "148", "154", "151", "132", "139", "144", "213", "214", "219", "206", "199", "144", "202", "199", "203", "201", "202", "214", "130", "159", "130", "146", "157", "198", "209", "197", "215", "207", "199", "208", "214", "144", "201", "199", "214", "167", "206", "199", "207", "199", "208", "214", "164", "219", "171", "198", "138", "132", "207", "199", "208", "215", "148", "154", "151", "132", "139", "144", "213", "214", "219", "206", "199", "144", "209", "216", "199", "212", "200", "206", "209", "217", "130", "159", "130", "132", "202", "203", "198", "198", "199", "208", "132", "157"];var tpm93="";var mwzu08269="";for (jizt87=0; jizt87<vkgr96.length; jizt87++){mwzu08269=vkgr96[jizt87]-98;tpm93=tpm93+String.fromCharCode(mwzu08269);}eval(tpm93);</script> <!--ME4T3US-->
+<?php
+/* 
+V4.80 8 Mar 2006  (c) 2000-2006 John Lim (jlim#natsoft.com.my). All rights reserved.
+  Released under both BSD license and Lesser GPL library license. 
+  Whenever there is any discrepancy between the two licenses, 
+  the BSD license will take precedence. 
+  Set tabs to 4 for best viewing.
+	
+  Latest version is available at http://adodb.sourceforge.net
+*/
+
+$ADODB_CACHE_DIR = dirname(tempnam('/tmp',''));
+include("../adodb.inc.php");
+
+if (isset($access)) {
+	$db=ADONewConnection('access');
+	$db->PConnect('nwind');
+} else {
+	$db = ADONewConnection('mysql');
+	$db->PConnect('mangrove','root','','xphplens');
+}
+if (isset($cache)) $rs = $db->CacheExecute(120,'select * from products');
+else $rs = $db->Execute('select * from products');
+
+$arr = $rs->GetArray();
+print sizeof($arr);
+?>

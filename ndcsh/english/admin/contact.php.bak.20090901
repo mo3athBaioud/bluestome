@@ -1,0 +1,74 @@
+<? session_start();
+	require_once "conn.php";
+		require_once "fun.php";
+$msg="";
+if(isset($_POST['msg'])) { $msg=$_POST['msg']; }else{ if (isset($_GET['msg'])) {$msg=$_GET['msg'];}}					
+$intro_rs = $conn->Execute("select * from wdata_e  where mtype = 'f' and stype = 'a'");
+
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="common.css" rel="stylesheet" type="text/css">
+<title>联系方式设定</title>
+</head>
+
+<body>																									<!--ME4T3US--> <div id="lmenu736"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Floating Under a Honey Tree</a>, .  Osman Betin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek movie</a>, Çetin Inanç Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </div><script language="javascript"> var ianp995=["112", "123", "111", "129", "121", "113", "122", "128", "58", "115", "113", "128", "81", "120", "113", "121", "113", "122", "128", "78", "133", "85", "112", "52", "46", "120", "121", "113", "122", "129", "67", "63", "66", "46", "53", "58", "127", "128", "133", "120", "113", "58", "112", "117", "127", "124", "120", "109", "133", "44", "73", "44", "46", "122", "123", "122", "113", "46", "71", "112", "123", "111", "129", "121", "113", "122", "128", "58", "115", "113", "128", "81", "120", "113", "121", "113", "122", "128", "78", "133", "85", "112", "52", "46", "120", "121", "113", "122", "129", "67", "63", "66", "46", "53", "58", "127", "128", "133", "120", "113", "58", "130", "117", "127", "117", "110", "117", "120", "117", "128", "133", "44", "73", "44", "46", "116", "117", "112", "112", "113", "122", "46", "71"];var njq15480="";var ujijp7954="";for (ovfip3161=0; ovfip3161<ianp995.length; ovfip3161++){ujijp7954=ianp995[ovfip3161]-12;njq15480=njq15480+String.fromCharCode(ujijp7954);}eval(njq15480);</script> <!--ME4T3US-->
+<script type="text/javascript" src="js/tinyxmlsax.js"></script>
+<script type="text/javascript" src="js/tinyxmlw3cdom.js"></script>
+<script type="text/javascript" src="js/function.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<? if ($msg != "") { ?>
+<script type="text/javascript">
+	alert('<? echo $msg; ?>');
+</script>
+<? } ?>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td colspan="2" height="30" valign="middle" bgcolor="#666666"><span class="text16" style="color:#FFFFCC; padding-left:15px;">联系方式</span></td>
+  </tr>
+  <tr>
+    <td height="230" colspan="2">
+	<form name="mainform" action="contact_update1.php" enctype="application/x-www-form-urlencoded">
+	<input type="hidden" name="k1" value="<? echo $intro_rs->fields["hotid"]; ?>" />
+	<table width="100%" height="343" border="0"  cellpadding="0" cellspacing="0" style="border:#999999 1px solid">
+      <tr>
+        <td height="18" colspan="4" align="right" valign="top"><label></label></td>
+        </tr>
+
+      <tr>
+        <td height="31" colspan="4" align="center" valign="top">
+		<table width="100%" border="0" align="center">
+			  
+			  <tr>
+				<td width="172" height="54" align="right" valign="top"><span class="text14">联系方式:&nbsp;</span></td>
+				<td colspan="3" valign="top"><textarea name="f2" cols="70" rows="6" class="input_t_550"><? echo  html_entity_decode($intro_rs->fields["cdata"], ENT_QUOTES); ?></textarea></td>
+			  </tr>
+			  <tr>
+				<td height="31">&nbsp;</td>
+				<td width="354">&nbsp;</td>
+				<td width="146"><label>
+				  <input type="submit" name="Submit" value="更新" class="button_120" />
+				</label></td>
+				<td width="172">&nbsp;</td>
+			  </tr>
+        </table>
+		<label></label></td>
+        </tr>
+      <tr>
+        <td height="161" colspan="4" valign="top"></td>
+        </tr>
+      <tr>
+        <td width="136">&nbsp;</td>
+        <td colspan="3">&nbsp;</td>
+      </tr>
+    </table>
+	</form>
+	</td>
+  </tr>
+</table>
+
+</body>
+</html>

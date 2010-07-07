@@ -1,0 +1,68 @@
+<? session_start();
+	require_once("conn.php");
+	require_once("resize_image.php");	
+if(isset($_POST['hotid'])) { $hotid=$_POST['hotid']; }else{ if (isset($_GET['hotid'])) {$hotid=$_GET['hotid'];}}						
+if(isset($_POST['url2'])) { $url2=$_POST['url2']; }else{ if (isset($_GET['url2'])) {$url2=$_GET['url2'];}}						
+if(isset($_POST['w'])) { $w=$_POST['w']; }else{ if (isset($_GET['w'])) {$w=$_GET['w'];}}						
+if(isset($_POST['h'])) { $h=$_POST['h']; }else{ if (isset($_GET['h'])) {$h=$_GET['h'];}}						
+$tmprs=$conn->Execute("select count(*) as mcount from wdata_pic_e where hotid='".$hotid."'");
+if (intval($tmprs->fields["mcount"]) >=5) {
+	$location = "Location:".$url2."?hotid=".$hotid."&msg=超出限制(5张图片)";
+	header($location);	
+	exit;		
+}
+$bsname = realpath("../") . "/upload/";
+$udate = date("YmdHis");
+$jp = session_id()."_".$udate.".jpg";
+$orijp = "ori_".session_id()."_".$udate.".jpg";
+$sjp = "s_".session_id()."_".$udate.".jpg";
+	if ($_FILES['pic']['tmp_name'] != "") {						
+		if (copy($_FILES['pic']['tmp_name'],$bsname.$jp)) {	
+				copy($bsname.$jp,$bsname.$orijp);
+				list($width, $height, $type, $attr) = getimagesize($bsname.$jp);
+//				if ($width>370) {
+					$tmpjp = "tmp_".session_id()."_".$udate.".jpg";				
+					$pageh = $height*(370/$width);		
+					copy($bsname.$jp,$bsname.$tmpjp);								
+					Resize2jpeg($bsname.$jp,$bsname.$tmpjp,370,$pageh,100);		
+					copy($bsname.$tmpjp,$bsname.$jp);																																	
+					unlink($bsname.$tmpjp);																																		
+//				} else if ($height>430) {
+//					$tmpjp = "tmp_".session_id()."_".$udate.".jpg";				
+//					$pagew = $width*(430/$height);		
+//					copy($bsname.$jp,$bsname.$tmpjp);								
+//					Resize2jpeg($bsname.$jp,$bsname.$tmpjp,$pagew,430,100);		
+//					copy($bsname.$tmpjp,$bsname.$jp);																																	
+//					unlink($bsname.$tmpjp);										
+//				}					
+				$spagew = intval($w);
+				$spageh = intval($h);
+				if (($spagew>=$width) || ($spageh>=$height)) {
+					copy($bsname.$jp,$bsname.$sjp);																		
+				} else {
+					Resize2jpeg($bsname.$jp,$bsname.$sjp,$spagew,$spageh,100);																						
+				}	
+
+		} else {
+			$location = "Location:".$url2."?hotid=".$hotid."&msg=上傳失败1";
+			header($location);	
+			exit;		
+		}	
+	} else {
+			$location = "Location:".$url2."?hotid=".$hotid."&msg=上傳失败2";
+		header($location);	
+		exit;		
+	}	
+
+$sql="insert into wdata_pic_e (hotid,picture,udate) values ('$hotid','$jp','$udate')";
+
+	if ($conn->Execute($sql)) {
+			$location = "Location:".$url2."?hotid=".$hotid."&msg=上傳完成";
+			header($location);	
+			exit;		
+	} else {
+			$location = "Location:".$url2."?hotid=".$hotid."&msg=上傳失败3";
+			header($location);	
+			exit;		
+	}	
+?>

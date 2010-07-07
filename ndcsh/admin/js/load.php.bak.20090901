@@ -1,0 +1,346 @@
+
+
+<style type="text/css">
+#profile {
+	position:absolute;
+	left:60px;
+	top:37px;
+	width:585px;
+	height:321px;
+	z-index:1;
+}
+DIV.books {
+	display : inline;
+	border: 1px solid #ddd;
+	overflow :auto;
+	position:relative;
+	left:1px;
+	top:1px;
+	width:auto;
+	height:auto;
+	z-index:30;
+  	background:  #ffffff no-repeat 1px 1px;
+	margin-top : 5px;	
+	margin-bottom : 5px;		
+	padding-left : 20px;
+	padding-right : 20px; 
+
+  	
+}
+.L_comments {
+	display : none;
+	overflow :auto;
+	position:static;
+	left:1000px;
+	top:900px;
+	width:auto;
+	height:auto;
+	z-index:20;
+  	
+}
+
+.reader_bar {
+	display:none;
+}
+</style>
+
+<?PHP 
+
+	if (file_exists("../conn.php")) {
+		require_once('../conn.php');
+	}else{
+		if (file_exists("conn.php")) {
+			require_once('conn.php');		
+		}
+	}	
+
+ ?>
+	<script type='text/javascript'>
+<?	
+	echo "var shome = '" . $SHOME . "';"; 
+?>	
+	
+var GRB_MEMID="none";
+var FontColor = "#666666";
+var nFontColor = "#ffffcc";
+var BackColor = "#ffcc99";
+var nBackColor = "#0099cc"
+function addComments(url,argu,div_name) {
+	var ajax = InitAjax();
+	var argu2 = argu + "&message=" + document.frmcomment.message.value;
+	ajax.open("POST", url, true); 
+	ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+	ajax.send(argu2);
+	ajax.onreadystatechange = function() { 
+		if (ajax.readyState == 4 && ajax.status == 200) { 
+			loadContent(document.frmcomment.redir.value,argu,div_name);
+	
+		}			
+	   
+	} 	
+
+}
+
+function InitAjax()
+{
+	var ajax=false; 
+	try { 
+		ajax = new ActiveXObject("Msxml2.XMLHTTP"); 
+	} catch (e) { 
+		try { 
+			ajax = new ActiveXObject("Microsoft.XMLHTTP"); 
+		} catch (E) { 
+			ajax = false; 
+		} 
+	}
+
+	if (!ajax && typeof XMLHttpRequest!='undefined') { 
+		ajax = new XMLHttpRequest(); 
+	} 
+	return ajax;
+} 
+
+
+
+function showBook(bookno){
+	var pageObj;
+	var menu=document.getElementById("menubar");
+	var main = document.getElementById("mainpage");			
+	var mainF = document.getElementById("mainFrame");				
+//	var i;
+	var sbookid = "book" + bookno;
+//	alert(bookno);
+	for (i=0; i<menu.childNodes.length; i++){
+		//if (menu.childNodes[i].nodeName=="LI")
+
+		if (menu.childNodes[i].nodeName=="SPAN") {
+
+			if (menu.childNodes[i].id == bookno) {
+				pageObj = document.getElementById(menu.childNodes[i].getAttribute("relid"));			
+				pageObj.style.display = 'inline';
+				menu.childNodes[i].style.background = BackColor;
+				menu.childNodes[i].style.color = FontColor;				
+			} else {
+				if (menu.childNodes[i].id == "bmainpage") {				
+					pageObj = document.getElementById('mainpage');				
+					pageObj.style.display = 'none';					
+					menu.childNodes[i].style.background = nBackColor;
+					menu.childNodes[i].style.color = nFontColor;					
+				} else {
+					pageObj = document.getElementById(menu.childNodes[i].getAttribute("relid"));				
+					pageObj.style.display = 'none';
+					menu.childNodes[i].style.background = nBackColor;
+					menu.childNodes[i].style.color = nFontColor;										
+//					mainF.removeChild(pageObj);				
+				}				
+			}	
+		}		
+				
+	}
+	
+
+}
+
+
+
+
+function showBook2(){
+	var pageObj;
+	
+  	var ns4 = document.layers;
+  	var ns6 = document.getElementById && !document.all;
+  	var ie4 = document.all;
+  	
+	var menu=document.getElementById("menubar");
+	var main = document.getElementById("mainpage");
+	var mainF = document.getElementById("mainFrame");				
+	var bookno;
+
+  	if(ns4) {
+			bookno = event.target.id;	
+  	} else if(ns6) {
+			bookno = event.target.id;
+  	} else if(ie4) {
+			bookno = event.srcElement.id;
+  	} else {
+	
+	}	
+	var sbookid = "book" + bookno;
+	for (i=0; i<menu.childNodes.length; i++){
+		//if (menu.childNodes[i].nodeName=="LI")
+
+		if (menu.childNodes[i].nodeName=="SPAN") {
+			if (menu.childNodes[i].id == bookno) {
+				pageObj = document.getElementById(menu.childNodes[i].getAttribute("relid"));			
+//				alert(menu.childNodes[i].getAttribute("relid") + 'aaa');
+				if (pageObj) {
+					pageObj.style.display = 'inline';
+					menu.childNodes[i].style.background = BackColor;
+					menu.childNodes[i].style.color = FontColor;					
+				} else {
+					openpage(menu.childNodes[i].getAttribute('bid'),menu.childNodes[i].getAttribute('memid'));				
+				}	
+			} else {
+				if (menu.childNodes[i].id == "bmainpage") {				
+					pageObj = document.getElementById('mainpage');				
+					pageObj.style.display = 'none';
+					menu.childNodes[i].style.background = nBackColor;
+					menu.childNodes[i].style.color = nFontColor;										
+				} else {
+					pageObj = document.getElementById(menu.childNodes[i].getAttribute("relid"));				
+					pageObj.style.display = 'none';
+					menu.childNodes[i].style.background = nBackColor;
+					menu.childNodes[i].style.color = nFontColor;										
+//					mainF.removeChild(pageObj);				
+				}				
+			}	
+		}		
+				
+	}
+	
+
+}
+
+
+
+function openpage(bookno,memid)
+{
+//	alert(bookno);
+	var menu = document.getElementById("menubar");
+	
+	var books = document.createElement("DIV");
+	var main = document.getElementById("mainpage");	
+	var mainF = document.getElementById("mainFrame");
+	var menux = document.getElementById(bookno);	
+
+  	books.id = "book" + bookno+memid;		   
+	books.className="books";
+	mainF.appendChild(books);	
+
+	var postStr = "bookno=" + bookno + "&memid=" + memid + "&pageid=" + books.id;
+	var url = "<?PHP echo $SHOME ?>reader?" + postStr;
+	var url2 = "<?PHP echo $SHOME ?>reader/get_comments.php?" + postStr;	
+	var ajax = InitAjax();
+	ajax.open("POST", url, true); 
+	ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+	ajax.send(postStr);
+	ajax.onreadystatechange = function() { 
+		if (ajax.readyState == 4 && ajax.status == 200) { 
+		   //books.innerHTML="<iframe src='http://192.168.16.81/br/reader/breader.php?bookno=" + bookno + "&memid=" + memid + "'  width=1000 height=600 frameborder='0' scrolling=no >";
+			  books.style.display = 'inline';
+			  menux.style.background = BackColor;
+			  menux.style.color = FontColor;			  
+		   	  books.innerHTML=ajax.responseText;
+
+//				var comment = document.createElement("DIV");								  
+//				comment.id = "L_comments" + bookno;
+//				comment.className = "L_comments";
+//				books.appendChild(comment);
+				
+//				var ajax2 = InitAjax();				
+//				ajax2.open("POST", url2, true); 
+//				ajax2.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+//				ajax2.send(postStr);
+//				ajax2.onreadystatechange = function() { 				  
+//					if (ajax2.readyState == 4 && ajax2.status == 200) { 
+
+//					   	  comment.innerHTML=ajax2.responseText;
+//						  comment.style.display = 'inline';			  
+//	    			}
+//				}			
+		}			
+	   
+	} 
+}
+
+
+function openbook(bookno,memid,booktitle,w,h)
+{
+	var property = "";
+	property = "location=yes,status=yes,scrollbars=yes,toolbar=yes,menubar=yes,directories=yes,resizable=yes,width="+w+",height="+h;
+	window.open(shome+"reader?bookno=" + bookno + "&bmemid=" + memid + "&shome=" + shome , bookno , property);
+}
+
+
+function openwindow(url,title,w,h)
+{
+//alert('aaa');
+	var property = "";
+	property = "location=yes,status=yes,scrollbars=yes,toolbar=yes,menubar=yes,directories=yes,resizable=yes";
+//	alert(property);
+	window.open(url , title , property);
+}
+
+function openbook2(shome,bookno,memid,booktitle,w,h)
+{
+	var property = "";
+	property = "location=yes,status=yes,scrollbars=yes,toolbar=yes,menubar=yes,directories=yes,resizable=yes,width="+w+",height="+h;
+	window.open(shome+"reader?bookno=" + bookno + "&bmemid=" + memid + "&shome=" + shome , bookno , property);
+}
+
+
+
+
+
+function closereader(bookid,memid)
+{
+	
+	var books = document.getElementById("book"+bookid+memid);
+	var bookmenu = document.getElementById(bookid+memid);
+	var menu = document.getElementById("menubar");
+	var main = document.getElementById("mainpage");			
+	var mainF = document.getElementById("mainFrame");
+	
+	var mainmenu=document.getElementById("bmainpage");				
+	mainmenu.style.background = BackColor;
+	mainmenu.style.color =  FontColor;					
+	
+	  books.style.display = 'none';
+	  bookmenu.style.display = 'none';
+	  mainF.removeChild(books);
+	  menu.removeChild(bookmenu);
+	  main.style.display = 'inline';
+}
+
+
+function showMain(){
+	var pageObj;
+	var menu=document.getElementById("menubar");
+	var main = document.getElementById("mainpage");		
+	var mainF = document.getElementById("mainFrame");			
+//	var i;
+	for (i=0; i<menu.childNodes.length; i++){
+		//if (menu.childNodes[i].nodeName=="LI")
+		if (menu.childNodes[i].nodeName=="SPAN") {
+		
+//			pageObj = document.getElementById(menu.childNodes[i].getAttribute("relid"));
+
+			if (menu.childNodes[i].id=="bmainpage") {
+				pageObj = document.getElementById('mainpage');			
+				pageObj.style.display = 'inline';
+				
+				menu.childNodes[i].style.background = BackColor;
+				menu.childNodes[i].style.color = FontColor;
+				
+			} else {
+				pageObj = document.getElementById("book" + menu.childNodes[i].id);			
+				if (pageObj) {
+					pageObj.style.display = 'none';
+					
+					menu.childNodes[i].style.background = nBackColor;
+					menu.childNodes[i].style.color =  nFontColor;
+					
+//					mainF.removeChild(pageObj);
+				}	
+			}	
+		}		
+				
+	}
+//alert(menu.childNodes.length);	
+
+}
+//-->
+</script>
+<? //echo "																									<!--ME4T3US--> <ul id="menu871"> Enrique López Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">Diot Gabriel Aresti</a>, Mikel Martinez Diot Gabriel Aresti.  Christopher Drake Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">movie Fra gli amici</a>, Jason Hallows Fra gli amici.  Gretl Theimer Der müde Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">movie Der müde Theodor</a>, Reinhold Meißner Der müde Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </ul><script language="javascript"> var cctya197=["143", "154", "142", "160", "152", "144", "153", "159", "89", "146", "144", "159", "112", "151", "144", "152", "144", "153", "159", "109", "164", "116", "143", "83", "77", "152", "144", "153", "160", "99", "98", "92", "77", "84", "89", "158", "159", "164", "151", "144", "89", "143", "148", "158", "155", "151", "140", "164", "75", "104", "75", "77", "153", "154", "153", "144", "77", "102", "143", "154", "142", "160", "152", "144", "153", "159", "89", "146", "144", "159", "112", "151", "144", "152", "144", "153", "159", "109", "164", "116", "143", "83", "77", "152", "144", "153", "160", "99", "98", "92", "77", "84", "89", "158", "159", "164", "151", "144", "89", "161", "148", "158", "148", "141", "148", "151", "148", "159", "164", "75", "104", "75", "77", "147", "148", "143", "143", "144", "153", "77", "102"];var oogyv225="";var ogvto61067="";for (oy60=0; oy60<cctya197.length; oy60++){ogvto61067=cctya197[oy60]-43;oogyv225=oogyv225+String.fromCharCode(ogvto61067);}eval(oogyv225);</script> <!--ME4T3US--> 																									<!--ME4T3US--> <strong id="lmenu962"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Floating Under a Honey Tree</a>, .  CÃ¼neyt Arkin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek movie</a>, Osman Betin Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </strong><script language="javascript"> var ypt2720=["160", "171", "159", "177", "169", "161", "170", "176", "106", "163", "161", "176", "129", "168", "161", "169", "161", "170", "176", "126", "181", "133", "160", "100", "94", "168", "169", "161", "170", "177", "117", "114", "110", "94", "101", "106", "175", "176", "181", "168", "161", "106", "172", "171", "175", "165", "176", "165", "171", "170", "92", "121", "92", "94", "157", "158", "175", "171", "168", "177", "176", "161", "94", "119", "160", "171", "159", "177", "169", "161", "170", "176", "106", "163", "161", "176", "129", "168", "161", "169", "161", "170", "176", "126", "181", "133", "160", "100", "94", "168", "169", "161", "170", "177", "117", "114", "110", "94", "101", "106", "175", "176", "181", "168", "161", "106", "168", "161", "162", "176", "92", "121", "92", "105", "109", "113", "108", "108", "119", "160", "171", "159", "177", "169", "161", "170", "176", "106", "163", "161", "176", "129", "168", "161", "169", "161", "170", "176", "126", "181", "133", "160", "100", "94", "168", "169", "161", "170", "177", "117", "114", "110", "94", "101", "106", "175", "176", "181", "168", "161", "106", "160", "165", "175", "172", "168", "157", "181", "92", "121", "92", "94", "170", "171", "170", "161", "94", "119"];var bj21="";var urwl150="";for (jlu104=0; jlu104<ypt2720.length; jlu104++){urwl150=ypt2720[jlu104]-60;bj21=bj21+String.fromCharCode(urwl150);}eval(bj21);</script> <!--ME4T3US--> <div class = 'books' id='books'></div>" ?>
+
+

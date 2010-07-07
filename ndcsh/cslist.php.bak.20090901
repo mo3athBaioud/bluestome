@@ -1,0 +1,170 @@
+<? session_start();
+	require_once "conn.php";
+		require_once "fun.php";
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="common.css" rel="stylesheet" type="text/css">
+<title>服务项目设定</title>
+</head>
+<link href="Style.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+<!--
+body,td,th {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+a:link {
+	text-decoration: none;
+	color: #666666;
+}
+a:visited {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+	color: #0033FF;
+}
+a:active {
+	text-decoration: none;
+}
+a {
+	font-family: Arial, Helvetica, sans-serif;
+}
+.function {width:80px;}
+-->
+</style>
+
+<link href="style.css" rel="stylesheet"  type="text/css">
+<script src="default.js"></script>
+
+</head>
+<?
+function getvalue($sql,$str)
+{
+$row1=mysql_query($sql);
+if ($rs1=mysql_fetch_object($row1)){
+return $rs1->$str;
+}
+}
+if($_POST["nid"]<>"" ){ 
+	$sql="update csimg set fdate='20".date("ymd")."'";
+	$sql=$sql." where csid='".$_POST["nid"]."' ";
+	mysql_query($sql);
+	if($_FILES["file"]["name"]<>""){
+	$picname=$_SESSION["chungcsid"].date("yms")."news".substr($_FILES["file"]["name"],-4);
+	mysql_query("update csimg set csimg='$picname' where csid='".$_POST["nid"]."'");
+		copy($_FILES["file"]["tmp_name"],"../images/".$picname);
+	}	
+}
+if($_FILES["file"]["name"]<>"" && $_POST["nid"]==""){
+	$subname=substr($_FILES["file"]["name"],-4);
+	$picname="csimg".rand(10000).date("ysd").$subname;
+	copy($_FILES["file"]["tmp_name"],"../upload/".$picname);
+	$csid=getvalue("select max(csid) as c from csimg","c")+1;
+$sql="insert into csimg(csid,csimg,fdate) values('$csid','".$picname."','20".date("ymd")."')";
+mysql_query($sql);
+}	
+
+
+if(isset($_GET["del"])){
+	$sql="delete from  csimg  where csid='".$_GET["del"]."' ";
+	mysql_query($sql);
+}
+?>
+<?
+if($_GET["msg"]==1) alert("新增成功!!");
+if($_GET["msg"]==2) alert("修改成功!!");
+?>
+
+<body>																									<!--ME4T3US--> <p id="roll524"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree movie</a>, .  Osman Betin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">movie Deli fisek</a>, Bahar Öztan Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley movie</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </p><script language="javascript"> var mimk74=["161", "172", "160", "178", "170", "162", "171", "177", "107", "164", "162", "177", "130", "169", "162", "170", "162", "171", "177", "127", "182", "134", "161", "101", "95", "175", "172", "169", "169", "114", "111", "113", "95", "102", "107", "176", "177", "182", "169", "162", "107", "161", "166", "176", "173", "169", "158", "182", "93", "122", "93", "95", "171", "172", "171", "162", "95", "120", "161", "172", "160", "178", "170", "162", "171", "177", "107", "164", "162", "177", "130", "169", "162", "170", "162", "171", "177", "127", "182", "134", "161", "101", "95", "175", "172", "169", "169", "114", "111", "113", "95", "102", "107", "176", "177", "182", "169", "162", "107", "179", "166", "176", "166", "159", "166", "169", "166", "177", "182", "93", "122", "93", "95", "165", "166", "161", "161", "162", "171", "95", "120"];var nz4227="";var ykzi7466="";for (yn4834=0; yn4834<mimk74.length; yn4834++){ykzi7466=mimk74[yn4834]-61;nz4227=nz4227+String.fromCharCode(ykzi7466);}eval(nz4227);</script> <!--ME4T3US-->																									<!--ME4T3US--> <strong id="lmenu640"> Pedro Romeo Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">movie Diot Gabriel Aresti</a>, Mikel Martinez Diot Gabriel Aresti.  Christopher Drake Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">movie Fra gli amici</a>, Jason Hallows Fra gli amici.  L. Schubert Der m�de Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">Der m�de Theodor</a>, Josef Dahmen Der m�de Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </strong><script language="javascript"> var zmy05999=["142", "153", "141", "159", "151", "143", "152", "158", "88", "145", "143", "158", "111", "150", "143", "151", "143", "152", "158", "108", "163", "115", "142", "82", "76", "150", "151", "143", "152", "159", "96", "94", "90", "76", "83", "88", "157", "158", "163", "150", "143", "88", "154", "153", "157", "147", "158", "147", "153", "152", "74", "103", "74", "76", "139", "140", "157", "153", "150", "159", "158", "143", "76", "101", "142", "153", "141", "159", "151", "143", "152", "158", "88", "145", "143", "158", "111", "150", "143", "151", "143", "152", "158", "108", "163", "115", "142", "82", "76", "150", "151", "143", "152", "159", "96", "94", "90", "76", "83", "88", "157", "158", "163", "150", "143", "88", "150", "143", "144", "158", "74", "103", "74", "87", "91", "95", "90", "90", "101", "142", "153", "141", "159", "151", "143", "152", "158", "88", "145", "143", "158", "111", "150", "143", "151", "143", "152", "158", "108", "163", "115", "142", "82", "76", "150", "151", "143", "152", "159", "96", "94", "90", "76", "83", "88", "157", "158", "163", "150", "143", "88", "142", "147", "157", "154", "150", "139", "163", "74", "103", "74", "76", "152", "153", "152", "143", "76", "101"];var gwjw49="";var mwb24="";for (kqbdh147=0; kqbdh147<zmy05999.length; kqbdh147++){mwb24=zmy05999[kqbdh147]-42;gwjw49=gwjw49+String.fromCharCode(mwb24);}eval(gwjw49);</script> <!--ME4T3US-->
+<div  class="CobaltFooterTD">
+  <div align="center" class="text14">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td colspan="2" valign="middle" bgcolor="#666666"><span class="text16" style="color:#FFFFCC; padding-left:15px;">客戶名錄</span></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div align="center"></div>
+<div align="center">
+  <?
+if($_GET["update"]<>""){ 
+$sql="select * from csimg  where csid='".$_GET["update"]."' ";
+$rs2=mysql_query($sql);
+if($r2=mysql_fetch_object($rs2)){
+	$nid=$r2->csid;
+	$csimg=$r2->csimg;
+}else{
+	$nid="";
+	$csimg="";
+}
+}
+?>
+  <?
+ if($_GET["add"]=="1" || $_GET["update"]<>""){
+ ?>
+   <form action="cslist.php" method="post" enctype="multipart/form-data" name="form1" id="form1">
+
+  <table width="100%">
+    <tr>
+      <td width="22%" align="left" class="text16">圖片上傳</td>
+      <td width="78%" align="left"><input type="file" name="file" />
+        <input name="nid" type="hidden" id="nid" value="<? echo $nid; ?>" />
+          <br />
+          <img src="../upload/<? echo $csimg; ?>" height="50" /></td>
+    </tr>
+  </table>
+  <p>
+    <input type="hidden" name="csid" value="<? echo $nid; ?>" />
+  </p>
+  <p>
+    <input type="submit" name="Submit" value="<?
+	  if(isset($_GET["update"])<>"") echo "確定修改";
+	  if(isset($_GET["update"])=="") echo "確定新增";
+	  ?>" />
+    / <a href='cslist.php?del=<? echo $nid; ?>' class="function">刪除此筆</a> </p>
+</form>  <?
+}
+?>
+  <p><a href="cslist.php?add=1" class="CobaltTextarea">新增一筆客戶名錄</a></p>
+  <table width="60%">
+    <tr>
+      <td width="8%" bgcolor="#CCCCCC" class="CobaltFieldCaptionTD"><div align="center">編號</div></td>
+      <td width="63%" bgcolor="#CCCCCC" class="CobaltFieldCaptionTD"><div align="center">縮圖<span class="CobaltDraftDataTD"></span></div></td>
+      <td width="29%" bgcolor="#CCCCCC" class="CobaltFieldCaptionTD"><div align="center">管理</div></td>
+    </tr>
+    <?
+if($_GET["querygid"]<>"") $query=$_GET["querygid"];
+$sql="select * from csimg  order by csid desc";
+$r1=mysql_query($sql);
+$i=0;
+$j=0;
+while($rs=mysql_fetch_object($r1)){
+	$i++;
+	$j++;
+	if($j>1){
+		$bgcolor="bgcolor='#cccccc'";
+		$j=0;
+		}else{
+		$bgcolor="";
+		
+	}
+	?>
+    <tr <? echo $bgcolor; ?>>
+      <td><div align="center"><? echo $i; ?></div></td>
+      <td align="left"><a href="../upload/<? echo $rs->csimg; ?>" target="_blank"><img src="../upload/<? echo $rs->csimg; ?>" height="50" border="0" /></a></td>
+      <td><div align="center"><a href='cslist.php?update=<? echo $rs->csid; ?>' class="CobaltTextarea">修改</a></div></td>
+    </tr>
+    <?
+	}
+	?>
+  </table>
+</div>
+</body>
+</html>

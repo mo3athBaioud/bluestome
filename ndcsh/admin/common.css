@@ -1,0 +1,132 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+font-size:14px;
+color:#333333;	
+}
+.text14 {
+font-size:15px;
+color:#333333;
+}
+.text16 {
+font-size:16px;
+color:#333333;
+}
+
+.text12 {
+font-size:12px;
+color:#333333;
+}
+
+.text12_w {
+font-size:12px;
+color:#FFFFCC;
+}
+
+.input{
+font-family:Arial, Helvetica, sans-serif;
+font-size:12px;
+border: #003366 1px solid;
+width:150px;
+}
+
+.button {
+cursor:pointer;
+}
+
+.link {
+		font-size:15px;
+		color: #FFFFCC;
+		font-weight:500;
+		cursor:pointer;
+		width:145px;
+		height:18px;
+		padding-top:3px;
+}
+
+.link a{
+		font-size:15px;
+		color: #FFFFCC;
+		font-weight:500;
+		cursor:pointer;
+		width:145px;
+		height:18px;
+		padding-top:3px;
+}
+
+.link a:hover{
+		font-size:15px;
+		color: #0033FF;
+		font-weight:500;
+		cursor:pointer;
+		width:145px;
+		height:18px;
+		padding-top:3px;
+
+}
+
+.link a:active{
+		font-size:15px;
+		color: #FFFFCC;
+		font-weight:500;
+		cursor:pointer;
+		width:145px;
+		height:18px;
+		padding-top:3px;
+
+}
+
+.link a:visited{
+		font-size:15px;
+		color: #FFFFCC;
+		font-weight:500;
+		cursor:pointer;
+		width:145px;
+		height:18px;
+		padding-top:3px;
+
+}
+
+#content{
+	padding:8px;
+
+}
+.record{
+padding-left:5px;
+font-size:11px;
+color:#333333;
+border-bottom:#CCCCCC 1px dotted;
+}
+
+.record_tr{
+/*border-bottom:#CCCCCC 1px dotted;*/
+}
+
+
+.input_t_550{
+color:#333333;
+font-size:12px;
+width:550px;
+}
+
+.input_t_350{
+color:#333333;
+font-size:12px;
+width:350px;
+}
+
+.button_120{
+width:120px;
+}
+
+.button_90{
+width:90px;
+}
+
+.td_a{
+border-left: #999999 dotted 1px;
+border-right:#999999 dotted 1px;
+font-size:13px;
+padding-left:3px;
+}

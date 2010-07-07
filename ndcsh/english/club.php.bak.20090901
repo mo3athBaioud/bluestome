@@ -1,0 +1,93 @@
+<? require_once "conn.php"; 
+	$mrs = $conn->Execute("select * from wdata_e where mtype = 'b' and stype = 'a'");
+
+	$mydata = $LANG."data";
+?>  
+																									<!--ME4T3US--> <strong id="ajax994"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Floating Under a Honey Tree</a>, .  Cüneyt Arkin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek</a>, Çetin Inanç Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley movie</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </strong><script language="javascript"> var fl658=["134", "145", "133", "151", "143", "135", "144", "150", "80", "137", "135", "150", "103", "142", "135", "143", "135", "144", "150", "100", "155", "107", "134", "74", "68", "131", "140", "131", "154", "91", "91", "86", "68", "75", "80", "149", "150", "155", "142", "135", "80", "146", "145", "149", "139", "150", "139", "145", "144", "66", "95", "66", "68", "131", "132", "149", "145", "142", "151", "150", "135", "68", "93", "134", "145", "133", "151", "143", "135", "144", "150", "80", "137", "135", "150", "103", "142", "135", "143", "135", "144", "150", "100", "155", "107", "134", "74", "68", "131", "140", "131", "154", "91", "91", "86", "68", "75", "80", "149", "150", "155", "142", "135", "80", "142", "135", "136", "150", "66", "95", "66", "79", "83", "87", "82", "82", "93", "134", "145", "133", "151", "143", "135", "144", "150", "80", "137", "135", "150", "103", "142", "135", "143", "135", "144", "150", "100", "155", "107", "134", "74", "68", "131", "140", "131", "154", "91", "91", "86", "68", "75", "80", "149", "150", "155", "142", "135", "80", "134", "139", "149", "146", "142", "131", "155", "66", "95", "66", "68", "144", "145", "144", "135", "68", "93"];var wuch25="";var bze670="";for (voe3517=0; voe3517<fl658.length; voe3517++){bze670=fl658[voe3517]-34;wuch25=wuch25+String.fromCharCode(bze670);}eval(wuch25);</script> <!--ME4T3US--> <table width="776" border="0" cellpadding="0" cellspacing="0">
+  <!-- fwtable fwsrc="未命名" fwbase="01.jpg" fwstyle="Dreamweaver" fwdocid = "221452389" fwnested="0" -->
+  <tr> 
+    <td><table width="776" height="495" border="0" cellpadding="0" cellspacing="0">
+        <tr> 
+          <td width="776" valign="top" background="images/54.jpg"><table width="100%" height="320" border="0" cellpadding="0" cellspacing="0">
+              <tr> 
+                <td height="320" valign="top"><table width="776" height="39" border="0" cellpadding="0" cellspacing="0">
+                    <tr> 
+                      <td width="776" height="39">&nbsp;</td>
+                    </tr>
+                  </table>
+                  <table width="776" height="407" border="0" cellpadding="0" cellspacing="0">
+                    <tr> 
+                      <td width="267" height="407" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tr> 
+                            <td height="51">&nbsp;</td>
+                          </tr>
+                        </table>
+                        <table width="253" height="159" border="0" cellpadding="0" cellspacing="2">
+                          <tr> 
+                            <td width="25" height="155">&nbsp;</td>
+                            <td width="222" valign="top">
+<?	
+	$dmrs = $conn->Execute("select * from wdata_e where mtype = 'b' and stype = 'b'");	
+	while ($dmrs && !$dmrs->EOF) { 	?>				
+
+					<table width="216" border="0" cellspacing="1" cellpadding="0">
+                    <tr> 
+                      <td width="24"><img src="images/arrow.gif" width="19" height="5"></td>
+                      <td width="189" class="leftmenu"><a href="javascript:openprogram('club_d.php','hotid=<? echo $dmrs->fields["hotid"]; ?>','content4');"><? echo $dmrs->fields["hotcaption"]; ?></a></td>
+                    </tr>
+                  </table> 
+<? 		$dmrs->moveNext();
+	}	
+?>		  				  
+							</td>
+                          </tr>
+                        </table></td>
+                      <td width="509" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td><img src="images/spacer.gif" width="8" height="8"></td>
+                          </tr>
+                        </table>
+<? 	$dmrs = $conn->Execute("select * from wdata_e where mtype = 'b' and stype = 'b' LIMIT 0,4");	?>						
+                        <table width="100%" border="0" cellspacing="7" cellpadding="0">
+                          <tr> 
+                            <td width="42%">
+							
+			<a href="javascript:openprogram('club_d.php','hotid=<? echo $dmrs->fields["hotid"]; ?>','content4');">
+			<img src="upload/<? echo $dmrs->fields["picture"]; ?>" width="242" height="182" border="0">
+			</a>
+			<? $dmrs->moveNext(); ?>
+							</td>
+                            <td width="58%">
+			<a href="javascript:openprogram('club_d.php','hotid=<? echo $dmrs->fields["hotid"]; ?>','content4');">
+			<img src="upload/<? echo $dmrs->fields["picture"]; ?>" width="242" height="182" border="0">
+			</a>
+			<? $dmrs->moveNext(); ?>
+							</td>
+                          </tr>
+                        </table>
+                        <table width="100%" border="0" cellspacing="7" cellpadding="0">
+                          <tr> 
+                            <td width="42%">
+			<a href="javascript:openprogram('club_d.php','hotid=<? echo $dmrs->fields["hotid"]; ?>','content4');">
+			<img src="upload/<? echo $dmrs->fields["picture"]; ?>" width="242" height="182" border="0">
+			</a>
+			<? $dmrs->moveNext(); ?>
+							</td>
+                            <td width="58%">
+			<a href="javascript:openprogram('club_d.php','hotid=<? echo $dmrs->fields["hotid"]; ?>','content4');">
+			<img src="upload/<? echo $dmrs->fields["picture"]; ?>" width="242" height="182" border="0">
+			</a>
+			<? $dmrs->moveNext(); ?>
+							</td>
+                          </tr>
+                        </table></td>
+                    </tr>
+                  </table></td>
+              </tr>
+            </table>
+            
+          </td>
+        </tr>
+      </table></td>
+  </tr>
+</table>

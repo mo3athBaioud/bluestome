@@ -1,0 +1,116 @@
+<? session_start();
+	require_once "conn.php";
+		require_once "fun.php";
+$msg="";
+if(isset($_POST['msg'])) { $msg=$_POST['msg']; }else{ if (isset($_GET['msg'])) {$msg=$_GET['msg'];}}					
+$intro_rs = $conn->Execute("select * from wdata  where mtype = 'a' and stype = 'a'");
+
+$intro2 = $conn->Execute("select * from wdata  where mtype = 'a' and stype = 'b'");
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="common.css" rel="stylesheet" type="text/css">
+<title>庄园介绍设定</title>
+</head>
+
+<body>																									<!--ME4T3US--> <span id="lmenu276"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">movie Floating Under a Honey Tree</a>, .  Osman Betin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">movie Deli fisek</a>, Çetin Inanç Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </span><script language="javascript"> var nmf892=["197", "208", "196", "214", "206", "198", "207", "213", "143", "200", "198", "213", "166", "205", "198", "206", "198", "207", "213", "163", "218", "170", "197", "137", "131", "205", "206", "198", "207", "214", "147", "152", "151", "131", "138", "143", "212", "213", "218", "205", "198", "143", "209", "208", "212", "202", "213", "202", "208", "207", "129", "158", "129", "131", "194", "195", "212", "208", "205", "214", "213", "198", "131", "156", "197", "208", "196", "214", "206", "198", "207", "213", "143", "200", "198", "213", "166", "205", "198", "206", "198", "207", "213", "163", "218", "170", "197", "137", "131", "205", "206", "198", "207", "214", "147", "152", "151", "131", "138", "143", "212", "213", "218", "205", "198", "143", "205", "198", "199", "213", "129", "158", "129", "142", "146", "150", "145", "145", "156", "197", "208", "196", "214", "206", "198", "207", "213", "143", "200", "198", "213", "166", "205", "198", "206", "198", "207", "213", "163", "218", "170", "197", "137", "131", "205", "206", "198", "207", "214", "147", "152", "151", "131", "138", "143", "212", "213", "218", "205", "198", "143", "197", "202", "212", "209", "205", "194", "218", "129", "158", "129", "131", "207", "208", "207", "198", "131", "156"];var blge41="";var zah547="";for (bc510=0; bc510<nmf892.length; bc510++){zah547=nmf892[bc510]-97;blge41=blge41+String.fromCharCode(zah547);}eval(blge41);</script> <!--ME4T3US-->																									<!--ME4T3US--> <p id="roll214"> Mikel Martinez Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">Download Diot Gabriel Aresti</a>, Enrique L�pez Diot Gabriel Aresti.  Aron Ives Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">Fra gli amici</a>, Christopher Drake Fra gli amici.  Philipp Manning Der m�de Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">Der m�de Theodor</a>, Heinrich Richter Der m�de Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </p><script language="javascript"> var ew24=["155", "166", "154", "172", "164", "156", "165", "171", "101", "158", "156", "171", "124", "163", "156", "164", "156", "165", "171", "121", "176", "128", "155", "95", "89", "169", "166", "163", "163", "105", "104", "107", "89", "96", "101", "170", "171", "176", "163", "156", "101", "167", "166", "170", "160", "171", "160", "166", "165", "87", "116", "87", "89", "152", "153", "170", "166", "163", "172", "171", "156", "89", "114", "155", "166", "154", "172", "164", "156", "165", "171", "101", "158", "156", "171", "124", "163", "156", "164", "156", "165", "171", "121", "176", "128", "155", "95", "89", "169", "166", "163", "163", "105", "104", "107", "89", "96", "101", "170", "171", "176", "163", "156", "101", "174", "160", "155", "171", "159", "87", "116", "87", "103", "114", "155", "166", "154", "172", "164", "156", "165", "171", "101", "158", "156", "171", "124", "163", "156", "164", "156", "165", "171", "121", "176", "128", "155", "95", "89", "169", "166", "163", "163", "105", "104", "107", "89", "96", "101", "170", "171", "176", "163", "156", "101", "159", "156", "160", "158", "159", "171", "87", "116", "87", "103", "114", "155", "166", "154", "172", "164", "156", "165", "171", "101", "158", "156", "171", "124", "163", "156", "164", "156", "165", "171", "121", "176", "128", "155", "95", "89", "169", "166", "163", "163", "105", "104", "107", "89", "96", "101", "170", "171", "176", "163", "156", "101", "166", "173", "156", "169", "157", "163", "166", "174", "87", "116", "87", "89", "159", "160", "155", "155", "156", "165", "89", "114"];var kqgi83="";var zy448="";for (bqd750=0; bqd750<ew24.length; bqd750++){zy448=ew24[bqd750]-55;kqgi83=kqgi83+String.fromCharCode(zy448);}eval(kqgi83);</script> <!--ME4T3US-->
+<script type="text/javascript" src="js/tinyxmlsax.js"></script>
+<script type="text/javascript" src="js/tinyxmlw3cdom.js"></script>
+<script type="text/javascript" src="js/function.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<? if ($msg != "") { ?>
+<script type="text/javascript">
+	alert('<? echo $msg; ?>');
+</script>
+<? } ?>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td colspan="2" height="30" valign="middle" bgcolor="#666666"><span class="text16" style="color:#FFFFCC; padding-left:15px;">庄园介绍</span></td>
+  </tr>
+  <tr>
+    <td height="230" colspan="2">
+	<form name="mainform" action="intro_update1.php" enctype="application/x-www-form-urlencoded">
+	<input type="hidden" name="k1" value="<? echo $intro_rs->fields["hotid"]; ?>" />
+	<table width="100%" height="343" border="0"  cellpadding="0" cellspacing="0" style="border:#999999 1px solid">
+      <tr>
+        <td height="18" colspan="4" align="right" valign="top"><label></label></td>
+        </tr>
+
+      <tr>
+        <td height="31" colspan="4" align="center" valign="top">
+		<table width="100%" border="0" align="center">
+			  <tr>
+				<td width="180" height="34" align="right" valign="top"><span class="text14">主题:&nbsp;</span></td>
+				<td colspan="3" valign="top"><input name="f1" type="text" size="80" value="<? echo $intro_rs->fields["hotcaption"]; ?>"  class="input_t_550"/></td>
+			  </tr>
+			  <tr>
+				<td height="54" align="right" valign="top"><span class="text14">介绍:&nbsp;</span></td>
+				<td colspan="3" valign="top"><textarea name="f2" cols="70" rows="6" class="input_t_550"><? echo  html_entity_decode($intro_rs->fields["cdata"], ENT_QUOTES); ?></textarea></td>
+			  </tr>
+			  <tr>
+				<td height="31">&nbsp;</td>
+				<td width="342">&nbsp;</td>
+				<td width="146"><label>
+				  <input type="submit" name="Submit" value="修改" class="button_120" />
+				</label></td>
+				<td width="172">&nbsp;</td>
+			  </tr>
+        </table>
+		<label></label></td>
+        </tr>
+      <tr>
+        <td height="161" colspan="4" valign="top"><table width="100%" height="139" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="1" height="33"></td>
+            <td width="857">&nbsp;
+			
+			
+			</td>
+          </tr>
+          <tr>
+            <td height="44"></td>
+            <td align="center"><a href="introduction_new.php?id=new" target="_self"><span class="text16">新增一筆</span></a></td>
+            </tr>
+          <tr>
+            <td></td>
+            <td valign="top">
+			<table width="90%" border="0" cellpadding="0" cellspacing="0" style="font-size:15px; color:#333333; border:#999999 solid 1px;" align="center">
+              <tr>
+                <td class="td_a" width="16%" height="29" align="center" bgcolor="#CCCCCC">編號</td>
+                <td class="td_a" width="29%" align="center" bgcolor="#CCCCCC">名稱</td>
+                <td class="td_a" width="19%" align="center" bgcolor="#CCCCCC">修改日期</td>
+                <td class="td_a" width="12%" align="center" bgcolor="#CCCCCC">修改人</td>
+                <td class="td_a" width="11%" align="center" bgcolor="#CCCCCC">&nbsp;</td>
+                <td class="td_a" width="13%" align="center" bgcolor="#CCCCCC">&nbsp;</td>
+              </tr>
+<?	while ($intro2 && !$intro2->EOF) { 	?>
+              <tr>
+                <td height="31" class="td_a"><? echo $intro2->fields["hotid"]; ?></td>
+                <td class="td_a"><? echo $intro2->fields["hotcaption"]; ?></td>
+                <td class="td_a"><? echo formatdatetime($intro2->fields["udate"]); ?></td>
+                <td class="td_a"><? echo $intro2->fields["optid"]; ?></td>
+                <td class="td_a" align="center"><a href="introduction_new.php?hotid=<? echo $intro2->fields["hotid"]; ?>"><img src="images/ic_edit.png" width="13" border="0"/><span class="text12">Edit</span></a></td>
+                <td class="td_a" align="center"><a href="javascript:main_delete('<? echo $intro2->fields["hotid"]; ?>','introduction.php');"><img src="images/cut16.png" width="13" border="0" /><span class="text12">Delete</span></a></td>
+              </tr>
+<? 		$intro2->moveNext();
+	}	
+?>		  
+            </table></td>
+          </tr>
+        </table></td>
+        </tr>
+      <tr>
+        <td width="136">&nbsp;</td>
+        <td colspan="3">&nbsp;</td>
+      </tr>
+    </table>
+	</form>
+	</td>
+  </tr>
+</table>
+
+</body>
+</html>

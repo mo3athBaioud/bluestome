@@ -1,0 +1,508 @@
+.footer {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	color: #FC7C1C;
+	text-decoration: none;
+	line-height: 16px;
+}
+.footer a {
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	color: #FC7C1C;
+	text-decoration: none;
+		line-height: 16px;
+}
+.footer a:hover {
+
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	color: #FC7C1C;
+	text-decoration: underline;
+		line-height: 16px;
+}
+
+/*-- 首頁設定 --*/
+.Index_News {
+	font-size: 11px;
+	color: #999999;
+	text-decoration: none;
+	line-height: 16px;
+	font-family: "Arial", "Helvetica", "sans-serif";
+}
+
+.Index_News a {
+	font-size: 11px;
+	color: #999999;
+	text-decoration: none;
+	font-family: "Arial", "Helvetica", "sans-serif";
+}
+
+.Index_News a:hover {
+	font-size: 11px;
+	color: #999999;
+	text-decoration: underline;
+	font-family: "Arial", "Helvetica", "sans-serif";
+	}
+	.Index_News_title {
+	font-size: 12px;
+	color: #F78F1D;
+	text-decoration: none;
+	line-height: 14px;
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-weight: bold;
+}
+
+.Index_News_title a {
+	font-size: 12px;
+	color: #F78F1D;
+	text-decoration: none;
+	font-family: "Arial", "Helvetica", "sans-serif";
+}
+
+.Index_News_title a:hover {
+	font-size: 12px;
+	color: #F78F1D;
+	text-decoration: underline;
+	font-family: "Arial", "Helvetica", "sans-serif";
+	}
+.Index_product {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 12px;
+	color: #A67E43;
+	text-decoration: none;
+	line-height: 18px;
+}
+.newstitle {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 15px;
+	color: #FFFFFF;
+	text-decoration: none;
+	font-weight: bold;
+	padding-top: 2px;
+}
+.newsDate {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	color: #666666;
+	text-decoration: none;
+	line-height: 16px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+
+}
+.newsContext {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 12px;
+	color: #777777;
+	text-decoration: none;
+	line-height: 16px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+.ProductTitle {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 13px;
+	color: FE7F03;
+	text-decoration: none;
+	line-height: 16px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-right: 8px;
+	font-weight: bold;
+	padding-left: 3px;
+
+
+}
+.ProductTitle a {
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 13px;
+	color: #666666;
+	text-decoration: none;
+}
+.ProductTitle a:hover {
+
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 13px;
+	color: #0879C6;
+	text-decoration: underline;
+}
+.ProductContext {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 12px;
+	color: #777777;
+	text-decoration: none;
+	line-height: 18px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 3px;
+}
+.Product2Title {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 13px;
+	color: #0099CC;
+	text-decoration: none;
+	line-height: 16px;
+	font-weight: bold;
+
+
+}
+.Product2Title a {
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 13px;
+	color: #0099CC;
+	text-decoration: none;
+}
+.Product2Title a:hover {
+
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 13px;
+	color: #0066CC;
+	text-decoration: underline;
+}
+.Product2Context {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 13px;
+	color: #FFFFFF;
+	text-decoration: none;
+	line-height: 18px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 3px;
+}
+.ProjectTitle {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 13px;
+	color: #666666;
+	text-decoration: none;
+	line-height: 16px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-right: 8px;
+	font-weight: bold;
+	padding-left: 4px;
+
+
+}
+.ProjectTitle a {
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 13px;
+	color: #666666;
+	text-decoration: none;
+}
+.ProjectTitle a:hover {
+
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 13px;
+	color: #0879C6;
+	text-decoration: underline;
+}
+.ProjectContext {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 12px;
+	color: #777777;
+	text-decoration: none;
+	line-height: 16px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+}
+.ProjectContext a {
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 12px;
+	color: #666666;
+	text-decoration: none;
+}
+.ProjectContext a:hover {
+
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 12px;
+	color: #0879C6;
+	text-decoration: underline;
+}
+.TopContext {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	color: #4D4D4D;
+	text-decoration: none;
+	line-height: 18px;
+}
+.TopContext a {
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	color: #4D4D4D;
+	text-decoration: none;
+}
+.TopContext a:hover {
+
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	color: #F8C013;
+	text-decoration: none;
+}
+
+/*-- 內頁設定 --*/
+.leftmenu {
+	font-size: 12px;
+	color: #ffffff;
+	text-decoration: none;
+	line-height: 14px;
+	font-family: "Arial", "Helvetica", "sans-serif";
+}
+.leftmenu a {
+	font-size: 12px;
+	color: #ffffff;
+	text-decoration: none;
+}
+.leftmenu a:hover {
+	font-size: 12px;
+	color: #FBD100;
+	text-decoration: none;
+}
+.leftmenu2 {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	background-image: url('images/left2.gif');
+	background-repeat: no-repeat;
+	background-position: left top;
+	color: #D2924C;
+	text-decoration: none;
+	display: block;
+	padding-left: 1px;
+
+}
+.menu {
+	font-size: 12px;
+	color: #ffffff;
+	text-decoration: none;
+	line-height: 18px;
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-weight: bold;
+}
+.menu a {
+	font-size: 12px;
+	color: #495F80;
+	text-decoration: none;
+}
+.menu a:hover {
+	font-size: 12px;
+	color: #495F80;
+	text-decoration: none;
+}
+.mainContext10 {
+	font-size: 10px;
+	color: #666666;
+	text-decoration: none;
+	line-height: 11px;
+	font-family: "Arial", "Helvetica", "sans-serif";
+}
+.mainContext11 {
+	font-size: 11px;
+	color: #4D4D4D;
+	text-decoration: none;
+	line-height: 12px;
+	font-family: "Arial", "Helvetica", "sans-serif";
+}
+.mainContext11 a {
+	font-size: 11px;
+	color: #333333;
+	text-decoration: none;
+}
+.mainContext11 a:hover {
+	font-size: 11px;
+	color: #333333;
+	text-decoration: underline;
+}
+.mainContext12 {
+	font-size: 12px;
+	color: #4D4D4D;
+	text-decoration: none;
+	line-height: 14px;
+	font-family: "Arial", "Helvetica", "sans-serif";
+}
+.mainContext12 a {
+	font-size: 12px;
+	color: #4D4D4D;
+	text-decoration: none;
+}
+.mainContext12 a:hover {
+	font-size: 12px;
+	color: #000000;
+	text-decoration: none;
+}
+.mainContext13 {
+	font-size: 13px;
+	color: #333333;
+	text-decoration: none;
+	line-height: 20px;
+	font-family: "Arial", "Helvetica", "sans-serif";
+}
+.mainContext13 a {
+	font-size: 13px;
+	color: #333333;
+	text-decoration: none;
+}
+.mainContext13 a:hover {
+	font-size: 13px;
+	color: #333333;
+	text-decoration: underline;
+}
+.mainContext16 {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 16px;
+	text-decoration: none;
+	line-height: 30px;
+}
+
+.mainContext18 {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 18px;
+	color: #000000;
+	text-decoration: none;
+	line-height: 24px;
+}
+.mainContext20 {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 20px;
+	color: #000000;
+	text-decoration: none;
+	line-height: 24px;
+}
+
+/*-- news --*/
+.news3title {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 15px;
+	color: #A67E43;
+	text-decoration: none;
+	line-height: 16px;
+	padding-top: 2px;
+	font-weight: bold;
+
+}
+.news2title {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	color: #666666;
+	text-decoration: none;
+	line-height: 16px;
+	padding-top: 2px;
+
+}
+.news2title a {
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	color: #666666;	
+	text-decoration: none;
+
+
+}
+.news2title a:hover {
+
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	color: #0066CC;
+	text-decoration: none;
+}
+
+.news2Date {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 12px;
+	color: #ffffff;
+	text-decoration: none;
+	line-height: 16px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+
+}
+.news2Context {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 15px;
+	color: #777777;
+	text-decoration: none;
+	line-height: 20px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.newsline {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #E4E4E4;
+	font-size: 12px;
+	line-height: 18px;
+}
+
+/*-- 表單的設定 --*/
+
+.FormFormat input {
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	background-color: #ffffff;
+	border: 1px solid #AEAEB0;
+	height: 16px;
+	color: #666666;
+
+}
+
+.FormFormat textarea{
+	border: 1px solid #cccccc;
+	color: #CBE17E;
+	background-color: #ffffff;
+}
+.FormFormat select {
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	background-color: #ffffff;
+	color: #666666;
+	border: 1px solid #E1E0E0;
+
+}
+
+.Path {
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	color: #999999;
+	text-decoration: none;
+	line-height: 16px;
+	padding-top: 2px;
+}
+.Path a {
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	color: #999999;
+	text-decoration: none;
+
+}
+.Path a:hover {
+
+
+	font-family: "Arial", "Helvetica", "sans-serif";
+	font-size: 11px;
+	color: #999999;
+	text-decoration: underline;
+	
+}
+.Table_bg {
+	font-size: 12px;
+	color: 4C3C3F;
+	line-height: 18px;
+	background-color: DFECF5;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: BEDAEE;
+}

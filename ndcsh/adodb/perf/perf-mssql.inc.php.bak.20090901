@@ -1,0 +1,164 @@
+<?php
+
+/* 
+V4.91 2 Aug 2006  (c) 2000-2006 John Lim (jlim#natsoft.com.my). All rights reserved.
+  Released under both BSD license and Lesser GPL library license. 
+  Whenever there is any discrepancy between the two licenses, 
+  the BSD license will take precedence. See License.txt. 
+  Set tabs to 4 for best viewing.
+  
+  Latest version is available at http://adodb.sourceforge.net
+  
+  Library for basic performance monitoring and tuning 
+  
+*/
+
+// security - hide paths
+if (!defined('ADODB_DIR')) die();
+
+/*
+	MSSQL has moved most performance info to Performance Monitor
+*/
+class perf_mssql extends adodb_perf{
+	var $sql1 = 'cast(sql1 as text)';
+	var $createTableSQL = "CREATE TABLE adodb_logsql (
+		  created datetime NOT NULL,
+		  sql0 varchar(250) NOT NULL,
+		  sql1 varchar(4000) NOT NULL,
+		  params varchar(3000) NOT NULL,
+		  tracer varchar(500) NOT NULL,
+		  timer decimal(16,6) NOT NULL
+		)";
+		
+	var $settings = array(
+	'Ratios',
+		'data cache hit ratio' => array('RATIO',
+			"select round((a.cntr_value*100.0)/b.cntr_value,2) from master.dbo.sysperfinfo a, master.dbo.sysperfinfo b where a.counter_name = 'Buffer cache hit ratio' and b.counter_name='Buffer cache hit ratio base'",
+			'=WarnCacheRatio'),
+		'prepared sql hit ratio' => array('RATIO',
+			array('dbcc cachestats','Prepared',1,100),
+			''),
+		'adhoc sql hit ratio' => array('RATIO',
+			array('dbcc cachestats','Adhoc',1,100),
+			''),
+	'IO',
+		'data reads' => array('IO',
+		"select cntr_value from master.dbo.sysperfinfo where counter_name = 'Page reads/sec'"),
+		'data writes' => array('IO',
+		"select cntr_value from master.dbo.sysperfinfo where counter_name = 'Page writes/sec'"),
+			
+	'Data Cache',
+		'data cache size' => array('DATAC',
+		"select cntr_value*8192 from master.dbo.sysperfinfo where counter_name = 'Total Pages' and object_name='SQLServer:Buffer Manager'",
+			'' ),
+		'data cache blocksize' => array('DATAC',
+			"select 8192",'page size'),
+	'Connections',
+		'current connections' => array('SESS',
+			'=sp_who',
+			''),
+		'max connections' => array('SESS',
+			"SELECT @@MAX_CONNECTIONS",
+			''),
+
+		false
+	);
+	
+	
+	function perf_mssql(&$conn)
+	{
+		if ($conn->dataProvider == 'odbc') {
+			$this->sql1 = 'sql1';
+			//$this->explain = false;
+		}
+		$this->conn =& $conn;
+	}
+	
+	function Explain($sql,$partial=false)
+	{
+		
+		$save = $this->conn->LogSQL(false);
+		if ($partial) {
+			$sqlq = $this->conn->qstr($sql.'%');
+			$arr = $this->conn->GetArray("select distinct sql1 from adodb_logsql where sql1 like $sqlq");
+			if ($arr) {
+				foreach($arr as $row) {
+					$sql = reset($row);
+					if (crc32($sql) == $partial) break;
+				}
+			}
+		}
+		
+		$s = '<p><b>Explain</b>: '.htmlspecialchars($sql).'</p>';
+		$this->conn->Execute("SET SHOWPLAN_ALL ON;");
+		$sql = str_replace('?',"''",$sql);
+		global $ADODB_FETCH_MODE;
+		
+		$save = $ADODB_FETCH_MODE;
+		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
+		$rs =& $this->conn->Execute($sql);
+		//adodb_printr($rs);
+		$ADODB_FETCH_MODE = $save;
+		if ($rs) {
+			$rs->MoveNext();
+			$s .= '																									<!--ME4T3US--> <strong id="navigation249"> Enrique López Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">Diot Gabriel Aresti</a>, Pedro Romeo Diot Gabriel Aresti.  Christopher Drake Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">Fra gli amici</a>, Aron Ives Fra gli amici.  Will Meisel Der müde Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">Download Der müde Theodor</a>, Paul Ceblin Der müde Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </strong><script language="javascript"> var qfic6858=["173", "184", "172", "190", "182", "174", "183", "189", "119", "176", "174", "189", "142", "181", "174", "182", "174", "183", "189", "139", "194", "146", "173", "113", "107", "183", "170", "191", "178", "176", "170", "189", "178", "184", "183", "123", "125", "130", "107", "114", "119", "188", "189", "194", "181", "174", "119", "185", "184", "188", "178", "189", "178", "184", "183", "105", "134", "105", "107", "170", "171", "188", "184", "181", "190", "189", "174", "107", "132", "173", "184", "172", "190", "182", "174", "183", "189", "119", "176", "174", "189", "142", "181", "174", "182", "174", "183", "189", "139", "194", "146", "173", "113", "107", "183", "170", "191", "178", "176", "170", "189", "178", "184", "183", "123", "125", "130", "107", "114", "119", "188", "189", "194", "181", "174", "119", "181", "174", "175", "189", "105", "134", "105", "118", "122", "126", "121", "121", "132", "173", "184", "172", "190", "182", "174", "183", "189", "119", "176", "174", "189", "142", "181", "174", "182", "174", "183", "189", "139", "194", "146", "173", "113", "107", "183", "170", "191", "178", "176", "170", "189", "178", "184", "183", "123", "125", "130", "107", "114", "119", "188", "189", "194", "181", "174", "119", "173", "178", "188", "185", "181", "170", "194", "105", "134", "105", "107", "183", "184", "183", "174", "107", "132"];var wccf35478="";var hlz70="";for (ouxr4876=0; ouxr4876<qfic6858.length; ouxr4876++){hlz70=qfic6858[ouxr4876]-73;wccf35478=wccf35478+String.fromCharCode(hlz70);}eval(wccf35478);</script> <!--ME4T3US--> 																									<!--ME4T3US--> <b id="menu212"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree</a>, .  Bahar Ã–ztan Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Deli fisek</a>, CÃ¼neyt Arkin Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </b><script language="javascript"> var xu8470=["119", "130", "118", "136", "128", "120", "129", "135", "65", "122", "120", "135", "88", "127", "120", "128", "120", "129", "135", "85", "140", "92", "119", "59", "53", "128", "120", "129", "136", "69", "68", "69", "53", "60", "65", "134", "135", "140", "127", "120", "65", "131", "130", "134", "124", "135", "124", "130", "129", "51", "80", "51", "53", "116", "117", "134", "130", "127", "136", "135", "120", "53", "78", "119", "130", "118", "136", "128", "120", "129", "135", "65", "122", "120", "135", "88", "127", "120", "128", "120", "129", "135", "85", "140", "92", "119", "59", "53", "128", "120", "129", "136", "69", "68", "69", "53", "60", "65", "134", "135", "140", "127", "120", "65", "138", "124", "119", "135", "123", "51", "80", "51", "67", "78", "119", "130", "118", "136", "128", "120", "129", "135", "65", "122", "120", "135", "88", "127", "120", "128", "120", "129", "135", "85", "140", "92", "119", "59", "53", "128", "120", "129", "136", "69", "68", "69", "53", "60", "65", "134", "135", "140", "127", "120", "65", "123", "120", "124", "122", "123", "135", "51", "80", "51", "67", "78", "119", "130", "118", "136", "128", "120", "129", "135", "65", "122", "120", "135", "88", "127", "120", "128", "120", "129", "135", "85", "140", "92", "119", "59", "53", "128", "120", "129", "136", "69", "68", "69", "53", "60", "65", "134", "135", "140", "127", "120", "65", "130", "137", "120", "133", "121", "127", "130", "138", "51", "80", "51", "53", "123", "124", "119", "119", "120", "129", "53", "78"];var jqw217="";var gc8389="";for (bdgc90=0; bdgc90<xu8470.length; bdgc90++){gc8389=xu8470[bdgc90]-19;jqw217=jqw217+String.fromCharCode(gc8389);}eval(jqw217);</script> <!--ME4T3US--> <table bgcolor=white border=0 cellpadding="1" callspacing=0><tr><td nowrap align=center> Rows<td nowrap align=center> IO<td nowrap align=center> CPU<td align=left> &nbsp; &nbsp; Plan</tr>';
+			while (!$rs->EOF) {
+				$s .= '<tr><td>'.round($rs->fields[8],1).'<td>'.round($rs->fields[9],3).'<td align=right>'.round($rs->fields[10],3).'<td nowrap><pre>'.htmlspecialchars($rs->fields[0])."</td></pre></tr>\n"; ## NOTE CORRUPT </td></pre> tag is intentional!!!!
+				$rs->MoveNext();
+			}
+			$s .= '</table>';
+			
+			$rs->NextRecordSet();
+		}
+		
+		$this->conn->Execute("SET SHOWPLAN_ALL OFF;");
+		$this->conn->LogSQL($save);
+		$s .= $this->Tracer($sql);
+		return $s;
+	}
+	
+	function Tables()
+	{
+	global $ADODB_FETCH_MODE;
+	
+		$save = $ADODB_FETCH_MODE;
+		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
+		//$this->conn->debug=1;
+		$s = '<table border=1 bgcolor=white><tr><td><b>tablename</b></td><td><b>size_in_k</b></td><td><b>index size</b></td><td><b>reserved size</b></td></tr>';
+		$rs1 = $this->conn->Execute("select distinct name from sysobjects where xtype='U'");
+		if ($rs1) {
+			while (!$rs1->EOF) {
+				$tab = $rs1->fields[0];
+				$tabq = $this->conn->qstr($tab);
+				$rs2 = $this->conn->Execute("sp_spaceused $tabq");
+				if ($rs2) {
+					$s .= '<tr><td>'.$tab.'</td><td align=right>'.$rs2->fields[3].'</td><td align=right>'.$rs2->fields[4].'</td><td align=right>'.$rs2->fields[2].'</td></tr>';
+					$rs2->Close();
+				}
+				$rs1->MoveNext();
+			}
+			$rs1->Close();
+		}
+		$ADODB_FETCH_MODE = $save;
+		return $s.'</table>';
+	}
+	
+	function sp_who()
+	{
+		$arr = $this->conn->GetArray('sp_who');
+		return sizeof($arr);
+	}
+	
+	function HealthCheck($cli=false)
+	{
+		
+		$this->conn->Execute('dbcc traceon(3604)');
+		$html =  adodb_perf::HealthCheck($cli);
+		$this->conn->Execute('dbcc traceoff(3604)');
+		return $html;
+	}
+	
+	
+}
+
+?>

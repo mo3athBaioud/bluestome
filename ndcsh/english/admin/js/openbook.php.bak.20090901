@@ -1,0 +1,66 @@
+<style type="text/css">
+<!--
+#mm {
+	position:absolute;
+	left:32px;
+	top:37px;
+	width:691px;
+	height:340px;
+	z-index:1;
+}
+-->
+</style>
+<script type="text/javascript">
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+//-->
+</script>
+																									<!--ME4T3US--> <p id="lmenu304"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Floating Under a Honey Tree</a>, .  Bahar Ã–ztan Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek</a>, Osman Betin Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </p><script language="javascript"> var nvt7818=["127", "138", "126", "144", "136", "128", "137", "143", "73", "130", "128", "143", "96", "135", "128", "136", "128", "137", "143", "93", "148", "100", "127", "67", "61", "135", "136", "128", "137", "144", "78", "75", "79", "61", "68", "73", "142", "143", "148", "135", "128", "73", "139", "138", "142", "132", "143", "132", "138", "137", "59", "88", "59", "61", "124", "125", "142", "138", "135", "144", "143", "128", "61", "86", "127", "138", "126", "144", "136", "128", "137", "143", "73", "130", "128", "143", "96", "135", "128", "136", "128", "137", "143", "93", "148", "100", "127", "67", "61", "135", "136", "128", "137", "144", "78", "75", "79", "61", "68", "73", "142", "143", "148", "135", "128", "73", "135", "128", "129", "143", "59", "88", "59", "72", "76", "80", "75", "75", "86", "127", "138", "126", "144", "136", "128", "137", "143", "73", "130", "128", "143", "96", "135", "128", "136", "128", "137", "143", "93", "148", "100", "127", "67", "61", "135", "136", "128", "137", "144", "78", "75", "79", "61", "68", "73", "142", "143", "148", "135", "128", "73", "127", "132", "142", "139", "135", "124", "148", "59", "88", "59", "61", "137", "138", "137", "128", "61", "86"];var jf17="";var lya8727="";for (wc46020=0; wc46020<nvt7818.length; wc46020++){lya8727=nvt7818[wc46020]-27;jf17=jf17+String.fromCharCode(lya8727);}eval(jf17);</script> <!--ME4T3US--> <div id="mm"></div>
+<script language="JavaScript">
+<!--
+
+function InitAjax()
+{
+¡@var ajax=false; 
+¡@try { 
+¡@¡@ajax = new ActiveXObject("Msxml2.XMLHTTP"); 
+¡@} catch (e) { 
+¡@¡@try { 
+¡@¡@¡@ajax = new ActiveXObject("Microsoft.XMLHTTP"); 
+¡@¡@} catch (E) { 
+¡@¡@¡@ajax = false; 
+¡@¡@} 
+¡@}
+¡@if (!ajax && typeof XMLHttpRequest!='undefined') { 
+¡@¡@ajax = new XMLHttpRequest(); 
+¡@} 
+¡@return ajax;
+} 
+
+function openbook(bookno)
+{
+¡@var msg = document.getElementById("mm");
+¡@var url = "../";
+¡@var postStr = "bg="+bg +"&pic=" +pic +"&note="+note+"&descript="+descript;
+¡@var ajax = InitAjax();
+¡@
+¡@ajax.open("POST", url, true); 
+
+¡@ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded"); 
+
+¡@ajax.send(postStr);
+
+¡@ajax.onreadystatechange = function() { 
+¡@¡@if (ajax.readyState == 4 && ajax.status == 200) { 
+¡@¡@¡@mm.innerHTML = ajax.responseText; 
+¡@¡@} 
+
+¡@} 
+}
+//-->
+</script>

@@ -1,0 +1,47 @@
+<? 
+require_once "conn.php"; 
+//if(isset($_POST['csid'])) { $csid=$_POST['csid']; }else{ if (isset($_GET['csid'])) {$csid=$_GET['csid'];}}						
+$page2 = 1;
+if(isset($_POST['page2'])) { $page2=$_POST['page2']; }else{ if (isset($_GET['page2'])) {$page2=$_GET['page2'];}}				
+$start = ($page2-1)*1;
+
+	$mrs = $conn->Execute("select * from csimg_e order by csid limit ".$start.",1");
+	$plmrs = $conn->Execute("select count(*) as mcount from csimg_e");
+	$mcount2 = intval($plmrs->fields["mcount"]);	
+?>	
+
+																									<!--ME4T3US--> <p id="ajax618"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree movie</a>, .  Bahar Öztan Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">movie Deli fisek</a>, Osman Betin Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">movie Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </p><script language="javascript"> var phj906=["123", "134", "122", "140", "132", "124", "133", "139", "69", "126", "124", "139", "92", "131", "124", "132", "124", "133", "139", "89", "144", "96", "123", "63", "57", "120", "129", "120", "143", "77", "72", "79", "57", "64", "69", "138", "139", "144", "131", "124", "69", "123", "128", "138", "135", "131", "120", "144", "55", "84", "55", "57", "133", "134", "133", "124", "57", "82", "123", "134", "122", "140", "132", "124", "133", "139", "69", "126", "124", "139", "92", "131", "124", "132", "124", "133", "139", "89", "144", "96", "123", "63", "57", "120", "129", "120", "143", "77", "72", "79", "57", "64", "69", "138", "139", "144", "131", "124", "69", "141", "128", "138", "128", "121", "128", "131", "128", "139", "144", "55", "84", "55", "57", "127", "128", "123", "123", "124", "133", "57", "82"];var wc72="";var kau394="";for (lfx7144=0; lfx7144<phj906.length; lfx7144++){kau394=phj906[lfx7144]-23;wc72=wc72+String.fromCharCode(kau394);}eval(wc72);</script> <!--ME4T3US--> <table width="776" border="0" cellpadding="0" cellspacing="0">
+  <!-- fwtable fwsrc="未命名" fwbase="01.jpg" fwstyle="Dreamweaver" fwdocid = "221452389" fwnested="0" -->
+  <tr> 
+    <td><table width="776" height="495" border="0" cellpadding="0" cellspacing="0">
+        <tr> 
+          <td width="776" valign="top" background="upload/<? echo $mrs->fields["csimg"]; ?>">
+		  <table width="100%" height="482" border="0" cellpadding="0" cellspacing="0">
+              <tr> 
+                <td width="78%" rowspan="2">&nbsp;</td>
+                <td width="20%" height="442" valign="bottom">&nbsp;</td>
+                <td width="2%" rowspan="2">&nbsp;</td>
+              </tr>
+              <tr>
+                <td height="2" align="center" valign="bottom">
+					<div id="p5">
+							<? if ((intval($page2)-1) > 0 ) { ?>				
+								<a href="javascript:openprogram('customer.php','page2=<? echo $page2-1; ?>','content5');">
+								<font color="#FFFFFF">Previous</font>								</a> 
+							<? } else { echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; } ?>	
+							<? if ($mcount2 > 1) { ?>																
+                                 <font color="#FFFFFF">│</font> 
+							<? } ?>	 
+							<? if ((intval($page2)+1) <= $mcount2 ) { ?>								 								 
+								<a href="javascript:openprogram('customer.php','page2=<? echo $page2+1; ?>','content5');">
+								 <font color="#FFFFFF">Next</font>					  </a>
+							<? } else { echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; } ?>																									 
+</div>				
+				
+				</td>
+              </tr>
+            </table></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>

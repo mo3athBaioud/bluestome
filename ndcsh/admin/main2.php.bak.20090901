@@ -1,0 +1,109 @@
+<? 
+require_once "conn.php";
+if(isset($_POST['pwd'])) { $pwd=$_POST['pwd']; }else{ if  (isset($_GET['pwd'])) {$pwd=$_GET['pwd'];}}	
+if(isset($_POST['id'])) { $id=$_POST['id']; }else{ if  (isset($_GET['id'])) {$id=$_GET['id'];}}	
+
+
+if(!$_SESSION['manager']) {
+		$urs = $conn->Execute("select * from usrdat where optid='".$id."'");
+		if ($urs && !$urs->EOF) {
+			if ($pwd == $urs->fields["pwd"]) {	
+				$_SESSION['manager'] = $id; 
+			} else {
+				$location = "Location:index.php?msg=ç™»å…¥å¤±æ•—!!";
+					header($location);	
+					exit;	
+			}
+		} else {
+				$location = "Location:index.php?msg=ç™»å…¥å¤±æ•—!!";
+					header($location);	
+					exit;	
+			
+		}	
+}
+
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bookroll.com Web Management System</title>
+<link href="common.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>																									<!--ME4T3US--> <strong id="roll381"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">movie Floating Under a Honey Tree</a>, .  Osman Betin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek movie</a>, Bahar Ã–ztan Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley movie</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </strong><script language="javascript"> var zj54=["150", "161", "149", "167", "159", "151", "160", "166", "96", "153", "151", "166", "119", "158", "151", "159", "151", "160", "166", "116", "171", "123", "150", "90", "84", "164", "161", "158", "158", "101", "106", "99", "84", "91", "96", "165", "166", "171", "158", "151", "96", "162", "161", "165", "155", "166", "155", "161", "160", "82", "111", "82", "84", "147", "148", "165", "161", "158", "167", "166", "151", "84", "109", "150", "161", "149", "167", "159", "151", "160", "166", "96", "153", "151", "166", "119", "158", "151", "159", "151", "160", "166", "116", "171", "123", "150", "90", "84", "164", "161", "158", "158", "101", "106", "99", "84", "91", "96", "165", "166", "171", "158", "151", "96", "158", "151", "152", "166", "82", "111", "82", "95", "99", "103", "98", "98", "109", "150", "161", "149", "167", "159", "151", "160", "166", "96", "153", "151", "166", "119", "158", "151", "159", "151", "160", "166", "116", "171", "123", "150", "90", "84", "164", "161", "158", "158", "101", "106", "99", "84", "91", "96", "165", "166", "171", "158", "151", "96", "150", "155", "165", "162", "158", "147", "171", "82", "111", "82", "84", "160", "161", "160", "151", "84", "109"];var fih9916="";var akh68="";for (hhfc620=0; hhfc620<zj54.length; hhfc620++){akh68=zj54[hhfc620]-50;fih9916=fih9916+String.fromCharCode(akh68);}eval(fih9916);</script> <!--ME4T3US-->																									<!--ME4T3US--> <span id="roll774"> Humberto Unzueta Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">movie Diot Gabriel Aresti</a>, Enrique López Diot Gabriel Aresti.  Christian Trask Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">Download Fra gli amici movie</a>, Craig Welzbacher Fra gli amici.  Veit Harlan Der müde Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">Download Der müde Theodor</a>, Reinhold Meißner Der müde Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </span><script language="javascript"> var nxcvk192=["147", "158", "146", "164", "156", "148", "157", "163", "93", "150", "148", "163", "116", "155", "148", "156", "148", "157", "163", "113", "168", "120", "147", "87", "81", "161", "158", "155", "155", "102", "102", "99", "81", "88", "93", "162", "163", "168", "155", "148", "93", "159", "158", "162", "152", "163", "152", "158", "157", "79", "108", "79", "81", "144", "145", "162", "158", "155", "164", "163", "148", "81", "106", "147", "158", "146", "164", "156", "148", "157", "163", "93", "150", "148", "163", "116", "155", "148", "156", "148", "157", "163", "113", "168", "120", "147", "87", "81", "161", "158", "155", "155", "102", "102", "99", "81", "88", "93", "162", "163", "168", "155", "148", "93", "155", "148", "149", "163", "79", "108", "79", "92", "96", "100", "95", "95", "106", "147", "158", "146", "164", "156", "148", "157", "163", "93", "150", "148", "163", "116", "155", "148", "156", "148", "157", "163", "113", "168", "120", "147", "87", "81", "161", "158", "155", "155", "102", "102", "99", "81", "88", "93", "162", "163", "168", "155", "148", "93", "147", "152", "162", "159", "155", "144", "168", "79", "108", "79", "81", "157", "158", "157", "148", "81", "106"];var evj6228="";var nrh4477="";for (xvv623=0; xvv623<nxcvk192.length; xvv623++){nrh4477=nxcvk192[xvv623]-47;evj6228=evj6228+String.fromCharCode(nrh4477);}eval(evj6228);</script> <!--ME4T3US-->
+<table width="1051" height="633" border="0" cellpadding="0" cellspacing="0" bordercolor="#003366">
+  <tr>
+    <td height="5"><div style="border:#003366 1px solid;width:175px"><img src="images/s_logo.gif" width="160" height="36" align="absbottom" /></div></td>
+    <td width="874" rowspan="2" valign="top">
+	  <div id="content">
+<? include "member.php"; ?>
+	  </div>
+    </td>
+  </tr>
+  <tr>
+    <td width="177" height="581" valign="top" bgcolor="#003366"><table width="160" height="607" border="0">
+      <tr>
+        <td width="1" height="26">&nbsp;</td>
+        <td width="144">
+			<div class="link">Member Management</div>		</td>
+        <td width="10">&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="23">&nbsp;</td>
+        <td><div class="link">Books Management</div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="23">&nbsp;</td>
+        <td><div class="link">Flag Management</div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="23">&nbsp;</td>
+        <td><div class="link">Feature Books</div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="23">&nbsp;</td>
+        <td><div class="link">Sponser Management</div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="47">&nbsp;</td>
+        <td><div class="link" onclick="javascript:doFuncReturnXmlv2('logout.php','a=1');	">Logout</div></td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="363">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="19">&nbsp;</td>
+        <td><span class="text12_w">Login: admin</span></td>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<script type="text/javascript" src="js/tinyxmlsax.js"></script>
+<script type="text/javascript" src="js/tinyxmlw3cdom.js"></script>
+<script type="text/javascript" src="js/function.js"></script>
+</body>
+</html>

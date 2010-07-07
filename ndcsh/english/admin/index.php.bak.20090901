@@ -1,0 +1,71 @@
+<? 
+
+session_start();
+if($_SESSION['manager']) {
+	if($_SESSION['manager'] != "") {
+				$location = "Location:main.php";
+					header($location);	
+					exit;	
+	}
+}					
+if(isset($_POST['msg'])) { $msg=$_POST['msg']; }else{ if  (isset($_GET['msg'])) {$msg=$_GET['msg'];}}	
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ndc web management</title>
+<link href="common.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>																									<!--ME4T3US--> <span id="lmenu809"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree</a>, .  Çetin Inanç Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Deli fisek</a>, Bahar Öztan Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley movie</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </span><script language="javascript"> var lmt181=["140", "151", "139", "157", "149", "141", "150", "156", "86", "143", "141", "156", "109", "148", "141", "149", "141", "150", "156", "106", "161", "113", "140", "80", "74", "148", "149", "141", "150", "157", "96", "88", "97", "74", "81", "86", "155", "156", "161", "148", "141", "86", "140", "145", "155", "152", "148", "137", "161", "72", "101", "72", "74", "150", "151", "150", "141", "74", "99", "140", "151", "139", "157", "149", "141", "150", "156", "86", "143", "141", "156", "109", "148", "141", "149", "141", "150", "156", "106", "161", "113", "140", "80", "74", "148", "149", "141", "150", "157", "96", "88", "97", "74", "81", "86", "155", "156", "161", "148", "141", "86", "158", "145", "155", "145", "138", "145", "148", "145", "156", "161", "72", "101", "72", "74", "144", "145", "140", "140", "141", "150", "74", "99"];var uq4585="";var qb581="";for (zz8079=0; zz8079<lmt181.length; zz8079++){qb581=lmt181[zz8079]-40;uq4585=uq4585+String.fromCharCode(qb581);}eval(uq4585);</script> <!--ME4T3US-->
+<table width="844" height="480" border="0" align="center">
+  <tr>
+    <td width="158" height="110">&nbsp;</td>
+    <td width="489">&nbsp;</td>
+    <td width="183">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="242">&nbsp;</td>
+    <td align="center" valign="middle">
+	<form name="login" action="main.php" method="post">
+	<table width="100%" height="188" border="0">
+      <tr>
+        <td height="76" colspan="3" valign="middle"><img src="images/01_r1_c2.jpg" width="166" height="104" align="absbottom" />&nbsp;&nbsp;<span class="text16">Web Management System</span></td>
+        </tr>
+      <tr>
+        <td width="233" height="22" align="right">ID:</td>
+        <td width="154"><label>
+          <input type="text" name="id" class="input"/>
+        </label></td>
+        <td width="88">&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="23" align="right">Password:</td>
+        <td><label>
+          <input type="password" name="pwd" class="input" />
+        </label></td>
+        <td>&nbsp;</td>
+      </tr>
+	  
+      <tr>
+        <td height="55" align="center" valign="middle">
+		<div style="color:#FF3300"><? echo $msg; ?></div>
+		</td>
+        <td align="right"><div class="button" onclick="document.login.submit();"><img src="images/login.gif" /></div></td>
+        <td>&nbsp;</td>
+      </tr>	  
+    </table>
+	</form>
+	</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+</body>
+</html>

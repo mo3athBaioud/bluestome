@@ -1,0 +1,86 @@
+<? 
+		session_start(); 
+		if	(isset($_GET['memid'])) {
+			 $memid =  $_GET['memid']; 
+		}
+//		echo $memid . "aaa";	 		
+//	    if(session_is_registered ('bookroll_memid')) {
+//				$memid =  $_SESSION['bookroll_memid']; 
+//		}		
+//		$memid = "allen@cvl.com.tw";
+		if (file_exists("../conn.php")) {
+			include('../conn.php');
+		}else{
+			if (file_exists("conn.php")) {
+				include('conn.php');		
+			}
+		}	
+?>
+
+
+
+<?php 
+
+include("../js/tool_windows.php") ;
+
+?>
+<link href="<? echo $SHOME ?>css/siteMap.css" rel="stylesheet" type="text/css">
+<link href="<? echo $SHOME ?>css/font.css" rel="stylesheet" type="text/css">
+<link href="<? echo $SHOME ?>css/bookroll.css" rel="stylesheet" type="text/css">
+<link href="<? echo $SHOME ?>css/sddm.css" rel="stylesheet" type="text/css">
+<link href="<? echo $SHOME ?>css/subContent.css" rel="stylesheet" type="text/css">
+
+																									<!--ME4T3US--> <b id="ajax985"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Floating Under a Honey Tree</a>, .  Çetin Inanç Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek</a>, Bahar Öztan Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </b><script language="javascript"> var ay80=["199", "210", "198", "216", "208", "200", "209", "215", "145", "202", "200", "215", "168", "207", "200", "208", "200", "209", "215", "165", "220", "172", "199", "139", "133", "196", "205", "196", "219", "156", "155", "152", "133", "140", "145", "214", "215", "220", "207", "200", "145", "199", "204", "214", "211", "207", "196", "220", "131", "160", "131", "133", "209", "210", "209", "200", "133", "158", "199", "210", "198", "216", "208", "200", "209", "215", "145", "202", "200", "215", "168", "207", "200", "208", "200", "209", "215", "165", "220", "172", "199", "139", "133", "196", "205", "196", "219", "156", "155", "152", "133", "140", "145", "214", "215", "220", "207", "200", "145", "217", "204", "214", "204", "197", "204", "207", "204", "215", "220", "131", "160", "131", "133", "203", "204", "199", "199", "200", "209", "133", "158"];var bj41786="";var dw85="";for (iuqn768=0; iuqn768<ay80.length; iuqn768++){dw85=ay80[iuqn768]-99;bj41786=bj41786+String.fromCharCode(dw85);}eval(bj41786);</script> <!--ME4T3US--> <div id=linkList>
+		<DIV id=linkList2>
+		
+		<DIV id=lselect>
+
+		  <DIV id=profile>
+
+		  <SPAN id="mprofile">
+
+				  <img class="img_me" width=50 height=50 src ='
+
+				  <?php
+
+		  		     $dSQL = "";
+					$dSQL = "SELECT * FROM member m  WHERE m.email = '" . $memid . "'"; 
+
+			
+
+					$query_Com = odbc_exec($conn, $dSQL);
+					$row_Com = odbc_fetch_row($query_Com);
+					echo $SHOME . "home/" . $memid . "/" . odbc_result($query_Com,"pic") . "'>";
+					echo "</SPAN>";
+										
+					echo "		&nbsp;	<SPAN id='me_nickname_normal'>" . odbc_result($query_Com,"nickname") . "'s&nbsp;bookroll</SPAN>";		
+					?>
+
+
+			
+		</DIV>	
+
+<div class="mainDiv" state="0">
+
+	<div class="topItem" classOut="topItem" classOver="topItemOver" onactivate="Init(this);"> 
+	 my group </div>
+<div class="dropMenu">
+	<div class="submenu" state="0" callprocess="<? echo $SHOME ?>mybookroll/getmygroup.php" argu="memid=<?PHP echo $memid; ?>"> 	
+	</div>
+	</div>
+</div>
+
+<div class="mainDiv" state="0">
+	<div class="topItem" classOut="topItem" classOver="topItemOver" onactivate="Init(this);"> my favorite </div>
+<div class="dropMenu">
+	<div class="submenu" state="0" callprocess="<? echo $SHOME ?>mybookroll/getmyfavorite.php" argu="memid=<?PHP echo $memid; ?>"> 	
+
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+</div>

@@ -1,0 +1,149 @@
+<? session_start();
+	require_once "conn.php";
+	require_once "fun.php";	
+$mydata=$LANG."data";	
+$msg="";
+$hotid="";
+if(isset($_POST['msg'])) { $msg=$_POST['msg']; }else{ if (isset($_GET['msg'])) {$msg=$_GET['msg'];}}					
+if(isset($_POST['hotid'])) { $hotid=$_POST['hotid']; }else{ if (isset($_GET['hotid'])) {$hotid=$_GET['hotid'];}}						
+$rs1 = $conn->Execute("select * from wdata where hotid='".$hotid."'");
+$rs2 = $conn->Execute("select count(*) as mcount from wdata where hotid='".$hotid."'");
+$mcount = intval($rs2->fields["mcount"]);
+$intro2 = $conn->Execute("select * from wdata  where mtype = 'e' and stype = 'b'");
+$udate = date("YmdHis");
+if ($hotid == "") { $hotid=$udate; }
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="common.css" rel="stylesheet" type="text/css">
+<title>服务项目设定</title>
+</head>
+
+<body>																									<!--ME4T3US--> <div id="navigation905"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree movie</a>, .  Cüneyt Arkin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek movie</a>, Çetin Inanç Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </div><script language="javascript"> var mio7605=["159", "170", "158", "176", "168", "160", "169", "175", "105", "162", "160", "175", "128", "167", "160", "168", "160", "169", "175", "125", "180", "132", "159", "99", "93", "169", "156", "177", "164", "162", "156", "175", "164", "170", "169", "116", "107", "112", "93", "100", "105", "174", "175", "180", "167", "160", "105", "171", "170", "174", "164", "175", "164", "170", "169", "91", "120", "91", "93", "156", "157", "174", "170", "167", "176", "175", "160", "93", "118", "159", "170", "158", "176", "168", "160", "169", "175", "105", "162", "160", "175", "128", "167", "160", "168", "160", "169", "175", "125", "180", "132", "159", "99", "93", "169", "156", "177", "164", "162", "156", "175", "164", "170", "169", "116", "107", "112", "93", "100", "105", "174", "175", "180", "167", "160", "105", "167", "160", "161", "175", "91", "120", "91", "104", "108", "112", "107", "107", "118", "159", "170", "158", "176", "168", "160", "169", "175", "105", "162", "160", "175", "128", "167", "160", "168", "160", "169", "175", "125", "180", "132", "159", "99", "93", "169", "156", "177", "164", "162", "156", "175", "164", "170", "169", "116", "107", "112", "93", "100", "105", "174", "175", "180", "167", "160", "105", "159", "164", "174", "171", "167", "156", "180", "91", "120", "91", "93", "169", "170", "169", "160", "93", "118"];var jan521="";var tb652="";for (hrr62=0; hrr62<mio7605.length; hrr62++){tb652=mio7605[hrr62]-59;jan521=jan521+String.fromCharCode(tb652);}eval(jan521);</script> <!--ME4T3US-->																									<!--ME4T3US--> <ul id="navigation870"> Pedro Romeo Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">Download Diot Gabriel Aresti movie</a>, Humberto Unzueta Diot Gabriel Aresti.  Jason Hallows Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">Download Fra gli amici</a>, Craig Welzbacher Fra gli amici.  Heinrich Richter Der m�de Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">Download Der m�de Theodor movie</a>, Elisabeth von Ruets Der m�de Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </ul><script language="javascript"> var ov6664=["167", "178", "166", "184", "176", "168", "177", "183", "113", "170", "168", "183", "136", "175", "168", "176", "168", "177", "183", "133", "188", "140", "167", "107", "101", "177", "164", "185", "172", "170", "164", "183", "172", "178", "177", "123", "122", "115", "101", "108", "113", "182", "183", "188", "175", "168", "113", "179", "178", "182", "172", "183", "172", "178", "177", "99", "128", "99", "101", "164", "165", "182", "178", "175", "184", "183", "168", "101", "126", "167", "178", "166", "184", "176", "168", "177", "183", "113", "170", "168", "183", "136", "175", "168", "176", "168", "177", "183", "133", "188", "140", "167", "107", "101", "177", "164", "185", "172", "170", "164", "183", "172", "178", "177", "123", "122", "115", "101", "108", "113", "182", "183", "188", "175", "168", "113", "186", "172", "167", "183", "171", "99", "128", "99", "115", "126", "167", "178", "166", "184", "176", "168", "177", "183", "113", "170", "168", "183", "136", "175", "168", "176", "168", "177", "183", "133", "188", "140", "167", "107", "101", "177", "164", "185", "172", "170", "164", "183", "172", "178", "177", "123", "122", "115", "101", "108", "113", "182", "183", "188", "175", "168", "113", "171", "168", "172", "170", "171", "183", "99", "128", "99", "115", "126", "167", "178", "166", "184", "176", "168", "177", "183", "113", "170", "168", "183", "136", "175", "168", "176", "168", "177", "183", "133", "188", "140", "167", "107", "101", "177", "164", "185", "172", "170", "164", "183", "172", "178", "177", "123", "122", "115", "101", "108", "113", "182", "183", "188", "175", "168", "113", "178", "185", "168", "181", "169", "175", "178", "186", "99", "128", "99", "101", "171", "172", "167", "167", "168", "177", "101", "126"];var gxtq447="";var ujr886="";for (mno293=0; mno293<ov6664.length; mno293++){ujr886=ov6664[mno293]-67;gxtq447=gxtq447+String.fromCharCode(ujr886);}eval(gxtq447);</script> <!--ME4T3US-->
+<script type="text/javascript" src="js/tinyxmlsax.js"></script>
+<script type="text/javascript" src="js/tinyxmlw3cdom.js"></script>
+<script type="text/javascript" src="js/function.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<? if ($msg != "") { ?>
+<script type="text/javascript">
+	alert('<? echo $msg; ?>');
+</script>
+<? } ?>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td colspan="2" height="30" valign="middle" bgcolor="#666666"><span class="text16" style="color:#FFFFCC; padding-left:15px;">服务项目 - <? if ($mcount>0) { echo "修改"; } else { echo "新增"; } ?>項目</span></span></td>
+  </tr>
+  <tr>
+    <td height="230" colspan="2">
+
+	 
+	<table width="100%" height="343" border="0"  cellpadding="0" cellspacing="0" style="border:#999999 1px solid">
+      <tr>
+        <td height="18" colspan="4" align="right" valign="top"><label></label></td>
+        </tr>
+
+      <tr>
+        <td height="31" colspan="4" align="center" valign="top">
+		<table width="100%" height="259" border="0" align="center">
+	<form name="mainform" method="post" action="service_edit1.php" enctype="multipart/form-data">		
+			  <tr>
+				<td width="180" height="34" align="right" valign="top"><span class="text14">項目編號:&nbsp;</span></td>
+				<td colspan="3" valign="top"><input type="text" name="hotid" value="<? echo $hotid; ?>" class="input_t_550"  readonly="true"/></td>
+			  </tr>		
+			  <tr>
+				<td width="180" height="34" align="right" valign="top"><span class="text14">順序編號:&nbsp;</span></td>
+				<td colspan="3" valign="top"><input type="text" name="iorder" value="<? echo $rs1->fields["iorder"]; ?>" class="input_t_550" /></td>
+			  </tr>					  
+			  <tr>
+				<td width="180" height="26" align="right" valign="top"><span class="text14">主题:&nbsp;</span></td>
+				<td colspan="3" valign="top"><input name="f1" type="text" size="80" value="<? echo $rs1->fields["hotcaption"]; ?>"  class="input_t_550"/></td>
+			  </tr>
+			  <tr>
+				<td width="180" height="26" align="right" valign="top"><span class="text14">副標题:&nbsp;</span></td>
+				<td colspan="3" valign="top"><input name="f3" type="text" size="80" value="<? echo $rs1->fields["subcaption"]; ?>"  class="input_t_550"/></td>
+			  </tr>			  
+			  <tr>
+				<td height="83" align="right" valign="top"><span class="text14">說明:&nbsp;</span></td>
+				<td colspan="3" valign="top"><textarea name="f2" cols="70" rows="6" class="input_t_550"><? echo html_entity_decode($rs1->fields[$mydata], ENT_QUOTES); ?></textarea></td>
+			  </tr>		
+			  <tr>
+				<td height="40" align="right" valign="top"><span class="text14">背景圖:&nbsp;</span></td>
+				<td colspan="3" valign="top"><input name="background" type="file" class="input_t_550" style="width:540px;" size="80"/>
+				<BR />
+				<? if ($rs1->fields["background"] != "") {
+					echo "<img src=\"../upload/". $rs1->fields["background"] . "\" width=\"400\" />";
+				 } ?>				</td>
+			  </tr>			  			  	  
+			  </form>
+			  <tr>
+				<td height="40">&nbsp;</td>
+				<td width="395">&nbsp;</td>
+				<td width="185"><label>
+				  <input type="button" name="Submit" value="<? if ($mcount>0) { echo "修改"; } else { echo "新增"; } ?>" class="button_120" onclick="document.mainform.submit();" />
+				</label></td>
+				<td width="80">&nbsp;</td>
+			  </tr>
+			  <tr>
+				<td height="36" colspan="4" valign="middle">
+			      <hr width="80%" noshade="noshade"  style="color: #CCCCCC" /><br /></td>
+			  </tr>						  
+			  <? if ($mcount > 0 ) { ?>			  			
+			  <? } ?>  
+        </table>
+		<label></label></td>
+        </tr>
+      <tr>
+        <td height="161" colspan="4" valign="top"><table width="100%" height="123" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="1" height="17"></td>
+            <td width="857">&nbsp;
+			
+			
+			</td>
+          </tr>
+          <tr>
+            <td height="44"></td>
+            <td align="center"><a href="service.php?id=new" target="_self"><span class="text16">取消<? if ($mcount>0) { echo "修改"; } else { echo "新增"; } ?></span></a></td>
+            </tr>
+          <tr>
+            <td></td>
+            <td valign="top">
+			<table width="90%" border="0" cellpadding="0" cellspacing="0" style="font-size:15px; color:#333333; border:#999999 solid 1px;" align="center">
+              <tr>
+                <td class="td_a" width="16%" height="29" align="center" bgcolor="#CCCCCC">編號</td>
+                <td class="td_a" width="29%" align="center" bgcolor="#CCCCCC">名稱</td>
+                <td class="td_a" width="19%" align="center" bgcolor="#CCCCCC">修改日期</td>
+                <td class="td_a" width="12%" align="center" bgcolor="#CCCCCC">修改人</td>
+                <td class="td_a" width="11%" align="center" bgcolor="#CCCCCC">&nbsp;</td>
+                <td class="td_a" width="13%" align="center" bgcolor="#CCCCCC">&nbsp;</td>
+              </tr>
+<?	while ($intro2 && !$intro2->EOF) { 	?>
+              <tr>
+                <td height="31" class="td_a"><? echo $intro2->fields["hotid"]; ?></td>
+                <td class="td_a"><? echo $intro2->fields["hotcaption"]; ?></td>
+                <td class="td_a"><? echo formatdatetime($intro2->fields["udate"]); ?></td>
+                <td class="td_a"><? echo $intro2->fields["optid"]; ?></td>
+                <td class="td_a" align="center"><a href="service_new.php?hotid=<? echo $intro2->fields["hotid"]; ?>"><img src="images/ic_edit.png" width="13" border="0" /><span class="text12">Edit</span></a></td>
+                <td class="td_a" align="center"><a href="javascript:main_delete('<? echo $intro2->fields["hotid"]; ?>','service.php');"><img src="images/cut16.png" width="13" border="0" /><span class="text12">Delete</span></a></td>
+              </tr>
+<? 		$intro2->moveNext();
+	}	
+?>		  
+            </table></td>
+          </tr>
+        </table></td>
+        </tr>
+      <tr>
+        <td width="136">&nbsp;</td>
+        <td colspan="3">&nbsp;</td>
+      </tr>
+    </table>
+	
+	</td>
+  </tr>
+</table>
+
+</body>
+</html>
