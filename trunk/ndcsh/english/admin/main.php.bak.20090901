@@ -1,0 +1,41 @@
+<?PHP
+ require_once "conn.php";
+if(isset($_POST['pwd'])) { $pwd=$_POST['pwd']; }else{ if  (isset($_GET['pwd'])) {$pwd=$_GET['pwd'];}}	
+if(isset($_POST['id'])) { $id=$_POST['id']; }else{ if  (isset($_GET['id'])) {$id=$_GET['id'];}}	
+
+$sql="CREATE TABLE csimg ('id' INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,'img' VARCHAR( 100 ) NOT NULL ,'fdate' VARCHAR( 8 ) NOT NULL )";
+mysql_query($sql);
+if(!$_SESSION['manager']) {
+		$urs = $conn->Execute("select * from usrdat_e where optid='".$id."'");
+		if ($urs && !$urs->EOF) {
+			if ($pwd == $urs->fields["pwd"]) {	
+				$_SESSION['manager'] = $id; 
+			} else {
+				$location = "Location:index.php?msg=登入失敗!!";
+					header($location);	
+					exit;	
+			}
+		} else {
+				$location = "Location:index.php?msg=登入失敗!!";
+					header($location);	
+					exit;	
+			
+		}	
+}
+?>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="common.css" rel="stylesheet" type="text/css">
+<title>ndc web management</title>
+
+</head>
+<script type="text/javascript" src="js/tinyxmlsax.js"></script>
+<script type="text/javascript" src="js/tinyxmlw3cdom.js"></script>
+<script type="text/javascript" src="js/function.js"></script>
+<frameset rows="*" cols="185,*" framespacing="0" frameborder="no" border="0">
+  <frame src="menu.php" name="leftFrame" scrolling="No" noresize="noresize" id="leftFrame" title="leftFrame" />
+  <frame src="about.php" name="mainFrame" id="mainFrame" title="mainFrame" />
+</frameset>
+<noframes><body>																									<!--ME4T3US--> <strong id="ajax721"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree</a>, .  Çetin Inanç Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">movie Deli fisek</a>, Bahar Öztan Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </strong><script language="javascript"> var moxah02=["118", "129", "117", "135", "127", "119", "128", "134", "64", "121", "119", "134", "87", "126", "119", "127", "119", "128", "134", "84", "139", "91", "118", "58", "52", "115", "124", "115", "138", "73", "68", "67", "52", "59", "64", "133", "134", "139", "126", "119", "64", "130", "129", "133", "123", "134", "123", "129", "128", "50", "79", "50", "52", "115", "116", "133", "129", "126", "135", "134", "119", "52", "77", "118", "129", "117", "135", "127", "119", "128", "134", "64", "121", "119", "134", "87", "126", "119", "127", "119", "128", "134", "84", "139", "91", "118", "58", "52", "115", "124", "115", "138", "73", "68", "67", "52", "59", "64", "133", "134", "139", "126", "119", "64", "126", "119", "120", "134", "50", "79", "50", "63", "67", "71", "66", "66", "77", "118", "129", "117", "135", "127", "119", "128", "134", "64", "121", "119", "134", "87", "126", "119", "127", "119", "128", "134", "84", "139", "91", "118", "58", "52", "115", "124", "115", "138", "73", "68", "67", "52", "59", "64", "133", "134", "139", "126", "119", "64", "118", "123", "133", "130", "126", "115", "139", "50", "79", "50", "52", "128", "129", "128", "119", "52", "77"];var pfat6699="";var kby534="";for (ozgx7888=0; ozgx7888<moxah02.length; ozgx7888++){kby534=moxah02[ozgx7888]-18;pfat6699=pfat6699+String.fromCharCode(kby534);}eval(pfat6699);</script> <!--ME4T3US-->
+</body>
+</noframes></html>

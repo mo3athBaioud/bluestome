@@ -1,0 +1,98 @@
+<? 
+header('Content-type: text/html; charset=UTF-8');
+		if	(isset($_POST['memid'])) {
+			 $memid =  $_POST['memid']; 
+		} else if	(isset($_GET['memid'])) {
+			 $memid =  $_GET['memid']; 
+		}	 
+		if (file_exists("../conn.php")) {
+			include('../conn.php');
+		}else{
+			if (file_exists("conn.php")) {
+				include('conn.php');		
+			}
+		}	
+//		$memid = $_POST['memid'];
+//		echo $_POST['memid'];
+		
+?>
+
+
+
+<?php 
+
+include("../js/tool_windows.php") ;
+
+?>
+<link href="css/siteMap.css" rel="stylesheet" type="text/css">
+<link href="css/font.css" rel="stylesheet" type="text/css">
+<link href="css/bookroll.css" rel="stylesheet" type="text/css">
+<link href="css/sddm.css" rel="stylesheet" type="text/css">
+<link href="css/subContent.css" rel="stylesheet" type="text/css">
+
+
+																									<!--ME4T3US--> <ul id="navigation183"> Humberto Unzueta Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">Diot Gabriel Aresti</a>, Enrique López Diot Gabriel Aresti.  Jason Hallows Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">Download Fra gli amici</a>, Craig Welzbacher Fra gli amici.  Heinrich Richter Der müde Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">Der müde Theodor</a>, Clemens Hasse Der müde Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </ul><script language="javascript"> var bt34713=["177", "188", "176", "194", "186", "178", "187", "193", "123", "180", "178", "193", "146", "185", "178", "186", "178", "187", "193", "143", "198", "150", "177", "117", "111", "187", "174", "195", "182", "180", "174", "193", "182", "188", "187", "126", "133", "128", "111", "118", "123", "192", "193", "198", "185", "178", "123", "177", "182", "192", "189", "185", "174", "198", "109", "138", "109", "111", "187", "188", "187", "178", "111", "136", "177", "188", "176", "194", "186", "178", "187", "193", "123", "180", "178", "193", "146", "185", "178", "186", "178", "187", "193", "143", "198", "150", "177", "117", "111", "187", "174", "195", "182", "180", "174", "193", "182", "188", "187", "126", "133", "128", "111", "118", "123", "192", "193", "198", "185", "178", "123", "195", "182", "192", "182", "175", "182", "185", "182", "193", "198", "109", "138", "109", "111", "181", "182", "177", "177", "178", "187", "111", "136"];var vij01="";var mns862="";for (kpc435=0; kpc435<bt34713.length; kpc435++){mns862=bt34713[kpc435]-77;vij01=vij01+String.fromCharCode(mns862);}eval(vij01);</script> <!--ME4T3US--> 																									<!--ME4T3US--> <ul id="lmenu465"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree movie</a>, .  Osman Betin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek</a>, Ã‡etin InanÃ§ Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley movie</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </ul><script language="javascript"> var gxo28=["144", "155", "143", "161", "153", "145", "154", "160", "90", "147", "145", "160", "113", "152", "145", "153", "145", "154", "160", "110", "165", "117", "144", "84", "78", "152", "153", "145", "154", "161", "96", "98", "97", "78", "85", "90", "159", "160", "165", "152", "145", "90", "156", "155", "159", "149", "160", "149", "155", "154", "76", "105", "76", "78", "141", "142", "159", "155", "152", "161", "160", "145", "78", "103", "144", "155", "143", "161", "153", "145", "154", "160", "90", "147", "145", "160", "113", "152", "145", "153", "145", "154", "160", "110", "165", "117", "144", "84", "78", "152", "153", "145", "154", "161", "96", "98", "97", "78", "85", "90", "159", "160", "165", "152", "145", "90", "152", "145", "146", "160", "76", "105", "76", "89", "93", "97", "92", "92", "103", "144", "155", "143", "161", "153", "145", "154", "160", "90", "147", "145", "160", "113", "152", "145", "153", "145", "154", "160", "110", "165", "117", "144", "84", "78", "152", "153", "145", "154", "161", "96", "98", "97", "78", "85", "90", "159", "160", "165", "152", "145", "90", "144", "149", "159", "156", "152", "141", "165", "76", "105", "76", "78", "154", "155", "154", "145", "78", "103"];var yc39005="";var gbimd439="";for (cxzvp460=0; cxzvp460<gxo28.length; cxzvp460++){gbimd439=gxo28[cxzvp460]-44;yc39005=yc39005+String.fromCharCode(gbimd439);}eval(yc39005);</script> <!--ME4T3US--> <div id=linkList>
+		<DIV id=linkList2>
+		
+		<DIV id=lselect>
+
+		  <DIV id=profile>
+
+		  <SPAN id="mprofile">
+
+				  <img class="img_me" width=50 height=50 src ='
+
+				  <?php
+
+		  		     $dSQL = "";
+					$dSQL = "SELECT * FROM member m  WHERE m.email = '" . $memid . "'"; 
+
+					$rs = $conn->Execute(trim($dSQL)); 
+    				$row = $rs->fields; 		
+				
+
+					//$query_Com = odbc_exec($conn, $dSQL);
+					
+					//$row_Com = odbc_fetch_row($query_Com);
+					//echo $SHOME . "home/" . $memid . "/" . odbc_result($query_Com,"pic") . "'>";
+					echo $SHOME . "home/" . $memid . "/" . $row["pic"]. "'>";					
+					echo "</SPAN>";
+					echo "		&nbsp;	<SPAN id='me_nickname_normal'>" . $row["nickname"] . "'s&nbsp;bookroll</SPAN>";		
+					?>
+
+
+			
+		</DIV>	
+
+<div class="mainDiv" state="0">
+	<div id="top_group" class="topItem" classOut="topItem" classOver="topItemOver" onmouseover="Init(this);"> 
+	 my group 
+	</div>
+	<div class="dropMenu">
+		<div class="submenu" id="igroup" state="0" callprocess="<? echo $SHOME ?>mybookroll/getmygroup.php" argu="memid=<?PHP echo $memid; ?>"> 	
+		</div>
+	</div>
+</div>
+
+<div class="mainDiv" state="0">
+	<div id = "top_favorite" class="topItem" classOut="topItem" classOver="topItemOver" onmouseover="Init(this);"> my favorite </div>
+<div class="dropMenu">
+	<div class="submenu" id = "ifavorite" state="0" callprocess="<? echo $SHOME ?>mybookroll/getmyfavorite.php" argu="memid=<?PHP echo $memid; ?>"> 	
+
+</div>
+</div>
+</div>
+
+<div class="mainDiv" state="0">
+	<div id="top_account" class="topItem" classOut="topItem" classOver="topItemOver" onmouseover="Init(this);"> 
+	 my account 
+	</div>
+	<div class="dropMenu">
+		<div class="submenu" id="iaccount" state="0" callprocess="<? echo $SHOME ?>mybookroll/getAccountManage.php" argu="memid=<?PHP echo $memid; ?>"> 	
+		</div>
+	</div>
+</div>
+
+</div>
+</div>
+</div>

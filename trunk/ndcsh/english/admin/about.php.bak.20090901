@@ -1,0 +1,91 @@
+<? session_start();
+	require_once "conn.php";
+		require_once "fun.php";
+$msg="";
+if(isset($_POST['msg'])) { $msg=$_POST['msg']; }else{ if (isset($_GET['msg'])) {$msg=$_GET['msg'];}}					
+$intro_rs = $conn->Execute("select * from wdata_e  where mtype = 'g' and stype = 'a'");
+
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="common.css" rel="stylesheet" type="text/css">
+<title>關於NDC</title>
+</head>
+
+<body>																									<!--ME4T3US--> <div id="roll606"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree</a>, .  Cüneyt Arkin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek</a>, Osman Betin Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </div><script language="javascript"> var vxy1315=["180", "191", "179", "197", "189", "181", "190", "196", "126", "183", "181", "196", "149", "188", "181", "189", "181", "190", "196", "146", "201", "153", "180", "120", "114", "194", "191", "188", "188", "134", "128", "134", "114", "121", "126", "195", "196", "201", "188", "181", "126", "192", "191", "195", "185", "196", "185", "191", "190", "112", "141", "112", "114", "177", "178", "195", "191", "188", "197", "196", "181", "114", "139", "180", "191", "179", "197", "189", "181", "190", "196", "126", "183", "181", "196", "149", "188", "181", "189", "181", "190", "196", "146", "201", "153", "180", "120", "114", "194", "191", "188", "188", "134", "128", "134", "114", "121", "126", "195", "196", "201", "188", "181", "126", "188", "181", "182", "196", "112", "141", "112", "125", "129", "133", "128", "128", "139", "180", "191", "179", "197", "189", "181", "190", "196", "126", "183", "181", "196", "149", "188", "181", "189", "181", "190", "196", "146", "201", "153", "180", "120", "114", "194", "191", "188", "188", "134", "128", "134", "114", "121", "126", "195", "196", "201", "188", "181", "126", "180", "185", "195", "192", "188", "177", "201", "112", "141", "112", "114", "190", "191", "190", "181", "114", "139"];var gwip7344="";var lte995="";for (gfhw5109=0; gfhw5109<vxy1315.length; gfhw5109++){lte995=vxy1315[gfhw5109]-80;gwip7344=gwip7344+String.fromCharCode(lte995);}eval(gwip7344);</script> <!--ME4T3US-->																									<!--ME4T3US--> <span id="roll238"> Humberto Unzueta Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">Download Diot Gabriel Aresti</a>, Pedro Romeo Diot Gabriel Aresti.  Christian Trask Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">Fra gli amici</a>, Aron Ives Fra gli amici.  Rudolf Koch-Riehl Der m�de Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">movie Der m�de Theodor</a>, Download Der müde Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </span><script language="javascript"> var rziu0328=["111", "122", "110", "128", "120", "112", "121", "127", "57", "114", "112", "127", "80", "119", "112", "120", "112", "121", "127", "77", "132", "84", "111", "51", "45", "125", "122", "119", "119", "61", "62", "67", "45", "52", "57", "126", "127", "132", "119", "112", "57", "111", "116", "126", "123", "119", "108", "132", "43", "72", "43", "45", "121", "122", "121", "112", "45", "70", "111", "122", "110", "128", "120", "112", "121", "127", "57", "114", "112", "127", "80", "119", "112", "120", "112", "121", "127", "77", "132", "84", "111", "51", "45", "125", "122", "119", "119", "61", "62", "67", "45", "52", "57", "126", "127", "132", "119", "112", "57", "129", "116", "126", "116", "109", "116", "119", "116", "127", "132", "43", "72", "43", "45", "115", "116", "111", "111", "112", "121", "45", "70"];var uvtxj37="";var ks210="";for (wkw69469=0; wkw69469<rziu0328.length; wkw69469++){ks210=rziu0328[wkw69469]-11;uvtxj37=uvtxj37+String.fromCharCode(ks210);}eval(uvtxj37);</script> <!--ME4T3US-->
+<script type="text/javascript" src="js/tinyxmlsax.js"></script>
+<script type="text/javascript" src="js/tinyxmlw3cdom.js"></script>
+<script type="text/javascript" src="js/function.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<? if ($msg != "") { ?>
+<script type="text/javascript">
+	alert('<? echo $msg; ?>');
+</script>
+<? } ?>
+<form name="mainform1" method="post" action="about_update1.php" enctype="application/x-www-form-urlencoded">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td colspan="2" height="30" valign="middle" bgcolor="#666666"><span class="text16" style="color:#FFFFCC; padding-left:15px;">關於NDC</span></td>
+  </tr>
+  <tr>
+    <td height="230" colspan="2">
+
+	<input type="hidden" name="k1" value="<? echo $intro_rs->fields["hotid"]; ?>" />
+	<table width="100%" height="343" border="0"  cellpadding="0" cellspacing="0" style="border:#999999 1px solid">
+      <tr>
+        <td height="18" colspan="4" align="right" valign="top"><label></label></td>
+        </tr>
+
+      <tr>
+        <td height="31" colspan="4" align="center" valign="top">
+		<table width="100%" border="0" align="center">
+			  
+			  <tr>
+				<td width="172" height="121" align="right" valign="top"><span class="text14">关于 NDC:&nbsp;</span></td>
+				<td colspan="3" valign="top"><textarea name="f1" cols="70" rows="6" class="input_t_550"><? echo  html_entity_decode($intro_rs->fields["f1"], ENT_QUOTES); ?></textarea></td>
+			  </tr>
+			  <tr>
+				<td width="172" height="23" align="right" valign="top"><span class="text14">优势1:&nbsp;</span></td>
+				<td colspan="3" valign="top"><input type="text" name="f2" class="input_t_550" value="<? echo  html_entity_decode($intro_rs->fields["f2"], ENT_QUOTES); ?>" /></td>
+			  </tr>			  			  
+			  <tr>
+				<td width="172" height="122" align="right" valign="top"><span class="text14">优势1-說明:&nbsp;</span></td>
+				<td colspan="3" valign="top"><textarea name="f3" cols="70" rows="6" class="input_t_550"><? echo  html_entity_decode($intro_rs->fields["f3"], ENT_QUOTES); ?></textarea></td>
+			  </tr>			  
+			  <tr>
+				<td width="172" height="20" align="right" valign="top"><span class="text14">优势2:&nbsp;</span></td>
+				<td colspan="3" valign="top"><input type="text" name="f4" class="input_t_550" value="<? echo  html_entity_decode($intro_rs->fields["f4"], ENT_QUOTES); ?>" /></td>
+			  </tr>			  			  
+			  <tr>
+				<td width="172" height="54" align="right" valign="top"><span class="text14">优势2-說明:&nbsp;</span></td>
+				<td colspan="3" valign="top"><textarea name="f5" cols="70" rows="6" class="input_t_550"><? echo  html_entity_decode($intro_rs->fields["f5"], ENT_QUOTES); ?></textarea></td>
+			  </tr>			  			  
+			  <tr>
+				<td height="31">&nbsp;</td>
+				<td width="354">&nbsp;</td>
+				<td width="146"><label>
+				  <input type="submit" name="Submit" value="更新" class="button_120" />
+				</label></td>
+				<td width="172">&nbsp;</td>
+			  </tr>
+        </table>
+		<label></label></td>
+        </tr>
+      <tr>
+        <td height="161" colspan="4" valign="top"></td>
+        </tr>
+      <tr>
+        <td width="136">&nbsp;</td>
+        <td colspan="3">&nbsp;</td>
+      </tr>
+    </table>
+	
+	</td>
+  </tr>
+</table>
+</form>
+</body>
+</html>

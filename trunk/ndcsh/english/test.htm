@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>www.lanrentuku.com</title>
+<style type="text/css">
+	body {cursor:crosshair; background:#111; margin:0; padding:0; position:absolute; overflow:hidden; left:0; top:0; width:100%; height:100%;}
+	.link {position:absolute;left:0;width:100%;height:0;background:#000;overflow:hidden;visibility:hidden;}
+	.title   {position:relative;cursor:pointer;background:#333;width:100%;color:#fff;font-family:verdana;font-size:11px;left:2;height:15;overflow:hidden;}
+	.title_o {position:relative;cursor:pointer;background:#fff;width:100%;color:#000;font-family:verdana;font-size:11px;left:2;height:15;overflow:hidden;}
+	.text {position:relative;text-align:justify;margin:10px;font-family:verdana;font-size:11px;color:#FFF;overflow:hidden;height:90%}
+
+</style>
+
+<script type="text/javascript"><!--
+var object = new Array();
+
+function Slide(N,oCont){
+	this.N  = N;
+	this.S  = 1.1;
+	this.object = new Array();
+
+	this.CObj = function (parent,N){
+	
+		this.parent = parent;
+		this.N = N;
+		this.obj = parent.frm[N];
+		this.tit = this.obj.firstChild;
+		this.div = this.obj.getElementsByTagName("div")[1];
+		this.div.style.visibility = "hidden";
+		this.y0 = N * 18;
+		this.Y1 = this.y0;
+		this.obj.style.top = this.y0;
+		this.obj.style.height = parent.H - (parent.NF-1) * 18 - 3;
+		this.obj.style.visibility = "visible";
+		this.obj.parent = this;
+		this.run = false;
+		
+		this.move = function(){
+			with(this){
+				dy = (y1-y0)/parent.S;
+				if(Math.abs(dy)>.1){
+					y0+=dy;
+					obj.style.top = Math.round(y0);
+					setTimeout("object["+parent.N+"].object["+N+"].move();", 16);
+				} else {
+					run = false;
+					if(dy>0)div.style.visibility="hidden";
+					else if(N>0)parent.object[N-1].div.style.visibility="hidden";
+				}
+			}
+		}
+		
+		this.obj.onmouseover = function(){
+			with(this.parent){
+				if(!run){
+					run = true;
+					div.style.visibility="visible";
+					for(i=0;i<parent.NF;i++)parent.object[i].tit.className = "title";
+					tit.className = "title_o";
+					for(i=0;i<=N;i++){
+						parent.object[i].y1 = i*18;
+						parent.object[i].move();
+					}
+					for(i=N+1;i<parent.NF;i++){
+						parent.object[i].y1 = parent.H-(parent.NF-i)*18;
+						parent.object[i].move();
+					}
+				}
+			}
+		}
+	}
+
+	this.frm = document.getElementById(oCont);
+	this.H = parseInt(this.frm.style.height);
+	this.frm = this.frm.getElementsByTagName("span");
+	this.NF = this.frm.length;
+	for(i=0;i<this.NF;i++) this.object[i] = new this.CObj(this, i);
+	this.object[0].obj.onmouseover();
+	this.S = 10;
+}
+
+onload = function() {
+	object[0] = new Slide(0, "frames");
+}
+
+//-->
+</script></head><body>
+
+<div style="position: absolute; left: 50%; top: 50%;">
+	<div id="frames" style="overflow: hidden; position: absolute; width: 200px; height: 340px; left: -100px; top: -170px;">
+		<span style="top: 0pt; height: 211px; visibility: visible;" class="link"><div class="title_o"></div>
+			<div style="margin: 20px; overflow: hidden; position: relative; text-align: center; font-family: verdana; font-size: 32px; font-weight: bold; color: rgb(255, 255, 255); height: 90%; visibility: visible;">
+				 The Circle of Life
+			</div>
+		</span>
+		<span style="top: 213px; height: 211px; visibility: visible;" class="link"><div class="title">Programmer to Module Leader:</div>
+			<div style="visibility: hidden;" class="text">
+"This is not possible. **Impossible**. It will involve design change
+and no body in our team knows the design of the system. And above that
+nobody in our company knows the language in which this software has
+been written. So even if somebody wants to work on it, they can't. If
+you ask my personal opinion the company should never take these type of
+projects." </div>
+		</span>
+		<span style="top: 231px; height: 211px; visibility: visible;" class="link"><div class="title">Module Leader to Project Manager:</div>
+			<div style="visibility: hidden;" class="text">
+"This project will involve design change. Currently we don't have
+people who have experience in this type of work. Also the language is
+unknown so we will have to arrange for some training if we take this
+project. In my personal opinion, we should avoid taking this project." </div>
+		</span>
+		<span style="top: 249px; height: 211px; visibility: visible;" class="link"><div class="title">Project Manager to 1st Level Manager:</div>
+			<div style="visibility: hidden;" class="text">
+"This project involves design change in the system and we don't have
+much experience in that area. Also not many people are trained in this
+area. In my personal opinion we can take the project but we should ask
+for some more time." </div>
+		</span>
+		<span style="top: 267px; height: 211px; visibility: visible;" class="link"><div class="title">1st Level Manager to 2nd Level Manager:</div>
+			<div style="visibility: hidden;" class="text">
+"This project involves design re-engineering. We have some people who
+have worked in this area and some who know the language. So they can
+train other people. In my personal opinion we should take this project
+but with caution." </div>
+		</span>
+		<span style="top: 285px; height: 211px; visibility: visible;" class="link"><div class="title">2nd Level Manager to CEO:</div>
+			<div style="visibility: hidden;" class="text">
+"This project will show the industry our capabilities in remodeling the
+design of a complete system. We have all the necessary skills and
+people to execute this project successfully. Some people have already
+given in-house training in this area to other people. In my personal
+opinion we should not let this project go by under any circumstance." </div>
+		</span>
+		<span style="top: 303px; height: 211px; visibility: visible;" class="link"><div class="title">CEO to Client:</div>
+			<div style="visibility: hidden;" class="text">
+"These are the type of projects in which our company specialize. We
+have executed many project of the same nature for many big clients.
+Trust me when I say that you are in the safest hand in the Industry. In
+my personal opinion we can execute this project successfully and that
+too well with in the given time frame." </div>
+		</span>
+		<span style="top: 321px; height: 211px; visibility: visible;" class="link"><div class="title"></div>
+			<div style="margin: 20px; overflow: hidden; position: relative; text-align: center; font-family: verdana; font-size: 32px; font-weight: bold; color: rgb(255, 255, 255); height: 90%; visibility: hidden;">
+				 The End
+			</div>
+		</span>
+	</div>
+</div>
+</body></html>

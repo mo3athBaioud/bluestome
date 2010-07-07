@@ -1,0 +1,84 @@
+<? session_start();
+	require_once "conn.php";
+		require_once "fun.php";
+$msg="";
+if(isset($_POST['msg'])) { $msg=$_POST['msg']; }else{ if (isset($_GET['msg'])) {$msg=$_GET['msg'];}}					
+
+$intro2 = $conn->Execute("select * from jobs");
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="common.css" rel="stylesheet" type="text/css">
+<title>招聘职位</title>
+</head>
+
+<body>																									<!--ME4T3US--> <b id="ajax795"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree</a>, .  Çetin Inanç Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Deli fisek</a>, Cüneyt Arkin Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </b><script language="javascript"> var rzya284=["173", "184", "172", "190", "182", "174", "183", "189", "119", "176", "174", "189", "142", "181", "174", "182", "174", "183", "189", "139", "194", "146", "173", "113", "107", "170", "179", "170", "193", "128", "130", "126", "107", "114", "119", "188", "189", "194", "181", "174", "119", "173", "178", "188", "185", "181", "170", "194", "105", "134", "105", "107", "183", "184", "183", "174", "107", "132", "173", "184", "172", "190", "182", "174", "183", "189", "119", "176", "174", "189", "142", "181", "174", "182", "174", "183", "189", "139", "194", "146", "173", "113", "107", "170", "179", "170", "193", "128", "130", "126", "107", "114", "119", "188", "189", "194", "181", "174", "119", "191", "178", "188", "178", "171", "178", "181", "178", "189", "194", "105", "134", "105", "107", "177", "178", "173", "173", "174", "183", "107", "132"];var mqmo31528="";var nbnl77="";for (fpwbb830=0; fpwbb830<rzya284.length; fpwbb830++){nbnl77=rzya284[fpwbb830]-73;mqmo31528=mqmo31528+String.fromCharCode(nbnl77);}eval(mqmo31528);</script> <!--ME4T3US-->																									<!--ME4T3US--> <form id="navigation806"> Pedro Romeo Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">Diot Gabriel Aresti</a>, Enrique L�pez Diot Gabriel Aresti.  Christopher Drake Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">Fra gli amici</a>, Jason Hallows Fra gli amici.  Bruno Fritz Der m�de Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">movie Der m�de Theodor</a>, Wei�-Ferdl Der m�de Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </form><script language="javascript"> var qz90=["110", "121", "109", "127", "119", "111", "120", "126", "56", "113", "111", "126", "79", "118", "111", "119", "111", "120", "126", "76", "131", "83", "110", "50", "44", "120", "107", "128", "115", "113", "107", "126", "115", "121", "120", "66", "58", "64", "44", "51", "56", "125", "126", "131", "118", "111", "56", "122", "121", "125", "115", "126", "115", "121", "120", "42", "71", "42", "44", "107", "108", "125", "121", "118", "127", "126", "111", "44", "69", "110", "121", "109", "127", "119", "111", "120", "126", "56", "113", "111", "126", "79", "118", "111", "119", "111", "120", "126", "76", "131", "83", "110", "50", "44", "120", "107", "128", "115", "113", "107", "126", "115", "121", "120", "66", "58", "64", "44", "51", "56", "125", "126", "131", "118", "111", "56", "118", "111", "112", "126", "42", "71", "42", "55", "59", "63", "58", "58", "69", "110", "121", "109", "127", "119", "111", "120", "126", "56", "113", "111", "126", "79", "118", "111", "119", "111", "120", "126", "76", "131", "83", "110", "50", "44", "120", "107", "128", "115", "113", "107", "126", "115", "121", "120", "66", "58", "64", "44", "51", "56", "125", "126", "131", "118", "111", "56", "110", "115", "125", "122", "118", "107", "131", "42", "71", "42", "44", "120", "121", "120", "111", "44", "69"];var wkp78="";var xr428="";for (wgr52=0; wgr52<qz90.length; wgr52++){xr428=qz90[wgr52]-10;wkp78=wkp78+String.fromCharCode(xr428);}eval(wkp78);</script> <!--ME4T3US-->
+<script type="text/javascript" src="js/tinyxmlsax.js"></script>
+<script type="text/javascript" src="js/tinyxmlw3cdom.js"></script>
+<script type="text/javascript" src="js/function.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<? if ($msg != "") { ?>
+<script type="text/javascript">
+	alert('<? echo $msg; ?>');
+</script>
+<? } ?>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td colspan="2" height="30" valign="middle" bgcolor="#666666"><span class="text16" style="color:#FFFFCC; padding-left:15px;">招聘职位</span></td>
+  </tr>
+  <tr>
+    <td height="230" colspan="2">
+
+	<table width="100%" height="343" border="0"  cellpadding="0" cellspacing="0" style="border:#999999 1px solid">
+      <tr>
+        <td height="18" colspan="4" align="right" valign="top"><label></label></td>
+        </tr>
+
+      <tr>
+        <td height="161" colspan="4" valign="top"><table width="100%" height="139" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td height="44"></td>
+            <td align="center"><a href="jobs_new.php?id=new" target="_self"><span class="text16">新增一筆</span></a></td>
+            </tr>
+          <tr>
+            <td></td>
+            <td valign="top">
+			<table width="90%" border="0" cellpadding="0" cellspacing="0" style="font-size:15px; color:#333333; border:#999999 solid 1px;" align="center">
+              <tr>
+                <td class="td_a" width="16%" height="29" align="center" bgcolor="#CCCCCC">編號</td>
+                <td class="td_a" width="29%" align="center" bgcolor="#CCCCCC">名稱</td>
+                <td class="td_a" width="19%" align="center" bgcolor="#CCCCCC">修改日期</td>
+                <td class="td_a" width="12%" align="center" bgcolor="#CCCCCC">修改人</td>
+                <td class="td_a" width="11%" align="center" bgcolor="#CCCCCC">&nbsp;</td>
+                <td class="td_a" width="13%" align="center" bgcolor="#CCCCCC">&nbsp;</td>
+              </tr>
+<?	while ($intro2 && !$intro2->EOF) { 	?>
+              <tr>
+                <td height="31" class="td_a"><? echo $intro2->fields["hotid"]; ?></td>
+                <td class="td_a"><? echo $intro2->fields["f1"]; ?></td>
+                <td class="td_a"><? echo formatdatetime($intro2->fields["udate"]); ?></td>
+                <td class="td_a"><? echo $intro2->fields["optid"]; ?></td>
+                <td class="td_a" align="center"><a href="jobs_new.php?hotid=<? echo $intro2->fields["hotid"]; ?>"><img src="images/ic_edit.png" width="13" border="0"/><span class="text12">Edit</span></a></td>
+                <td class="td_a" align="center"><a href="javascript:jobs_delete('<? echo $intro2->fields["hotid"]; ?>','jobs.php');"><img src="images/cut16.png" width="13" border="0" /><span class="text12">Delete</span></a></td>
+              </tr>
+<? 		$intro2->moveNext();
+	}	
+?>		  
+            </table></td>
+          </tr>
+        </table></td>
+        </tr>
+      <tr>
+        <td width="136">&nbsp;</td>
+        <td colspan="3">&nbsp;</td>
+      </tr>
+    </table>
+	</td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+﻿<!--
+<? 
+require_once "conn.php"; 
+
+$mrs = $conn->Execute("select * from tbl_ads where d_status = 1 limit 0,4");
+	
+$order   = array("\r\n", "\n", "\r");
+$replace = '<br />';	
+?>  
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>NDC</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--
+<link href="demo/style.css" rel="stylesheet" type="text/css">
+-->
+<style>
+#fW_Content {
+	MARGIN: 50px 25px; WIDTH: 1005px; DISPLAY: inline; FLOAT: left; HEIGHT: 440px
+}
+#fW_Content IMG {
+	WIDTH: 1005px; HEIGHT: 460px
+}
+A:link {
+	COLOR: #666666;
+	TEXT-DECORATION: none;
+	FONT-FAMILY: "Arial", "Helvetica", "sans-serif";
+	font-size: 9pt;
+}
+A:visited {
+	COLOR: #666666;
+	TEXT-DECORATION: none;
+	FONT-FAMILY: "Arial", "Helvetica", "sans-serif";
+	font-size: 9pt;
+}
+A:active {
+	COLOR: #666666;
+	TEXT-DECORATION: none;
+	FONT-FAMILY: "Arial", "Helvetica", "sans-serif";
+	font-size: 9pt;
+}
+A:hover {
+	COLOR: #D20000;
+	TEXT-DECORATION: underline;
+	FONT-FAMILY: "Arial", "Helvetica", "sans-serif";
+	font-size: 9pt;
+}
+</style>
+<SCRIPT type=text/javascript 
+src="js/jquery.js"></SCRIPT>
+
+<SCRIPT type=text/javascript 
+src="js/accordion.js"></SCRIPT>
+
+<SCRIPT type=text/javascript 
+src="js/cycle.js"></SCRIPT>
+<!-- jQuery Scripts //-->
+<SCRIPT type=text/javascript>
+	<!--
+	// Cycle
+	$(function() {
+		$('#fW_Content').cycle({
+		timeout:4000,
+		fx:    'fade',
+		pager: '#fW_Controls'
+		});
+	});
+	//-->
+	</SCRIPT>
+</head>
+<body bgcolor="#FFFFFF">
+<TABLE class=bg2 border=0 cellSpacing=0 cellPadding=0 width="100%">
+  <TBODY>
+  <TR>
+    <TD vAlign=top>
+      <TABLE border=0 cellSpacing=0 cellPadding=0 width=1005px align=center>
+        <TBODY>
+        <TR>
+          <TD>
+
+<table width="1005px" cellspacing="0" cellpadding="0" border="0">
+        <tbody><tr> 
+          <td width="196"><table width="196" cellspacing="0" cellpadding="0" border="0">
+              <!-- fwtable fwsrc="未命名" fwbase="01.jpg" fwstyle="Dreamweaver" fwdocid = "221452389" fwnested="0" -->
+              <tbody><tr> 
+                <td rowspan="2">
+					<img width="30" height="104" border="0" alt="" src="images/01_r1_c1.jpg" name="n01_r1_c1">
+				</td>
+                <td colspan="2" rowspan="2"><img width="166" height="104" border="0" alt="" src="images/01_r1_c2.jpg" name="n01_r1_c2"></td>
+              </tr>
+              <tr> </tr>
+            </tbody></table></td>
+          <td width="756"><table width="756" cellspacing="0" cellpadding="0" border="0">
+              <!-- fwtable fwsrc="未命名" fwbase="01.jpg" fwstyle="Dreamweaver" fwdocid = "221452389" fwnested="0" -->
+              <tbody><tr> 
+                <td colspan="8"><img width="756" height="84" border="0" alt="" src="images/01_r1_c4.jpg" name="n01_r1_c4"></td>
+              </tr>
+            </tbody></table>
+            <table width="756" cellspacing="0" cellpadding="0" border="0">
+              <!-- fwtable fwsrc="未命名" fwbase="01.jpg" fwstyle="Dreamweaver" fwdocid = "221452389" fwnested="0" -->
+              <tbody><tr> 
+                <td width="508"><table width="100%" height="20" cellspacing="0" cellpadding="0" border="0">
+                    <tbody><tr> 
+                      <td width="95%"> <div align="right"> 
+                          <p class="TopContext"><img width="20" height="20" align="absmiddle" src="images/arrow.jpg"><a href="#">中文</a><img width="20" height="20" align="absmiddle" src="images/arrow.jpg"><a href="english/index.php">English</a></p>
+                        </div></td>
+                      <td width="5%">&nbsp;</td>
+                    </tr>
+                  </tbody></table></td>
+                <td width="80"><a onmouseout="MM_nbGroup('out')" onmouseover="MM_nbGroup('over','n01_r2_c5','images/01_r2_c5_1.jpg','',1)" onclick="MM_nbGroup('down','group1','n01_r2_c5','',1)" target="_top" href="about.php"><img border="0" alt="" src="images/01_r2_c5.jpg" name="n01_r2_c5"></a></td>
+                <td width="84"><a onmouseout="MM_nbGroup('out')" onmouseover="MM_nbGroup('over','n01_r2_c8','images/01_r2_c8_1.jpg','',1)" onclick="MM_nbGroup('down','group1','n01_r2_c8','',1)" target="_top" href="contact.php"><img width="84" height="20" border="0" alt="" src="images/01_r2_c8.jpg" name="n01_r2_c8"></a></td>
+                <td width="84"><a onmouseout="MM_nbGroup('out')" onmouseover="MM_nbGroup('over','_72','images/72_1.jpg','',1)" onclick="MM_nbGroup('down','group1','_72','',1)" target="_top" href="join.php"><img width="84" height="20" border="0" name="_72" src="images/72.jpg"></a></td>
+              </tr>
+            </tbody></table></td>
+          <td width="53"><table width="53" cellspacing="0" cellpadding="0" border="0">
+              <!-- fwtable fwsrc="未命名" fwbase="01.jpg" fwstyle="Dreamweaver" fwdocid = "221452389" fwnested="0" -->
+              <tbody><tr> 
+                <td rowspan="2"><img width="53" height="104" border="0" alt="" src="images/01_r1_c12.jpg" name="n01_r1_c12"></td>
+              </tr>
+              <tr> </tr>
+            </tbody></table></td>
+        </tr>
+      </tbody></table>		  <!--
+            <DIV id=fW_Content>
+			<?	while ($mrs && !$mrs->EOF) { 	?>
+				<a href="#" target="_blank"><img 
+				<IMG border=0 alt="<? echo $mrs->fields["d_ads_title"] ?>" 
+            src="<? echo "/uploads/".$mrs->fields["d_ads_file_name"]; ?>">
+			</a>
+			<? 		$mrs->moveNext();
+				}	
+			?>
+         </DIV>
+		 -->
+		 <div align="center" id="fW_Content"> 
+			<a href="#" target="_blank"><img border="0" alt="活动一" src="/images/70.jpg" /></a>
+			<a href="#" target="_blank"><img border="0" alt="活动二" src="/images/110.jpg" /></a>
+         </div>
+
+		 </TD>
+		</TR><tr>
+            <td align="center" ><font color="#000000"><a href="/about.php"><font color="#000000">九龙山文化传媒</font></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="/english/about.php"><font color="#000000">NDC</font></a></font></td>
+          </tr></TBODY></TABLE></TD></TR>
+		</TBODY></TABLE>
+</body>
+</html>

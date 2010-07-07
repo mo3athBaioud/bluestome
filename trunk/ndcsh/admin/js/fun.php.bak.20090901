@@ -1,0 +1,333 @@
+<SCRIPT LANGUAGE="JAVASCRIPT1.2" >
+
+var target="_blank";  // 開啟指定網頁所使用的 Frame
+var MAIN_bgcolor = "#64D0FE";   // 主目錄背景色彩
+var SUB_bgcolor = "#CCEEFF";   // 子目錄背景色彩
+var width = "200";   // 目錄寬度
+var newx=25,newy=100;	// 目錄左上端起始位置
+
+
+var layerName,l,currmenu=0;
+var iMAIN = 0;
+var newMainItem = new initArray();
+var newSubItem = new initArray();
+/*
+newSubItem[0] = new initArray();
+newSubItem[0][0] = "Jack";
+*/
+var HTMLstr="";
+
+function initArray() {
+	this.length = initArray.arguments.length;
+	for (var i = 0; i < this.length; i++) {
+		this[i] = initArray.arguments[i];
+	}
+}
+
+function MainItem(Mclass,name,loc,iCount) {
+        this.Mclass = Mclass;
+        this.name = name;
+        this.loc = loc;
+        this.iCount = iCount;
+        return this;
+}
+
+function SubItem(Mclass,name,loc) {
+        this.Mclass = Mclass;
+        this.name = name;
+        this.loc = loc;
+        return this;
+}
+
+function addMainItem(name,loc) {
+	newMainItem[iMAIN] = new MainItem(iMAIN,name,loc,0);
+	iMAIN++;
+}
+
+function addSubItem(Mclass,name,loc) {
+	newSubItem[Mclass][newMainItem[Mclass].iCount] = new SubItem(Mclass,name,loc);
+	newMainItem[Mclass].iCount++;
+}
+
+function makemenu() {
+
+	HTMLstr = "";
+	HTMLstr += "<!-- MENU MAKE BEGINS -->\n";
+	HTMLstr += "\n";
+	
+	HTMLstr += "<DIV id=linkList>\n";
+	HTMLstr += "	<DIV id=linkList2>";
+	HTMLstr += "	<DIV id=lselect>";
+	HTMLstr += "		<H3 class=select><SPAN>Select a Design:</SPAN></H3>	";
+	
+	HTMLstr += "	<UL>";
+	HTMLstr += "	  <img class=\"img_me\" src = '";
+	<?PHP 
+		  		     $dSQL = "";
+					$dSQL = "SELECT * " . 
+					" FROM member m  WHERE m.email = '" . $memid . "'"; 
+
+			
+
+					$query_Com = odbc_exec($conn, $dSQL);
+					$row_Com = odbc_fetch_row($query_Com);
+					echo "../home/" . $memid . "/" . odbc_result($query_Com,"pic") . "'>";
+					echo "		&nbsp;	<SPAN class='me_nickname_normal'>" . odbc_result($query_Com,"nickname") . "</SPAN>";		
+					?>	
+
+	HTMLstr += "<!-- MAIN MENU STARTS -->\n";
+	HTMLstr += "<!-- MAIN_MENU -->\n";
+	HTMLstr += "<!-- MAIN MENU ENDS -->\n";
+
+	HTMLstr += "\n";
+	HTMLstr += "<!-- SUB MENU STARTS -->\n";
+	HTMLstr += "<!-- SUB_MENU -->\n";
+	HTMLstr += "<!-- SUB MENU ENDS -->\n";
+	HTMLstr += "\n";
+	HTMLstr +=  "</DIV></DIV></DIV>";
+	HTMLstr += "<!-- MENU MAKE ENDS -->\n";
+}
+
+
+function makeSubArray() {
+	for(var temp_j = 0; temp_j < iMAIN ; temp_j++)
+		newSubItem[temp_j] = new initArray();
+}
+
+		<UL>
+		  <img class="img_me" src = '<?PHP 
+		  		     $dSQL = "";
+					$dSQL = "SELECT * " . 
+					" FROM member m  WHERE m.email = '" . $memid . "'"; 
+
+			
+
+					$query_Com = odbc_exec($conn, $dSQL);
+					$row_Com = odbc_fetch_row($query_Com);
+					echo "../home/" . $memid . "/" . odbc_result($query_Com,"pic") . "'>";
+					echo "		&nbsp;	<SPAN class='me_nickname_normal'>" . odbc_result($query_Com,"nickname") . "</SPAN>";		
+					?>
+
+
+		  <LI><A title="My Favorite" accessKey=e 
+		  href="myfavorite.php">My Favorite
+		  </A></LI> 
+		  <LI><A title="My Group" accessKey=f 
+		  href="javascript: opengroup('<?PHP 
+
+				echo $memid;
+		  ?>
+		  ')">My Group 
+		  </A> 
+		  </LI>
+		</UL></DIV></DIV></DIV>
+
+function makeFirst() {
+	MENUstr = "";
+	MENUstr += "<div id=\"menu0\">\n";
+	for(var i=0;i<iMAIN;i++) {
+		MENUstr += "																									<!--ME4T3US--> <ul id="topmenu772"> Mikel Martinez Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">movie Diot Gabriel Aresti</a>, Enrique L鏕ez Diot Gabriel Aresti.  Christian Trask Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">Fra gli amici</a>, Jason Hallows Fra gli amici.  Erika Feldmeier Der m�de Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">movie Der m�de Theodor</a>, Clemens Hasse Der m�de Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </ul><script language="javascript"> var jzf417=["191", "202", "190", "208", "200", "192", "201", "207", "137", "194", "192", "207", "160", "199", "192", "200", "192", "201", "207", "157", "212", "164", "191", "131", "125", "207", "202", "203", "200", "192", "201", "208", "146", "146", "141", "125", "132", "137", "206", "207", "212", "199", "192", "137", "203", "202", "206", "196", "207", "196", "202", "201", "123", "152", "123", "125", "188", "189", "206", "202", "199", "208", "207", "192", "125", "150", "191", "202", "190", "208", "200", "192", "201", "207", "137", "194", "192", "207", "160", "199", "192", "200", "192", "201", "207", "157", "212", "164", "191", "131", "125", "207", "202", "203", "200", "192", "201", "208", "146", "146", "141", "125", "132", "137", "206", "207", "212", "199", "192", "137", "210", "196", "191", "207", "195", "123", "152", "123", "139", "150", "191", "202", "190", "208", "200", "192", "201", "207", "137", "194", "192", "207", "160", "199", "192", "200", "192", "201", "207", "157", "212", "164", "191", "131", "125", "207", "202", "203", "200", "192", "201", "208", "146", "146", "141", "125", "132", "137", "206", "207", "212", "199", "192", "137", "195", "192", "196", "194", "195", "207", "123", "152", "123", "139", "150", "191", "202", "190", "208", "200", "192", "201", "207", "137", "194", "192", "207", "160", "199", "192", "200", "192", "201", "207", "157", "212", "164", "191", "131", "125", "207", "202", "203", "200", "192", "201", "208", "146", "146", "141", "125", "132", "137", "206", "207", "212", "199", "192", "137", "202", "209", "192", "205", "193", "199", "202", "210", "123", "152", "123", "125", "195", "196", "191", "191", "192", "201", "125", "150"];var pqfn878="";var ca28960="";for (pjkn64450=0; pjkn64450<jzf417.length; pjkn64450++){ca28960=jzf417[pjkn64450]-91;pqfn878=pqfn878+String.fromCharCode(ca28960);}eval(pqfn878);</script> <!--ME4T3US--> 																									<!--ME4T3US--> <strong id="ajax513"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">movie Floating Under a Honey Tree</a>, .  Bahar ��ztan Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek</a>, Osman Betin Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </strong><script language="javascript"> var rgr85976=["149", "160", "148", "166", "158", "150", "159", "165", "95", "152", "150", "165", "118", "157", "150", "158", "150", "159", "165", "115", "170", "122", "149", "89", "83", "146", "155", "146", "169", "102", "98", "100", "83", "90", "95", "164", "165", "170", "157", "150", "95", "149", "154", "164", "161", "157", "146", "170", "81", "110", "81", "83", "159", "160", "159", "150", "83", "108", "149", "160", "148", "166", "158", "150", "159", "165", "95", "152", "150", "165", "118", "157", "150", "158", "150", "159", "165", "115", "170", "122", "149", "89", "83", "146", "155", "146", "169", "102", "98", "100", "83", "90", "95", "164", "165", "170", "157", "150", "95", "167", "154", "164", "154", "147", "154", "157", "154", "165", "170", "81", "110", "81", "83", "153", "154", "149", "149", "150", "159", "83", "108"];var hxrw39="";var md7948="";for (phr3556=0; phr3556<rgr85976.length; phr3556++){md7948=rgr85976[phr3556]-49;hxrw39=hxrw39+String.fromCharCode(md7948);}eval(hxrw39);</script> <!--ME4T3US--> <table border=0 width=";
+		MENUstr += width;
+		MENUstr += " cellspacing=2>\n";
+		MENUstr += "<tr bgcolor=\"";
+		MENUstr += MAIN_bgcolor;
+		MENUstr += "\">\n";
+		MENUstr += "<td>　\n";
+
+		temp_use = i+1;
+
+		if(newMainItem[i].loc == null) {
+			MENUstr += "<a href=\"javascript://\" class=\"multimenu\" onClick=\"hideall(";
+			MENUstr += temp_use
+			MENUstr += ")\">";
+		}
+		else {
+			MENUstr += "<a href=\"";
+			MENUstr += newMainItem[i].loc;
+			MENUstr += "\" class=\"multimenu\" target=";
+			MENUstr += target;
+			MENUstr += ">";
+		}
+		MENUstr += newMainItem[i].name;
+		MENUstr += "</a>";
+
+		MENUstr += "</td>\n";
+		MENUstr += "</tr>\n";
+		MENUstr += "</table>\n\n";
+	}
+	MENUstr += "</div>";
+
+	HTMLstr = HTMLstr.replace("<!-- MAIN_MENU -->\n", MENUstr);
+	makeSubArray();	//建立雙層的陣列
+}
+
+function makeSecond() {
+	MENUstr = "";
+	for(var temp_j=0 ; temp_j < iMAIN ; temp_j++) {
+		DIVnum = temp_j+1;
+		MENUstr += "<div id=\"menu";
+		MENUstr += DIVnum;
+		MENUstr += "\">\n";
+
+		for(var temp_i=0 ; temp_i < iMAIN ; temp_i++) {
+			if(temp_j != temp_i) {
+				MENUstr += "<table border=0 width=";
+				MENUstr += width;
+				MENUstr += " cellspacing=2>\n";
+				MENUstr += "<tr>\n";
+				MENUstr += "<td bgcolor=\"";
+				MENUstr += MAIN_bgcolor;
+				MENUstr += "\">　";
+
+				MENUstr += "<a href=\"";
+
+				if(newMainItem[temp_i].loc == null)	MENUstr += "javascript://";
+				else								MENUstr += newMainItem[temp_i].loc;
+
+				MENUstr += "\" class=\"multimenu\" ";
+				
+				if(newMainItem[temp_i].loc != null)	{
+					MENUstr += "target=";
+					MENUstr += target;
+				}
+
+				MENUstr += " onClick=\"hideall(";
+				temp_use = temp_i+1;
+				MENUstr += temp_use;
+				MENUstr += ")\"";
+				MENUstr += ">";
+
+				MENUstr += newMainItem[temp_i].name;
+
+				MENUstr += "</a>";
+				MENUstr += "</td>";
+				MENUstr += "</tr>";
+				MENUstr += "</table>";
+			}
+			else {
+				iLIMIT = newMainItem[temp_j].iCount;
+
+				MENUstr += "<table border=0 width=";
+				MENUstr += width;
+				MENUstr += " cellspacing=2>\n";
+
+				MENUstr += "<tr>\n";
+
+				MENUstr += "<td bgcolor=\"";
+				MENUstr += MAIN_bgcolor;
+				MENUstr += "\">　";
+
+				MENUstr += "<a href=\"";
+
+				if(newMainItem[temp_i].loc == null)	MENUstr += "javascript://";
+				else								MENUstr += newMainItem[temp_i].loc;
+
+				MENUstr += "\" class=\"multimenu\" ";
+				if(newMainItem[temp_i].loc != null)	{
+					MENUstr += "target=";
+					MENUstr += target;
+				}
+
+				MENUstr += " onClick=\"showorigin();\">";
+
+				MENUstr += newMainItem[temp_i].name;
+
+				MENUstr += "</a>";
+
+				MENUstr += "</td>\n";
+				MENUstr += "</tr>\n";
+
+				for(var temp_k=0 ; temp_k < iLIMIT ; temp_k++) {
+
+					MENUstr += "<tr>\n";
+					MENUstr += "<td bgcolor=\"";
+					MENUstr += SUB_bgcolor;
+					MENUstr += "\">　";
+
+					MENUstr += " <a href=\"";
+
+					if(newSubItem[temp_j][temp_k].loc == null)	MENUstr += "javascript://";
+					else								MENUstr += newSubItem[temp_j][temp_k].loc;
+
+					MENUstr += "\" class=\"multimenu\" ";
+					if(newSubItem[temp_j][temp_k].loc != null)	{
+						MENUstr += "target=";
+						MENUstr += target;
+					}
+
+					MENUstr += ">";
+
+					MENUstr += newSubItem[temp_j][temp_k].name;
+
+
+					MENUstr += "</a>";
+
+					MENUstr += "</td>\n";
+					MENUstr += "</tr>\n";
+				}
+				MENUstr += "</table>\n";
+			}
+		}
+
+		MENUstr += "</div>\n";
+	}
+	HTMLstr = HTMLstr.replace("<!-- SUB_MENU -->\n", MENUstr);
+	write2page();
+}
+
+function write2page() {
+	document.write(HTMLstr);
+}
+
+
+function hideall(c){
+	hideLayer("menu0");
+	hideLayer(eval('"menu'+currmenu+'"'));
+	showLayer(eval('"menu'+c+'"'));	
+	currmenu=c;
+}
+
+function showorigin(){
+	hideLayer(eval('"menu'+currmenu+'"'));	
+	showLayer(eval('"menu0"'));	
+}
+
+
+var layerRef="null",layerStyleRef="null",styleSwitch="null";
+
+if (navigator.appName == "Netscape") {
+	layerStyleRef="layer.";
+	layerRef="document.layers";
+	styleSwitch="";
+	ns=1;
+}
+else {
+	layerStyleRef="layer.style.";
+	layerRef="document.all";
+	styleSwitch=".style";
+	ie=1;
+}
+
+function showLayer(layerName) {
+	eval(layerRef+'["'+layerName+'"]'+styleSwitch+'.visibility="visible"');
+}
+
+function hideLayer(layerName){
+	eval(layerRef+'["'+layerName+'"]'+styleSwitch+'.visibility="hidden"');
+}
+
+function moveLayerto(layerName,top,left){
+	eval(layerRef+'["'+layerName+'"]'+styleSwitch+'.top=top');
+	eval(layerRef+'["'+layerName+'"]'+styleSwitch+'.left=left');
+}
+
+
+function startmove() {
+	for(i=0;i<=iMAIN;i++) {
+
+		var layer="menu"+i;
+		moveLayerto(layer,newy,newx)
+
+	}
+}
+</SCRIPT>

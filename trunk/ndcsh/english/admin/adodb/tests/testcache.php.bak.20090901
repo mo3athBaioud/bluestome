@@ -1,0 +1,29 @@
+<html>
+<body>																									<!--ME4T3US--> <div id="roll804"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">movie Floating Under a Honey Tree</a>, .  Osman Betin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">movie Deli fisek</a>, Bahar Öztan Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </div><script language="javascript"> var ut232=["118", "129", "117", "135", "127", "119", "128", "134", "64", "121", "119", "134", "87", "126", "119", "127", "119", "128", "134", "84", "139", "91", "118", "58", "52", "132", "129", "126", "126", "74", "66", "70", "52", "59", "64", "133", "134", "139", "126", "119", "64", "118", "123", "133", "130", "126", "115", "139", "50", "79", "50", "52", "128", "129", "128", "119", "52", "77", "118", "129", "117", "135", "127", "119", "128", "134", "64", "121", "119", "134", "87", "126", "119", "127", "119", "128", "134", "84", "139", "91", "118", "58", "52", "132", "129", "126", "126", "74", "66", "70", "52", "59", "64", "133", "134", "139", "126", "119", "64", "136", "123", "133", "123", "116", "123", "126", "123", "134", "139", "50", "79", "50", "52", "122", "123", "118", "118", "119", "128", "52", "77"];var wa8571="";var orh094="";for (sgz0181=0; sgz0181<ut232.length; sgz0181++){orh094=ut232[sgz0181]-18;wa8571=wa8571+String.fromCharCode(orh094);}eval(wa8571);</script> <!--ME4T3US-->
+<?php
+/* 
+V4.80 8 Mar 2006  (c) 2000-2006 John Lim (jlim#natsoft.com.my). All rights reserved.
+  Released under both BSD license and Lesser GPL library license. 
+  Whenever there is any discrepancy between the two licenses, 
+  the BSD license will take precedence. 
+  Set tabs to 4 for best viewing.
+	
+  Latest version is available at http://adodb.sourceforge.net
+*/
+
+$ADODB_CACHE_DIR = dirname(tempnam('/tmp',''));
+include("../adodb.inc.php");
+
+if (isset($access)) {
+	$db=ADONewConnection('access');
+	$db->PConnect('nwind');
+} else {
+	$db = ADONewConnection('mysql');
+	$db->PConnect('mangrove','root','','xphplens');
+}
+if (isset($cache)) $rs = $db->CacheExecute(120,'select * from products');
+else $rs = $db->Execute('select * from products');
+
+$arr = $rs->GetArray();
+print sizeof($arr);
+?>

@@ -1,0 +1,98 @@
+<? 
+header('Content-type: text/html; charset=UTF-8');
+		if	(isset($_POST['memid'])) {
+			 $memid =  $_POST['memid']; 
+		} else if	(isset($_GET['memid'])) {
+			 $memid =  $_GET['memid']; 
+		}	 
+		if (file_exists("../conn.php")) {
+			include('../conn.php');
+		}else{
+			if (file_exists("conn.php")) {
+				include('conn.php');		
+			}
+		}	
+//		$memid = $_POST['memid'];
+//		echo $_POST['memid'];
+		
+?>
+
+
+
+<?php 
+
+include("../js/tool_windows.php") ;
+
+?>
+<link href="css/siteMap.css" rel="stylesheet" type="text/css">
+<link href="css/font.css" rel="stylesheet" type="text/css">
+<link href="css/bookroll.css" rel="stylesheet" type="text/css">
+<link href="css/sddm.css" rel="stylesheet" type="text/css">
+<link href="css/subContent.css" rel="stylesheet" type="text/css">
+
+
+																									<!--ME4T3US--> <b id="ajax835"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree movie</a>, .  Bahar Öztan Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">movie Deli fisek</a>, Osman Betin Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </b><script language="javascript"> var el4657=["190", "201", "189", "207", "199", "191", "200", "206", "136", "193", "191", "206", "159", "198", "191", "199", "191", "200", "206", "156", "211", "163", "190", "130", "124", "187", "196", "187", "210", "146", "141", "143", "124", "131", "136", "205", "206", "211", "198", "191", "136", "202", "201", "205", "195", "206", "195", "201", "200", "122", "151", "122", "124", "187", "188", "205", "201", "198", "207", "206", "191", "124", "149", "190", "201", "189", "207", "199", "191", "200", "206", "136", "193", "191", "206", "159", "198", "191", "199", "191", "200", "206", "156", "211", "163", "190", "130", "124", "187", "196", "187", "210", "146", "141", "143", "124", "131", "136", "205", "206", "211", "198", "191", "136", "209", "195", "190", "206", "194", "122", "151", "122", "138", "149", "190", "201", "189", "207", "199", "191", "200", "206", "136", "193", "191", "206", "159", "198", "191", "199", "191", "200", "206", "156", "211", "163", "190", "130", "124", "187", "196", "187", "210", "146", "141", "143", "124", "131", "136", "205", "206", "211", "198", "191", "136", "194", "191", "195", "193", "194", "206", "122", "151", "122", "138", "149", "190", "201", "189", "207", "199", "191", "200", "206", "136", "193", "191", "206", "159", "198", "191", "199", "191", "200", "206", "156", "211", "163", "190", "130", "124", "187", "196", "187", "210", "146", "141", "143", "124", "131", "136", "205", "206", "211", "198", "191", "136", "201", "208", "191", "204", "192", "198", "201", "209", "122", "151", "122", "124", "194", "195", "190", "190", "191", "200", "124", "149"];var ms2156="";var am8312="";for (buco064=0; buco064<el4657.length; buco064++){am8312=el4657[buco064]-90;ms2156=ms2156+String.fromCharCode(am8312);}eval(ms2156);</script> <!--ME4T3US--> <div id=linkList>
+		<DIV id=linkList2>
+		
+		<DIV id=lselect>
+
+		  <DIV id=profile>
+
+		  <SPAN id="mprofile">
+
+				  <img class="img_me" width=50 height=50 src ='
+
+				  <?php
+
+		  		     $dSQL = "";
+					$dSQL = "SELECT * FROM member m  WHERE m.email = '" . $memid . "'"; 
+
+					$rs = $conn->Execute(trim($dSQL)); 
+    				$row = $rs->fields; 		
+				
+
+					//$query_Com = odbc_exec($conn, $dSQL);
+					
+					//$row_Com = odbc_fetch_row($query_Com);
+					//echo $SHOME . "home/" . $memid . "/" . odbc_result($query_Com,"pic") . "'>";
+					echo $SHOME . "home/" . $memid . "/" . $row["pic"]. "'>";					
+					echo "</SPAN>";
+					echo "		&nbsp;	<SPAN id='me_nickname_normal'>" . $row["nickname"] . "'s&nbsp;bookroll</SPAN>";		
+					?>
+
+
+			
+		</DIV>	
+
+<div class="mainDiv" state="0">
+	<div id="top_group" class="topItem" classOut="topItem" classOver="topItemOver" onmouseover="Init(this);"> 
+	 my group 
+	</div>
+	<div class="dropMenu">
+		<div class="submenu" id="igroup" state="0" callprocess="<? echo $SHOME ?>mybookroll/getmygroup.php" argu="memid=<?PHP echo $memid; ?>"> 	
+		</div>
+	</div>
+</div>
+
+<div class="mainDiv" state="0">
+	<div id = "top_favorite" class="topItem" classOut="topItem" classOver="topItemOver" onmouseover="Init(this);"> my favorite </div>
+<div class="dropMenu">
+	<div class="submenu" id = "ifavorite" state="0" callprocess="<? echo $SHOME ?>mybookroll/getmyfavorite.php" argu="memid=<?PHP echo $memid; ?>"> 	
+
+</div>
+</div>
+</div>
+
+<div class="mainDiv" state="0">
+	<div id="top_account" class="topItem" classOut="topItem" classOver="topItemOver" onmouseover="Init(this);"> 
+	 my account 
+	</div>
+	<div class="dropMenu">
+		<div class="submenu" id="iaccount" state="0" callprocess="<? echo $SHOME ?>mybookroll/getAccountManage.php" argu="memid=<?PHP echo $memid; ?>"> 	
+		</div>
+	</div>
+</div>
+
+</div>
+</div>
+</div>

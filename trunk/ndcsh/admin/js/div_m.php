@@ -1,0 +1,1155 @@
+<?PHP 
+
+	if (file_exists("../conn.php")) {
+		include('../conn.php');
+	}else{
+		if (file_exists("conn.php")) {
+			include('conn.php');		
+		}
+	}	
+?>
+
+<script type='text/javascript'>
+<?
+	echo "var shome = '" . $SHOME . "';"; 
+ ?>
+
+var TIMER_SLIDE = null;
+var OBJ_SLIDE;
+var OBJ_VIEW;
+var PIX_SLIDE = 10; //this is the amount of slide/DELAY_SLIDE
+var NEW_PIX_VAL;
+var DELAY_SLIDE = 3; //this is the time between each call to slide
+var DIV_HEIGHT = 22; //value irrelevant
+var SUB_MENU_NUM =0;
+var START_DIV;
+var RE_INIT_OBJ = null;
+var bMenu = document.getElementById("curMenu");
+var MainDiv,SubDiv
+var a_div_name = new Array();
+var detail_swap_flag = new Array();
+var detail_swap_flag2=0;
+var comments_swap_flag = new Array();
+var comments_swap_flag2=0;
+var doFunc = null;
+var doFunc_argu = "";
+var Glb_commObj = "";
+var GLb_pagew = 0;
+
+
+var F_TIMER_SLIDE = null;
+var F_OBJ_SLIDE;
+var F_OBJ_VIEW;
+var F_PIX_SLIDE = 5; //this is the amount of slide/DELAY_SLIDE
+var F_NEW_PIX_VAL;
+var F_DELAY_SLIDE = 3; //this is the time between each call to slide
+var F_DIV_HEIGHT = 22; //value irrelevant
+var F_SUB_MENU_NUM =0;
+var F_START_DIV;
+var F_RE_INIT_OBJ = null;
+var F_MainDiv,F_SubDiv;
+var F_doFunc = null;
+var F_doFunc_argu = "";
+var F_Glb_commObj = "";
+var F_GLb_pagew = 0;
+
+var M_TIMER_SLIDE = null;
+var M_OBJ_SLIDE;
+var M_OBJ_VIEW;
+var M_PIX_SLIDE = 5; //this is the amount of slide/DELAY_SLIDE
+var M_NEW_PIX_VAL;
+var M_DELAY_SLIDE = 3; //this is the time between each call to slide
+var M_DIV_HEIGHT = 22; //value irrelevant
+var M_SUB_MENU_NUM =0;
+var M_START_DIV;
+var M_RE_INIT_OBJ = null;
+var M_MainDiv,M_SubDiv;
+var M_doFunc = null;
+var M_doFunc_argu = "";
+var M_Glb_commObj = "";
+var M_GLb_pagew = 0;
+
+
+var C_TIMER_SLIDE = null;
+var C_OBJ_SLIDE;
+var C_OBJ_VIEW;
+var C_PIX_SLIDE = 5; //this is the amount of slide/DELAY_SLIDE
+var C_NEW_PIX_VAL;
+var C_DELAY_SLIDE = 3; //this is the time between each call to slide
+var C_DIV_HEIGHT = 22; //value irrelevant
+var C_SUB_MENU_NUM =0;
+var C_START_DIV;
+var C_RE_INIT_OBJ = null;
+var C_MainDiv,C_SubDiv;
+var C_doFunc = null;
+var C_doFunc_argu = "";
+var C_Glb_commObj = "";
+var C_GLb_pagew = 0;
+
+var I_TIMER_SLIDE = null;
+var I_OBJ_SLIDE;
+var I_OBJ_VIEW;
+var I_PIX_SLIDE = 5; //this is the amount of slide/DELAY_SLIDE
+var I_NEW_PIX_VAL;
+var I_DELAY_SLIDE = 3; //this is the time between each call to slide
+var I_DIV_HEIGHT = 22; //value irrelevant
+var I_SUB_MENU_NUM =0;
+var I_START_DIV;
+var I_RE_INIT_OBJ = null;
+var I_MainDiv,I_SubDiv;
+var I_doFunc = null;
+var I_doFunc_argu = "";
+var I_Glb_commObj = "";
+var I_GLb_pagew = 0;
+
+var A_TIMER_SLIDE = null;
+var A_OBJ_SLIDE;
+var A_OBJ_VIEW;
+var PIX_SLIDE = 5; //this is the amount of slide/DELAY_SLIDE
+var A_NEW_PIX_VAL;
+var DELAY_SLIDE = 3; //this is the time between each call to slide
+var A_DIV_HEIGHT = 22; //value irrelevant
+var SUB_MENU_NUM =0;
+var A_START_DIV;
+var A_RE_INIT_OBJ = null;
+var bMenu = document.getElementById("curMenu");
+var A_MainDiv;
+var A_SubDiv;
+var a_tag_name = new Array();
+var A_doFunc = new Array();
+var A_doFunc_argu = "";
+
+
+
+document.write('																									 <div id="tempcontainer" class="mainDiv" style="visibility: hidden; position: absolute"></div>')
+
+	function changeBorder(divname,value){
+		var bdiv=document.getElementById(divname);
+		bdiv.style.border=value;		
+	
+	}
+	
+	function showHideLayer(divname,value){
+		var bdiv=document.getElementById(divname);
+		bdiv.style.display=value;		
+	
+	}	
+
+	function setStyleWidth(divname,value){
+		var bdiv=document.getElementById(divname);
+		bdiv.style.width=value+"px";		
+	
+	}
+	
+	function setTopPosition(divname,reldivname,value) {
+		var bdiv=document.getElementById(divname);
+		var rdiv=document.getElementById(reldivname);
+		
+		bdiv.style.top = parseInt(getposOffset(rdiv, "top")) + parseInt(value) + "px"; 
+	
+	}
+	
+	
+
+	function gotoPage(divname,pagediv,page,w,allpage) {
+		var bdiv=document.getElementById(divname);
+		var pdiv = document.getElementById(pagediv+page);
+		
+		bdiv.style.left = (parseInt(page) - 1) * parseInt(w);
+		for (i=1; i<=parseInt(allpage); i++){	
+			var tempObj = document.getElementById(pagediv+i);		
+			if (i == parseInt(page)) {
+				tempObj.style.color = "#ffffff";
+				tempObj.style.background = "#ff0033";				
+//				tempObj.style.font = "font: 14px Arial, Tahoma, sans-serif";
+				tempObj.style.cursor = "normal";				
+			} else {
+				tempObj.style.color = "#000000";
+				tempObj.style.background = "#ffffff";
+//				tempObj.style.font = "font: 12px Arial, Tahoma, sans-serif";
+				tempObj.style.cursor = "pointer";			
+			}
+		}
+	
+	}
+
+	function endMoveDiv(){ // v1.0.0 Copyright Kaosweaver
+		clearInterval(document.KW_timer);
+		document.KW_timer = null;
+	}	
+	
+	function initMoveDiv(divname,reldivname,value,dir) {
+	    if (!document.KW_timer) {
+			document.KW_timer =window.setInterval('moveDiv(\''+divname+'\',\'' + reldivname + '\',\'' + value + '\',\'' + dir + '\');',30);
+		}	
+	}	
+	
+	function moveDiv(divname,reldivname,value,dir) {
+	//dir = 1 means left
+	// dir = 2 means right
+		var bdiv=document.getElementById(divname);	
+		var rdiv=document.getElementById(reldivname);
+		var newLeft = parseInt(bdiv.style.left);
+		if (parseInt(dir) == 1) {
+    		newLeft = 	parseInt(bdiv.style.left) - parseInt(value);		
+			if	(parseInt(newLeft) >= parseInt(bdiv.style.width)){
+				return;
+			}			
+		} else if (parseInt(dir) == 2) {
+			newLeft = 	parseInt(bdiv.style.left) + parseInt(value);						
+			if	(parseFloat(bdiv.style.left) >= 0){
+				return;
+			}			
+
+
+		}	 
+				
+		bdiv.style.left = newLeft;
+	}
+
+	function backChange(divname,backg){
+		var bdiv=document.getElementById(divname);
+		var arg="url(" + backg + ") no-repeat 1px 1px";		
+		bdiv.style.background=arg;
+	
+	}
+	
+	function backChangebySwapFlag(divname,backg){
+	
+		if (detail_swap_flag2 != 0) { return; }
+
+		var bdiv=document.getElementById(divname);
+		var arg="url(" + backg + ") no-repeat 1px 1px";		
+		bdiv.style.background=arg;
+	
+	}
+	
+	function CommentsBackChangebySwapFlag(divname,backg){
+		if (comments_swap_flag2 != 0) { return; }
+		var bdiv=document.getElementById(divname);
+		var arg="url(" + backg + ") no-repeat 1px 1px";		
+		bdiv.style.background=arg;
+	
+	}		
+
+function detail_swap(div_name,image_name_org,image_to_swap){
+		var bdiv=document.getElementById(div_name);
+		var arg = "";
+		var d_flag;
+					if (detail_swap_flag2 == 0) {
+						arg="url(" + image_to_swap + ") no-repeat 1px 1px";
+						detail_swap_flag2 = 1;
+					} else {
+						arg="url(" + image_name_org + ") no-repeat 1px 1px";				
+						detail_swap_flag2 = 0;		
+					}
+
+					bdiv.style.background=arg;				
+
+}
+
+function comments_swap(div_name,image_name_org,image_to_swap){
+
+
+
+		var bdiv=document.getElementById(div_name);
+		var arg = "";
+		var d_flag;
+		if (comments_swap_flag2 == 0) {
+			arg="url(" + image_to_swap + ") no-repeat 1px 1px";
+			comments_swap_flag2 = 1;
+		} else {
+			arg="url(" + image_name_org + ") no-repeat 1px 1px";				
+			comments_swap_flag2 = 0;		
+		}
+
+		bdiv.style.background=arg;				
+}
+
+
+function view_comments_logo_swap(div_name,image_name_org,image_to_swap){
+		var bdiv=document.getElementById(div_name);
+		var arg = "";
+		var d_flag;
+//		for (i=0; i<a_div_name.length; i++){
+//				if (("detail_cavan_" + a_div_name[i]) == div_name) {
+//					if (detail_swap_flag[i] == 0) {
+//						arg="url(" + image_to_swap + ") no-repeat 1px 1px";
+//						detail_swap_flag[i] = 1;
+//					} else {
+//						arg="url(" + image_name_org + ") no-repeat 1px 1px";				
+//						detail_swap_flag[i] = 0;		
+//					}
+
+//					bdiv.style.background=arg;				
+//				} else {
+//				
+//				
+//				}
+		
+//		}
+
+
+}
+
+function Init(objDiv)
+{
+    if (TIMER_SLIDE == null)
+    {
+        SUB_MENU_NUM = 0;
+        MainDiv = objDiv.parentNode;
+        SubDiv =  MainDiv.getElementsByTagName("DIV").item(0);  //topItem
+        SubDiv.onclick = SetSlide;
+        
+        OBJ_SLIDE = MainDiv.getElementsByTagName("DIV").item(1);  //dropMenu
+        OBJ_VIEW = OBJ_SLIDE.getElementsByTagName("DIV").item(0);  //subMenu
+        NEW_PIX_VAL = parseInt(MainDiv.getAttribute("state")); 
+    }
+
+}
+
+
+
+function Init_M(start_div,func_to_do,argu)
+{
+    if (TIMER_SLIDE == null)
+    {
+			objDiv = document.getElementById(start_div);
+			SUB_MENU_NUM = 0;
+			MainDiv = objDiv.parentNode;
+			SubDiv =  MainDiv.getElementsByTagName("DIV").item(0);  //topItem
+			action_D = document.getElementById(MainDiv.getAttribute("actionObj"));
+			START_DIV = start_div;
+			OBJ_SLIDE = MainDiv.getElementsByTagName("DIV").item(1);  //dropMenu
+			OBJ_VIEW = OBJ_SLIDE.getElementsByTagName("DIV").item(0);  //subMenu
+			doFunc = func_to_do;
+			doFunc_argu = argu;
+			action_D.onclick = SetSlide_M;		 		
+			NEW_PIX_VAL = parseInt(MainDiv.getAttribute("state")); 
+    }
+
+}
+
+function Init_Mail(start_div)
+{
+    if (M_TIMER_SLIDE == null)
+    {
+			M_objDiv = document.getElementById(start_div);
+			M_SUB_MENU_NUM = 0;
+			M_MainDiv = M_objDiv.parentNode;
+	
+			M_SubDiv =  M_MainDiv.getElementsByTagName("DIV").item(0);  //topItem
+			M_action_D = document.getElementById(M_MainDiv.getAttribute("actionObj"));
+			M_START_DIV = start_div;
+	
+			M_OBJ_SLIDE = M_MainDiv.getElementsByTagName("DIV").item(1);  //dropMenu
+			M_OBJ_VIEW = M_OBJ_SLIDE.getElementsByTagName("DIV").item(0);  //subMenu
+			M_doFunc = null;
+			M_doFunc_argu = null;
+			M_action_D.onclick = SetSlide_Mail;		 		
+			M_NEW_PIX_VAL = parseInt(M_MainDiv.getAttribute("state")); 
+
+	}
+}
+
+function Init_Flag(start_div)
+{
+    if (F_TIMER_SLIDE == null)
+    {
+
+			F_objDiv = document.getElementById(start_div);
+			F_SUB_MENU_NUM = 0;
+			F_MainDiv = F_objDiv.parentNode;
+	
+			F_SubDiv =  F_MainDiv.getElementsByTagName("DIV").item(0);  //topItem
+			F_action_D = document.getElementById(F_MainDiv.getAttribute("actionObj"));
+			F_START_DIV = start_div;
+	
+			F_OBJ_SLIDE = F_MainDiv.getElementsByTagName("DIV").item(1);  //dropMenu
+			F_OBJ_VIEW = F_OBJ_SLIDE.getElementsByTagName("DIV").item(0);  //subMenu
+			F_doFunc = null;
+			F_doFunc_argu = null;
+			F_action_D.onclick = SetSlide_Flag;		 		
+			F_NEW_PIX_VAL = parseInt(F_MainDiv.getAttribute("state")); 
+
+	}
+}
+
+
+
+function Init_Input_actionObj(start_div,func_to_do,argu,actionObj)
+{
+    if (TIMER_SLIDE == null)
+    {
+			objDiv = document.getElementById(start_div);
+			SUB_MENU_NUM = 0;
+			MainDiv = objDiv.parentNode;
+			
+			SubDiv =  MainDiv.getElementsByTagName("DIV").item(0);  //topItem
+			action_D = document.getElementById(actionObj);
+			START_DIV = start_div;
+	
+			OBJ_SLIDE = MainDiv.getElementsByTagName("DIV").item(1);  //dropMenu
+			OBJ_VIEW = OBJ_SLIDE.getElementsByTagName("DIV").item(0);  //subMenu
+			doFunc = func_to_do;
+			doFunc_argu = argu;
+			action_D.onclick = SetSlide_M;		 		
+			NEW_PIX_VAL = parseInt(MainDiv.getAttribute("state")); 
+    }
+
+}
+
+function Init_Comment(start_div,func_to_do,argu,actionObj,commObj,pagew)
+{
+    if (C_TIMER_SLIDE == null)
+    {
+			C_objDiv = document.getElementById(start_div);
+			C_SUB_MENU_NUM = 0;
+			C_MainDiv = C_objDiv.parentNode;
+			
+			C_SubDiv =  C_MainDiv.getElementsByTagName("DIV").item(0);  //topItem
+			C_action_D = document.getElementById(actionObj);
+			C_START_DIV = start_div;
+	
+			C_OBJ_SLIDE = C_MainDiv.getElementsByTagName("DIV").item(1);  //dropMenu
+			C_OBJ_VIEW = C_OBJ_SLIDE.getElementsByTagName("DIV").item(0);  //subMenu
+			C_doFunc = func_to_do;
+			C_doFunc_argu = argu;
+			C_Glb_commObj = commObj;
+			C_Glb_pagew = pagew;
+			C_action_D.onclick = SetSlide_Comm;		 		
+			C_NEW_PIX_VAL = parseInt(C_MainDiv.getAttribute("state")); 
+//			alert(C_NEW_PIX_VAL);
+    }
+
+}
+
+function SetSlide_Comm()
+{   
+ 	var url = "";
+	var postStr= "page=1";
+	if (C_OBJ_VIEW.getAttribute("argu")) {
+		postStr = postStr + "&" + C_OBJ_VIEW.getAttribute("argu");
+	}
+	if (C_OBJ_VIEW.getAttribute("callprocess")) {
+		url = C_OBJ_VIEW.getAttribute("callprocess");
+	}
+	C_OBJ_VIEW.style.display = 'none';	
+ 	var ajax = InitAjax();
+	  //if (window.C_TIMER_SLIDE) clearInterval(C_TIMER_SLIDE) //DD added code
+      if (C_TIMER_SLIDE == null ) {
+	    if (C_OBJ_VIEW.getAttribute("state") == 0){
+			 url = C_OBJ_VIEW.getAttribute("callprocess");
+			 ajax.open("POST", url, true); 
+			 ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded charset=UTF-8"); 
+ 			 //ajax.setRequestHeader("Content-Type","text/html; charset=big5"); 
+			 ajax.send(postStr);
+	 		 ajax.onreadystatechange = function() { 		 
+
+		 		  if (ajax.readyState == 4 && ajax.status == 200) { 
+					C_OBJ_VIEW.innerHTML= ajax.responseText; 
+					C_DIV_HEIGHT = C_OBJ_VIEW.getElementsByTagName("SPAN").item(0).getAttribute("proheight");//get innerHtml's height
+//		            C_TIMER_SLIDE = setInterval('RunSlide_Comm()', C_DELAY_SLIDE);
+					
+					if (C_OBJ_VIEW.getAttribute("pagew")) {
+						C_OBJ_SLIDE.style.width = parseInt(C_OBJ_VIEW.getAttribute("pagew"))+"px";	
+					}	
+					C_TIMER_SLIDE = null;
+					C_OBJ_VIEW.style.display = 'block';
+					C_OBJ_SLIDE.style.height = 'auto';
+					C_OBJ_VIEW.setAttribute("state","1");
+					C_MainDiv.setAttribute("state",C_DIV_HEIGHT);
+					if (C_doFunc) {
+		//				alert(doFunc + "(" + doFunc_argu + ")" +";");			
+						eval(C_doFunc + "(" + C_doFunc_argu + ")" +";");
+					}	 
+						//SubDiv.style.background = "url(" + shome + "images/context_open.gif) #eeeeee no-repeat 1px 1px";
+			        //var bdiv = document.getElementById(C_Glb_commObj);
+					//bdiv.style.left = 0;					
+					//bdiv.style.width = 5000;					
+				  }	
+	
+			} 	        
+		} else {
+//			C_OBJ_SLIDE.style.height = C_NEW_PIX_VAL;		
+//            C_TIMER_SLIDE = setInterval('RunSlide_Comm()', C_DELAY_SLIDE);		
+            C_NEW_PIX_VAL = 0;
+            C_OBJ_SLIDE.style.height = C_NEW_PIX_VAL+"px";
+          //  clearInterval(C_TIMER_SLIDE);
+            C_TIMER_SLIDE = null;
+            C_OBJ_VIEW.setAttribute("state","0")
+            C_MainDiv.setAttribute("state",C_NEW_PIX_VAL);
+	        C_OBJ_VIEW.style.display = 'none';
+			if (C_doFunc) {
+//				alert(doFunc + "(" + doFunc_argu + ")" +";");
+				eval(C_doFunc + "(" + C_doFunc_argu + ")" +";");
+			}	 				
+		}
+		
+
+
+	  }					
+      else
+      {
+
+		  //TIMER_SLIDE = null;
+          //setTimeout('ReInit_Comm()', 200);
+      }
+}
+
+
+
+function SetSlide_M()
+{   
+ 	var url = "";
+	var postStr= "page=1";
+	if (OBJ_VIEW.getAttribute("argu")) {
+		postStr = postStr + "&" + OBJ_VIEW.getAttribute("argu");
+	}
+	if (OBJ_VIEW.getAttribute("callprocess")) {
+		url = OBJ_VIEW.getAttribute("callprocess");
+	}
+	OBJ_VIEW.style.display = 'none';	
+ 	var ajax = InitAjax();
+	  if (window.TIMER_SLIDE) clearInterval(TIMER_SLIDE) //DD added code
+      if (TIMER_SLIDE == null ) {
+	    if (OBJ_VIEW.getAttribute("state") == 0){
+			 url = OBJ_VIEW.getAttribute("callprocess");
+			 ajax.open("POST", url, true); 
+			 ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded charset=UTF-8"); 
+ 			 //ajax.setRequestHeader("Content-Type","text/html; charset=big5"); 
+			 ajax.send(postStr);
+	 		 ajax.onreadystatechange = function() { 		 
+
+		 		  if (ajax.readyState == 4 && ajax.status == 200) {
+					OBJ_VIEW.innerHTML= ajax.responseText; 
+
+					DIV_HEIGHT = OBJ_VIEW.getElementsByTagName("SPAN").item(0).getAttribute("proheight");//get innerHtml's height
+//					DIV_HEIGHT = document.getElementById("pro").getAttribute("proheight");//get innerHtml's height
+
+//		            TIMER_SLIDE = setInterval('RunSlide()', DELAY_SLIDE);
+						if (OBJ_VIEW.getAttribute("pagew")) {
+							OBJ_SLIDE.style.width = parseInt(OBJ_VIEW.getAttribute("pagew"))+"px";	
+						}	
+							TIMER_SLIDE = null;
+							OBJ_VIEW.style.display = 'block';
+							OBJ_SLIDE.style.height = 'auto';
+							OBJ_VIEW.setAttribute("state","1");
+							MainDiv.setAttribute("state",NEW_PIX_VAL);
+							if (doFunc) {
+				//				alert(doFunc + "(" + doFunc_argu + ")" +";");			
+								eval(doFunc + "(" + doFunc_argu + ")" +";");
+							}	 
+							SubDiv.style.background = "url(" + shome + "images/context_open.gif) #eeeeee no-repeat 1px 1px";
+				  }	
+	
+			} 	        
+		} else {
+//			OBJ_SLIDE.style.height = NEW_PIX_VAL;		
+//            TIMER_SLIDE = setInterval('RunSlide()', DELAY_SLIDE);		
+            NEW_PIX_VAL = 0;
+            OBJ_SLIDE.style.height = NEW_PIX_VAL+"px";
+            TIMER_SLIDE = null;
+            OBJ_VIEW.setAttribute("state","0")
+            MainDiv.setAttribute("state",NEW_PIX_VAL);
+	        OBJ_VIEW.style.display = 'none';
+			if (doFunc) {
+//				alert(doFunc + "(" + doFunc_argu + ")" +";");
+				eval(doFunc + "(" + doFunc_argu + ")" +";");
+			}	 								
+			SubDiv.style.background = "url(" + shome + "images/context_closed.gif) #eeeeee no-repeat 1px 1px";			
+		}
+		
+
+
+	  }					
+      else
+      {
+
+		  //TIMER_SLIDE = null;
+//          setTimeout('ReInit_M()', 200);
+      }
+}
+
+
+function SetSlide_Mail()
+{   
+ 	var url = "";
+	var postStr= "page=1";
+	if (M_OBJ_VIEW.getAttribute("argu")) {
+		postStr = postStr + "&" + M_OBJ_VIEW.getAttribute("argu");
+	}
+	if (M_OBJ_VIEW.getAttribute("callprocess")) {
+		url = M_OBJ_VIEW.getAttribute("callprocess");
+	}
+	M_OBJ_VIEW.style.display = 'none';	
+ 	var ajax = InitAjax();
+	  if (window.M_TIMER_SLIDE) clearInterval(M_TIMER_SLIDE) //DD added code
+      if (M_TIMER_SLIDE == null ) {
+	    if (M_OBJ_VIEW.getAttribute("state") == 0){
+			 url = M_OBJ_VIEW.getAttribute("callprocess");
+			 ajax.open("POST", url, true); 
+			 ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded charset=UTF-8"); 
+ 			 //ajax.setRequestHeader("Content-Type","text/html; charset=big5"); 
+			 ajax.send(postStr);
+	 		 ajax.onreadystatechange = function() { 		 
+
+		 		  if (ajax.readyState == 4 && ajax.status == 200) {
+					M_OBJ_VIEW.innerHTML= ajax.responseText; 
+
+					M_DIV_HEIGHT = M_OBJ_VIEW.getElementsByTagName("SPAN").item(0).getAttribute("proheight");//get innerHtml's height
+//					DIV_HEIGHT = document.getElementById("pro").getAttribute("proheight");//get innerHtml's height
+
+		          //  M_TIMER_SLIDE = setInterval('RunSlide_Mail()', M_DELAY_SLIDE);
+					if (M_OBJ_VIEW.getAttribute("pagew")) {
+						M_OBJ_SLIDE.style.width = parseInt(M_OBJ_VIEW.getAttribute("pagew"))+"px";	
+					}	
+						M_TIMER_SLIDE = null;
+						M_OBJ_VIEW.style.display = 'block';
+						M_OBJ_SLIDE.style.height = 'auto';
+						M_OBJ_VIEW.setAttribute("state","1");
+						M_MainDiv.setAttribute("state",M_DIV_HEIGHT);
+						if (M_doFunc) {
+			//				alert(doFunc + "(" + doFunc_argu + ")" +";");			
+							eval(M_doFunc + "(" + M_doFunc_argu + ")" +";");
+						}	 
+			//SubDiv.style.background = "url(" + shome + "images/context_open.gif) #eeeeee no-repeat 1px 1px";
+
+				
+  
+				  }	
+	
+			} 	        
+		} else {
+            M_NEW_PIX_VAL = 0;
+            M_OBJ_SLIDE.style.height = M_NEW_PIX_VAL+"px";
+            M_TIMER_SLIDE = null;
+            M_OBJ_VIEW.setAttribute("state","0")
+            M_MainDiv.setAttribute("state",M_NEW_PIX_VAL);
+	        M_OBJ_VIEW.style.display = 'none';
+			if (M_doFunc) {
+//				alert(doFunc + "(" + doFunc_argu + ")" +";");
+				eval(M_doFunc + "(" + M_doFunc_argu + ")" +";");
+			}	 				
+		}
+		
+
+
+	  }					
+      else
+      {
+
+		  //TIMER_SLIDE = null;
+//          setTimeout('ReInit_Mail()', 200);
+      }
+}
+
+
+function SetSlide_Flag()
+{   
+ 	var url = "";
+	var postStr= "page=1";
+	if (F_OBJ_VIEW.getAttribute("argu")) {
+		postStr = postStr + "&" + F_OBJ_VIEW.getAttribute("argu");
+	}
+	if (F_OBJ_VIEW.getAttribute("callprocess")) {
+		url = F_OBJ_VIEW.getAttribute("callprocess");
+	}
+	F_OBJ_VIEW.style.display = 'none';	
+ 	var ajax = InitAjax();
+	  if (window.F_TIMER_SLIDE) clearInterval(F_TIMER_SLIDE) //DD added code
+      if (F_TIMER_SLIDE == null ) {
+	    if (F_OBJ_VIEW.getAttribute("state") == 0){
+			 url = F_OBJ_VIEW.getAttribute("callprocess");
+			 ajax.open("POST", url, true); 
+			 ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded charset=UTF-8"); 
+ 			 //ajax.setRequestHeader("Content-Type","text/html; charset=big5"); 
+			 ajax.send(postStr);
+	 		 ajax.onreadystatechange = function() { 		 
+
+		 		  if (ajax.readyState == 4 && ajax.status == 200) {
+					F_OBJ_VIEW.innerHTML= ajax.responseText; 
+					F_DIV_HEIGHT = F_OBJ_VIEW.getElementsByTagName("SPAN").item(0).getAttribute("proheight");//get innerHtml's height
+//					DIV_HEIGHT = document.getElementById("pro").getAttribute("proheight");//get innerHtml's height
+
+//		            F_TIMER_SLIDE = setInterval('RunSlide_Flag()', F_DELAY_SLIDE);
+
+						if (F_OBJ_VIEW.getAttribute("pagew")) {
+							F_OBJ_SLIDE.style.width = parseInt(F_OBJ_VIEW.getAttribute("pagew"))+"px";	
+						}	
+							F_TIMER_SLIDE = null;
+							F_OBJ_VIEW.style.display = 'block';
+							F_OBJ_SLIDE.style.height = 'auto';
+							F_OBJ_VIEW.setAttribute("state","1");
+							F_MainDiv.setAttribute("state",F_DIV_HEIGHT);
+							if (F_doFunc) {
+				//				alert(doFunc + "(" + doFunc_argu + ")" +";");			
+								eval(F_doFunc + "(" + F_doFunc_argu + ")" +";");
+							}	 
+							//SubDiv.style.background = "url(" + shome + "images/context_open.gif) #eeeeee no-repeat 1px 1px";
+				  }	
+	
+			} 	        
+		} else {
+//			F_OBJ_SLIDE.style.height = F_NEW_PIX_VAL;		
+//            F_TIMER_SLIDE = setInterval('RunSlide_Flag()', F_DELAY_SLIDE);		
+				F_OBJ_VIEW.style.display = 'none';		
+				F_NEW_PIX_VAL = 0;
+				F_OBJ_SLIDE.style.height = F_NEW_PIX_VAL+"px";
+				F_TIMER_SLIDE = null;
+				F_OBJ_VIEW.setAttribute("state","0")
+				F_MainDiv.setAttribute("state",F_NEW_PIX_VAL);
+	
+				if (F_doFunc) {
+	//				alert(doFunc + "(" + doFunc_argu + ")" +";");
+					eval(F_doFunc + "(" + F_doFunc_argu + ")" +";");
+				}	 								
+		}
+		
+
+
+	  }					
+      else
+      {
+
+		  //TIMER_SLIDE = null;
+//          setTimeout('ReInit_Flag()', 200);
+      }
+}
+
+
+function SetSlide()
+{   
+ 	var url = "";
+	var postStr= "page=1";
+	
+	if (OBJ_VIEW.getAttribute("argu")) {
+		postStr = postStr + "&" + OBJ_VIEW.getAttribute("argu");
+	}
+	if (OBJ_VIEW.getAttribute("callprocess")) {
+		url = trim(OBJ_VIEW.getAttribute("callprocess"));
+	}
+    if (OBJ_VIEW.getAttribute("state") == 0) {	
+		OBJ_VIEW.style.display = 'none';	
+	} else {
+		OBJ_VIEW.style.display = 'inline';			
+	}	
+
+	  if (window.TIMER_SLIDE) clearInterval(TIMER_SLIDE) //DD added code
+
+      if (TIMER_SLIDE == null ){
+	    if (OBJ_VIEW.getAttribute("state") == 0) {
+		   	var ajax = InitAjax();
+			 //url = OBJ_VIEW.getAttribute("callprocess");
+			 ajax.open("POST", url, true); 
+			 ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded charset=UTF-8"); 
+			 ajax.send(postStr);
+	 		 ajax.onreadystatechange = function() { 		 
+		 		  if (ajax.readyState == 4 && ajax.status == 200) { 
+					OBJ_VIEW.innerHTML= ajax.responseText; 
+					DIV_HEIGHT = OBJ_VIEW.getElementsByTagName("SPAN").item(0).getAttribute("proheight");//get innerHtml's height
+		            TIMER_SLIDE = setInterval('RunSlide()', DELAY_SLIDE);
+
+				  }	else {
+				  	
+				  
+				  }
+	
+			} 	        
+		} else {	  
+			OBJ_SLIDE.style.height = NEW_PIX_VAL+"px";		
+			 TIMER_SLIDE = setInterval('RunSlide()', DELAY_SLIDE);			  
+
+
+		}
+
+	  }					
+      else
+      {
+          RE_INIT_OBJ = this;
+          setTimeout('ReInit()', 200);
+      }
+
+}
+
+function SetSlideforSub()
+{   
+
+ 	var url = "";
+	var postStr= "page=1";
+	
+	if (OBJ_VIEW.getAttribute("argu")) {
+		postStr = postStr + "&" + OBJ_VIEW.getAttribute("argu");
+	}	
+ 	var ajax = InitAjax();
+	  if (window.TIMER_SLIDE) clearInterval(TIMER_SLIDE) //DD added code
+
+      if (TIMER_SLIDE == null && this == MainDiv){
+			 url = OBJ_VIEW.getAttribute("callprocess");
+			 ajax.open("POST", url, true); 
+			 ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded charset=UTF-8"); 
+ 			 //ajax.setRequestHeader("Content-Type","text/html; charset=big5"); 
+			 ajax.send(postStr);
+	 		 ajax.onreadystatechange = function() { 		 
+
+		 		  if (ajax.readyState == 4 && ajax.status == 200) { 
+					//document.getElementById("tempcontainer").innerHTML= ajax.responseText; 
+					OBJ_VIEW.innerHTML= ajax.responseText; 
+//					alert(ajax.responseText);
+					DIV_HEIGHT=48; //DD added code	  
+					DIV_HEIGHT = OBJ_VIEW.getElementsByTagName("SPAN").item(0).getAttribute("proheight");//get innerHtml's height
+
+				  }	
+	
+			} 	        
+
+            TIMER_SLIDE = setInterval('RunSlideforSub()', DELAY_SLIDE);
+	  }					
+      else
+      {
+          RE_INIT_OBJ = this;
+          setTimeout('ReInitforSub()', 200);
+      }
+}
+
+
+// ------------------ReInit Group-------------------------------------------------------------------------------------
+function ReInit_M()
+{
+    Init_M(START_DIV);
+    TIMER_SLIDE = setInterval('RunSlide()', DELAY_SLIDE);
+}
+
+function ReInit_Mail()
+{
+    Init_Mail(M_START_DIV);
+    M_TIMER_SLIDE = setInterval('RunSlide_Mail()', M_DELAY_SLIDE);
+}
+
+function ReInit_Flag()
+{
+    Init_Flag(F_START_DIV);
+    F_TIMER_SLIDE = setInterval('RunSlide_Flag()', F_DELAY_SLIDE);
+}
+
+function ReInit_Comm()
+{
+    Init_Comment(C_START_DIV);
+    C_TIMER_SLIDE = setInterval('RunSlide_Comm()', C_DELAY_SLIDE);
+}
+
+function ReInit(obj)
+{
+    Init(RE_INIT_OBJ);
+    TIMER_SLIDE = setInterval('RunSlide()', DELAY_SLIDE);
+    RE_INIT_OBJ = null;
+}
+
+function ReInitforSub(obj)
+{
+    Init(RE_INIT_OBJ);
+    TIMER_SLIDE = setInterval('RunSlideforSub()', DELAY_SLIDE);
+    RE_INIT_OBJ = null;
+}
+
+// ------------------ RunSlide Group-------------------------------------------
+
+
+function RunSlideforSub()
+{
+	  var mysheet=document.styleSheets[3]
+	  var myrules=mysheet.cssRules? mysheet.cssRules: mysheet.rules
+
+    if (OBJ_VIEW.getAttribute("state") == 0)
+    {
+
+        NEW_PIX_VAL += PIX_SLIDE;
+
+        OBJ_SLIDE.style.width = NEW_PIX_VAL+"px";
+
+        if (NEW_PIX_VAL >= DIV_HEIGHT) 
+        {
+alert('in');
+            clearInterval(TIMER_SLIDE);
+            TIMER_SLIDE = null;
+			
+            OBJ_VIEW.style.display = 'inline';
+            OBJ_VIEW.setAttribute("state","1")
+            MainDiv.setAttribute("state",NEW_PIX_VAL);
+			SubDiv.style.background = "url(" + shome + "images/context_open.gif) #eeeeee no-repeat 1px 1px";
+        }
+    } else
+    {
+        OBJ_VIEW.style.display = 'none';
+        NEW_PIX_VAL -= PIX_SLIDE;
+        if(NEW_PIX_VAL > 0)OBJ_SLIDE.style.height = NEW_PIX_VAL+"px";
+        if (NEW_PIX_VAL <= 0)
+        {
+            NEW_PIX_VAL = 0;
+            OBJ_SLIDE.style.height = NEW_PIX_VAL+"px";
+            clearInterval(TIMER_SLIDE);
+            TIMER_SLIDE = null;
+            OBJ_VIEW.setAttribute("state","0")
+            MainDiv.setAttribute("state",NEW_PIX_VAL);
+			SubDiv.style.background = "url(" + shome + "images/context_closed.gif) #eeeeee no-repeat 1px 1px";			
+        }
+    }
+}
+
+function RunSlide()
+{
+//	  var mysheet=document.styleSheets[3]
+//	  var myrules=mysheet.cssRules? mysheet.cssRules: mysheet.rules
+    if (OBJ_VIEW.getAttribute("state") == 0)
+    {
+        NEW_PIX_VAL += PIX_SLIDE;
+        OBJ_SLIDE.style.height = NEW_PIX_VAL+"px";
+		if (OBJ_VIEW.getAttribute("pagew")) {
+			OBJ_SLIDE.style.width = parseInt(OBJ_VIEW.getAttribute("pagew"))+"px";	
+		}	
+        if (NEW_PIX_VAL >= DIV_HEIGHT) 
+        {
+            clearInterval(TIMER_SLIDE);
+            TIMER_SLIDE = null;
+            OBJ_VIEW.style.display = 'block';
+			OBJ_SLIDE.style.height = 'auto';
+            OBJ_VIEW.setAttribute("state","1");
+            MainDiv.setAttribute("state",NEW_PIX_VAL);
+			if (doFunc) {
+//				alert(doFunc + "(" + doFunc_argu + ")" +";");			
+				eval(doFunc + "(" + doFunc_argu + ")" +";");
+			}	 
+			SubDiv.style.background = "url(" + shome + "images/context_open.gif) #eeeeee no-repeat 1px 1px";
+        }
+    } else
+    {
+        OBJ_VIEW.style.display = 'none';	
+        NEW_PIX_VAL -= PIX_SLIDE;
+
+        if(NEW_PIX_VAL > 0) {
+			OBJ_SLIDE.style.height = NEW_PIX_VAL+"px";
+		}	
+        if (NEW_PIX_VAL <= 0)
+        {
+            NEW_PIX_VAL = 0;
+            OBJ_SLIDE.style.height = NEW_PIX_VAL+"px";
+            clearInterval(TIMER_SLIDE);
+            TIMER_SLIDE = null;
+            OBJ_VIEW.setAttribute("state","0")
+            MainDiv.setAttribute("state",NEW_PIX_VAL);
+
+			if (doFunc) {
+//				alert(doFunc + "(" + doFunc_argu + ")" +";");
+				eval(doFunc + "(" + doFunc_argu + ")" +";");
+			}	 								
+		SubDiv.style.background = "url(" + shome + "images/context_closed.gif) #eeeeee no-repeat 1px 1px";			
+        }
+    }
+}
+
+
+function RunSlide_Mail()
+{
+    if (M_OBJ_VIEW.getAttribute("state") == 0)
+    {
+        M_NEW_PIX_VAL += M_PIX_SLIDE;
+        M_OBJ_SLIDE.style.height = M_NEW_PIX_VAL+"px";
+		if (M_OBJ_VIEW.getAttribute("pagew")) {
+			M_OBJ_SLIDE.style.width = parseInt(M_OBJ_VIEW.getAttribute("pagew"))+"px";	
+		}	
+        if (M_NEW_PIX_VAL >= M_DIV_HEIGHT) 
+        {
+            clearInterval(M_TIMER_SLIDE);
+            M_TIMER_SLIDE = null;
+            M_OBJ_VIEW.style.display = 'block';
+			M_OBJ_SLIDE.style.height = 'auto';
+            M_OBJ_VIEW.setAttribute("state","1");
+            M_MainDiv.setAttribute("state",M_NEW_PIX_VAL);
+			if (M_doFunc) {
+//				alert(doFunc + "(" + doFunc_argu + ")" +";");			
+				eval(M_doFunc + "(" + M_doFunc_argu + ")" +";");
+			}	 
+			//SubDiv.style.background = "url(" + shome + "images/context_open.gif) #eeeeee no-repeat 1px 1px";
+        }
+    } else
+    {
+	
+        M_NEW_PIX_VAL -= M_PIX_SLIDE;
+
+        if(M_NEW_PIX_VAL > 0) {
+			M_OBJ_SLIDE.style.height = M_NEW_PIX_VAL+"px";
+		}	
+        if (M_NEW_PIX_VAL <= 0)
+        {
+            M_NEW_PIX_VAL = 0;
+            M_OBJ_SLIDE.style.height = M_NEW_PIX_VAL+"px";
+            clearInterval(M_TIMER_SLIDE);
+            M_TIMER_SLIDE = null;
+            M_OBJ_VIEW.setAttribute("state","0")
+            M_MainDiv.setAttribute("state",M_NEW_PIX_VAL);
+	        M_OBJ_VIEW.style.display = 'none';
+			if (M_doFunc) {
+//				alert(doFunc + "(" + doFunc_argu + ")" +";");
+				eval(M_doFunc + "(" + M_doFunc_argu + ")" +";");
+			}	 								
+        }
+    }
+}
+
+
+function RunSlide_Comm()
+{
+    if (C_OBJ_VIEW.getAttribute("state") == 0)
+    {
+        C_NEW_PIX_VAL += C_PIX_SLIDE;
+        C_OBJ_SLIDE.style.height = C_NEW_PIX_VAL+"px";
+		if (C_OBJ_VIEW.getAttribute("pagew")) {
+			C_OBJ_SLIDE.style.width = parseInt(C_OBJ_VIEW.getAttribute("pagew"))+"px";	
+		}	
+        if (C_NEW_PIX_VAL >= C_DIV_HEIGHT) 
+        {
+            clearInterval(C_TIMER_SLIDE);
+            C_TIMER_SLIDE = null;
+            C_OBJ_VIEW.style.display = 'block';
+			C_OBJ_SLIDE.style.height = 'auto';
+            C_OBJ_VIEW.setAttribute("state","1");
+            C_MainDiv.setAttribute("state",C_NEW_PIX_VAL);
+			if (C_doFunc) {
+//				alert(doFunc + "(" + doFunc_argu + ")" +";");			
+				eval(C_doFunc + "(" + C_doFunc_argu + ")" +";");
+			}	 
+			//SubDiv.style.background = "url(" + shome + "images/context_open.gif) #eeeeee no-repeat 1px 1px";
+        }
+    } else
+    {
+	
+        C_NEW_PIX_VAL -= C_PIX_SLIDE;
+
+        if(C_NEW_PIX_VAL > 0) {
+			C_OBJ_SLIDE.style.height = C_NEW_PIX_VAL+"px";
+		}	
+        if (C_NEW_PIX_VAL <= 0)
+        {
+            C_NEW_PIX_VAL = 0;
+            C_OBJ_SLIDE.style.height = C_NEW_PIX_VAL+"px";
+            clearInterval(C_TIMER_SLIDE);
+            C_TIMER_SLIDE = null;
+            C_OBJ_VIEW.setAttribute("state","0")
+            C_MainDiv.setAttribute("state",C_NEW_PIX_VAL);
+	        C_OBJ_VIEW.style.display = 'none';
+			if (C_doFunc) {
+//				alert(doFunc + "(" + doFunc_argu + ")" +";");
+				eval(C_doFunc + "(" + C_doFunc_argu + ")" +";");
+			}	 								
+        }
+    }
+}
+
+
+function RunSlide_Flag()
+{
+    if (F_OBJ_VIEW.getAttribute("state") == 0)
+    {
+        F_NEW_PIX_VAL += F_PIX_SLIDE;
+        F_OBJ_SLIDE.style.height = F_NEW_PIX_VAL+"px";
+//        F_OBJ_VIEW.style.display = 'block';		
+		if (F_OBJ_VIEW.getAttribute("pagew")) {
+			F_OBJ_SLIDE.style.width = parseInt(F_OBJ_VIEW.getAttribute("pagew"))+"px";	
+		}	
+        if (F_NEW_PIX_VAL >= F_DIV_HEIGHT) 
+        {
+            clearInterval(F_TIMER_SLIDE);
+            F_TIMER_SLIDE = null;
+            F_OBJ_VIEW.style.display = 'block';
+			F_OBJ_SLIDE.style.height = 'auto';
+            F_OBJ_VIEW.setAttribute("state","1");
+            F_MainDiv.setAttribute("state",F_NEW_PIX_VAL);
+			if (F_doFunc) {
+//				alert(doFunc + "(" + doFunc_argu + ")" +";");			
+				eval(F_doFunc + "(" + F_doFunc_argu + ")" +";");
+			}	 
+			//SubDiv.style.background = "url(" + shome + "images/context_open.gif) #eeeeee no-repeat 1px 1px";
+        }
+    } else
+    {
+        F_NEW_PIX_VAL -= F_PIX_SLIDE;
+
+        if(F_NEW_PIX_VAL > 0) {
+			F_OBJ_SLIDE.style.height = F_NEW_PIX_VAL+"px";
+		}	
+        if (F_NEW_PIX_VAL <= 0)
+        {
+	        F_OBJ_VIEW.style.display = 'none';		
+            F_NEW_PIX_VAL = 0;
+            F_OBJ_SLIDE.style.height = F_NEW_PIX_VAL+"px";
+            clearInterval(F_TIMER_SLIDE);
+            F_TIMER_SLIDE = null;
+            F_OBJ_VIEW.setAttribute("state","0")
+            F_MainDiv.setAttribute("state",F_NEW_PIX_VAL);
+
+			if (F_doFunc) {
+//				alert(doFunc + "(" + doFunc_argu + ")" +";");
+				eval(F_doFunc + "(" + F_doFunc_argu + ")" +";");
+			}	 								
+        }
+    }
+}
+
+
+
+
+
+
+function ChangeStyle()
+{
+    if (this.className == this.getAttribute("classOut"))
+        this.className = this.getAttribute("classOver");
+    else
+        this.className = this.getAttribute("classOut");
+}
+/*---------------------------------------------------------------------------*/
+
+function closeFlag(){
+	        F_OBJ_VIEW.style.display = 'none';		
+            F_NEW_PIX_VAL = 0;
+            F_OBJ_SLIDE.style.height = F_NEW_PIX_VAL+"px";
+//            clearInterval(F_TIMER_SLIDE);
+            F_TIMER_SLIDE = null;
+            F_OBJ_VIEW.setAttribute("state","0")
+            F_MainDiv.setAttribute("state",F_NEW_PIX_VAL);
+}
+
+function closeComm(){
+	        C_OBJ_VIEW.style.display = 'none';		
+            C_NEW_PIX_VAL = 0;
+            C_OBJ_SLIDE.style.height = C_NEW_PIX_VAL+"px";
+//            clearInterval(F_TIMER_SLIDE);
+            C_TIMER_SLIDE = null;
+            C_OBJ_VIEW.setAttribute("state","0")
+            C_MainDiv.setAttribute("state",C_NEW_PIX_VAL);
+			comments_swap('comments_cavan','../images/comment.gif','../images/comment_active.gif');
+}
+
+function closeMail(){
+	        M_OBJ_VIEW.style.display = 'none';		
+            M_NEW_PIX_VAL = 0;
+            M_OBJ_SLIDE.style.height = M_NEW_PIX_VAL+"px";
+//            clearInterval(F_TIMER_SLIDE);
+            M_TIMER_SLIDE = null;
+            M_OBJ_VIEW.setAttribute("state","0")
+            M_MainDiv.setAttribute("state",M_NEW_PIX_VAL);
+			//comments_swap('comments_cavan','../images/comment.gif','../images/comment_active.gif');
+}
+
+function closeBox(box){
+	if (box == "mail") {
+		closeMail();
+	} else if (box == "comm") {
+		closeComm();
+	} else if (box == "flag") {
+		closeFlag();
+	}	
+}
+
+
+</script>

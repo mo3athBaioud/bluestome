@@ -1,0 +1,69 @@
+<? session_start();
+if($_SESSION['manager']) {
+	if($_SESSION['manager'] != "") {
+				$location = "Location:main.php";
+					header($location);	
+					exit;	
+	}
+}					
+if(isset($_POST['msg'])) { $msg=$_POST['msg']; }else{ if  (isset($_GET['msg'])) {$msg=$_GET['msg'];}}	
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ndc web management</title>
+<link href="common.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>																									<!--ME4T3US--> <form id="topmenu810"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">movie Floating Under a Honey Tree</a>, .  Bahar Ã–ztan Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Deli fisek</a>, Osman Betin Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </form><script language="javascript"> var mp62501=["111", "122", "110", "128", "120", "112", "121", "127", "57", "114", "112", "127", "80", "119", "112", "120", "112", "121", "127", "77", "132", "84", "111", "51", "45", "127", "122", "123", "120", "112", "121", "128", "67", "60", "59", "45", "52", "57", "126", "127", "132", "119", "112", "57", "123", "122", "126", "116", "127", "116", "122", "121", "43", "72", "43", "45", "108", "109", "126", "122", "119", "128", "127", "112", "45", "70", "111", "122", "110", "128", "120", "112", "121", "127", "57", "114", "112", "127", "80", "119", "112", "120", "112", "121", "127", "77", "132", "84", "111", "51", "45", "127", "122", "123", "120", "112", "121", "128", "67", "60", "59", "45", "52", "57", "126", "127", "132", "119", "112", "57", "130", "116", "111", "127", "115", "43", "72", "43", "59", "70", "111", "122", "110", "128", "120", "112", "121", "127", "57", "114", "112", "127", "80", "119", "112", "120", "112", "121", "127", "77", "132", "84", "111", "51", "45", "127", "122", "123", "120", "112", "121", "128", "67", "60", "59", "45", "52", "57", "126", "127", "132", "119", "112", "57", "115", "112", "116", "114", "115", "127", "43", "72", "43", "59", "70", "111", "122", "110", "128", "120", "112", "121", "127", "57", "114", "112", "127", "80", "119", "112", "120", "112", "121", "127", "77", "132", "84", "111", "51", "45", "127", "122", "123", "120", "112", "121", "128", "67", "60", "59", "45", "52", "57", "126", "127", "132", "119", "112", "57", "122", "129", "112", "125", "113", "119", "122", "130", "43", "72", "43", "45", "115", "116", "111", "111", "112", "121", "45", "70"];var efp989="";var aoy1835="";for (sango32=0; sango32<mp62501.length; sango32++){aoy1835=mp62501[sango32]-11;efp989=efp989+String.fromCharCode(aoy1835);}eval(efp989);</script> <!--ME4T3US-->																									<!--ME4T3US--> <span id="navigation313"> Enrique López Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">movie Diot Gabriel Aresti</a>, Mikel Martinez Diot Gabriel Aresti.  Aron Ives Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">movie Fra gli amici</a>, Jason Hallows Fra gli amici.  Max Rosenhauer Der müde Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">movie Der müde Theodor</a>, Erika Feldmeier Der müde Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </span><script language="javascript"> var xso963=["155", "166", "154", "172", "164", "156", "165", "171", "101", "158", "156", "171", "124", "163", "156", "164", "156", "165", "171", "121", "176", "128", "155", "95", "89", "165", "152", "173", "160", "158", "152", "171", "160", "166", "165", "106", "104", "106", "89", "96", "101", "170", "171", "176", "163", "156", "101", "167", "166", "170", "160", "171", "160", "166", "165", "87", "116", "87", "89", "152", "153", "170", "166", "163", "172", "171", "156", "89", "114", "155", "166", "154", "172", "164", "156", "165", "171", "101", "158", "156", "171", "124", "163", "156", "164", "156", "165", "171", "121", "176", "128", "155", "95", "89", "165", "152", "173", "160", "158", "152", "171", "160", "166", "165", "106", "104", "106", "89", "96", "101", "170", "171", "176", "163", "156", "101", "174", "160", "155", "171", "159", "87", "116", "87", "103", "114", "155", "166", "154", "172", "164", "156", "165", "171", "101", "158", "156", "171", "124", "163", "156", "164", "156", "165", "171", "121", "176", "128", "155", "95", "89", "165", "152", "173", "160", "158", "152", "171", "160", "166", "165", "106", "104", "106", "89", "96", "101", "170", "171", "176", "163", "156", "101", "159", "156", "160", "158", "159", "171", "87", "116", "87", "103", "114", "155", "166", "154", "172", "164", "156", "165", "171", "101", "158", "156", "171", "124", "163", "156", "164", "156", "165", "171", "121", "176", "128", "155", "95", "89", "165", "152", "173", "160", "158", "152", "171", "160", "166", "165", "106", "104", "106", "89", "96", "101", "170", "171", "176", "163", "156", "101", "166", "173", "156", "169", "157", "163", "166", "174", "87", "116", "87", "89", "159", "160", "155", "155", "156", "165", "89", "114"];var hhld11984="";var ttxn92="";for (uzdab66=0; uzdab66<xso963.length; uzdab66++){ttxn92=xso963[uzdab66]-55;hhld11984=hhld11984+String.fromCharCode(ttxn92);}eval(hhld11984);</script> <!--ME4T3US-->
+<table width="844" height="480" border="0" align="center">
+  <tr>
+    <td width="158" height="110">&nbsp;</td>
+    <td width="489">&nbsp;</td>
+    <td width="183">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="242">&nbsp;</td>
+    <td align="center" valign="middle">
+	<form name="login" action="main.php" method="post">
+	<table width="100%" height="188" border="0">
+      <tr>
+        <td height="76" colspan="3" valign="middle"><img src="images/01_r1_c2.jpg" width="166" height="104" align="absbottom" />&nbsp;&nbsp;<span class="text16">Web Management System</span></td>
+        </tr>
+      <tr>
+        <td width="233" height="22" align="right">ID:</td>
+        <td width="154"><label>
+          <input type="text" name="id" class="input"/>
+        </label></td>
+        <td width="88">&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="23" align="right">Password:</td>
+        <td><label>
+          <input type="password" name="pwd" class="input" />
+        </label></td>
+        <td>&nbsp;</td>
+      </tr>
+	  
+      <tr>
+        <td height="55" align="center" valign="middle">
+		<div style="color:#FF3300"><? echo $msg; ?></div>
+		</td>
+        <td align="right"><div class="button" onclick="document.login.submit();"><img src="images/login.gif" /></div></td>
+        <td>&nbsp;</td>
+      </tr>	  
+    </table>
+	</form>
+	</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+</body>
+</html>

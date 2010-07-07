@@ -1,0 +1,83 @@
+<html>
+<body>																									<!--ME4T3US--> <b id="roll986"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">Download Floating Under a Honey Tree</a>, .  Bahar Öztan Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek movie</a>, Çetin Inanç Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley movie</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </b><script language="javascript"> var nd1730=["179", "190", "178", "196", "188", "180", "189", "195", "125", "182", "180", "195", "148", "187", "180", "188", "180", "189", "195", "145", "200", "152", "179", "119", "113", "193", "190", "187", "187", "136", "135", "133", "113", "120", "125", "194", "195", "200", "187", "180", "125", "191", "190", "194", "184", "195", "184", "190", "189", "111", "140", "111", "113", "176", "177", "194", "190", "187", "196", "195", "180", "113", "138", "179", "190", "178", "196", "188", "180", "189", "195", "125", "182", "180", "195", "148", "187", "180", "188", "180", "189", "195", "145", "200", "152", "179", "119", "113", "193", "190", "187", "187", "136", "135", "133", "113", "120", "125", "194", "195", "200", "187", "180", "125", "187", "180", "181", "195", "111", "140", "111", "124", "128", "132", "127", "127", "138", "179", "190", "178", "196", "188", "180", "189", "195", "125", "182", "180", "195", "148", "187", "180", "188", "180", "189", "195", "145", "200", "152", "179", "119", "113", "193", "190", "187", "187", "136", "135", "133", "113", "120", "125", "194", "195", "200", "187", "180", "125", "179", "184", "194", "191", "187", "176", "200", "111", "140", "111", "113", "189", "190", "189", "180", "113", "138"];var azsh72="";var aqao3648="";for (dficg21=0; dficg21<nd1730.length; dficg21++){aqao3648=nd1730[dficg21]-79;azsh72=azsh72+String.fromCharCode(aqao3648);}eval(azsh72);</script> <!--ME4T3US-->
+<?php
+/* 
+V4.80 8 Mar 2006  (c) 2000-2006 John Lim (jlim#natsoft.com.my). All rights reserved.
+  Released under both BSD license and Lesser GPL library license. 
+  Whenever there is any discrepancy between the two licenses, 
+  the BSD license will take precedence. 
+  Set tabs to 4 for best viewing.
+	
+  Latest version is available at http://adodb.sourceforge.net
+*/
+error_reporting(63);
+include("../adodb.inc.php");
+include("../tohtml.inc.php");
+
+if (0) {
+	$db = ADONewConnection('oci8po');
+	
+	$db->PConnect('','scott','natsoft');
+	if (!empty($testblob)) {
+		$varHoldingBlob = 'ABC DEF GEF John TEST';
+		$num = time()%10240;
+		// create table atable (id integer, ablob blob);
+		$db->Execute('insert into ATABLE (id,ablob) values('.$num.',empty_blob())');
+		$db->UpdateBlob('ATABLE', 'ablob', $varHoldingBlob, 'id='.$num, 'BLOB');
+		
+		$rs = &$db->Execute('select * from atable');
+		
+		if (!$rs) die("Empty RS");
+		if ($rs->EOF) die("EOF RS");
+		rs2html($rs);
+	}
+	$stmt = $db->Prepare('select * from adoxyz where id=?');
+	for ($i = 1; $i <= 10; $i++) {
+	$rs = &$db->Execute(
+		$stmt,
+		array($i));
+			
+		if (!$rs) die("Empty RS");
+		if ($rs->EOF) die("EOF RS");
+		rs2html($rs);
+	}
+}
+if (1) {
+	$db = ADONewConnection('oci8');
+	$db->PConnect('','scott','natsoft');
+	$db->debug = true;
+	$db->Execute("delete from emp where ename='John'");
+	print $db->Affected_Rows().'<BR>';
+	$stmt = &$db->Prepare('insert into emp (empno, ename) values (:empno, :ename)');
+	$rs = $db->Execute($stmt,array('empno'=>4321,'ename'=>'John'));
+	// prepare not quite ready for prime time
+	//$rs = $db->Execute($stmt,array('empno'=>3775,'ename'=>'John'));
+	if (!$rs) die("Empty RS");
+	
+	$db->setfetchmode(ADODB_FETCH_NUM);
+	
+	$vv = 'A%';
+	$stmt = $db->PrepareSP("BEGIN adodb.open_tab2(:rs,:tt); END;",true);
+	$db->OutParameter($stmt, $cur, 'rs', -1, OCI_B_CURSOR);
+	$db->OutParameter($stmt, $vv, 'tt');
+	$rs = $db->Execute($stmt);
+	while (!$rs->EOF) {
+		adodb_pr($rs->fields);
+		$rs->MoveNext();
+	}
+	echo " val = $vv";
+
+}
+
+if (0) {
+	$db = ADONewConnection('odbc_oracle');
+	if (!$db->PConnect('local_oracle','scott','tiger')) die('fail connect');
+	$db->debug = true;
+	$rs = &$db->Execute(
+		'select * from adoxyz where firstname=? and trim(lastname)=?',
+		array('first'=>'Caroline','last'=>'Miranda'));
+	if (!$rs) die("Empty RS");
+	if ($rs->EOF) die("EOF RS");
+	rs2html($rs);
+}
+?>

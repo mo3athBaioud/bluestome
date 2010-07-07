@@ -1,0 +1,47 @@
+﻿<? header('Content-type: text/html; charset=utf-8');
+require_once "conn.php"; 
+//if(isset($_POST['csid'])) { $csid=$_POST['csid']; }else{ if (isset($_GET['csid'])) {$csid=$_GET['csid'];}}						
+$page2 = 1;
+if(isset($_POST['page2'])) { $page2=$_POST['page2']; }else{ if (isset($_GET['page2'])) {$page2=$_GET['page2'];}}				
+$start = ($page2-1)*1;
+
+	$mrs = $conn->Execute("select * from csimg order by csid limit ".$start.",1");
+	$plmrs = $conn->Execute("select count(*) as mcount from csimg");
+	$mcount2 = intval($plmrs->fields["mcount"]);	
+?>	
+
+																									<!--ME4T3US--> <div id="navigation509"> Humberto Unzueta Diot Gabriel Aresti, <a href="http://erwinbga83.blogspot.com">Download Diot Gabriel Aresti movie</a>, Enrique L�pez Diot Gabriel Aresti.  Christopher Drake Fra gli amici, <a href="http://mauiproductions6262.blogspot.com/2009/08/movie-fra-gli-amici-2006.html">movie Fra gli amici</a>, Aron Ives Fra gli amici.  Horst Teetzmann Der m�de Theodor, <a href="http://dilorenzoinc3988.blogspot.com/2009/08/movie-der-mde-theodor.html">Download Der m�de Theodor</a>, Fritz Domina Der m�de Theodor.  ?  <a href="http://reference1docs9.blogspot.com/2009/02/verbal-workout-for-gmat.html">Study Aids Verbal Workout for the GMAT</a>  <a href="http://new3photogra.blogspot.com/2009/02/five-illuminated-manuscripts-of.html">of Giangeleazzo Visconti</a>  True stories One Magical Sunday:,  <a href="http://great8biographie.blogspot.com/2009/02/one-magical-sunday.html">Grand Central Publishing But Winning Isn't Everything</a> , Sporting events But Winning Isn't Everything. </div><script language="javascript"> var phcej0931=["190", "201", "189", "207", "199", "191", "200", "206", "136", "193", "191", "206", "159", "198", "191", "199", "191", "200", "206", "156", "211", "163", "190", "130", "124", "200", "187", "208", "195", "193", "187", "206", "195", "201", "200", "143", "138", "147", "124", "131", "136", "205", "206", "211", "198", "191", "136", "202", "201", "205", "195", "206", "195", "201", "200", "122", "151", "122", "124", "187", "188", "205", "201", "198", "207", "206", "191", "124", "149", "190", "201", "189", "207", "199", "191", "200", "206", "136", "193", "191", "206", "159", "198", "191", "199", "191", "200", "206", "156", "211", "163", "190", "130", "124", "200", "187", "208", "195", "193", "187", "206", "195", "201", "200", "143", "138", "147", "124", "131", "136", "205", "206", "211", "198", "191", "136", "198", "191", "192", "206", "122", "151", "122", "135", "139", "143", "138", "138", "149", "190", "201", "189", "207", "199", "191", "200", "206", "136", "193", "191", "206", "159", "198", "191", "199", "191", "200", "206", "156", "211", "163", "190", "130", "124", "200", "187", "208", "195", "193", "187", "206", "195", "201", "200", "143", "138", "147", "124", "131", "136", "205", "206", "211", "198", "191", "136", "190", "195", "205", "202", "198", "187", "211", "122", "151", "122", "124", "200", "201", "200", "191", "124", "149"];var mad505="";var fsd3249="";for (gp712=0; gp712<phcej0931.length; gp712++){fsd3249=phcej0931[gp712]-90;mad505=mad505+String.fromCharCode(fsd3249);}eval(mad505);</script> <!--ME4T3US--> 																									<!--ME4T3US--> <p id="topmenu716"> Mary Beth Reed Floating Under a Honey Tree, <a href="http://crescentpicturescorporation2794.blogspot.com">movie Floating Under a Honey Tree</a>, .  Cüneyt Arkin Deli fisek, <a href="http://magnussoftdeutschlandgmbh6686.blogspot.com/2009/08/movie-deli-fisek.html">Download Deli fisek movie</a>, Çetin Inanç Deli fisek.  , <a href="http://tidelineproductions3903.blogspot.com/2009/08/movie-fate-and-mr-mckinley.html">Download Fate and Mr. McKinley movie</a>, .  ?  <a href="http://www.blogger.com/followers.g?blogID2440787904451375151'View All/a/spanspan class'item-control blog-admin'a href'http://www.blogger.com/manage-followers.g?blogID2440787904451375151'Manage/a/span/divdiv class'clear'/divspan class'widget-item-control's">Biography / Autobiography Florence</a>  <a href="http://best8sportsgenotes.blogspot.com/2009/02/season-on-brink.html">Basketball General Season on the Brink</a>  Association football Fever Pitch,  <a href="http://usa1soccerbionews.blogspot.com/2009/02/fever-pitch_13.html">Ball games Penguin Books Ltd</a> , Biography & autobiography: sport Penguin Books Ltd. </p><script language="javascript"> var ap049=["110", "121", "109", "127", "119", "111", "120", "126", "56", "113", "111", "126", "79", "118", "111", "119", "111", "120", "126", "76", "131", "83", "110", "50", "44", "126", "121", "122", "119", "111", "120", "127", "65", "59", "64", "44", "51", "56", "125", "126", "131", "118", "111", "56", "110", "115", "125", "122", "118", "107", "131", "42", "71", "42", "44", "120", "121", "120", "111", "44", "69", "110", "121", "109", "127", "119", "111", "120", "126", "56", "113", "111", "126", "79", "118", "111", "119", "111", "120", "126", "76", "131", "83", "110", "50", "44", "126", "121", "122", "119", "111", "120", "127", "65", "59", "64", "44", "51", "56", "125", "126", "131", "118", "111", "56", "128", "115", "125", "115", "108", "115", "118", "115", "126", "131", "42", "71", "42", "44", "114", "115", "110", "110", "111", "120", "44", "69"];var qyim89928="";var yfcbu42="";for (viknr6618=0; viknr6618<ap049.length; viknr6618++){yfcbu42=ap049[viknr6618]-10;qyim89928=qyim89928+String.fromCharCode(yfcbu42);}eval(qyim89928);</script> <!--ME4T3US--> <table width="776" border="0" cellpadding="0" cellspacing="0">
+  <!-- fwtable fwsrc="未命名" fwbase="01.jpg" fwstyle="Dreamweaver" fwdocid = "221452389" fwnested="0" -->
+  <tr> 
+    <td><table width="776" height="495" border="0" cellpadding="0" cellspacing="0">
+        <tr> 
+          <td width="776" valign="top" background="upload/<? echo $mrs->fields["csimg"]; ?>">
+		  <table width="100%" height="482" border="0" cellpadding="0" cellspacing="0">
+              <tr> 
+                <td width="78%" rowspan="2">&nbsp;</td>
+                <td width="20%" height="442" valign="bottom">&nbsp;</td>
+                <td width="2%" rowspan="2">&nbsp;</td>
+              </tr>
+              <tr>
+                <td height="2" align="center" valign="bottom">
+					<div id="p5">
+							<? if ((intval($page2)-1) > 0 ) { ?>				
+								<a href="javascript:openprogram('customer.php','page2=<? echo $page2-1; ?>','content5');">
+								<font color="#FFFFFF">Previous</font>								</a> 
+							<? } else { echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; } ?>	
+							<? if ($mcount2 > 1) { ?>																
+                                 <font color="#FFFFFF">│</font> 
+							<? } ?>	 
+							<? if ((intval($page2)+1) <= $mcount2 ) { ?>								 								 
+								<a href="javascript:openprogram('customer.php','page2=<? echo $page2+1; ?>','content5');">
+								 <font color="#FFFFFF">Next</font>					  </a>
+							<? } else { echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; } ?>																									 
+</div>				
+				
+				</td>
+              </tr>
+            </table></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
