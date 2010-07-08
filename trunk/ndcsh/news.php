@@ -24,18 +24,6 @@ if ($hotid == "") {
 <SCRIPT type=text/javascript src="js/jquery.js"></SCRIPT>
 <script type="text/javascript">
 	<!--
-	function showPicDesc(title,content){
-		var maintitle = document.getElementById("maintitle");
-		maintitle.style.display='none';
-		var content9 = document.getElementById("content9");
-		content9.style.display = 'none';
-		var titleshow = document.getElementById("titleshow");
-		titleshow.style.display = '';
-		titleshow.innerHTML = title;
-		var contentshow = document.getElementById("contentshow");
-		contentshow.style.display = '';
-		contentshow.innerHTML = " <font color='#000000'>"+content+"</font>";
-	}
 
 	function hiddenPicDesc(){
 
@@ -183,7 +171,7 @@ background-color:#RGB(197,167,116);
 	font-size:11px;
 }
 </style>
-<div id="intro_preview" style=" display:none;position:absolute; background:#eeeeee;border:#666666 1px solid; width:270; height: auto;  align="center">
+<div id="intro_preview" style=" display:none;position:absolute; background:#eeeeee;border:#666666 1px solid; width:270; height: auto;" align="center">
 							<table width="100%" border="0" cellpadding="0" cellspacing="0">
 							  <tr>
 								<td align="right" valign="top" height="20"><span style="cursor:pointer" onclick="javascript:showHideLayer('intro_preview','none');"><img src="images/close.gif"  width="15" height="15" /></span></td>
