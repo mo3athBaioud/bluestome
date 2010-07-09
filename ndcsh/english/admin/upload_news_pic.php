@@ -9,7 +9,7 @@ if(isset($_POST['ptitle'])) { $ptitle=$_POST['ptitle']; }else{ if(isset($_GET['p
 if(isset($_POST['pdetail'])) { $detail=$_POST['pdetail']; }else{ if(isset($_GET['pdetail'])) {$detail=$_GET['pdetail'];}}
 if(isset($_POST['ordernum'])) { $ordernum=$_POST['ordernum']; }else{ if(isset($_GET['ordernum'])) {$ordernum=$_GET['ordernum'];}}
 $tmprs=$conn->Execute("select count(*) as mcount from wdata_pic_e where hotid='".$hotid."'");
-if (intval($tmprs->fields["mcount"]) >=5) {
+if (intval($tmprs->fields["mcount"]) >=6) {
 	$location = "Location:".$url2."?hotid=".$hotid."&msg=超出限制(5张图片)";
 	header($location);	
 	exit;		
