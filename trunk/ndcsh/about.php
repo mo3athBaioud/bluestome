@@ -226,8 +226,7 @@ function MM_nbGroup(event, grpName) { //v6.0
 				</div>									  				  
 				  </td>
                 <td width="24">
-<div id="btn4" style="cursor:pointer" onClick="javascript:action('content4','content5','n01_r3_c7','n01_r3_c9','images/01_r3_c7_1.jpg','images/01_r3_c9_1.jpg','images/01_r3_c7.jpg','images/01_r3_c9.jpg');refreshprogram('club.php','a=1','content4');">												
-				<table width="24" border="0" cellpadding="0" cellspacing="0">
+<div id="btn4" style="cursor:pointer" onClick="javascript:action('content4','content5','n01_r3_c7','n01_r3_c9','images/01_r3_c7_1.jpg','images/01_r3_c9_1.jpg','images/01_r3_c7.jpg','images/01_r3_c9.jpg');refreshprogram('customer.php','a=1','content5');refreshprogram('club.php','a=1','content4');">								<table width="24" border="0" cellpadding="0" cellspacing="0">
                     <!-- fwtable fwsrc="未命名" fwbase="01.jpg" fwstyle="Dreamweaver" fwdocid = "221452389" fwnested="0" -->
                     <tr> 
                       <td><span ><img name="n01_r3_c9" id="n01_r3_c9" src="images/01_r3_c9.jpg" width="24" height="495" border="0" alt=""></span></td>
@@ -241,7 +240,7 @@ function MM_nbGroup(event, grpName) { //v6.0
 				</div>									  				  
 				  </td>				  
                 <td width="24">
-<div id="btn5" style="cursor:pointer" onClick="javascript:action('content5','content6','n01_r3_c9','n01_r3_c10','images/01_r3_c9_1.jpg','images/01_r3_c10_1.jpg','images/01_r3_c9.jpg','images/01_r3_c10.jpg');refreshprogram('projects.php','a=1','content6');">																
+<div id="btn5" style="cursor:pointer" onClick="javascript:action('content5','content6','n01_r3_c9','n01_r3_c10','images/01_r3_c9_1.jpg','images/01_r3_c10_1.jpg','images/01_r3_c9.jpg','images/01_r3_c10.jpg');refreshprogram('news.php','a=1','content7');refreshprogram('projects.php','a=1','content6');">																
 				<table width="24" border="0" cellpadding="0" cellspacing="0">
                     <!-- fwtable fwsrc="未命名" fwbase="01.jpg" fwstyle="Dreamweaver" fwdocid = "221452389" fwnested="0" -->
                     <tr> 
@@ -256,7 +255,7 @@ function MM_nbGroup(event, grpName) { //v6.0
 				</div>
 				</td>									  				  				  
                 <td width="24">
-<div id="btn6" style="cursor:pointer" onClick="javascript:action('content6','content7','n01_r3_c10','n01_r3_c11','images/01_r3_c10_1.jpg','images/01_r3_c11_1.jpg','images/01_r3_c10.jpg','images/01_r3_c11.jpg');refreshprogram('projects.php','a=1','content6');">																				
+<div id="btn6" style="cursor:pointer" onClick="javascript:action('content6','content7','n01_r3_c10','n01_r3_c11','images/01_r3_c10_1.jpg','images/01_r3_c11_1.jpg','images/01_r3_c10.jpg','images/01_r3_c11.jpg');refreshprogram('projects.php','a=1','content6');refreshprogram('news.php','a=1','content7');">																				
 				<table border="0" cellpadding="0" cellspacing="0" width="24">
                     <!-- fwtable fwsrc="未命名" fwbase="01.jpg" fwstyle="Dreamweaver" fwdocid = "221452389" fwnested="0" -->
                     <tr> 
