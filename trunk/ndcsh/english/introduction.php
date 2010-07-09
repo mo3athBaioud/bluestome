@@ -37,9 +37,13 @@
                 <td width="12" height="80">&nbsp;</td>
                 <td width="149" valign="top" class="mainContext11"><span class="mainContext17"><? echo $mrs->fields["hotcaption"]; ?></span><span class="mainContext12"><br>
                   </span>
+					<p style="overflow:auto;height:200px;">
+						<? echo html_entity_decode($mrs->fields[$mydata], ENT_QUOTES); ?>
+					</p> 
+				  <!--
 				  <div style="overflow:auto;height:200px;">
-					<p><? echo html_entity_decode($mrs->fields[$mydata], ENT_QUOTES); ?></p> 
-				  </div>
+			 	  </div>
+				  -->
                 </td>
               </tr>
             </table> </td>
