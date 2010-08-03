@@ -96,6 +96,16 @@ public class PicFileDaoImpl extends CommonDB implements PicFileDao {
 	}
 	
 	/**
+	 * 查找所有记录
+	 * @return
+	 * @throws Exception
+	 */
+	public List<PicfileBean> findPicByWebParentId(int webId) throws Exception{
+		//TODO
+		return null;
+	}
+	
+	/**
 	 * 根据ID查找记录
 	 * @param id
 	 * @return
