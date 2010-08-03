@@ -8,6 +8,10 @@ public class CacheUtils {
 	
 	private final static String CACHE_IMAGE = "127.0.0.1"+Constants.CACHE_KEY_SEPARATOR2+"11211"+Constants.CACHE_KEY_SEPARATOR+"IMAGE";
 	
+	private final static String CACHE_SMALL_IMG_DOWNLOAD_FLAG = "SMALL_IMG_DOWNLOAD_TRUE";
+	
+	private final static String CACHE_BIG_IMG_DOWNLOAD_FLAG = "BIG_IMG_DOWNLOAD_TRUE";
+	
 	public static String getHTMLKey(Object obj){
 		return CACHE_KEY + Constants.CACHE_KEY_SEPARATOR+"html" 
 		+ Constants.CACHE_KEY_SEPARATOR+ obj;
@@ -44,6 +48,14 @@ public class CacheUtils {
 	
 	public static String getImageKey(Object obj){
 		return CACHE_IMAGE + Constants.CACHE_KEY_SEPARATOR2 + obj;
+	}
+	
+	public static String getDownloadSmallImageKey(Object obj){
+		return CACHE_SMALL_IMG_DOWNLOAD_FLAG+ Constants.CACHE_KEY_SEPARATOR2 + obj;
+	}
+	
+	public static String getDownloadBigImageKey(Object obj){
+		return CACHE_BIG_IMG_DOWNLOAD_FLAG+ Constants.CACHE_KEY_SEPARATOR2 + obj;
 	}
 	
 }
