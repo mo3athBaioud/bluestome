@@ -190,22 +190,23 @@ public class QWPPHtmlParser {
 						Article article = null;
 						for(int i=0;i<nodes.size();i++){
 							LinkTag select  = (LinkTag)nodes.elementAt(i);
-							article = new Article();
-							article.setActicleRealUrl(_URL+select.getLink());
-							article.setArticleUrl(_URL+select.getLink());
-							article.setActicleXmlUrl(null);
-							article.setTitle(select.getLinkText());
-							article.setCreateTime(new Date());
-							article.setWebId(webId);
-							article.setText("NED");
-//							RequestRecordQuene.getInstance().setElement(article);
-							if(null == client.get(article.getArticleUrl())){
+							String url_ = _URL+select.getLink();
+							if(null == client.get(url_)){
+								article = new Article();
+								article.setActicleRealUrl(url_);
+								article.setArticleUrl(url_);
+								article.setActicleXmlUrl(null);
+								article.setTitle(select.getLinkText());
+								article.setCreateTime(new Date());
+								article.setWebId(webId);
+								article.setText("NED");
+//								RequestRecordQuene.getInstance().setElement(article);
 								int articleId = articleDao.insert(article);
 								if(articleId>0){
 									System.out.println("articleId:"+articleId);
-									client.add(article.getArticleUrl(), article.getArticleUrl());
+									client.add(url_, url_);
 									_COUNT ++;
-									getPicUrl(_URL+select.getLink(),"id", "piclist2",articleId);
+									getPicUrl(url_,"id", "piclist2",articleId);
 								}
 							}
 						}
@@ -241,18 +242,21 @@ public class QWPPHtmlParser {
 						ImageBean imgBean = null;
 						for(int i=0;i<nodes.size();i++){
 							LinkTag select  = (LinkTag)nodes.elementAt(i);
-							imgBean = new ImageBean();
-//							imgBean.setTitle(title)
-							imgBean.setArticleId(articleId);
-							imgBean.setHttpUrl(_URL+select.getLink());
-							imgBean.setImgUrl(_URL+select.getLink());
-							imgBean.setCreatetime(new Date());
-							imgBean.setOrderId(i+1);
-							imgBean.setLink("NED");
-							int iid = imageDao.insert(imgBean);
-							if(iid > 0){
-								System.out.println("imageId:"+iid);
-								download(_URL+select.getLink(),"");
+							String url_ = _URL+select.getLink();
+							if(null == client.get(url_)){
+								imgBean = new ImageBean();
+//								imgBean.setTitle(title)
+								imgBean.setArticleId(articleId);
+								imgBean.setHttpUrl(url_);
+								imgBean.setImgUrl(url_);
+								imgBean.setCreatetime(new Date());
+								imgBean.setOrderId(i+1);
+								imgBean.setLink("NED");
+								int iid = imageDao.insert(imgBean);
+								if(iid > 0){
+									client.add(url_, url_);
+									download(_URL+select.getLink(),"");
+								}
 							}
 						}
 					}
@@ -287,20 +291,22 @@ public class QWPPHtmlParser {
 						ImageBean imgBean = null;
 						for(int i=0;i<nodes.size();i++){
 							LinkTag select  = (LinkTag)nodes.elementAt(i);
-							imgBean = new ImageBean();
-							imgBean.setArticleId(article.getId());
-							imgBean.setHttpUrl(_URL+select.getLink());
-							imgBean.setImgUrl(_URL+select.getLink());
-							imgBean.setCreatetime(new Date());
-							imgBean.setOrderId(i+1);
-							imgBean.setTitle(article.getTitle());
-							imgBean.setLink("NED");
-							int iid = imageDao.insert(imgBean);
-							System.out.println("imageID:"+iid);
-							System.out.println("imageURL:"+_URL+select.getLink());
-							if(iid > 0){
-								System.out.println("imageId:"+iid);
-//								download(_URL+select.getLink(),article.getTitle());
+							String url = _URL+select.getLink();
+							if(null == client.get(url)){
+								imgBean = new ImageBean();
+								imgBean.setArticleId(article.getId());
+								imgBean.setHttpUrl(_URL+select.getLink());
+								imgBean.setImgUrl(_URL+select.getLink());
+								imgBean.setCreatetime(new Date());
+								imgBean.setOrderId(i+1);
+								imgBean.setTitle(article.getTitle());
+								imgBean.setLink("NED");
+								int iid = imageDao.insert(imgBean);
+								if(iid > 0){
+									System.out.println("imageId:"+iid);
+									client.add(url, url);
+//									download(url,article.getTitle());
+								}
 							}
 						}
 					}
@@ -444,18 +450,18 @@ public class QWPPHtmlParser {
 			}
 			
 			//获取文章下的图片地址
-//			for(WebsiteBean bean:rootURL){
-//				List<Article> list  = articleDao.findShowImg(bean.getId(),"NED",1);
-//				for(Article art:list){
-//					System.out.println("标题："+art.getTitle() + "\t\t所属类别ID:"+art.getWebId());
-//						getPicUrl(art, "id", "piclist2");
-//						art.setText("FD");
-//						if(articleDao.update(art)){
-//							System.out.println("更新文章["+art.getTitle()+"]成功");
-//						}
-//					_COUNT++;
-//				}
-//			}
+			for(WebsiteBean bean:rootURL){
+				List<Article> list  = articleDao.findShowImg(bean.getId(),"NED",1);
+				for(Article art:list){
+					System.out.println("标题："+art.getTitle() + "\t\t所属类别ID:"+art.getWebId());
+						getPicUrl(art, "id", "piclist2");
+						art.setText("FD");
+						if(articleDao.update(art)){
+							System.out.println("更新文章["+art.getTitle()+"]成功");
+						}
+					_COUNT++;
+				}
+			}
 			
 //			System.out.println("已解析图片地址的数量："+_COUNT);
 //			downloadArticleImage();
