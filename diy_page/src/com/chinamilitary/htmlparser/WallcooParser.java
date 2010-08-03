@@ -755,6 +755,7 @@ public class WallcooParser {
 			/**
 			 * 文章获取并入库 List<WebsiteBean> list = wesiteDao.findByParentId(125);
 			 */
+			/**
 			if (list != null && list.size() > 0) {
 				ResultBean result = null;
 				int i = 0;
@@ -778,13 +779,15 @@ public class WallcooParser {
 					wesiteDao.update(bean);
 				}
 			}
-			/**
 			**/
 
+			//查找文章下的图片数量
 			/**
+			**/
 			for (WebsiteBean website : list) {
 				List<Article> aList = articleDao.findShowImg(website.getId(),
-						"NED", 0); //NED_WALLCOO
+						"FNFE", 0); //NED_WALLCOO
+				System.out.println("图片数量:"+aList.size());
 				if (aList != null && aList.size() > 0) {
 					int i = 0;
 					ResultBean result = null;
@@ -804,7 +807,7 @@ public class WallcooParser {
 											continue;
 										}
 									}
-									article.setText("NED");
+									article.setText("FD");
 									if (articleDao.update(article)) {
 										System.out.println("articleId="
 												+ article.getId() + "\t"
@@ -818,7 +821,7 @@ public class WallcooParser {
 										.getArticleUrl())) {
 									continue;
 								}
-								article.setText("NED");
+								article.setText("FD");
 								if (articleDao.update(article)) {
 									System.out.println("articleId="
 											+ article.getId() + "\t"
@@ -830,11 +833,13 @@ public class WallcooParser {
 							e.printStackTrace();
 							article.setText("FNFE"); // FileNotFoundException
 							articleDao.update(article);
+							System.out.println("文章:"+article.getTitle()+".Exception:");
 							continue;
 						} catch (Exception e) {
 							e.printStackTrace();
 							article.setText("FNFE");//FileNotFoundException
 							articleDao.update(article);
+							System.out.println("文章:"+article.getTitle()+".Exception:");
 							continue;
 						}
 					}
@@ -842,7 +847,6 @@ public class WallcooParser {
 					System.out.println("共更新" + i + "条记录");
 				}
 			}
-			**/
 			
 			/**
 			secondURL("http://www.wallcoo.com/engine/index.htm");
