@@ -12,6 +12,8 @@ public class CacheUtils {
 	
 	private final static String CACHE_BIG_IMG_DOWNLOAD_FLAG = "BIG_IMG_DOWNLOAD_TRUE";
 	
+	private final static String CACHE_WEBLIST_PARENT = "WEBLIST_BY_PARENT_ID";
+	
 	public static String getHTMLKey(Object obj){
 		return CACHE_KEY + Constants.CACHE_KEY_SEPARATOR+"html" 
 		+ Constants.CACHE_KEY_SEPARATOR+ obj;
@@ -58,4 +60,7 @@ public class CacheUtils {
 		return CACHE_BIG_IMG_DOWNLOAD_FLAG+ Constants.CACHE_KEY_SEPARATOR2 + obj;
 	}
 	
+	public static String getWebListByParentID(Object obj){
+		return  CACHE_WEBLIST_PARENT + Constants.CACHE_KEY_SEPARATOR2 + obj;
+	}
 }
