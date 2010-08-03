@@ -64,5 +64,10 @@ http://rtuku.club.china.com//user/channelPageTypeIndexAjaxAction.do?channelId=mi
 其它壁纸 (共有388个类别,15055张壁纸)
 
 
-
- 
+2010-08-03 随记
+ 性能瓶颈：
+ 1.数据库压力
+   a.缓存 [取数据]
+   b.异步线程 [处理数据更新，数据删除] 需要处理
+ 2.IO压力
+   a.文件写入 异步/缓存
