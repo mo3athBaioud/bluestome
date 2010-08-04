@@ -168,6 +168,8 @@ public class ShowimgParser2 {
 			Iterator it = result.getMap().keySet().iterator();
 			while(it.hasNext()){
 				String lkey = (String)it.next();
+				if(null == client.get(lkey)){
+					try{
 				System.out.println("key:"+lkey);
 				LinkBean lb = (LinkBean)result.getMap().get(lkey);
 
@@ -190,11 +192,9 @@ public class ShowimgParser2 {
 					if(nodes != null && nodes.size() > 0){
 						Article article = null;
 						for(int i=0;i<nodes.size();i++){
-							try{
 								LinkTag link = (LinkTag)nodes.elementAt(i);
 								if(link.getLink() != null && !link.getLink().equalsIgnoreCase("") && link.getLink().startsWith("/tabulation.php")){
 									String url = URL+link.getLink().replace("/", "");
-//									System.out.println("title:"+link.getLinkText()+"\turl:"+url);
 									NodeList tmp = link.getChildren();
 									if(tmp != null && tmp.size() > 0){
 										ImageTag imgTag = (ImageTag)tmp.elementAt(0);
@@ -215,13 +215,16 @@ public class ShowimgParser2 {
 									}
 									Thread.sleep(50);
 								}
-							}catch(Exception e){
-								log.error(e);
-								continue;
-							}
 						}
 					}
 				}
+				}catch(Exception e){
+					log.error(e);
+					continue;
+				}
+			}else{
+				System.out.println(">> 已存在地址["+lkey+"]");
+			}
 				
 						}
 //			for(LinkBean lbean:result.getList()){}
@@ -249,18 +252,21 @@ public class ShowimgParser2 {
 							LinkTag link = (LinkTag)nodes.elementAt(i);
 							
 							if(link.getLinkText() != null && !link.getLinkText().equalsIgnoreCase("")){
-								article.setWebId(bean.getId());
-								article.setArticleUrl(URL+link.getLink().replace("../", ""));
-								article.setTitle(StringUtils.illageString(link.getLinkText()));
-								article.setText("NED"); // No Execute Download
-								int key = articleDao.insert(article);
-								if (key > 0) {
-									log.debug("添加" + link.getLinkText()+ ",成功");
-									COUNT++;
-								} else {
-									log.debug("添加" + link.getLinkText() + "失败");
+								String url_ = URL+link.getLink().replace("../", "");
+								if(null == client.get(url_)){
+									article.setWebId(bean.getId());
+									article.setArticleUrl(url_);
+									article.setTitle(StringUtils.illageString(link.getLinkText()));
+									article.setText("NED"); // No Execute Download
+									int key = articleDao.insert(article);
+									if (key > 0) {
+										log.debug("添加" + link.getLinkText()+ ",成功");
+										COUNT++;
+									} else {
+										log.debug("添加" + link.getLinkText() + "失败");
+									}
+									Thread.sleep(50);
 								}
-								Thread.sleep(50);
 							}
 						}catch(Exception e){
 							log.error(e);
@@ -725,10 +731,11 @@ public class ShowimgParser2 {
 					LinkTag link = (LinkTag)nodes.elementAt(i);
 					LinkBean l1 = null;
 					if(link != null){
+						String url_ = URL+"htm/"+link.getLink();
 						l1 = new LinkBean();
-						l1.setLink(URL+link.getLink());//"htm/"+
+						l1.setLink(url_);//"htm/"+
 						l1.setName(link.getLinkText());//link.getLinkText()
-						result.put(l1.getLink(), l1);
+						result.put(url_, l1);
 						COUNT ++;
 					}
 				}
@@ -928,8 +935,11 @@ public class ShowimgParser2 {
 	}
 	public static void main(String args[]){
 		try{
-			init();
-			updateArticleFromSource(36);
+//			init();
+			
+			index();
+			
+//			updateArticleFromSource(36);
 			
 //			ResultBean result = hasPaging("http://www.showimg.com/tabulation.php?mid=8230","class","pages");
 //			if(result.isBool()){
@@ -996,6 +1006,55 @@ public class ShowimgParser2 {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * 获取首页数据
+	 * @throws Exception
+	 */
+	static void index() throws Exception{
+		Parser parser = new Parser();
+		parser.setURL(URL);
+		
+		// 获取指定ID的DIV内容
+		NodeFilter filter = new NodeClassFilter(LinkTag.class);
+		NodeList nodes = parser.extractAllNodesThatMatch(filter);
+		
+		if(nodes != null && nodes.size() > 0){
+			Article article = null;
+			for(int i=0;i<nodes.size();i++){
+				try{
+				LinkTag link = (LinkTag)nodes.elementAt(i);
+				if(null != link.getLink() && !link.getLink().equalsIgnoreCase("") && link.getLink().startsWith("tabulation.php?mid=")){
+					String url = URL+link.getLink().replace("/", "");
+					System.out.println("url_"+url);
+					NodeList tmp = link.getChildren();
+					if(tmp != null && tmp.size() > 0){
+						ImageTag imgTag = (ImageTag)tmp.elementAt(0);
+						if(null == client.get(url)){
+							article = new Article();
+							article.setWebId(36);
+							article.setArticleUrl(url);
+							article.setTitle(imgTag.getAttribute("alt"));
+							article.setText("NED"); // No Execute Download
+							int key = articleDao.insert(article);
+							if (key > 0) {
+								log.debug("添加" + imgTag.getAttribute("alt")+ ",成功");
+								COUNT++;
+							} else {
+								log.debug("添加" + imgTag.getAttribute("alt") + "失败,已存在相同标题的内容");
+							}
+						}
+					}
+					Thread.sleep(50);
+				}
+				}catch(Exception e){
+					System.out.println(">> Index.Exception:"+e.getMessage());
+					continue;
+				}
+			}
 		}
 		
 	}

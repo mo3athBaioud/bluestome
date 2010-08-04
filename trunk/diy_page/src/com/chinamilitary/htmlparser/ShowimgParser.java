@@ -163,7 +163,6 @@ public class ShowimgParser {
 	 * @throws Exception
 	 */
 	public static void getSecondLink(WebsiteBean bean) throws Exception{
-//		ResultBean result = hasPaging(bean.getUrl(),"id","damulu-page"); //version 1.0
 		ResultBean result = hasPaging(bean.getUrl(),"class","pages");
 		System.out.println("分页中文章数量："+result.getList().size());
 		if(result.isBool()){
@@ -178,7 +177,6 @@ public class ShowimgParser {
 //								new HasAttributeFilter("class", "damulu-left2")); //version 2.0
 								new HasAttributeFilter("id", "left"));
 				if(list != null && list.size() > 0){
-//					System.out.println("list.toHtml:"+list.toHtml());
 					Parser p1 = new Parser();
 					p1.setInputHTML(list.toHtml());
 					
@@ -203,12 +201,7 @@ public class ShowimgParser {
 										article.setText("NED"); // No Execute Download
 										int key = articleDao.insert(article);
 										if (key > 0) {
-											log.debug("title:"+imgTag.getAttribute("alt"));
-											log.debug("imageURL:"+imgTag.getImageURL());
-											log.debug("添加" + imgTag.getAttribute("alt")+ ",成功");
 											COUNT++;
-										} else {
-											log.debug("添加" + imgTag.getAttribute("alt") + "失败,已存在相同标题的内容");
 										}
 									}
 									Thread.sleep(50);
