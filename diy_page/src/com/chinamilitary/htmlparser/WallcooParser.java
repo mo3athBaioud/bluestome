@@ -209,7 +209,7 @@ public class WallcooParser {
 										LINKHASH.put(link.getLink(), link);
 									}
 								}else{
-									System.out.println(">> 已存在相同的内容");
+									System.out.println(">> 已存在相同的内容 ["+nl.getLinkText()+"]");
 								}
 							}
 						}
@@ -764,19 +764,19 @@ public class WallcooParser {
 			}
 			long end1 = System.currentTimeMillis();
 			
-//			List<String> imageURLList = imageDao.findImageURL(125);
-//			long start2 = System.currentTimeMillis();
-//			for(String key:imageURLList){
-//				Object obj = client.get(key);
-//				if(null == obj){
-//					client.add(key, key);
-//				}else{
-//					client.replace(key, key);
-//				}
-//			}
-//			long end2 = System.currentTimeMillis();
-//			System.out.println("文章入缓存花费:"+(end1-start1));
-//			System.out.println("图片地址入缓存花费:"+(end2-start2));
+			List<String> imageURLList = imageDao.findImageURL(125);
+			long start2 = System.currentTimeMillis();
+			for(String key:imageURLList){
+				Object obj = client.get(key);
+				if(null == obj){
+					client.add(key, key);
+				}else{
+					client.replace(key, key);
+				}
+			}
+			long end2 = System.currentTimeMillis();
+			System.out.println("文章入缓存花费:"+(end1-start1));
+			System.out.println("图片地址入缓存花费:"+(end2-start2));
 		}catch(Exception e){
 			System.out.println(">> Exception:"+e.getMessage());
 		}
@@ -821,7 +821,6 @@ public class WallcooParser {
 			/**
 			**/
 
-			/**
 			//查找文章下的图片数量
 			for (WebsiteBean website : list) {
 				List<Article> aList = articleDao.findShowImg(website.getId(),
@@ -886,6 +885,7 @@ public class WallcooParser {
 					System.out.println("共更新" + i + "条记录");
 				}
 			}
+			/**
 			**/
 			
 			/**
