@@ -93,7 +93,7 @@ public class XMLParser {
 			bean.setOrderId(id);
 			bean.setImgUrl(imgurl);
 			bean.setIntro(intro);
-			bean.setLink(link);
+			bean.setLink("NED");
 			bean.setName(name);
 			bean.setTime(time);
 			imageList.add(bean);
