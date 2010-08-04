@@ -122,8 +122,12 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 	 */
 	public int insert(Article bean) throws Exception{
 		int key = -1;
-		if(checkExists(bean.getTitle(),bean.getWebId())){
-			System.out.println("已存在相同标题："+bean.getTitle());
+//		if(checkExists(bean.getTitle(),bean.getWebId())){
+//			System.out.println("已存在相同标题："+bean.getTitle());
+//			return key;
+//		}
+		
+		if(getCountByURL(bean.getArticleUrl()) > 0){
 			return key;
 		}
 		
