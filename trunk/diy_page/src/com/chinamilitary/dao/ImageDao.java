@@ -32,6 +32,13 @@ public interface ImageDao extends ICommonDao {
 	List<String> findImageURL(int webParentId) throws Exception;
 	
 	/**
+	 * 查找某站点下的所有数据
+	 * @param webParentId
+	 * @return
+	 * @throws Exception
+	 */
+	List<ImageBean> findImage(int webParentId,String status) throws Exception;
+	/**
 	 * 
 	 * @param link
 	 * @return
