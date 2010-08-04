@@ -115,6 +115,43 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 			rs.close();
 		return list;
 	}
+	
+	/**
+	 * 根据父站点
+	 */
+	public List<ImageBean> findImage(int webParentId,String status) throws Exception {
+		List<ImageBean> list = new ArrayList<ImageBean>();
+		ImageBean bean = null;
+		pstmt = conn.prepareStatement("select distinct * from tbl_image where d_article_id in (" +
+				"select distinct d_id from tbl_article where d_web_id in (" +
+				"select distinct d_id from tbl_web_site where d_parent_id = ? " + //"+webParentId+"
+				")) and d_link = ?");
+		pstmt.setInt(1, webParentId);
+		pstmt.setString(2, status);
+		rs = pstmt.executeQuery();
+		while(rs.next()){
+			bean = new ImageBean();
+			bean.setId(rs.getInt("d_id"));
+			bean.setArticleId(rs.getInt("d_article_id"));
+			bean.setTitle(rs.getString("d_title"));
+			bean.setName(rs.getString("d_name"));
+			bean.setImgUrl(rs.getString("d_imgurl"));
+			bean.setHttpUrl(rs.getString("d_httpurl"));
+			bean.setOrderId(rs.getInt("d_orderid"));
+			bean.setTime(rs.getString("d_time"));
+			bean.setIntro(rs.getString("d_intro"));
+			bean.setCommentsuburl(rs.getString("d_commentsuburl"));
+			bean.setCommentshowurl(rs.getString("d_commentshowurl"));
+			bean.setLink(rs.getString("d_link"));
+			bean.setCreatetime(rs.getDate("d_createtime"));
+			list.add(bean);
+		}
+		if(pstmt != null)
+			pstmt.close();
+		if(rs != null)
+			rs.close();
+		return list;
+	}
 
 	/**
 	 * 查找某站点下的所有数据
