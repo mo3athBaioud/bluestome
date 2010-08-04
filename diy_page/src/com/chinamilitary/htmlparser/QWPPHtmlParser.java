@@ -147,12 +147,13 @@ public class QWPPHtmlParser {
 				result.setBool(true);
 				for(int i=0;i<nodes.size();i++){
 					LinkTag select  = (LinkTag)nodes.elementAt(i);
+					String url_ = url+select.getLink();
+					if(null == client.get(url_)){
 					LinkBean l1 = null;
 					l1 = new LinkBean();
-					l1.setLink(url+select.getLink());
+					l1.setLink(url_);
 					l1.setName(select.getLinkText());
-					if(null == client.get(l1.getLink())){
-						result.add(l1);
+					result.add(l1);
 					}
 				}
 			}
@@ -167,7 +168,6 @@ public class QWPPHtmlParser {
 	 * @param url
 	 */
 	static void articelPerPage(String url,String attribute,String value,Integer webId) {
-		System.out.println("解析页面:"+url);
 		try{
 			Parser parser = new Parser();
 			parser.setURL(url);
@@ -295,8 +295,8 @@ public class QWPPHtmlParser {
 							if(null == client.get(url)){
 								imgBean = new ImageBean();
 								imgBean.setArticleId(article.getId());
-								imgBean.setHttpUrl(_URL+select.getLink());
-								imgBean.setImgUrl(_URL+select.getLink());
+								imgBean.setHttpUrl(url);
+								imgBean.setImgUrl(url);
 								imgBean.setCreatetime(new Date());
 								imgBean.setOrderId(i+1);
 								imgBean.setTitle(article.getTitle());
@@ -437,32 +437,35 @@ public class QWPPHtmlParser {
 	
 	public static void main(String args[]){
 		try{
+			
 //			init2cache();
+			
 			List<WebsiteBean> rootURL = wesiteDao.findByParentId(148);
-			
-			//获取网站下的文章
-			for(WebsiteBean bean:rootURL){
-				ResultBean  result = hasPaging(bean.getUrl(),"class","show_page");
-				for(LinkBean ll : result.getList()){
-					//获取分页连接
-					articelPerPage(ll.getLink(),"id","Channel1",bean.getId());
+			if(null != rootURL){
+				//获取网站下的文章
+				for(WebsiteBean bean:rootURL){
+					System.out.println(">> 解析地址:["+bean.getUrl()+"]");
+					ResultBean  result = hasPaging(bean.getUrl(),"class","show_page");
+					for(LinkBean ll : result.getList()){
+						//获取分页连接
+						articelPerPage(ll.getLink(),"id","Channel1",bean.getId());
+					}
+				}
+				
+				//获取文章下的图片地址
+				for(WebsiteBean bean:rootURL){
+					List<Article> list  = articleDao.findShowImg(bean.getId(),"NED",1);
+					for(Article art:list){
+						System.out.println("标题："+art.getTitle() + "\t\t所属类别ID:"+art.getWebId());
+							getPicUrl(art, "id", "piclist2");
+							art.setText("FD");
+							if(articleDao.update(art)){
+								System.out.println("更新文章["+art.getTitle()+"]成功");
+							}
+						_COUNT++;
+					}
 				}
 			}
-			
-			//获取文章下的图片地址
-			for(WebsiteBean bean:rootURL){
-				List<Article> list  = articleDao.findShowImg(bean.getId(),"NED",1);
-				for(Article art:list){
-					System.out.println("标题："+art.getTitle() + "\t\t所属类别ID:"+art.getWebId());
-						getPicUrl(art, "id", "piclist2");
-						art.setText("FD");
-						if(articleDao.update(art)){
-							System.out.println("更新文章["+art.getTitle()+"]成功");
-						}
-					_COUNT++;
-				}
-			}
-			
 //			System.out.println("已解析图片地址的数量："+_COUNT);
 //			downloadArticleImage();
 			System.out.println("已下载的图片数量："+_COUNT);

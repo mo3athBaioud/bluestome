@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.NodeClassFilter;
+import org.htmlparser.tags.ImageTag;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.NodeList;
 
@@ -37,6 +38,7 @@ import com.chinamilitary.xmlparser.XMLParser;
 
 public class MilitaryParser {
 	private static final String URL = "http://tuku.military.china.com/military/html/1_1.html"; // military.china.com
+	private static final String URL_ = "http://military.china.com/";
 	private ExecutorService responseExecutor = Executors.newFixedThreadPool(2);
 	// http://tuku.military.china.com/military/
 
@@ -527,6 +529,15 @@ public class MilitaryParser {
 				if (b) {
 					client.add(CacheUtils.getDownloadSmallImageKey(imgBean.getId()), "SMALL_"+imgBean.getId());
 					client.add(CacheUtils.getDownloadBigImageKey(imgBean.getId()), "BIG_"+imgBean.getId());
+					if(imageDao.updateLinkStatus(imgBean.getId())){
+						//更新图片地址
+						if(null != client.get(imgBean.getHttpUrl())){
+							client.replace(imgBean.getHttpUrl(), imgBean.getHttpUrl());
+						}else{
+							client.add(imgBean.getHttpUrl(), imgBean.getHttpUrl());
+						}
+					}
+					
 				} else {
 					System.out.println("失败");
 				}
@@ -586,21 +597,103 @@ public class MilitaryParser {
 		}
 	}
 
+	/**
+	 * 获取首页数据
+	 * @throws Exception
+	 */
+	static void index() throws Exception{
+		Parser parser = new Parser();
+		parser.setURL(URL_);
+		
+		// 获取指定ID的DIV内容
+		NodeFilter filter = new NodeClassFilter(LinkTag.class);
+		NodeList nodes = parser.extractAllNodesThatMatch(filter);
+		
+		if(nodes != null && nodes.size() > 0){
+			Article article = null;
+			for(int i=0;i<nodes.size();i++){
+				try{
+				LinkTag link = (LinkTag)nodes.elementAt(i);
+				if (link.getLink().startsWith(SOCIAL_TUKU_URL)
+						|| link.getLink().startsWith(TUKU_URL)
+						|| link.getLink().startsWith(HISTORY_TUKU_URL)
+						|| link.getLink().startsWith(BBS_ARTICLE_URL)
+						|| link.getLink().startsWith(TECH_TUKU_URL)
+						|| link.getLink().startsWith(FUN_TUKU_URL)
+						|| link.getLink().startsWith(GAME_TUKU_URL)) {
+					if(null == client.get(link.getLink())){
+						String name = StringUtils
+								.illageString(link.getAttribute("title") == null ? (link
+										.getLinkText() == null ? "无话题" : link
+										.getLinkText())
+										: link.getAttribute("title"));
+						if (name.indexOf("“") != -1 && name.indexOf("”") != -1) {
+							name = name.replaceAll("“", "");
+							name = name.replace("”", "");
+						}
+						// 判断连接中是否存在创建文件夹时的非法字符
+						if (name.indexOf("\"") != -1 && name.indexOf("\"") != -1) {
+							name = name.replace("\"", "");
+						}
+						System.out.println("name:"+name);
+						article = new Article();
+						article.setWebId(36);
+						article.setArticleUrl(link.getLink());
+						article.setTitle(name);
+						article.setText("NED"); // No Execute Download
+						int key = articleDao.insert(article);
+						if (key > 0) {
+							client.add(link.getLink(), link.getLink());
+						} else {
+							System.out.println(">> 已存在相同["+link.getLink()+"]");
+						}
+						Thread.sleep(50);
+					}else{
+						System.out.println(">> 已存在相同["+link.getLink()+"]");
+					}
+				}
+				
+				}catch(Exception e){
+					System.out.println(">> Index.Exception:"+e.getMessage());
+					continue;
+				}
+			}
+		}
+		
+	}
+	
 	public static void main(String args[]) {
 		try {
 			
-			add2Cache();
+//			add2Cache();
+			
+			patch();
+			
+//			index();
+			
 
- 			getActicle(5); //5 , 143
+// 			getActicle(5); //5 , 143
  			
- 			getActicle(143); //5 , 143
+// 			getActicle(143); //5 , 143
 
-			listUnHandleData();
+//			listUnHandleData();
 			
 			clearList();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	static void patch() {
+		try{
+			List<Article> articleList = articleDao.findShowImg(0, "未获得", 0);
+			for(Article article:articleList){
+				System.out.println(""+article.getId());
+				getImage(article.getId());
+			}
+		}catch(Exception e){
+			
 		}
 	}
 
