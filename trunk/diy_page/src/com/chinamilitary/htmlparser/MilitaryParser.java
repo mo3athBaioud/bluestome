@@ -596,6 +596,59 @@ public class MilitaryParser {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 图片下载
+	 * @throws Exception
+	 */
+	static void imgDownloadTest() throws Exception {
+		PicfileBean bean = null;
+		List<ImageBean> list = imageDao.findImage(5, "NED");
+		System.out.println("可以下载的图片记录为："+list.size());
+		try {
+			if (list.size() > 0) {
+				System.out.println("list.size():" + list.size());
+				for (ImageBean imgBean : list) {
+					bean = new PicfileBean();
+					String s_fileName = imgBean.getImgUrl().substring(
+							imgBean.getImgUrl().lastIndexOf("/") + 1,
+							imgBean.getImgUrl().length());
+					String fileName = imgBean.getHttpUrl().substring(
+							imgBean.getHttpUrl().lastIndexOf("/") + 1,
+							imgBean.getHttpUrl().length());
+					s_fileName = s_fileName.replace(".", "_s.");
+					IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
+							+ CommonUtil.getDate("") + File.separator
+							+ imgBean.getArticleId() + File.separator
+							+ fileName.replace(".", "_s."));
+					IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH
+							+ CommonUtil.getDate("") + File.separator
+							+ imgBean.getArticleId() + File.separator
+							+ fileName);
+//					bean.setArticleId(imgBean.getArticleId());
+//					bean.setImageId(imgBean.getId());
+//					bean.setTitle(imgBean.getTitle());
+//					bean.setSmallName(CommonUtil.getDate("") + File.separator
+//							+ imgBean.getArticleId() + File.separator
+//							+ s_fileName);
+//					bean.setName(CommonUtil.getDate("") + File.separator
+//							+ imgBean.getArticleId() + File.separator
+//							+ fileName);
+//					bean.setUrl(PIC_SAVE_PATH);
+//					boolean b = picFiledao.insert(bean);
+//					if (b) {
+//						System.out.println("成功！");
+//					} else {
+//						System.out.println("失败");
+//					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 
 	/**
 	 * 获取首页数据
@@ -665,12 +718,13 @@ public class MilitaryParser {
 	public static void main(String args[]) {
 		try {
 			
+//			imgDownloadTest();
+			
 //			add2Cache();
 			
 			patch();
 			
 //			index();
-			
 
 // 			getActicle(5); //5 , 143
  			
@@ -689,8 +743,9 @@ public class MilitaryParser {
 		try{
 			List<Article> articleList = articleDao.findShowImg(0, "未获得", 0);
 			for(Article article:articleList){
-				System.out.println(""+article.getId());
-				getImage(article.getId());
+				if(1 != article.getWebId() || 3 != article.getWebId()){
+					getImage(article.getId());
+				}
 			}
 		}catch(Exception e){
 			

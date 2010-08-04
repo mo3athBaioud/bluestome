@@ -939,7 +939,7 @@ public class ShowimgParser2 {
 			
 			index();
 			
-//			updateArticleFromSource(36);
+			updateArticleFromSource(36);
 			
 //			ResultBean result = hasPaging("http://www.showimg.com/tabulation.php?mid=8230","class","pages");
 //			if(result.isBool()){
