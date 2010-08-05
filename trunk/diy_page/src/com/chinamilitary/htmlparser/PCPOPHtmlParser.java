@@ -420,44 +420,44 @@ public class PCPOPHtmlParser {
 	static void process(){
 		try {
 			//指定父ID下的网站列表
-//			List<WebsiteBean> weblist = webSiteDao.findByParentId(166);
-//			//将获取的页面放入缓存
-//			initHTML(weblist);
-//			Iterator hit = HTMLHASH.keySet().iterator();
-//			while(hit.hasNext()){
-//				String key = (String) hit.next();
-//				System.out.println("key:"+key);
-//				String[] keys = key.split(":");
-//				String content = (String) HTMLHASH.get(key);
-//				try{
-//					docByHTML(content, "http://www.pcpop.com/doc/");
-//					Iterator it = LINKHASH.keySet().iterator();
-//					ArticleDoc doc = null;
-//					while (it.hasNext()) {
-//						String key1 = (String) it.next();
-//						if(null == client.get(getKey(key1))){
-//							LinkBean link = (LinkBean) LINKHASH.get(key1);
-//							doc = new ArticleDoc();
-//							doc.setTitle(link.getName());
-//							doc.setUrl(link.getLink());
-//							doc.setWebId(Integer.valueOf(keys[0]));
-//							int id = articleDocDao.insert(doc);
-//							if(!(id>0)){
-//								System.out.println("失败，\t链接名称：" + link.getName() + "\n链接地址："+ link.getLink());
-//							}else{
-//								doc.setId(id);
-//								doc.setStatus(1);
-//								client.add(getKey(doc.getUrl()), doc);
-//								System.out.println("Memcached now store this object");
-//							}
-//						}
-//					}
-//					LINKHASH.clear();
-//					}catch(Exception e){
-//						System.out.println("解析异常，跳过:"+key+"\tException:"+e.getMessage());
-//						continue;
-//					}
-//			}
+			List<WebsiteBean> weblist = webSiteDao.findByParentId(166);
+			//将获取的页面放入缓存
+			initHTML(weblist);
+			Iterator hit = HTMLHASH.keySet().iterator();
+			while(hit.hasNext()){
+				String key = (String) hit.next();
+				System.out.println("key:"+key);
+				String[] keys = key.split(":");
+				String content = (String) HTMLHASH.get(key);
+				try{
+					docByHTML(content, "http://www.pcpop.com/doc/");
+					Iterator it = LINKHASH.keySet().iterator();
+					ArticleDoc doc = null;
+					while (it.hasNext()) {
+						String key1 = (String) it.next();
+						if(null == client.get(getKey(key1))){
+							LinkBean link = (LinkBean) LINKHASH.get(key1);
+							doc = new ArticleDoc();
+							doc.setTitle(link.getName());
+							doc.setUrl(link.getLink());
+							doc.setWebId(Integer.valueOf(keys[0]));
+							int id = articleDocDao.insert(doc);
+							if(!(id>0)){
+								System.out.println("失败，\t链接名称：" + link.getName() + "\n链接地址："+ link.getLink());
+							}else{
+								doc.setId(id);
+								doc.setStatus(1);
+								client.add(getKey(doc.getUrl()), doc);
+								System.out.println("Memcached now store this object");
+							}
+						}
+					}
+					LINKHASH.clear();
+					}catch(Exception e){
+						System.out.println("解析异常，跳过:"+key+"\tException:"+e.getMessage());
+						continue;
+					}
+			}
 			
 //			for(WebsiteBean bean:weblist){
 //				try{
@@ -497,7 +497,7 @@ public class PCPOPHtmlParser {
 			
 			
 			//1584
-			List<ArticleDoc> list = articleDocDao.findAll(10);
+			List<ArticleDoc> list = articleDocDao.findAll(1);
 			for(ArticleDoc bean : list){
 				
 				if(!bean.getUrl().startsWith("http://www.pcpop.com/doc/")){

@@ -937,7 +937,7 @@ public class ShowimgParser2 {
 		try{
 //			init();
 			
-			index();
+//			index();
 			
 			updateArticleFromSource(36);
 			
@@ -960,26 +960,26 @@ public class ShowimgParser2 {
 //			}
 			
 			
-			try {
-				List<WebsiteBean> list = wesiteDao.findByParentId(36);
-				if (list != null && list.size() > 0) {
-					for (WebsiteBean bean : list) {
-						if(bean != null){
-							List<Article> alist = articleDao.findShowImg(bean.getId());//47 48 49 50 51 52 
-							for(Article article:alist){
-								try{
-									getPicUrl(article);
-								}catch(Exception e){
-									System.out.println(">> Article["+article.getId()+"],Exception:"+e.getMessage());
-									continue;
-								}
-							}
-						}
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+//			try {
+//				List<WebsiteBean> list = wesiteDao.findByParentId(36);
+//				if (list != null && list.size() > 0) {
+//					for (WebsiteBean bean : list) {
+//						if(bean != null){
+//							List<Article> alist = articleDao.findShowImg(bean.getId());//47 48 49 50 51 52 
+//							for(Article article:alist){
+//								try{
+//									getPicUrl(article);
+//								}catch(Exception e){
+//									System.out.println(">> Article["+article.getId()+"],Exception:"+e.getMessage());
+//									continue;
+//								}
+//							}
+//						}
+//					}
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 			
 		}catch(Exception e){
 			e.printStackTrace();
