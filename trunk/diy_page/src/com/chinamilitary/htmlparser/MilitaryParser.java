@@ -722,13 +722,13 @@ public class MilitaryParser {
 			
 //			add2Cache();
 			
-			patch();
+//			patch();
 			
-//			index();
+			index();
 
-// 			getActicle(5); //5 , 143
+ 			getActicle(5); //5 , 143
  			
-// 			getActicle(143); //5 , 143
+ 			getActicle(143); //5 , 143
 
 //			listUnHandleData();
 			
