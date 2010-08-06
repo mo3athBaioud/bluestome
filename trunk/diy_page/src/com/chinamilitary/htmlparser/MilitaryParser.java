@@ -722,13 +722,13 @@ public class MilitaryParser {
 			
 //			add2Cache();
 			
-//			patch();
+			patch();
 			
-			index();
+//			index();
 
- 			getActicle(5); //5 , 143
+// 			getActicle(5); //5 , 143
  			
- 			getActicle(143); //5 , 143
+// 			getActicle(143); //5 , 143
 
 //			listUnHandleData();
 			
@@ -741,12 +741,20 @@ public class MilitaryParser {
 	
 	static void patch() {
 		try{
-			List<Article> articleList = articleDao.findShowImg(0, "未获得", 0);
-			for(Article article:articleList){
-				if(1 != article.getWebId() || 3 != article.getWebId()){
+//			List<WebsiteBean> list = webSiteDao.findByParentId(143);
+			Integer[] webIds = {1,4,5,14,17};
+//			for(WebsiteBean webSite:list){
+//				List<Article> articleList = articleDao.findShowImg(webSite.getId(), "NED", 0);
+			for(Integer webId:webIds){
+				List<Article> articleList = articleDao.findByWebId(webId);
+				for(Article article:articleList){
+//					if(1 != article.getWebId() || 3 != article.getWebId()){
 					getImage(article.getId());
+//					}
 				}
 			}
+//			}
+			
 		}catch(Exception e){
 			
 		}
