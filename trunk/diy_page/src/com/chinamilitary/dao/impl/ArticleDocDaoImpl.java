@@ -199,6 +199,11 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 
 	public int insert(ArticleDoc bean) throws Exception {
 		int key = -1;
+		if(getCountByTitle(bean.getTitle()) > 0){
+			System.out.println("已存在相同标题："+bean.getTitle());
+			return key;
+		}
+		
 		Long start = System.currentTimeMillis();
 		int urlResult = getCountByURL(bean.getUrl()); //,bean.getWebId()
 		Long end = System.currentTimeMillis();
@@ -207,10 +212,11 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 			return key;
 		}
 		
-		if(checkExists(bean.getTitle(),bean.getWebId())){
-			System.out.println("已存在相同标题："+bean.getTitle());
-			return key;
-		}
+		
+//		if(checkExists(bean.getTitle(),bean.getWebId())){
+//			System.out.println("已存在相同标题："+bean.getTitle());
+//			return key;
+//		}
 		
 		pstmt = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
 		pstmt.setInt(1, bean.getWebId());
@@ -317,7 +323,20 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 		rs.close();
 		return count;
 	}
-	
+
+	public synchronized int getCountByTitle(String title) throws Exception {
+		int count = 0;
+		pstmt = conn.prepareStatement(COUNT_SQL+" where REPLACE(d_title, '：', ':') = ? limit 1");// and d_title = ?
+		pstmt.setString(1,title);
+		rs = pstmt.executeQuery();
+		while(rs.next()){
+			count = rs.getInt(1);
+		}
+		pstmt.close();
+		rs.close();
+		return count;
+	}
+
 	public synchronized int getCountByTitle(String title,Integer webId) throws Exception {
 		int count = 0;
 		pstmt = conn.prepareStatement(COUNT_SQL+" where REPLACE(d_title, '：', ':') = ? and d_web_id = ?");// and d_title = ?
