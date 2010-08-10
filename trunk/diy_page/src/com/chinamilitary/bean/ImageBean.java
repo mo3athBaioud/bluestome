@@ -20,6 +20,8 @@ public class ImageBean implements java.io.Serializable{
 	private String commentsuburl;
 	private String commentshowurl;
 	private String link;
+	private Integer status;
+	private Long fileSize;
 	private Date createtime;
 	
 	public ImageBean(){
@@ -127,6 +129,22 @@ public class ImageBean implements java.io.Serializable{
 
 	public void setArticleId(Integer articleId) {
 		this.articleId = articleId;
+	}
+
+	public Long getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(Long fileSize) {
+		this.fileSize = fileSize;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 	
 	
