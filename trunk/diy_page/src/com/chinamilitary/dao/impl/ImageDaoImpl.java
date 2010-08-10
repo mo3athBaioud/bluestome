@@ -12,7 +12,7 @@ import com.chinamilitary.db.CommonDB;
 
 public class ImageDaoImpl extends CommonDB implements ImageDao {
 	
-	private final static String INSERT_SQL = "insert into tbl_image (d_article_id,d_title,d_name,d_imgurl,d_httpurl,d_orderid,d_time,d_intro,d_commentsuburl,d_commentshowurl,d_link) values (?,?,?,?,?,?,?,?,?,?,?)";
+	private final static String INSERT_SQL = "insert into tbl_image (d_article_id,d_title,d_name,d_imgurl,d_httpurl,d_orderid,d_time,d_intro,d_commentsuburl,d_commentshowurl,d_filesize,d_status,d_link) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	private final static String QUERY_SQL = "select * from tbl_image ";
 	
@@ -78,6 +78,8 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 			bean.setCommentshowurl(rs.getString("d_commentshowurl"));
 			bean.setLink(rs.getString("d_link"));
 			bean.setCreatetime(rs.getDate("d_createtime"));
+			bean.setStatus(rs.getInt("d_status"));
+			bean.setFileSize(rs.getLong("d_filesize"));
 			list.add(bean);
 		}
 		if(pstmt != null)
@@ -144,6 +146,8 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 			bean.setCommentshowurl(rs.getString("d_commentshowurl"));
 			bean.setLink(rs.getString("d_link"));
 			bean.setCreatetime(rs.getDate("d_createtime"));
+			bean.setStatus(rs.getInt("d_status"));
+			bean.setFileSize(rs.getLong("d_filesize"));
 			list.add(bean);
 		}
 		if(pstmt != null)
@@ -153,6 +157,42 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 		return list;
 	}
 
+	/**
+	 * 根据父站点
+	 */
+	public List<ImageBean> findImage(int webId) throws Exception {
+		List<ImageBean> list = new ArrayList<ImageBean>();
+		ImageBean bean = null;
+		pstmt = conn.prepareStatement("select distinct * from tbl_image where d_article_id in (" +
+				"select distinct d_id from tbl_article where d_web_id = ?)");
+		pstmt.setInt(1, webId);
+		rs = pstmt.executeQuery();
+		while(rs.next()){
+			bean = new ImageBean();
+			bean.setId(rs.getInt("d_id"));
+			bean.setArticleId(rs.getInt("d_article_id"));
+			bean.setTitle(rs.getString("d_title"));
+			bean.setName(rs.getString("d_name"));
+			bean.setImgUrl(rs.getString("d_imgurl"));
+			bean.setHttpUrl(rs.getString("d_httpurl"));
+			bean.setOrderId(rs.getInt("d_orderid"));
+			bean.setTime(rs.getString("d_time"));
+			bean.setIntro(rs.getString("d_intro"));
+			bean.setCommentsuburl(rs.getString("d_commentsuburl"));
+			bean.setCommentshowurl(rs.getString("d_commentshowurl"));
+			bean.setLink(rs.getString("d_link"));
+			bean.setCreatetime(rs.getDate("d_createtime"));
+			bean.setStatus(rs.getInt("d_status"));
+			bean.setFileSize(rs.getLong("d_filesize"));
+			list.add(bean);
+		}
+		if(pstmt != null)
+			pstmt.close();
+		if(rs != null)
+			rs.close();
+		return list;
+	}
+	
 	/**
 	 * 查找某站点下的所有数据
 	 * @param webParentId
@@ -204,6 +244,8 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 			bean.setCommentshowurl(rs.getString("d_commentshowurl"));
 			bean.setLink(rs.getString("d_link"));
 			bean.setCreatetime(rs.getDate("d_createtime"));
+			bean.setStatus(rs.getInt("d_status"));
+			bean.setFileSize(rs.getLong("d_filesize"));
 		}
 		if(pstmt != null)
 			pstmt.close();
@@ -240,6 +282,8 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 			bean.setCommentshowurl(rs.getString("d_commentshowurl"));
 			bean.setLink(rs.getString("d_link"));
 			bean.setCreatetime(rs.getDate("d_createtime"));
+			bean.setStatus(rs.getInt("d_status"));
+			bean.setFileSize(rs.getLong("d_filesize"));
 		}
 		if(pstmt != null)
 			pstmt.close();
@@ -269,6 +313,13 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 		pstmt.setString(9,bean.getCommentsuburl() );
 		pstmt.setString(10,bean.getCommentshowurl() );
 		pstmt.setString(11,bean.getLink() );
+		if(null == bean.getFileSize()){
+			bean.setFileSize(0l);
+		}
+		pstmt.setLong(12, bean.getFileSize());
+		if(null == bean.getStatus())
+			bean.setStatus(-1);
+		pstmt.setInt(13, bean.getStatus());
 		if(pstmt.executeUpdate()  == 1){
 			rs = pstmt.getGeneratedKeys();
 			while(rs.next()){
@@ -335,6 +386,41 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 		boolean b =  false;
 		pstmt = conn.prepareStatement(UPDATE_SQL + "set d_link = 'FD' where d_id = ?");
 		pstmt.setInt(1, id);
+		int key = pstmt.executeUpdate();
+		if(key == 1){
+			b = true;
+		}
+		if(pstmt != null)
+			pstmt.close();
+		return b;
+	}
+	
+	/**
+	 * 
+	 * @param bean
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean update(ImageBean bean) throws Exception{
+		boolean b = false;
+		StringBuffer sql = new StringBuffer();
+		sql.append(UPDATE_SQL).append(" SET d_article_id=?,d_title=?,d_name=?,d_imgurl=?,d_httpurl=?,d_orderid=?,d_time=?,d_intro=?,");
+		sql.append("d_commentsuburl=?,d_commentshowurl=?,d_link=?,d_status=?,d_filesize=? where d_id=?");
+		pstmt = conn.prepareStatement(sql.toString());
+		pstmt.setInt(1, bean.getArticleId());
+		pstmt.setString(2, bean.getTitle());
+		pstmt.setString(3, bean.getName());
+		pstmt.setString(4, bean.getImgUrl());
+		pstmt.setString(5,bean.getHttpUrl());
+		pstmt.setInt(6, bean.getOrderId());
+		pstmt.setString(7,bean.getTime());
+		pstmt.setString(8, bean.getIntro());
+		pstmt.setString(9, bean.getCommentsuburl());
+		pstmt.setString(10, bean.getCommentshowurl());
+		pstmt.setString(11, bean.getLink());
+		pstmt.setInt(12, bean.getStatus());
+		pstmt.setLong(13, bean.getFileSize());
+		pstmt.setInt(14, bean.getId());
 		int key = pstmt.executeUpdate();
 		if(key == 1){
 			b = true;
