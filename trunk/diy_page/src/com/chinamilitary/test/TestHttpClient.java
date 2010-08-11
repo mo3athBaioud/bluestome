@@ -14,11 +14,15 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 
 import com.chinamilitary.bean.Article;
 import com.chinamilitary.bean.ImageBean;
+import com.chinamilitary.bean.WebsiteBean;
 import com.chinamilitary.dao.ArticleDao;
 import com.chinamilitary.dao.ImageDao;
+import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.factory.DAOFactory;
+import com.chinamilitary.util.HttpClientUtils;
 
 public class TestHttpClient {
+	
 	static final String URL1 = "http://www.showimg.com/tabulation.php?mid=6775";
 	
 	public static HttpClient httpclient = new HttpClient();
@@ -28,6 +32,8 @@ public class TestHttpClient {
 	static ArticleDao  articleDao = DAOFactory.getInstance().getArticleDao();
 	
 	static ImageDao imageDao = DAOFactory.getInstance().getImageDao();
+	
+	static WebSiteDao webSiteDao = DAOFactory.getInstance().getWebSiteDao();
 	
 	static HashMap<String,String> LINK_NOT_OK = new HashMap<String,String>();
 	
@@ -59,7 +65,9 @@ public class TestHttpClient {
 //			System.out.println("页面是否合法:"+isTrue);
 			
 //			getResponseHeaders("http://image.tuku.china.com/tuku.military.china.com/military//pic/2010-08-09/f003abea-7bd8-478b-b9f8-a11b59d6a0e0.jpg");
-			getResponseHeaders("http://www.china.com");
+//			getResponseHeaders("http://www.china.com");
+			
+			pitchImage();
 //			getImgInfoFromResponse();
 			
 			
@@ -124,6 +132,29 @@ public class TestHttpClient {
 			List<ImageBean> list = imageDao.findImage(36, "FD");
 			for(ImageBean img:list){
 				getResponseHeaders(img.getHttpUrl());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	static void pitchImage(){
+		try{
+			List<WebsiteBean> webSites = webSiteDao.findAll();
+			for(WebsiteBean website:webSites){
+				List<ImageBean> imgList = imageDao.findImage(website.getId());
+				for(ImageBean imgBean:imgList){
+					long start = System.currentTimeMillis();
+					String length = HttpClientUtils.getHttpHeaderResponse(imgBean.getHttpUrl(),"Content-Length");
+					if(null != length){
+						imgBean.setFileSize(Long.valueOf(length));
+						imgBean.setStatus(1);
+						if(imageDao.update(imgBean)){
+							long end = System.currentTimeMillis();
+							System.out.println("更新["+imgBean.getTitle()+"|"+imgBean.getId()+"]成功,耗时:"+(end-start));
+						}
+					}
+				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();
