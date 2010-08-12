@@ -254,6 +254,10 @@ public class ChinaTUKUParser {
 	}
 	
 	public static void main(String args[]){
+		
+		init();
+		
+		
 		try{
 			for(String url:CATALOG_URL){
 			getLink(url);
@@ -262,8 +266,12 @@ public class ChinaTUKUParser {
 				String key = (String)it.next();
 				System.out.println("key:"+key);
 				try {
-				LinkBean bean = (LinkBean) LINKHASH.get(key);
-				Article acticle = null;
+					LinkBean bean = (LinkBean) LINKHASH.get(key);
+					Article acticle = null;
+					if(null != client.get(bean.getLink())){
+						System.out.println("已存在相同地址:");
+						continue;
+					}
 					if(HttpClientUtils.validationURL(bean.getLink())){
 						acticle = new Article();
 						acticle.setArticleUrl(bean.getLink());
@@ -342,4 +350,20 @@ public class ChinaTUKUParser {
 		}
 	}
 
+	/**
+	 * 初始化文章缓存数据
+	 *
+	 */
+	public static void init(){
+		try{
+			List<Article> alist = articleDao.findAll();
+			for(Article art:alist){
+				if(null == client.get(art.getArticleUrl())){
+					client.add(art.getArticleUrl(), art.getArticleUrl());
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 }
