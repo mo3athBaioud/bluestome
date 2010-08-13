@@ -12,8 +12,10 @@ import com.chinamilitary.db.CommonDB;
 
 public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 
+	//
 	private final static String INSERT_SQL = "insert into tbl_article_doc (d_web_id,d_title,d_url,d_modifytime) values (?,?,?,current_timestamp)";
-	private final static String UPDATE_SQL = "update tbl_article_doc set d_web_id = ?,d_title = ?,d_url = ?,d_author = ?,d_grade = ?,d_tag = ?,d_content = ?,d_status=?,d_publish_time=?,d_modifytime=current_timestamp where d_id = ?";
+	//d_content = ?,
+	private final static String UPDATE_SQL = "update tbl_article_doc set d_web_id = ?,d_title = ?,d_url = ?,d_author = ?,d_grade = ?,d_tag = ?,d_status=?,d_publish_time=?,d_modifytime=current_timestamp where d_id = ?";
 	private final static String QUERY_SQL = "select * from tbl_article_doc ";
 	private final static String COUNT_SQL = "select count(d_id) from tbl_article_doc ";
 	
