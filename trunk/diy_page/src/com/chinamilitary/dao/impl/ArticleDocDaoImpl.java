@@ -40,7 +40,7 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 			bean.setGrade(rs.getInt("d_grade"));
 			bean.setTag(rs.getString("d_tag"));
 			bean.setStatus(rs.getInt("d_status"));
-			bean.setContent(rs.getString("d_content"));
+//			bean.setContent(rs.getString("d_content"));
 			bean.setAuthor(rs.getString("d_author"));
 			bean.setCreateTime(rs.getDate("d_createtime"));
 			bean.setPublishTime(rs.getString("d_publish_time"));
@@ -64,7 +64,7 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 			bean.setGrade(rs.getInt("d_grade"));
 			bean.setTag(rs.getString("d_tag"));
 			bean.setStatus(rs.getInt("d_status"));
-			bean.setContent(rs.getString("d_content"));
+//			bean.setContent(rs.getString("d_content"));
 			bean.setAuthor(rs.getString("d_author"));
 			bean.setCreateTime(rs.getDate("d_createtime"));
 			bean.setPublishTime(rs.getString("d_publish_time"));
@@ -89,7 +89,7 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 			bean.setGrade(rs.getInt("d_grade"));
 			bean.setTag(rs.getString("d_tag"));
 			bean.setStatus(rs.getInt("d_status"));
-			bean.setContent(rs.getString("d_content"));
+//			bean.setContent(rs.getString("d_content"));
 			bean.setAuthor(rs.getString("d_author"));
 			bean.setCreateTime(rs.getDate("d_createtime"));
 			bean.setPublishTime(rs.getString("d_publish_time"));
@@ -164,7 +164,7 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 			bean.setGrade(rs.getInt("d_grade"));
 			bean.setTag(rs.getString("d_tag"));
 			bean.setStatus(rs.getInt("d_status"));
-			bean.setContent(rs.getString("d_content"));
+//			bean.setContent(rs.getString("d_content"));
 			bean.setAuthor(rs.getString("d_author"));
 			bean.setCreateTime(rs.getDate("d_createtime"));
 			bean.setPublishTime(rs.getString("d_publish_time"));
@@ -189,7 +189,7 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 			bean.setGrade(rs.getInt("d_grade"));
 			bean.setTag(rs.getString("d_tag"));
 			bean.setStatus(rs.getInt("d_status"));
-			bean.setContent(rs.getString("d_content"));
+//			bean.setContent(rs.getString("d_content"));
 			bean.setAuthor(rs.getString("d_author"));
 			bean.setCreateTime(rs.getDate("d_createtime"));
 			bean.setPublishTime(rs.getString("d_publish_time"));
@@ -249,10 +249,10 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 		pstmt.setString(4, doc.getAuthor());
 		pstmt.setInt(5, doc.getGrade());
 		pstmt.setString(6, doc.getTag());
-		pstmt.setString(7, doc.getContent());
-		pstmt.setInt(8, doc.getStatus());
-		pstmt.setString(9, doc.getPublishTime());
-		pstmt.setInt(10, doc.getId());
+//		pstmt.setString(7, doc.getContent());
+		pstmt.setInt(7, doc.getStatus());
+		pstmt.setString(8, doc.getPublishTime());
+		pstmt.setInt(9, doc.getId());
 		int key  = pstmt.executeUpdate();
 		if(key == 1){
 			b = true;
