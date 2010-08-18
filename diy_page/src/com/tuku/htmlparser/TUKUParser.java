@@ -24,6 +24,7 @@ import org.htmlparser.util.NodeList;
 
 import com.chinamilitary.bean.Article;
 import com.chinamilitary.bean.ArticleDoc;
+import com.chinamilitary.bean.ImageBean;
 import com.chinamilitary.bean.LinkBean;
 import com.chinamilitary.bean.ResultBean;
 import com.chinamilitary.bean.WebsiteBean;
@@ -34,11 +35,15 @@ import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.factory.DAOFactory;
 import com.chinamilitary.memcache.MemcacheClient;
 import com.chinamilitary.test.TestHttpClient;
+import com.chinamilitary.util.CacheUtils;
+import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 
 public class TUKUParser {
 
 	static String URL = "http://www.tuku.cn/";
+	
+	static String IMAGE_URL = "http://image6.tuku.cn/";
 	
 	static List<LinkBean> LINKLIST = new ArrayList<LinkBean>();
 
@@ -243,11 +248,13 @@ public class TUKUParser {
 							if (cnl.elementAt(0) instanceof ImageTag) {
 								ImageTag it = (ImageTag) cnl.elementAt(0);
 								String url = URL + nl.getLink();
+								System.out.print(">> 连接名称:"+it.getAttribute("alt"));
+								System.out.println(">> URL:"+url);
 								if(null == client.get(url)){
 									article = new Article();
 									article.setWebId(webId);
 									article.setArticleUrl(url);
-									article.setTitle(it.getAttribute("alt"));
+									article.setTitle(getTitle(it.getAttribute("alt"),"NT")); //NT:No Title
 									article.setText("NED"); //NED_WALLCOO
 									article.setIntro("");
 									int key = articleDao.insert(article);
@@ -267,6 +274,90 @@ public class TUKUParser {
 		}
 	}
 
+	/**
+	 * 获取图片地址下数据
+	 * 
+	 * @param link
+	 * @param webId
+	 * @throws Exception
+	 */
+	public static void getImage(Article article) throws Exception {
+		Parser parser = new Parser();
+		parser.setURL(article.getArticleUrl());
+		parser.setEncoding("UTF-8");
+		String length = "0";
+		int size = 0;
+		// 获取指定ID的TableTag内容
+		NodeFilter filter = new NodeClassFilter(TableTag.class);
+		NodeList list = parser.extractAllNodesThatMatch(filter)
+				.extractAllNodesThatMatch(new HasAttributeFilter("id", "DataList1"));
+		if (list != null && list.size() > 0) {
+			NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
+			NodeFilter imageFilter = new NodeClassFilter(ImageTag.class);
+			OrFilter lastFilter = new OrFilter();
+			lastFilter
+					.setPredicates(new NodeFilter[] { linkFilter, imageFilter });
+			Parser p2 = new Parser();
+			p2.setInputHTML(list.toHtml());
+			p2.setEncoding("UTF-8");
+			NodeList list4 = p2.parse(lastFilter);
+			if (list4 != null || list4.size() > 0) {
+				for (int i = 0; i < list4.size(); i++) {
+					// 地址
+					if (list4.elementAt(i) instanceof LinkTag) {
+						LinkTag nl = (LinkTag) list4.elementAt(i);
+						NodeList cnl = nl.getChildren();
+						if (cnl != null && cnl.size() > 0) {
+							// 小图 可能存在部分图片无法访问，需要判断
+							ImageBean imgBean = null;
+							if (cnl.elementAt(0) instanceof ImageTag) {
+								ImageTag it = (ImageTag) cnl.elementAt(0);
+								String url = IMAGE_URL + getImageUrl(nl.getLink());
+								if(null == client.get(url)){
+									length = HttpClientUtils.getHttpHeaderResponse(url,"Content-Length");
+									imgBean = new ImageBean();
+									imgBean.setArticleId(article.getId());
+									imgBean.setHttpUrl(url);
+									imgBean.setImgUrl(it.getImageURL());
+									imgBean.setTitle(it.getAttribute("alt"));
+									try{
+										size = Integer.parseInt(length);
+										imgBean.setFileSize(Long.valueOf(size));
+										imgBean.setStatus(3);
+									}catch(Exception e){
+										e.printStackTrace();
+										System.err.println(">> IMAGE SIZE ERROR");
+										size = 0;
+										imgBean.setFileSize(0l);
+										imgBean.setStatus(1);
+									}
+									imgBean.setLink("NED");
+									imgBean.setOrderId(i);
+									imgBean.setArticleId(article.getId());
+									// HttpClientUtils
+									int result = imageDao.insert(imgBean);
+									if (result > 0) {
+										System.out.println(">> add article["+article.getId()+":"+article.getTitle()+"] image id["+result+"] to DB");
+										imgBean.setId(result);
+										client.add(url, url);
+									} else{
+										System.err.println(">> 未添加[]到数据库中");
+									}
+//									System.out.println("图片大图:"+url);
+//									System.out.println("图片小图:"+it.getImageURL());
+//									System.out.println("图片标题:"+it.getAttribute("alt"));
+								}else{
+									System.err.println(">> 缓存中已存在相同的内容 ["+nl.getLink()+"]");
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
 	/**
 	 * 获取分类下数据
 	 * 
@@ -301,23 +392,24 @@ public class TUKUParser {
 						NodeList cnl = nl.getChildren();
 						if (cnl != null && cnl.size() > 0) {
 							// 小图 可能存在部分图片无法访问，需要判断
-							Article article = null;
+							ImageBean imgBean = null;
 							if (cnl.elementAt(0) instanceof ImageTag) {
 								ImageTag it = (ImageTag) cnl.elementAt(0);
 								String url = URL + nl.getLink();
 								if(null == client.get(url)){
-									article = new Article();
-									article.setWebId(webId);
-									article.setArticleUrl(url);
-									article.setTitle(it.getAttribute("alt"));
-									article.setText("NED"); //NED_WALLCOO
-									article.setIntro("");
-									int key = articleDao.insert(article);
-									if (key > 0) {
-										System.out.print(">> 连接名称:"+it.getAttribute("alt"));
-										System.out.println(">> URL:"+url);
-										client.add(url, url);
-									} 
+									imgBean = new ImageBean();
+//									imgBean.setArticleId(article.getId());
+									imgBean.setHttpUrl(it.getImageURL());
+//									String length = HttpClientUtilsgetHttpHeaderResponse(bean.getHttpUrl(),
+//											"Content-Length");
+//									System.out.println(">> Content-Length:" + length);
+									System.out.println("地址1： "+link.getLink());
+									System.out.println("地址2： "+IMAGE_URL+getImageUrl(nl.getLink()));
+									System.out.println("图片大图:"+it.getImageURL());
+									System.out.println("图片标题:"+it.getAttribute("alt"));
+									String length = HttpClientUtils.getHttpHeaderResponse(IMAGE_URL+getImageUrl(nl.getLink()),
+									"Content-Length");
+									System.out.println(">> Content-Length:" + length);
 								}else{
 									System.err.println(">> 已存在相同的内容 ["+nl.getLink()+"]");
 								}
@@ -329,14 +421,128 @@ public class TUKUParser {
 		}
 	}
 	
+	/**
+	 * 获取图片地址下数据
+	 * 
+	 * @param link
+	 * @param webId
+	 * @throws Exception
+	 */
+	public static void getImage(LinkBean link, int webId,int articleId) throws Exception {
+		Parser parser = new Parser();
+		parser.setURL(link.getLink());
+		parser.setEncoding("UTF-8");
+		String length = "0";
+		int size = 0;
+		// 获取指定ID的TableTag内容
+		NodeFilter filter = new NodeClassFilter(TableTag.class);
+		NodeList list = parser.extractAllNodesThatMatch(filter)
+				.extractAllNodesThatMatch(new HasAttributeFilter("id", "DataList1"));
+		if (list != null && list.size() > 0) {
+			NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
+			NodeFilter imageFilter = new NodeClassFilter(ImageTag.class);
+			OrFilter lastFilter = new OrFilter();
+			lastFilter
+					.setPredicates(new NodeFilter[] { linkFilter, imageFilter });
+			Parser p2 = new Parser();
+			p2.setInputHTML(list.toHtml());
+			p2.setEncoding("UTF-8");
+			NodeList list4 = p2.parse(lastFilter);
+			if (list4 != null || list4.size() > 0) {
+				for (int i = 0; i < list4.size(); i++) {
+					// 地址
+					if (list4.elementAt(i) instanceof LinkTag) {
+						LinkTag nl = (LinkTag) list4.elementAt(i);
+						NodeList cnl = nl.getChildren();
+						if (cnl != null && cnl.size() > 0) {
+							// 小图 可能存在部分图片无法访问，需要判断
+							ImageBean imgBean = null;
+							if (cnl.elementAt(0) instanceof ImageTag) {
+								ImageTag it = (ImageTag) cnl.elementAt(0);
+								String url = IMAGE_URL + getImageUrl(nl.getLink());
+								if(null == client.get(url)){
+									length = HttpClientUtils.getHttpHeaderResponse(url,"Content-Length");
+									imgBean = new ImageBean();
+									imgBean.setArticleId(articleId);
+									imgBean.setHttpUrl(url);
+									imgBean.setImgUrl(it.getImageURL());
+									imgBean.setTitle(it.getAttribute("alt"));
+									try{
+										size = Integer.parseInt(length);
+										imgBean.setFileSize(Long.valueOf(size));
+										imgBean.setStatus(3);
+									}catch(Exception e){
+										e.printStackTrace();
+										System.err.println(">> IMAGE SIZE ERROR");
+										size = 0;
+										imgBean.setFileSize(0l);
+										imgBean.setStatus(1);
+									}
+									imgBean.setLink("NED");
+									imgBean.setOrderId(i);
+									imgBean.setArticleId(articleId);
+									// HttpClientUtils
+									int result = imageDao.insert(imgBean);
+									if (result > 0) {
+										System.out.println(">> add article["+articleId+"] image id["+result+"] to DB");
+										imgBean.setId(result);
+										client.add(url, url);
+									} else{
+										System.err.println(">> 未添加[]到数据库中");
+									}
+								}else{
+									System.err.println(">> 缓存中已存在相同的内容 ["+nl.getLink()+"]");
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	static String getImageUrl(String link){
+		int start = link.indexOf("=");
+		int end = link.length();
+		String imgUrl = link.substring(start+1,end);
+		return imgUrl;
+	}
+	
+	static String getTitle(String title,String defaultTitle){
+		if(null == title || "".equalsIgnoreCase(title)){
+			return defaultTitle+":"+System.currentTimeMillis();
+		}
+		return title;
+	}
+	
+	static void init() {
+		try{
+			List<WebsiteBean>  webList = webSiteDao.findByParentId(400);
+			for(WebsiteBean bean:webList){
+				List<Article> articleList = articleDao.findByWebId(bean.getId());
+				for(Article article:articleList){
+					if(null == client.get(article.getArticleUrl())){
+						client.add(article.getArticleUrl(), article.getArticleUrl());
+					}else{
+						System.err.println(">> 文章["+article.getTitle()+"|"+article.getArticleUrl()+"]已存在于缓存中");
+					}
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public static void main(String[] args){
+		init();
+		
 		StringBuffer sb = new StringBuffer();
 		try{
 //			catalog(URL);
-			
 			List<WebsiteBean>  webList = webSiteDao.findByParentId(400);
 //			for(WebsiteBean bean:webList){
+//				WebsiteBean bean = webSiteDao.findById(423);
 //				ResultBean result = hasPaging(bean.getUrl(), "id", "lblPageCount");
 //				if(result.isBool()){
 //					Iterator it = result.getMap().keySet().iterator();
@@ -356,20 +562,48 @@ public class TUKUParser {
 //			}
 			
 			for(WebsiteBean bean:webList){
-				List<Article> articleList = articleDao.findByWebId(bean.getId());
-				System.out.println("文章数量:"+articleList.size());
+				List<Article> articleList = articleDao.findByWebId(bean.getId(),"NED");
+				for(Article article:articleList){
+					sb.append(article.getId()+":"+article.getArticleUrl()+"\n");
+					try{
+						ResultBean result = hasPaging(article.getArticleUrl(), "id", "lblPageCount");
+						if(result.isBool()){
+							Iterator it = result.getMap().keySet().iterator();
+							while(it.hasNext()){
+								String key = (String)it.next();
+								LinkBean link = result.getMap().get(key);
+								try{
+									getImage(link,article.getWebId(),article.getId());
+								}catch(Exception e){
+									e.printStackTrace();
+									System.out.println("key:"+key);
+									continue;
+								}
+							}
+							article.setText("FD");
+						}else{
+							article.setText("NED");
+						}
+					}catch(Exception e){
+						article.setText("NED");
+					}finally{
+						if(!articleDao.update(article)){
+							System.err.println(">> 更新记录["+article.getArticleUrl()+"]失败");
+						}
+					}
+				}
 			}
 			
-//			ResultBean result = hasPaging("http://www.tuku.cn/aclass.aspx?id=6", "id", "lblPageCount");
+//			ResultBean result = hasPaging("http://www.tuku.cn/class.aspx?typeid=2228", "id", "lblPageCount");
 //			if(result.isBool()){
 //				Iterator it = result.getMap().keySet().iterator();
 //				while(it.hasNext()){
 //					String key = (String)it.next();
 //					LinkBean link = result.getMap().get(key);
-//					secondURL(link,412);
+//					getImage(link,412);
 //				}
 //			}
-			IOUtil.createFile(sb.toString());
+//			IOUtil.createFile(sb.toString());
 		}catch(Exception e){
 			e.printStackTrace();
 			IOUtil.createFile(sb.toString());
