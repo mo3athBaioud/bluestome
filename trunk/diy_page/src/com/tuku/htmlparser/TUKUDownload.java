@@ -1,7 +1,6 @@
 package com.tuku.htmlparser;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import com.chinamilitary.bean.Article;
@@ -32,6 +31,11 @@ public class TUKUDownload {
 
 	static PicFileDao picFiledao = DAOFactory.getInstance().getPicFileDao();
 
+	/**
+	 * 下载逻辑类 返回核心下载结果
+	 * @param img
+	 * @return
+	 */
 	static boolean downloadImage(ImageBean img) {
 		boolean b = false;
 		try {
@@ -49,6 +53,11 @@ public class TUKUDownload {
 		return b;
 	}
 
+	/**
+	 * 核心下载类 执行实际的文件下载
+	 * @param imgBean
+	 * @throws Exception
+	 */
 	static void imgDownload(ImageBean imgBean) throws Exception {
 		System.err.println(" >> IN Download Image Method");
 		PicfileBean bean = null;
@@ -108,6 +117,10 @@ public class TUKUDownload {
 		}
 	}
 
+	/**
+	 * 下载方法
+	 * @param bean
+	 */
 	static void patchImag(WebsiteBean bean) {
 		try {
 			List<Article> artList = articleDao.findByWebId(bean.getId(), "FD");
