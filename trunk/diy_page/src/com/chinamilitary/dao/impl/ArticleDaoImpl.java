@@ -123,12 +123,12 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 	public int insert(Article bean) throws Exception{
 		int key = -1;
 		if(checkExists(bean.getTitle(),bean.getWebId())){
-			System.out.println("已存在相同标题："+bean.getTitle());
+			System.err.println("已存在相同标题："+bean.getTitle());
 			return key;
 		}
 		
 		if(getCountByURL(bean.getArticleUrl()) > 0){
-			System.out.println("已存在相同URL："+bean.getTitle());
+			System.err.println("已存在相同URL："+bean.getTitle());
 			return key;
 		}
 		
@@ -177,7 +177,7 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 	
 	boolean checkExists(String title,Integer webId) throws Exception{
 		boolean b = false;
-		if(title == null && title.equalsIgnoreCase("")){
+		if(null == title || title.equalsIgnoreCase("")){
 			return b;
 		}
 		if(getCountByTitle(title,webId) > 0){
@@ -188,7 +188,7 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 	
 	boolean checkExists(String title) throws Exception{
 		boolean b = false;
-		if(title == null && title.equalsIgnoreCase("")){
+		if(null == title || title.equalsIgnoreCase("")){
 			return b;
 		}
 		if(getCountByTitle(title) > 0){
@@ -335,7 +335,7 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 	public List<Article> findShowImg(Integer webId,String text,Integer id) throws Exception{
 		List<Article> list = new ArrayList<Article>();
 		Article bean = null;
-		pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id > ? and d_text = ? and d_id > ?");
+		pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id = ? and d_text = ? and d_id > ?");
 		pstmt.setInt(1, webId);
 		pstmt.setString(2, text);
 		pstmt.setInt(3, id);
@@ -427,7 +427,7 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 		Article bean = null;
 		pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id = ? and d_text = ?");
 		pstmt.setInt(1, webId);
-		pstmt.setString(2, "NED");
+		pstmt.setString(2, text);
 		rs = pstmt.executeQuery();
 		while(rs.next()){
 			bean = new Article();
