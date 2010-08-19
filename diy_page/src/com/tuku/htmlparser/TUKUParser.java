@@ -488,7 +488,7 @@ public class TUKUParser {
 										imgBean.setId(result);
 										client.add(url, url);
 									} else{
-										System.err.println(">> 未添加[]到数据库中");
+										System.err.println(">> 未添加["+url+"]到数据库中");
 									}
 								}else{
 									System.err.println(">> 缓存中已存在相同的内容 ["+nl.getLink()+"]");
