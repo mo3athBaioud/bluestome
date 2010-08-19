@@ -312,14 +312,14 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 		pstmt.setString(8,bean.getIntro() );
 		pstmt.setString(9,bean.getCommentsuburl() );
 		pstmt.setString(10,bean.getCommentshowurl() );
-		pstmt.setString(11,bean.getLink() );
 		if(null == bean.getFileSize()){
 			bean.setFileSize(0l);
 		}
-		pstmt.setLong(12, bean.getFileSize());
+		pstmt.setLong(11, bean.getFileSize());
 		if(null == bean.getStatus())
 			bean.setStatus(-1);
-		pstmt.setInt(13, bean.getStatus());
+		pstmt.setInt(12, bean.getStatus());
+		pstmt.setString(13,bean.getLink());
 		if(pstmt.executeUpdate()  == 1){
 			rs = pstmt.getGeneratedKeys();
 			while(rs.next()){
