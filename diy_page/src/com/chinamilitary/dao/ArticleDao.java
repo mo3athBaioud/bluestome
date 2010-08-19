@@ -45,6 +45,13 @@ public interface ArticleDao extends ICommonDao{
 	 */
 	public boolean update(Article article) throws Exception;
 	
+	/**
+	 * 根据WEBID查找记录
+	 * @param webId
+	 * @return
+	 */
+	public List<Article> findByWebId(Integer webId,String text) throws Exception;
+	
 	public List<Article> findShowImg(Integer webId,Integer id) throws Exception;
 	
 	/**
