@@ -41,6 +41,15 @@ public class LuceneIndex {
 				log.debug(">> create index file");
 				file.getParentFile().mkdirs();
 			}
+			if(file.isDirectory()){
+				File[] s = file.listFiles();
+				for(File s2:s){
+					if(s2.delete()){
+						log.debug(">> delete index file");
+					}
+				}
+			}
+			
 			writer = new IndexWriter(file.getAbsolutePath(), analyzer, true, IndexWriter.MaxFieldLength.LIMITED);
 		} catch (CorruptIndexException e) {
 			log.error(">> createIndexWriter CorruptIndexException:"+e);
@@ -67,11 +76,11 @@ public class LuceneIndex {
 			writer = createIndexWriter(indexPath);
 		
 		Document doc = new Document();
-		Field field = new Field("title",article.getTitle(),Field.Store.YES,Field.Index.TOKENIZED);
+		Field field = new Field("id",String.valueOf(article.getId()),Field.Store.YES,Field.Index.TOKENIZED);
 		doc.add(field);
 		
-//		field = new Field("title",article.getTitle(),Field.Store.YES,Field.Index.TOKENIZED);
-//		doc.add(field);
+		field = new Field("title",article.getTitle(),Field.Store.YES,Field.Index.TOKENIZED);
+		doc.add(field);
 		
 		field = new Field("uri",article.getArticleUrl(),Field.Store.YES,Field.Index.TOKENIZED);
 		doc.add(field);
