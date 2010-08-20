@@ -560,6 +560,12 @@ public class TUKUParser {
 //					}
 //				}
 //			}
+//			TUKUThread[] thread = new TUKUThread[webList.size()];
+//			for(int i=0;i<webList.size();i++){
+//				WebsiteBean bean = (WebsiteBean)webList.get(i);
+//				thread[i] = new TUKUThread(bean.getId());
+//				thread[i].start();
+//			}
 			
 			for(WebsiteBean bean:webList){
 				List<Article> articleList = articleDao.findByWebId(bean.getId(),"NED");
@@ -606,7 +612,7 @@ public class TUKUParser {
 //			IOUtil.createFile(sb.toString());
 		}catch(Exception e){
 			e.printStackTrace();
-			IOUtil.createFile(sb.toString());
+//			IOUtil.createFile(sb.toString());
 		}
 	}
 	
