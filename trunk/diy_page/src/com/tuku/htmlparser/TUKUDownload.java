@@ -36,20 +36,14 @@ public class TUKUDownload {
 	 * @param img
 	 * @return
 	 */
-	static boolean downloadImage(ImageBean img) {
+	static boolean downloadImage(ImageBean img) throws Exception{
 		boolean b = false;
-		try {
-			if (picFiledao.checkExists(img.getId(), img.getArticleId())) {
-				System.err.println(">> 该记录["+img.getId()+"]已经下载 ");
-				return false;
-			}
-			imgDownload(img);
-			b = true;
-		} catch (Exception e) {
-			System.err.print(">> 下载图片失败");
-			return b;
+		if (picFiledao.checkExists(img.getId(), img.getArticleId())) {
+			System.err.println(">> 该记录["+img.getId()+"]已经下载 ");
+			return false;
 		}
-
+		imgDownload(img);
+		b = true;
 		return b;
 	}
 
@@ -121,12 +115,12 @@ public class TUKUDownload {
 	 * 下载方法
 	 * @param bean
 	 */
-	static void patchImag(WebsiteBean bean) {
-		try {
-			List<Article> artList = articleDao.findByWebId(bean.getId(), "FD");
-			for (Article article : artList) {
-				List<ImageBean> imgList = imageDao.findImage(article.getId());
-				for (ImageBean img : imgList) {
+	static void patchImag(WebsiteBean bean) throws Exception {
+		List<Article> artList = articleDao.findByWebId(bean.getId(), "FD");
+		for (Article article : artList) {
+			List<ImageBean> imgList = imageDao.findImage(article.getId());
+			for (ImageBean img : imgList) {
+				try {
 					if(downloadImage(img)){
 						img.setStatus(1);
 						img.setLink("FD");
@@ -134,10 +128,11 @@ public class TUKUDownload {
 							System.err.println(" >> 更新tbl_image对象记录["+img.getId()+"]失败!!!");
 						}
 					}
+				} catch (Exception e) {
+					System.err.println(">> error patch img");
+					continue;
 				}
 			}
-		} catch (Exception e) {
-			System.err.println(">> error patch img");
 		}
 	}
 	
@@ -148,7 +143,7 @@ public class TUKUDownload {
 				patchImag(bean);
 			}
 		}catch(Exception e){
-			
+			System.err.println(" >> Exception:"+e);
 		}
 	}
 
