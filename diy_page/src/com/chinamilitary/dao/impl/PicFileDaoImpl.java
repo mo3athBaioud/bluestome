@@ -236,4 +236,66 @@ public class PicFileDaoImpl extends CommonDB implements PicFileDao {
 			return true;
 	}
 	
+	/**
+	 * 判断是否存在已下载的图片
+	 * @param imgId
+	 * @param articleId
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean checkExists(int imgId,int articleId) throws Exception{
+		boolean b = false;
+		int count = 0;
+		if(imgId < 1)
+			return checkExistsByImgId(imgId);
+		if(articleId < 1)
+			return checkExistsByArticleId(articleId);
+		
+		String sql = COUNT_SQL + " where d_image_id = ? and d_article_id = ?";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, imgId);
+		pstmt.setInt(2, articleId);
+		rs = pstmt.executeQuery();
+		while(rs.next()){
+			count = rs.getInt(1);
+		}
+		releaseLink();
+		if(count == 0)
+			return false;
+		else
+			return true;
+	}
+	
+	boolean checkExistsByImgId(int imgId) throws Exception{
+		int count = 0;
+		String sql = COUNT_SQL + " where d_image_id = ?";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, imgId);
+		rs = pstmt.executeQuery();
+		while(rs.next()){
+			count = rs.getInt(1);
+		}
+		releaseLink();
+		if(count == 0)
+			return false;
+		else
+			return true;
+		
+	}
+	
+	boolean checkExistsByArticleId(int articleId) throws Exception{
+		int count = 0;
+		String sql = COUNT_SQL + " where d_article_id = ?";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, articleId);
+		rs = pstmt.executeQuery();
+		while(rs.next()){
+			count = rs.getInt(1);
+		}
+		releaseLink();
+		if(count == 0)
+			return false;
+		else
+			return true;
+	}
 }
