@@ -1,0 +1,114 @@
+package com.chinamilitary.lucene;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.LockObtainFailedException;
+
+import com.chinamilitary.bean.Article;
+import com.chinamilitary.constants.Constants;
+
+public class LuceneIndex {
+	
+	private static Log log = LogFactory.getLog(LuceneIndex.class);
+
+	private String indexPath;
+	
+	private static LuceneIndex instance = null;
+	
+	private static IndexWriter writer = null;
+	
+	private final StandardAnalyzer analyzer = new StandardAnalyzer();
+	
+	private LuceneIndex(String indexPath){
+		this.indexPath = indexPath;
+		writer = createIndexWriter(indexPath);
+	}
+	
+	private IndexWriter createIndexWriter(String indexPath){
+		File file = null;
+		try {
+			file = new File(indexPath);
+			if(!file.exists()){
+				log.debug(">> create index file");
+				file.getParentFile().mkdirs();
+			}
+			writer = new IndexWriter(file.getAbsolutePath(), analyzer, true, IndexWriter.MaxFieldLength.LIMITED);
+		} catch (CorruptIndexException e) {
+			log.error(">> createIndexWriter CorruptIndexException:"+e);
+			return null;
+		} catch (LockObtainFailedException e) {
+			log.error(">> createIndexWriter LockObtainFailedException:"+e);
+			return null;
+		} catch (IOException e) {
+			log.error(">> createIndexWriter IOException:"+e);
+			return null;
+		}
+		return writer;
+	}
+	
+	public static LuceneIndex getInstance(){
+		if(instance == null)
+			instance = new LuceneIndex(Constants.INDEX_DIR);
+		return instance;
+	}
+	
+	public boolean addIndex(Article article){
+		
+		if(null == writer)
+			writer = createIndexWriter(indexPath);
+		
+		Document doc = new Document();
+		Field field = new Field("title",article.getTitle(),Field.Store.YES,Field.Index.TOKENIZED);
+		doc.add(field);
+		
+//		field = new Field("title",article.getTitle(),Field.Store.YES,Field.Index.TOKENIZED);
+//		doc.add(field);
+		
+		field = new Field("uri",article.getArticleUrl(),Field.Store.YES,Field.Index.TOKENIZED);
+		doc.add(field);
+		
+		field = new Field("webid",String.valueOf(article.getWebId()),Field.Store.YES,Field.Index.TOKENIZED);
+		doc.add(field);
+		
+		field = new Field("status",article.getText(),Field.Store.YES,Field.Index.TOKENIZED);
+		doc.add(field);
+		
+		field = new Field("cdate",article.getCreateTime().toLocaleString(),Field.Store.YES,Field.Index.TOKENIZED);
+		doc.add(field);
+		
+		try {
+			writer.addDocument(doc);
+			log.debug(">> add Article["+article.getTitle()+"|"+article.getArticleUrl()+"] to Index");
+		} catch (CorruptIndexException e) {
+			log.error(">> createIndexWriter CorruptIndexException:"+e);
+			return false;
+		} catch (IOException e) {
+			log.error(">> createIndexWriter IOException:"+e);
+			return false;
+		}		return true;
+	}
+	
+	public static void closeWriter(){
+		if(null != writer){
+			try {
+				writer.close();
+			} catch (CorruptIndexException e) {
+				log.error(">> close writer CorruptIndexException:"+e);
+				e.printStackTrace();
+			} catch (IOException e) {
+				log.error(">> close writer IOException:"+e);
+				e.printStackTrace();
+			}
+		}
+	}
+	
+}
