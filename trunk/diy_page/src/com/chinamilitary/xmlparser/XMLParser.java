@@ -12,6 +12,7 @@ import com.chinamilitary.bean.ImageBean;
 import com.chinamilitary.dao.ImageDao;
 import com.chinamilitary.factory.DAOFactory;
 import com.chinamilitary.util.CommonUtil;
+import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
 
@@ -20,7 +21,25 @@ public class XMLParser {
 	
 	public static void readXmlFromURL(String url,String dir) throws Exception{
 		SAXReader reader = new SAXReader();
-		Document document = reader.read(new URL(url));// 读取XML文件
+		Document document = null;
+		try{
+			//读取XML文件
+			document = reader.read(new URL(url));
+		}catch(Exception e){
+			String value = HttpClientUtils.getResponseBody(url);
+			if(!"".equalsIgnoreCase(value)){
+				return;
+			}
+			if(!"".equalsIgnoreCase(value)){
+				int start = value.indexOf("intro=")+6;
+				int end = value.indexOf("comment");
+				String tmp = value.substring(start,end);
+				System.out.println("value:"+value.replace(tmp, "\"\""));
+				String tmp2 = value.replace(tmp, "\"\" ");
+				//读取XML文件
+				document = reader.read(tmp2);
+			}
+		}
 		Element root = document.getRootElement();// 得到根节点
 //		Element ele = root.element("list");
 		List list = root.elements("Image");
@@ -66,13 +85,35 @@ public class XMLParser {
 		IOUtil.createFile("XMLURL:"+url+"\n", dir+title,".txt");
 	}
 	public static List<ImageBean> readXmlFromURL(String xmlUrl) throws Exception{
+		List<ImageBean> imageList = new ArrayList<ImageBean>();
 		SAXReader reader = new SAXReader();
-		Document document = reader.read(new URL(xmlUrl));// 读取XML文件
+		Document document = null;
+		try{
+			//读取XML文件
+			document = reader.read(new URL(xmlUrl));
+		}catch(Exception e){
+			String value = HttpClientUtils.getResponseBody(xmlUrl);
+			if("".equalsIgnoreCase(value)){
+				return imageList;
+			}
+			if(!"".equalsIgnoreCase(value)){
+				int start = value.indexOf("intro=")+6;
+				int end = value.indexOf("comment");
+				String tmp = value.substring(start,end);
+				System.out.println("value:"+value.replace(tmp, "\"\""));
+				String tmp2 = value.replace(tmp, "\"\" ");
+//				 读取XML文件
+				document = reader.read(tmp2);
+			}
+		}
+		if(null == document){
+			return imageList;
+		}
+//		reader.read(new URL(xmlUrl));// 读取XML文件
 		Element root = document.getRootElement();// 得到根节点
 		List list = root.elements("Image");
 		ImageBean bean = null;
 		String title = null;
-		List<ImageBean> imageList = new ArrayList<ImageBean>();
 		for(int i=0;i<list.size();i++){
 			bean = new ImageBean();
 			Element eles = (Element)list.get(i);
@@ -103,7 +144,25 @@ public class XMLParser {
 	
 	public static void readXmlFromURL(String linkUrl,String xmlUrl,String dir) throws Exception{
 		SAXReader reader = new SAXReader();
-		Document document = reader.read(new URL(xmlUrl));// 读取XML文件
+		Document document = null;
+		try{
+			//读取XML文件
+			document = reader.read(new URL(xmlUrl));
+		}catch(Exception e){
+			String value = HttpClientUtils.getResponseBody(xmlUrl);
+			if(!"".equalsIgnoreCase(value)){
+				return;
+			}
+			if(!"".equalsIgnoreCase(value)){
+				int start = value.indexOf("intro=")+6;
+				int end = value.indexOf("comment");
+				String tmp = value.substring(start,end);
+				System.out.println("value:"+value.replace(tmp, "\"\""));
+				String tmp2 = value.replace(tmp, "\"\" ");
+				//读取XML文件
+				document = reader.read(tmp2);
+			}
+		}
 		Element root = document.getRootElement();// 得到根节点
 //		Element ele = root.element("list");
 		List list = root.elements("Image");
@@ -152,7 +211,7 @@ public class XMLParser {
 	
 	public static void main(String args[]){
 		try{
-			XMLParser.readXmlFromURL("http://www.china.com","http://tuku.military.china.com/military/html/2009-12-23/134707.xml","H:\\china\\military\\pic\\");
+			XMLParser.readXmlFromURL("http://tuku.game.china.com/game/html/2010-08-19/149536.xml","F:\\china\\military\\pic\\");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
