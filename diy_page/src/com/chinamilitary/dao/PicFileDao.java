@@ -38,6 +38,15 @@ public interface PicFileDao extends ICommonDao{
 	 */
 	public List<PicfileBean> findByArticleId(Integer articleid) throws Exception;
 	
+	/**
+	 * 判断是否存在已下载的图片
+	 * @param imgId
+	 * @param articleId
+	 * @return
+	 * @throws Exception
+	 */
+	boolean checkExists(int imgId,int articleId) throws Exception;
+	
 	public PicfileBean findByImgIdAndArticleId(Integer imagId,Integer articleId) throws Exception;
 	
 	/**
