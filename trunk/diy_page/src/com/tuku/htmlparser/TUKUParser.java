@@ -142,21 +142,21 @@ public class TUKUParser {
 				if(i>1){
 					link = url+"&Page="+i;
 				}
-				boolean isTrue = TestHttpClient.urlValidation(link);
-				if(isTrue){
-					l1 = new LinkBean();
-					l1.setLink(link);//"htm/"+
-					l1.setName(link);//link.getLinkText()
-					result.put(link, l1);
-				}else{
-					link = url+"?Page="+i;
-					if(TestHttpClient.urlValidation(link)){
-						l1 = new LinkBean();
-						l1.setLink(link);//"htm/"+
-						l1.setName(link);//link.getLinkText()
-						result.put(link, l1);
-					}
-				}
+//				boolean isTrue = TestHttpClient.urlValidation(link);
+//				if(isTrue){
+				l1 = new LinkBean();
+				l1.setLink(link);//"htm/"+
+				l1.setName(link);//link.getLinkText()
+				result.put(link, l1);
+//				}else{
+//					link = url+"?Page="+i;
+//					if(TestHttpClient.urlValidation(link)){
+//						l1 = new LinkBean();
+//						l1.setLink(link);//"htm/"+
+//						l1.setName(link);//link.getLinkText()
+//						result.put(link, l1);
+//					}
+//				}
 			}
 			b = true;
 			result.setBool(true);
@@ -461,7 +461,7 @@ public class TUKUParser {
 								ImageTag it = (ImageTag) cnl.elementAt(0);
 								String url = IMAGE_URL + getImageUrl(nl.getLink());
 								if(null == client.get(url)){
-									length = HttpClientUtils.getHttpHeaderResponse(url,"Content-Length");
+//									length = HttpClientUtils.getHttpHeaderResponse(url,"Content-Length");
 									imgBean = new ImageBean();
 									imgBean.setArticleId(articleId);
 									imgBean.setHttpUrl(url);
@@ -496,6 +496,7 @@ public class TUKUParser {
 							}
 						}
 					}
+					Thread.sleep(1000);
 				}
 			}
 		}
@@ -535,12 +536,8 @@ public class TUKUParser {
 	}
 	
 	public static void main(String[] args){
-		init();
-		
-		StringBuffer sb = new StringBuffer();
 		try{
 //			catalog(URL);
-			List<WebsiteBean>  webList = webSiteDao.findByParentId(400);
 //			for(WebsiteBean bean:webList){
 //				WebsiteBean bean = webSiteDao.findById(423);
 //				ResultBean result = hasPaging(bean.getUrl(), "id", "lblPageCount");
@@ -567,14 +564,23 @@ public class TUKUParser {
 //				thread[i].start();
 //			}
 			
-			for(WebsiteBean bean:webList){
-				List<Article> articleList = articleDao.findByWebId(bean.getId(),"NED");
-				for(Article article:articleList){
-					sb.append(article.getId()+":"+article.getArticleUrl()+"\n");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	static void update() throws Exception{
+		List<WebsiteBean>  webList = webSiteDao.findByParentId(400);
+		for(WebsiteBean bean:webList){
+			List<Article> articleList = articleDao.findByWebId(bean.getId(),"FD");
+			for(Article article:articleList){
+				List<ImageBean> imgList = imageDao.findImage(article.getId());
+				if(imgList.size() == 0){
 					try{
 						ResultBean result = hasPaging(article.getArticleUrl(), "id", "lblPageCount");
 						if(result.isBool()){
 							Iterator it = result.getMap().keySet().iterator();
+							boolean isFull = true;
 							while(it.hasNext()){
 								String key = (String)it.next();
 								LinkBean link = result.getMap().get(key);
@@ -582,16 +588,21 @@ public class TUKUParser {
 									getImage(link,article.getWebId(),article.getId());
 								}catch(Exception e){
 									e.printStackTrace();
-									System.out.println("key:"+key);
+									isFull = false;
 									continue;
 								}
 							}
-							article.setText("FD");
+							if(isFull){
+								article.setText("FD");
+							}else{
+								article.setText("NED");
+							}
 						}else{
 							article.setText("NED");
 						}
 					}catch(Exception e){
 						article.setText("NED");
+						System.err.println(">> ["+article.getId()+"|"+article.getTitle()+"]Excepton:"+e);
 					}finally{
 						if(!articleDao.update(article)){
 							System.err.println(">> 更新记录["+article.getArticleUrl()+"]失败");
@@ -599,20 +610,6 @@ public class TUKUParser {
 					}
 				}
 			}
-			
-//			ResultBean result = hasPaging("http://www.tuku.cn/class.aspx?typeid=2228", "id", "lblPageCount");
-//			if(result.isBool()){
-//				Iterator it = result.getMap().keySet().iterator();
-//				while(it.hasNext()){
-//					String key = (String)it.next();
-//					LinkBean link = result.getMap().get(key);
-//					getImage(link,412);
-//				}
-//			}
-//			IOUtil.createFile(sb.toString());
-		}catch(Exception e){
-			e.printStackTrace();
-//			IOUtil.createFile(sb.toString());
 		}
 	}
 	
