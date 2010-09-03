@@ -31,6 +31,7 @@ import com.chinamilitary.factory.DAOFactory;
 import com.chinamilitary.memcache.MemcacheClient;
 import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.CommonUtil;
+import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 import com.message.RequestRecordQuene;
 
@@ -149,11 +150,14 @@ public class QWPPHtmlParser {
 					LinkTag select  = (LinkTag)nodes.elementAt(i);
 					String url_ = url+select.getLink();
 					if(null == client.get(url_)){
-					LinkBean l1 = null;
-					l1 = new LinkBean();
-					l1.setLink(url_);
-					l1.setName(select.getLinkText());
-					result.add(l1);
+						if(!HttpClientUtils.validationURL(url_)){
+							continue;
+						}
+						LinkBean l1 = null;
+						l1 = new LinkBean();
+						l1.setLink(url_);
+						l1.setName(select.getLinkText());
+						result.add(l1);
 					}
 				}
 			}
@@ -192,6 +196,9 @@ public class QWPPHtmlParser {
 							LinkTag select  = (LinkTag)nodes.elementAt(i);
 							String url_ = _URL+select.getLink();
 							if(null == client.get(url_)){
+								if(!HttpClientUtils.validationURL(url_)){
+									continue;
+								}
 								article = new Article();
 								article.setActicleRealUrl(url_);
 								article.setArticleUrl(url_);
@@ -243,6 +250,10 @@ public class QWPPHtmlParser {
 						for(int i=0;i<nodes.size();i++){
 							LinkTag select  = (LinkTag)nodes.elementAt(i);
 							String url_ = _URL+select.getLink();
+							if(!HttpClientUtils.validationURL(url_)){
+								System.out.println(">> QWPP 连接不可用");
+								continue;
+							}
 							if(null == client.get(url_)){
 								imgBean = new ImageBean();
 //								imgBean.setTitle(title)
@@ -252,6 +263,11 @@ public class QWPPHtmlParser {
 								imgBean.setCreatetime(new Date());
 								imgBean.setOrderId(i+1);
 								imgBean.setLink("NED");
+								String length = HttpClientUtils.getHttpHeaderResponse(url_, "Content-Length");
+								if(null != length){
+									imgBean.setFileSize(Long.valueOf(length));
+									imgBean.setStatus(1);
+								}
 								int iid = imageDao.insert(imgBean);
 								if(iid > 0){
 									client.add(url_, url_);
@@ -293,6 +309,9 @@ public class QWPPHtmlParser {
 							LinkTag select  = (LinkTag)nodes.elementAt(i);
 							String url = _URL+select.getLink();
 							if(null == client.get(url)){
+								if(!HttpClientUtils.validationURL(url)){
+									continue;
+								}
 								imgBean = new ImageBean();
 								imgBean.setArticleId(article.getId());
 								imgBean.setHttpUrl(url);
@@ -335,30 +354,30 @@ public class QWPPHtmlParser {
 	}
 	
 	static void download(ImageBean imgBean,Article article) throws Exception{
-		PicfileBean bean = null;
+//		PicfileBean bean = null;
 		String fileName = imgBean.getImgUrl().substring(imgBean.getImgUrl().lastIndexOf("/")+1);
-		bean = new PicfileBean();
-		bean.setArticleId(article.getId());
-		bean.setImageId(imgBean.getId());
-		bean.setTitle(imgBean.getTitle() == null?article.getTitle():imgBean.getTitle()); // NO TITLE
+//		bean = new PicfileBean();
+//		bean.setArticleId(article.getId());
+//		bean.setImageId(imgBean.getId());
+//		bean.setTitle(imgBean.getTitle() == null?article.getTitle():imgBean.getTitle()); // NO TITLE
 		// webId+File.separator+
-		bean.setSmallName("NSI"); //NO SMALL ICON
+//		bean.setSmallName("NSI"); //NO SMALL ICON
 
 		// webId+File.separator+
-		bean.setName(CommonUtil.getDate("") + File.separator
-				+ article.getTitle() + File.separator + fileName);
-		bean.setUrl(SAVE_DIR);
+//		bean.setName(CommonUtil.getDate("") + File.separator
+//				+ article.getTitle() + File.separator + fileName);
+//		bean.setUrl(SAVE_DIR);
 		try {
-			boolean b = picFileDao.insert(bean);
-			if (b) {
+//			boolean b = picFileDao.insert(bean);
+			if (true) {
 				System.out.println("fileName:"+fileName);
 				if(article.getTitle() != null && !article.getTitle().equalsIgnoreCase("")){
 				IOUtil.createPicFile(imgBean.getImgUrl(), SAVE_DIR
-						+ CommonUtil.getDate("") + File.separator + article.getTitle()+ File.separator
+						+ CommonUtil.getDate("") + File.separator + article.getId()+ File.separator
 						+ fileName);
 				}else{
 					IOUtil.createPicFile(imgBean.getImgUrl(), SAVE_DIR
-							+ CommonUtil.getDate("") + File.separator
+						+ CommonUtil.getDate("") +File.separator+article.getId()+File.separator
 							+ fileName);
 				}
 				System.out.println("添加到tbl_pic_file成功！");
@@ -378,6 +397,7 @@ public class QWPPHtmlParser {
 	//217 1957
 	static void downloadArticleImage(){
 		try{
+		long start = System.currentTimeMillis();
 		List<WebsiteBean> rootURL = wesiteDao.findByParentId(148);
 		for(WebsiteBean bean:rootURL){
 			List<Article> list  = articleDao.findShowImg(bean.getId(),"FD",1);
@@ -391,12 +411,17 @@ public class QWPPHtmlParser {
 				 
 				 List<ImageBean> ilist = imageDao.findImage(art.getId());
 				 for(ImageBean imgBean:ilist){
+					if(!HttpClientUtils.validationURL(imgBean.getImgUrl()) || !HttpClientUtils.validationURL(imgBean.getHttpUrl())){
+						continue;
+					}
 					 download(imgBean,art);
-//					 _COUNT ++;
+					 _COUNT ++;
 				 }
 			}
 		}
+		long end = System.currentTimeMillis();
 		
+		System.out.println("下载图片耗时:"+(end-start)/1024);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -411,25 +436,21 @@ public class QWPPHtmlParser {
 				Object obj = client.get(key);
 				if(null == obj){
 					client.add(key, key);
-				}else{
-					client.replace(key, key);
 				}
 			}
 			long end1 = System.currentTimeMillis();
 			
-			List<String> imageURLList = imageDao.findImageURL(148);
-			long start2 = System.currentTimeMillis();
-			for(String key:imageURLList){
-				Object obj = client.get(key);
-				if(null == obj){
-					client.add(key, key);
-				}else{
-					client.replace(key, key);
-				}
-			}
-			long end2 = System.currentTimeMillis();
+//			List<String> imageURLList = imageDao.findImageURL(148);
+//			long start2 = System.currentTimeMillis();
+//			for(String key:imageURLList){
+//				Object obj = client.get(key);
+//				if(null == obj){
+//					client.add(key, key);
+//				}
+//			}
+//			long end2 = System.currentTimeMillis();
 			System.out.println("文章入缓存花费:"+(end1-start1));
-			System.out.println("图片地址入缓存花费:"+(end2-start2));
+//			System.out.println("图片地址入缓存花费:"+(end2-start2));
 		}catch(Exception e){
 			System.out.println(">> Exception:"+e.getMessage());
 		}
@@ -445,6 +466,12 @@ public class QWPPHtmlParser {
 				//获取网站下的文章
 				for(WebsiteBean bean:rootURL){
 					System.out.println(">> 解析地址:["+bean.getUrl()+"]");
+					
+					if(!HttpClientUtils.validationURL(bean.getUrl())){
+						System.out.println(">> QWPP Catalog URL["+bean.getUrl()+"] NOT OK");
+						continue;
+					}
+					
 					ResultBean  result = hasPaging(bean.getUrl(),"class","show_page");
 					for(LinkBean ll : result.getList()){
 						//获取分页连接
@@ -456,7 +483,11 @@ public class QWPPHtmlParser {
 				for(WebsiteBean bean:rootURL){
 					List<Article> list  = articleDao.findShowImg(bean.getId(),"NED",1);
 					for(Article art:list){
-						System.out.println("标题："+art.getTitle() + "\t\t所属类别ID:"+art.getWebId());
+							if(!HttpClientUtils.validationURL(art.getArticleUrl())){
+								System.out.println(">> QWPP Article URL["+bean.getUrl()+"] NOT OK");
+								continue;
+							}
+							System.out.println("标题："+art.getTitle() + "\t\t所属类别ID:"+art.getWebId());
 							getPicUrl(art, "id", "piclist2");
 							art.setText("FD");
 							if(articleDao.update(art)){
@@ -466,6 +497,8 @@ public class QWPPHtmlParser {
 					}
 				}
 			}
+			/**
+			**/
 //			System.out.println("已解析图片地址的数量："+_COUNT);
 //			downloadArticleImage();
 			System.out.println("已下载的图片数量："+_COUNT);
