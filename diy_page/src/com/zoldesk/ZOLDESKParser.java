@@ -305,16 +305,18 @@ public class ZOLDESKParser {
 	 * @throws Exception
 	 */
 	public static boolean getImage(Article article) throws Exception {
-		boolean b = true;
+		boolean b = false;
 		ResultBean result = hasPaging(article.getArticleUrl(), "class",
 				"page f14b");
 		if (result.isBool()) {
 			Iterator it = result.getMap().keySet().iterator();
 			while (it.hasNext()) {
 				String key = (String) it.next();
+				System.out.println("需要解析的URL:"+key);
 				LinkBean link = result.getMap().get(key);
 				b = getImage(link, article.getId());
 			}
+			b = true;
 		}
 
 		return b;
@@ -334,7 +336,7 @@ public class ZOLDESKParser {
 		parser.setEncoding("UTF-8");
 		boolean resultB = true;
 		// 获取指定ID的TableTag内容
-		NodeFilter filter = new NodeClassFilter(CompositeTag.class);
+		NodeFilter filter = new NodeClassFilter(Div.class);
 		NodeList list = parser
 				.extractAllNodesThatMatch(filter)
 				.extractAllNodesThatMatch(new HasAttributeFilter("class", "lb"));
@@ -397,7 +399,7 @@ public class ZOLDESKParser {
 							}
 							int key = imageDao.insert(imgBean);
 							if (key > 0) {
-								System.out.println(imgBean.getTime() + "\t|"
+								System.out.println(imgBean.getTitle() + "\t|"
 										+ url);
 								client.add(url, url);
 							}
@@ -602,8 +604,8 @@ public class ZOLDESKParser {
 			// catalog(URL);
 //			 update();
 			// vistDesk();
-//			loadImg();
-			imgDownload();
+			loadImg();
+//			imgDownload();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -613,14 +615,19 @@ public class ZOLDESKParser {
 		// WebsiteBean bean = webSiteDao.findById(702);
 		List<WebsiteBean> webList = webSiteDao.findByParentId(701);
 		for (WebsiteBean bean : webList) {
-			List<Article> list = articleDao.findByWebId(bean.getId());
+			List<Article> list = articleDao.findByWebId(bean.getId(),"FD");
 			for (Article art : list) {
-				if (!art.getArticleUrl().startsWith("http://vista.zol.com.cn")) {
-					if (getImage(art)) {
-						art.setText("FD");
-						if (articleDao.update(art)) {
-							System.out
-									.println("更新记录[" + art.getTitle() + "]成功");
+				List<ImageBean> imgList = imageDao.findImage(art.getId());
+//				System.out
+//				.println(">> zol.com.cn 记录[" + art.getTitle() + "|"+art.getId()+"]下的图片数量["+imgList.size()+"]");
+				if(imgList.size() == 0 ){
+					if (!art.getArticleUrl().startsWith("http://vista.zol.com.cn")) {
+						if (getImage(art)) {
+							art.setText("FD");
+							if (articleDao.update(art)) {
+								System.out
+										.println(">> zol.com.cn 更新记录[" + art.getTitle() + "|"+art.getId()+"]成功");
+							}
 						}
 					}
 				}
@@ -734,10 +741,8 @@ public class ZOLDESKParser {
 	}
 
 	static boolean download(ImageBean imgBean) {
-		PicFileDao dao = null;
 		PicfileBean bean = null;
-		dao = DAOFactory.getInstance().getPicFileDao();
-		bean = new PicfileBean();
+		String date = CommonUtil.getDate("");
 		String s_fileName = imgBean.getImgUrl().substring(
 				imgBean.getImgUrl().lastIndexOf("/") + 1,
 				imgBean.getImgUrl().length());
@@ -746,33 +751,34 @@ public class ZOLDESKParser {
 				imgBean.getHttpUrl().length());
 		s_fileName = s_fileName.replace(".", "_s.");
 		try {
+			bean = new PicfileBean();
 			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
-					+ CommonUtil.getDate("") + File.separator
+					+ date + File.separator
 					+ imgBean.getArticleId() + File.separator
 					+ fileName.replace(".", "_s."))) == null) {
 				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
-						+ CommonUtil.getDate("") + File.separator
+						+ date + File.separator
 						+ imgBean.getArticleId() + File.separator
 						+ fileName.replace(".", "_s."));
 			}
 
 			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
-					+ CommonUtil.getDate("") + File.separator
+					+ date + File.separator
 					+ imgBean.getArticleId() + File.separator + fileName)) == null) {
 				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH
-						+ CommonUtil.getDate("") + File.separator
+						+ date + File.separator
 						+ imgBean.getArticleId() + File.separator + fileName);
 			}
 			bean.setArticleId(imgBean.getArticleId());
 			bean.setImageId(imgBean.getId());
 			bean.setTitle(imgBean.getTitle());
-			bean.setSmallName(CommonUtil.getDate("") + File.separator
+			bean.setSmallName( date+ File.separator
 					+ imgBean.getArticleId() + File.separator + s_fileName);
-			bean.setName(CommonUtil.getDate("") + File.separator
+			bean.setName(date + File.separator
 					+ imgBean.getArticleId() + File.separator + fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
-				boolean b = dao.insert(bean);
+				boolean b = picFiledao.insert(bean);
 				if (b) {
 					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
 							+ bean.getName()), bean);
