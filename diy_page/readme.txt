@@ -70,4 +70,11 @@ http://rtuku.club.china.com//user/channelPageTypeIndexAjaxAction.do?channelId=mi
    a.缓存 [取数据]
    b.异步线程 [处理数据更新，数据删除] 需要处理
  2.IO压力
-   a.文件写入 异步/缓存
+   a.文件写入 异步/缓存 【未处理】
+   
+2010-09-02 
+1.http://www.zhuoku.com 在下载图片时做了防盗链的处理，也就是在每次请求中需要加入Referer地址，也就是请求的页面地址。
+这个情况也出现在http://www.bizhizhan.com网站，该网站的防盗链比zhuoku网防盗链技术更专业，使用Referer无法欺骗系统，也就无法获取图片
+http://www.bizhizhan.com中对盗链的破解需要使用请求头中的2个参数，
+一个是Referer ,即从哪个页面进来的，
+另一个是Cookie,基本上以以下参数为主：rtime=4; ltime=1283479552367; cnzz_eid=5808015-1282816593-http%3A//www.tuku.cn/; virtualwall=vsid=0c8cafa6001de309645c11edffa3aa43; cnzz_a1235385=1; sin1235385=
