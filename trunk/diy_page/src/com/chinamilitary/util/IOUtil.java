@@ -2,7 +2,7 @@ package com.chinamilitary.util;
 import java.io.*;
 import java.net.URL;
 public class IOUtil {
-	public static void createFile(String content){
+	public synchronized static void createFile(String content){
 		File file = null;
 		OutputStream out = null;
 		try{
@@ -28,13 +28,14 @@ public class IOUtil {
 	 * @param dst
 	 * @param BUFFER_SIZE
 	 */
-	public static void createPicFile(String url,String fileName) throws IOException{ //File src, File dst, int BUFFER_SIZE
+	public static synchronized void createPicFile(String url,String fileName) throws IOException{ //File src, File dst, int BUFFER_SIZE
 			InputStream in = null;
 			OutputStream out = null;
 			URL urls = null;
 			File file = null;
 			try {
-			   urls = new URL(url);
+				url = url.replace(" ", "%20");
+			    urls = new URL(url);
 
 				in = urls.openStream();
 
@@ -69,7 +70,7 @@ public class IOUtil {
 			}
 	}
 
-	public static void createFile(String content,String fileName){
+	public static synchronized void createFile(String content,String fileName){
 		File file = null;
 		OutputStream out = null;
 		try{
@@ -88,7 +89,8 @@ public class IOUtil {
 
 	}
 	
-	public static void createFile(String content,String fileName,String ext){
+	public static synchronized String createFile(String content,String fileName,String ext){
+		String filePath = System.getProperty("user.dir")+"/"+fileName+ext;
 		File file = null;
 		OutputStream out = null;
 		try{
@@ -104,9 +106,39 @@ public class IOUtil {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-
+		return filePath;
 	}
 
+	/**
+	 * 将二进制内容写入指定文件
+	 * @param bytes
+	 * @param fileName
+	 */
+	public synchronized static void createFile(byte[] bytes,String fileName) throws IOException{
+		File file = null;
+		OutputStream out = null;
+		try{
+			try{
+				file = new File(fileName);
+				
+				if(!file.exists()){
+					file.getParentFile().mkdirs();
+				}
+				
+				out = new BufferedOutputStream(new FileOutputStream(file),1024);
+				out.write(bytes, 0, bytes.length);
+				out.close();
+			}finally{
+				if(out != null)
+					out.close();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new IOException();
+		}
+
+	}
+	
 	public static void main(String[] args){
 		try{
 		System.out.println("Hello World!");

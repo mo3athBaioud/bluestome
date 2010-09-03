@@ -1,6 +1,7 @@
 package com.chinamilitary.util;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
@@ -10,6 +11,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.io.IOUtils;
 
 public class HttpClientUtils {
 	
@@ -21,33 +23,54 @@ public class HttpClientUtils {
 	
 	
 	public static boolean validationURL(String url){
-		Long start = System.currentTimeMillis();
 		boolean success = true;
 		try{
 			httpclient = new HttpClient();
 			getMethod = new GetMethod(url);
+			//请求次数
 //			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,new DefaultHttpMethodRetryHandler());
 			int statusCode = httpclient.executeMethod(getMethod);
 			if (statusCode != HttpStatus.SC_OK) {
 				success = false;
 			}
 			}catch(IOException ioe){
-				System.err.println("HttpClient.validationURL.IOException:"+ioe.getMessage());
-				ioe.printStackTrace();
+//				System.err.println("HttpClient.validationURL.IOException:"+ioe.getMessage());
 				success = false;
+				return false;
 			}catch(Exception e){
-				System.err.println("HttpClient.validationURL.Exception:"+e.getMessage());
-				e.printStackTrace();
+//				System.err.println("HttpClient.validationURL.Exception:"+e.getMessage());
 				success = false;
+				return false;
 			}finally{
 				if(null != getMethod)
 					getMethod.releaseConnection();
 				if(null != httpclient)
 					httpclient = null;
 			}
-		long end = System.currentTimeMillis();
-		System.out.println("耗时:"+(end-start));
-		return success;
+		return true;
+	}
+	
+	public static boolean urlValidation(String url){
+		try {
+			httpclient = new HttpClient(); 
+			getMethod = new GetMethod(url);
+			
+			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,new DefaultHttpMethodRetryHandler());
+			// 执行getMethod
+			int statusCode = httpclient.executeMethod(getMethod);
+			if (statusCode != HttpStatus.SC_OK) {
+				System.err.println("地址["+url+"],状态码["+statusCode+"]");
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			if(!getMethod.isAborted())
+				getMethod.releaseConnection();
+			if(null != httpclient)
+				httpclient = null;
+		}
+		return true;
 	}
 	
 	static void test1(String url) {
@@ -60,9 +83,9 @@ public class HttpClientUtils {
 			int statusCode = httpclient.executeMethod(getMethod);
 			System.out.println("URL:"+url+",状态码:"+statusCode);
 			if (statusCode != HttpStatus.SC_OK) {
-				System.err.println("Method failed: "+ getMethod.getStatusLine());
-				System.err.println("URL: "+ url);
-				System.out.println();
+//				System.err.println("Method failed: "+ getMethod.getStatusLine());
+//				System.err.println("URL: "+ url);
+//				System.out.println();
 			}
 			if(null != getMethod)
 				getMethod.releaseConnection();
@@ -118,7 +141,6 @@ public class HttpClientUtils {
 	 */
 public static String getHttpHeaderResponse(String url,String headerName){
 		String result = null;
-		long start = System.currentTimeMillis();
 		try{
 			httpclient = new HttpClient();
 			getMethod = new GetMethod(url);
@@ -135,21 +157,143 @@ public static String getHttpHeaderResponse(String url,String headerName){
 			if(null != httpclient)
 				httpclient = null;
 		}
-		long end = System.currentTimeMillis();
-		System.out.println("耗时:"+(end-start));
 		return result;
+	}
+
+	/**
+	 * 获取响应体
+	 * @param url
+	 * @return
+	 */
+	public static String getResponseBody(String url){
+		String value = "";
+		try{
+			httpclient = new HttpClient();
+			getMethod = new GetMethod(url);
+			int statusCode = httpclient.executeMethod(getMethod);
+			if(statusCode == HttpStatus.SC_OK){
+				value = new String(getMethod.getResponseBody(),"GB2312");
+			}
+		}catch(Exception e){
+			System.err.println(e);
+		}finally{
+			if( null != getMethod )
+				getMethod.releaseConnection();
+			if(null != httpclient)
+				httpclient = null;
+		}
+		return value;
+	}
+
+	
+	/**
+	 * 获取响应体
+	 * @param url 实际下载地址
+	 * @return
+	 */
+	public static byte[] getResponseBodyAsByte(String url){
+		byte[] value = null;
+		value = getResponseBodyAsByte(null,null,url);
+		return value;
+	}
+	
+	/**
+	 * 获取响应体
+	 * @param cookie cookie内容
+	 * @param url 实际下载地址
+	 * @return
+	 */
+	public static byte[] getResponseBodyAsByte(String cookie,String url){
+		byte[] value = null;
+		value = getResponseBodyAsByte(null,cookie,url);
+		return value;
+	}
+	
+	/**
+	 * 获取响应体
+	 * @param refence 引用的地址
+	 * @param cookie 页面保存的信息
+	 * @param url
+	 * @return
+	 */
+	public static byte[] getResponseBodyAsByte(String refence,String cookie,String url){
+		byte[] value = null;
+		try{
+			httpclient = new HttpClient();
+			getMethod = new GetMethod(url);
+			//破解防盗链配置
+			if(null != refence)
+				getMethod.addRequestHeader("Referer", refence);
+			if(null != cookie)
+				getMethod.setRequestHeader("Cookie", cookie);
+			int statusCode = httpclient.executeMethod(getMethod);
+			if(statusCode == HttpStatus.SC_OK){
+				value = getMethod.getResponseBody();
+			}
+		}catch(Exception e){
+			System.err.println(e);
+		}finally{
+			if( null != getMethod )
+				getMethod.releaseConnection();
+			if(null != httpclient)
+				httpclient = null;
+		}
+		return value;
+	}
+	
+	public static boolean referTest(String referUrl,String url) throws Exception{
+		try{
+			httpclient = new HttpClient();
+			getMethod = new GetMethod(url);
+			
+			getMethod.setRequestHeader("Referer", referUrl);
+//			getMethod.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.1; zh-CN; rv:1.9.2.8) Gecko/20100722 Firefox/3.6.8");
+//			getMethod.setRequestHeader("Cookie", "rtime=2; ltime=1282990509523; cnzz_eid=5808015-1282816593-http%3A//www.tuku.cn/; virtualwall=vsid=0c8cafa6001de309645c11edffa3aa43");
+			int statusCode = httpclient.executeMethod(getMethod);
+			if(statusCode != HttpStatus.SC_OK){
+				System.err.println("地址["+url+"],状态码["+statusCode+"]");
+				return false;
+			}
+			return true;
+		}catch(Exception e){
+			System.err.println(e);
+			return false;
+		}finally{
+			if( null != getMethod )
+				getMethod.releaseConnection();
+			if(null != httpclient)
+				httpclient = null;
+		}
 	}
 	
 	public static void main(String args[]){
 		
-//		boolean success = validationURL("http://www.google.com.hk");
-//		System.out.println(success?"成功":"失败");
-		
-//		test1("http://www.google.com.hk");
-		
-//		String value = getHttpHeaderResponse("http://image.tuku.china.com/tuku.military.china.com/military//pic/2010-08-10/693fa27b-3aad-477e-bf87-aadd947ee03f.jpg").get("Content-Length");
-		String value = getHttpHeaderResponse("http://www.teeta.com/", "Content-Length");
-		System.out.println("value:"+value);
+		try{
+			byte[] value2 = getResponseBodyAsByte(null, null,"http://www.bizhizhan.com/uploads/allimg/090830/1-0ZS0102521.jpg");
+			if(null != value2){
+				System.out.println("未增加破解防盗链引用文件长度:"+value2.length);
+			}
+			
+			long start = System.currentTimeMillis();
+			byte[] value = getResponseBodyAsByte("http://www.bizhizhan.com//renwenjijiabizhi/shoujitupian-30-4598.html",
+					"rtime=2; ltime=1282990509523; cnzz_eid=5808015-1282816593-http%3A//www.tuku.cn/; virtualwall=vsid=0c8cafa6001de309645c11edffa3aa43",
+					"http://www.bizhizhan.com/uploads/allimg/090830/1-0ZS0102521.jpg");
+			if(null != value){
+				long end = System.currentTimeMillis();
+				System.out.println("增加破解防盗链引用后的文件长度:"+value.length);
+				System.out.println("耗时:"+(end-start));
+				IOUtil.createFile(value, System.getProperty("user.dir")+"/"+"1-0ZS0102521.jpg");
+			}
+			
+//			System.out.println("isTRUE:"+urlValidation("http://www.bizhi.com/wallpaper/1150_2.html"));
+		}catch(Exception e){
+			System.err.println(e);
+		}finally{
+			if( null != getMethod )
+				getMethod.releaseConnection();
+			if(null != httpclient)
+				httpclient = null;
+		}
 	}
 
 }
