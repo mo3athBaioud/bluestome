@@ -19,7 +19,7 @@ import com.chinamilitary.util.IOUtil;
 
 public class TUKUDownload {
 
-	static String SAVE_PATH = "F:\\china\\tuku\\";
+	static String SAVE_PATH = "D:\\share\\tuku\\";
 
 	static MemcacheClient client = MemcacheClient.getInstance();
 
@@ -53,7 +53,7 @@ public class TUKUDownload {
 	 * @throws Exception
 	 */
 	static void imgDownload(ImageBean imgBean) throws Exception {
-		System.err.println(" >> IN Download Image Method");
+		System.err.println(" >> IN Download Image["+imgBean.getArticleId()+"|"+imgBean.getId()+"] Method");
 		PicfileBean bean = null;
 		bean = new PicfileBean();
 		String s_fileName = imgBean.getImgUrl().substring(
@@ -121,18 +121,25 @@ public class TUKUDownload {
 			List<ImageBean> imgList = imageDao.findImage(article.getId());
 			for (ImageBean img : imgList) {
 				try {
-					if(downloadImage(img)){
-						img.setStatus(1);
-						img.setLink("FD");
-						if(!imageDao.update(img)){
-							System.err.println(" >> 更新tbl_image对象记录["+img.getId()+"]失败!!!");
+					if(img.getLink().equalsIgnoreCase("NED")){
+						if(downloadImage(img)){
+							img.setStatus(1);
+							img.setLink("FD");
+							if(!imageDao.update(img)){
+								System.err.println(" >> 更新tbl_image对象记录["+img.getId()+"]失败!!!");
+							}
 						}
+					}else{
+						System.err.println(">> 已经下载了图片");
 					}
 				} catch (Exception e) {
+					e.printStackTrace();
 					System.err.println(">> error patch img");
 					continue;
 				}
 			}
+			article.setText("FD");
+			articleDao.update(article);
 		}
 	}
 	
