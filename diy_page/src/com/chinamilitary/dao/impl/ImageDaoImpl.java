@@ -60,7 +60,7 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 	public List<ImageBean> findImage(Integer articleId) throws Exception{
 		List<ImageBean> list = new ArrayList<ImageBean>();
 		ImageBean bean = null;
-		pstmt = conn.prepareStatement(FIND_BY_ARTICLE_ID);
+		pstmt = conn.prepareStatement(FIND_BY_ARTICLE_ID+ " order by d_id ");
 		pstmt.setInt(1, articleId);
 		rs = pstmt.executeQuery();
 		while(rs.next()){
@@ -158,13 +158,13 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 	}
 
 	/**
-	 * 根据父站点
+	 * 根据父站点查找对应下的资源
 	 */
 	public List<ImageBean> findImage(int webId) throws Exception {
 		List<ImageBean> list = new ArrayList<ImageBean>();
 		ImageBean bean = null;
 		pstmt = conn.prepareStatement("select distinct * from tbl_image where d_article_id in (" +
-				"select distinct d_id from tbl_article where d_web_id = ?)");
+				"select distinct d_id from tbl_article where d_web_id = ?) and d_link = 'NED' ");
 		pstmt.setInt(1, webId);
 		rs = pstmt.executeQuery();
 		while(rs.next()){

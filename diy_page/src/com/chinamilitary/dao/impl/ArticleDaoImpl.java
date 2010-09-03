@@ -395,7 +395,7 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 		Article bean = null;
 		pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id = ? and d_text = ?");
 		pstmt.setInt(1, webId);
-		pstmt.setString(2, "NED");
+		pstmt.setString(2, "0");
 		rs = pstmt.executeQuery();
 		while(rs.next()){
 			bean = new Article();
@@ -425,7 +425,7 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 	public List<Article> findByWebId(Integer webId,String text) throws Exception {
 		List<Article> list = new ArrayList<Article>();
 		Article bean = null;
-		pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id = ? and d_text = ?");
+		pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id = ? and d_text = ? order by d_id");
 		pstmt.setInt(1, webId);
 		pstmt.setString(2, text);
 		rs = pstmt.executeQuery();
