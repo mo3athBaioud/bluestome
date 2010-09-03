@@ -2,6 +2,8 @@ package com.bizhizhan.htmlparser;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -31,6 +33,7 @@ import com.chinamilitary.bean.Article;
 import com.chinamilitary.bean.ArticleDoc;
 import com.chinamilitary.bean.ImageBean;
 import com.chinamilitary.bean.LinkBean;
+import com.chinamilitary.bean.PicfileBean;
 import com.chinamilitary.bean.ResultBean;
 import com.chinamilitary.bean.WebsiteBean;
 import com.chinamilitary.dao.ArticleDao;
@@ -41,15 +44,20 @@ import com.chinamilitary.factory.DAOFactory;
 import com.chinamilitary.memcache.MemcacheClient;
 import com.chinamilitary.test.TestHttpClient;
 import com.chinamilitary.util.CacheUtils;
+import com.chinamilitary.util.CommonUtil;
 import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 import org.htmlparser.PrototypicalNodeFactory;
 
 public class BIZHIZHANParser {
 
+	private static final String PIC_SAVE_PATH = "d:\\share\\bizhizhan\\";
+
 	static String URL = "http://www.bizhizhan.com";
 
 	static String IMAGE_URL = "http://image6.tuku.cn/";
+	
+	static String ARTICLE_COM_URL = "";
 
 	static List<LinkBean> LINKLIST = new ArrayList<LinkBean>();
 
@@ -257,13 +265,36 @@ public class BIZHIZHANParser {
     			imageBean.setTitle(img.getAttribute("alt"));
     			imageBean.setHttpUrl(img.getImageURL());
 				imageBean.setLink("NED");
+				imageBean.setCommentshowurl(link);
 				//TODO 需要增加缓存判断
 				if(null == client.get(imageBean.getHttpUrl())){
     				int size = imageDao.insert(imageBean);
     				if(size > 0){
     					client.add(imageBean.getHttpUrl(), imageBean.getHttpUrl());
-    					System.out.println("添加图片"+imageBean.getHttpUrl()+"\tarticle.getTitle():"+article.getTitle()+"\t:"+"成功!");
-    				}
+    					System.out.println("添加图片记录:["+imageBean.getHttpUrl()+"]"+imageBean.getArticleId()+"]\t|" +article.getTitle()+"\t:"+"成功!");
+    				}else{
+						ImageBean tmpImg = imageDao.findByHttpUrl(imageBean.getHttpUrl());
+						if(null == tmpImg.getCommentshowurl()){
+							if(null != tmpImg){
+								tmpImg.setCommentshowurl(link);
+								if(!imageDao.update(tmpImg)){
+									System.out.println("更新图片记录:["+tmpImg.getTitle() + "|"+tmpImg.getArticleId()+"]\t|" + link+"\t成功");
+									client.add(link, link);
+								}
+							}
+						}
+					}
+				}else{
+					ImageBean tmpImg = imageDao.findByHttpUrl(imageBean.getHttpUrl());
+					if(null != tmpImg){
+						if(null == tmpImg.getCommentshowurl()){
+							tmpImg.setCommentshowurl(link);
+							if(!imageDao.update(tmpImg)){
+								System.out.println("更新图片记录:["+tmpImg.getTitle() + "|"+tmpImg.getArticleId()+"]\t|" + link+"\t成功");
+								client.add(link, link);
+							}
+						}
+					}
 				}
 				b = true;
 			}
@@ -272,7 +303,7 @@ public class BIZHIZHANParser {
 	}
 	
 	static ResultBean getImagePage(String url) throws Exception{
-
+		LinkBean oplink = null;
 		boolean b = false;
 		ResultBean result = new ResultBean();
 		Parser parser = new Parser();
@@ -290,10 +321,7 @@ public class BIZHIZHANParser {
 			NodeFilter filter2 = new NodeClassFilter(LinkTag.class);
 			NodeList linkList = p2.extractAllNodesThatMatch(filter2);
 			if (linkList != null && linkList.size() > 1) {
-				result.setBool(true);
-				LinkBean oplink = null;
 				String tmp = null;
-				result.put(url, null);
 				for (int j = 0; j < linkList.size(); j++) {
 					LinkTag link = (LinkTag) linkList.elementAt(j);
 					oplink = new LinkBean();
@@ -302,10 +330,13 @@ public class BIZHIZHANParser {
 					oplink.setLink(tmp);
 					result.put(tmp, oplink);
 				}
-				b = true;
-				result.setBool(b);
 			}
 		}
+		oplink = new LinkBean();
+		oplink.setLink(url);
+		result.put(url, oplink);
+		result.setBool(true);
+
 		return result;
 		}
 
@@ -359,13 +390,15 @@ public class BIZHIZHANParser {
 
 			// getImage("http://www.bizhizhan.com/fzlsjbz/23-1.html");
 			
-			index();
+//			index();
 			
 //			init();
 			
 //			update();
 			
-			image();
+//			image();
+			
+			downloadImg();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -438,22 +471,115 @@ public class BIZHIZHANParser {
 	static void image() throws Exception{
 		List<WebsiteBean> webList = webSiteDao.findByParentId(600);
 		for(WebsiteBean bean:webList){
-			List<Article> artlist = articleDao.findByWebId(bean.getId());
+			List<Article> artlist = articleDao.findByWebId(bean.getId(),"FD");
+			System.out.println("网站["+bean.getId()+"|"+bean.getName()+"|"+bean.getUrl()+"]下的文章数"+artlist.size());
 			for(Article art:artlist){
-				try{
-					if(getImage(art)){
-						art.setText("FD");
-						if(!articleDao.update(art)){
-							System.err.println(">> 更新文章["+art.getTitle()+"]失败");
+				List<ImageBean> imgList = imageDao.findImage(art.getId());
+				if(imgList.size() == 0){
+					try{
+						if(getImage(art)){
+							art.setText("FD");
+							if(!articleDao.update(art)){
+								System.err.println(">> 更新文章["+art.getTitle()+"]失败");
+							}
 						}
+					}catch(Exception e){
+						System.err.println("更新图片出现异常，文章为["+art.getTitle()+"]");
 					}
-				}catch(Exception e){
-					System.err.println("更新图片出现异常，文章为["+art.getTitle()+"]");
 				}
 			}
 		}
 	}
 	
+	static void downloadImg() throws Exception{
+		List<WebsiteBean> webList = webSiteDao.findByParentId(600);
+		for(WebsiteBean bean:webList){
+			List<Article> artlist = articleDao.findByWebId(bean.getId(),"FD");
+			System.out.println("网站["+bean.getId()+"|"+bean.getName()+"|"+bean.getUrl()+"]下的文章数"+artlist.size());
+			for(Article art:artlist){
+				List<ImageBean> imgList = imageDao.findImage(art.getId());
+				System.out.println(">> 文章["+art.getId()+"|"+art.getTitle()+"]\t下的图片数量"+imgList.size());
+				ARTICLE_COM_URL = art.getArticleUrl();
+				for (ImageBean img : imgList) {
+					if((img.getLink().equalsIgnoreCase("NED")) || (img.getStatus() == 3)){
+						if (download(img,art.getArticleUrl())) {
+							img.setStatus(1);
+							img.setLink("FD");
+							if (imageDao.update(img)) {
+								System.out.println(">> 更新图片对象["+art.getTitle()+"|" + img.getId() + "]成功!");
+							}
+						}
+					}
+				}
+				ARTICLE_COM_URL = null;
+			}
+		}
+	}
+	
+	private static boolean download(ImageBean imgBean, String articleUrl) {
+		PicfileBean bean = null;
+		bean = new PicfileBean();
+		String s_fileName = imgBean.getImgUrl().substring(
+				imgBean.getImgUrl().lastIndexOf("/") + 1,
+				imgBean.getImgUrl().length());
+		String fileName = imgBean.getHttpUrl().substring(
+				imgBean.getHttpUrl().lastIndexOf("/") + 1,
+				imgBean.getHttpUrl().length());
+		s_fileName = s_fileName.replace(".", "_s.");
+		String date = CommonUtil.getDate("");
+		String length = "0";
+		try {
+			if(null != ARTICLE_COM_URL){
+			byte[] big = null;
+			//不下载小图
+			System.out.println("引用的地址："+imgBean.getCommentshowurl());
+			if(null == imgBean.getCommentshowurl())
+				return false;
+			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), "rtime=4; ltime=1283479552367; cnzz_eid=5808015-1282816593-http%3A//www.tuku.cn/; virtualwall=vsid=0c8cafa6001de309645c11edffa3aa43; cnzz_a1235385=1; sin1235385=", imgBean.getHttpUrl());
+			if(null == big)
+				return false;
+			length = String.valueOf(big.length);
+			if(length.equalsIgnoreCase("20261")){
+				return false;
+			}
+			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
+					+ date + File.separator
+					+ imgBean.getArticleId() + File.separator + fileName)) == null) {
+				IOUtil.createFile(big, PIC_SAVE_PATH
+						+ date + File.separator
+						+ imgBean.getArticleId() + File.separator + fileName);
+			}
+			bean.setArticleId(imgBean.getArticleId());
+			bean.setImageId(imgBean.getId());
+			bean.setTitle(imgBean.getTitle());
+			bean.setSmallName(imgBean.getImgUrl());
+			bean.setName(CommonUtil.getDate("") + File.separator
+					+ imgBean.getArticleId() + File.separator + fileName);
+			bean.setUrl(PIC_SAVE_PATH);
+			try {
+				boolean b = picFiledao.insert(bean);
+				if (b) {
+					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+							+ bean.getName()), bean);
+					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+							+ bean.getSmallName()), bean);
+				} else {
+					return false;
+				}
+			} catch (Exception e) {
+				System.out.println("数据库异常");
+				e.printStackTrace();
+				return false;
+			}
+			}
+		} catch (IOException e) {
+			System.out.println("网络连接，文件IO异常");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * 验证地址是否为可以请求的地址
 	 * @param url
