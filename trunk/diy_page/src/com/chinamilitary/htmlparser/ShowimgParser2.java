@@ -37,6 +37,7 @@ import com.chinamilitary.dao.PicFileDao;
 import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.factory.DAOFactory;
 import com.chinamilitary.memcache.MemcacheClient;
+import com.chinamilitary.test.TestHttpClient;
 import com.chinamilitary.threadpool.GetImageUrlThread;
 import com.chinamilitary.threadpool.RequestRecordThread;
 import com.chinamilitary.threadpool.ThreadPoolManager;
@@ -219,7 +220,9 @@ public class ShowimgParser2 {
 					}
 				}
 				}catch(Exception e){
+					client.remove(lkey);
 					log.error(e);
+					e.printStackTrace();
 					continue;
 				}
 			}else{
@@ -740,11 +743,24 @@ public class ShowimgParser2 {
 					LinkBean l1 = null;
 					if(link != null){
 						String url_ = URL+link.getLink();//"htm/"+
-						l1 = new LinkBean();
-						l1.setLink(url_);//"htm/"+
-						l1.setName(link.getLinkText());//link.getLinkText()
-						result.put(url_, l1);
-						COUNT ++;
+						boolean isTrue = TestHttpClient.urlValidation(url_);
+						if(isTrue){
+							l1 = new LinkBean();
+							l1.setLink(url_);//"htm/"+
+							l1.setName(link.getLinkText());//link.getLinkText()
+							result.put(url_, l1);
+							COUNT ++;
+						}else{
+							url_ = URL+"htm/"+link.getLink();
+							boolean isTrue2 = TestHttpClient.urlValidation(url_);
+							if(isTrue2){
+								l1 = new LinkBean();
+								l1.setLink(url_);//"htm/"+
+								l1.setName(link.getLinkText());//link.getLinkText()
+								result.put(url_, l1);
+								COUNT ++;
+							}
+						}
 					}
 				}
 			}
@@ -914,29 +930,20 @@ public class ShowimgParser2 {
 	
 	static void init(){
 		try{
-			List<String> articleURLlist = articleDao.findAllArticleURL(148);
-			long start1 = System.currentTimeMillis();
+			List<String> articleURLlist = articleDao.findAllArticleURL(36);
 			for(String key:articleURLlist){
 				Object obj = client.get(key);
 				if(null == obj){
 					client.add(key, key);
-				}else{
-					client.replace(key, key);
 				}
 			}
-			long end1 = System.currentTimeMillis();
 			
-			long start = System.currentTimeMillis();
-			List<String> list = imageDao.findImageURL(36);
-			long end = System.currentTimeMillis();
-//			System.out.println("查询"+list.size()+"万记录消耗:"+((end-start)/1000));
-			for(String url:list){
-				if(null != client.get(url)){
-					client.replace(url, url);
-				}else{
-					client.add(url, url);
-				}
-			}
+//			List<String> list = imageDao.findImageURL(36);
+//			for(String url:list){
+//				if(null == client.get(url)){
+//					client.add(url, url);
+//				}
+//			}
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -946,7 +953,7 @@ public class ShowimgParser2 {
 		try{
 //			init();
 			
-//			index();
+			index();
 			
 //			updateArticleFromSource(36);
 			
@@ -992,6 +999,24 @@ public class ShowimgParser2 {
 				e.printStackTrace();
 			}
 			
+			try{
+				WebsiteBean bean = wesiteDao.findById(36);
+				if(bean != null){
+					List<Article> alist = articleDao.findShowImg(bean.getId());//47 48 49 50 51 52 
+					for(Article article:alist){
+						try{
+							getPicUrl(article);
+						}catch(Exception e){
+							article.setText("FNFE");
+							articleDao.update(article);
+							System.out.println(">> Article["+article.getId()+"],Exception:"+e.getMessage());
+							continue;
+						}
+					}
+				}
+			}catch(Exception e){
+				
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
@@ -1038,27 +1063,30 @@ public class ShowimgParser2 {
 			for(int i=0;i<nodes.size();i++){
 				try{
 				LinkTag link = (LinkTag)nodes.elementAt(i);
-				if(null != link.getLink() && !link.getLink().equalsIgnoreCase("") && link.getLink().startsWith("tabulation.php?mid=")){
-					String url = URL+link.getLink().replace("/", "");
-					System.out.println("url_"+url);
-					NodeList tmp = link.getChildren();
-					if(tmp != null && tmp.size() > 0){
-						ImageTag imgTag = (ImageTag)tmp.elementAt(0);
-						if(null == client.get(url)){
-							article = new Article();
-							article.setWebId(36);
-							article.setArticleUrl(url);
-							article.setTitle(imgTag.getAttribute("alt"));
-							article.setText("NED"); // No Execute Download
-							int key = articleDao.insert(article);
-							if (key > 0) {
-								log.debug("添加" + imgTag.getAttribute("alt")+ ",成功");
-								COUNT++;
-							} else {
-								log.debug("添加" + imgTag.getAttribute("alt") + "失败,已存在相同标题的内容");
+//				System.out.println(link.getLinkText()+"|"+link.getLink());
+				if(null != link.getLink() && !link.getLink().equalsIgnoreCase("") && link.getLink().startsWith("http://www.showimg.com/tabulation.php?mid=")){
+//					String url = URL+link.getLink().replace("/", "");
+//					System.out.println(link.getLinkText()+"|"+link.getLink());
+//					NodeList tmp = link.getChildren();
+//					if(tmp != null && tmp.size() > 0){
+//						ImageTag imgTag = (ImageTag)tmp.elementAt(0);
+						if(null == client.get(link.getLink())){
+							if(null != link.getLinkText() && !"".equalsIgnoreCase(link.getLinkText())){
+								article = new Article();
+								article.setWebId(36);
+								article.setArticleUrl(link.getLink());
+								article.setTitle(link.getLinkText());
+								article.setText("NED"); // No Execute Download
+								int key = articleDao.insert(article);
+								if (key > 0) {
+									log.debug("添加" + link.getLinkText()+ ",成功");
+									COUNT++;
+								} else {
+									log.debug("添加" + link.getLinkText() + "失败,已存在相同标题的内容");
+								}
 							}
 						}
-					}
+//					}
 					Thread.sleep(50);
 				}
 				}catch(Exception e){

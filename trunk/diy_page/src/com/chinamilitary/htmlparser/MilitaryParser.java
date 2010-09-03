@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.regex.Matcher;
+//import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.htmlparser.NodeFilter;
@@ -32,14 +32,18 @@ import com.chinamilitary.factory.DAOFactory;
 import com.chinamilitary.memcache.MemcacheClient;
 import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.CommonUtil;
+import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
 import com.chinamilitary.xmlparser.XMLParser;
 
 public class MilitaryParser {
 	private static final String URL = "http://tuku.military.china.com/military/html/1_1.html"; // military.china.com
+
 	private static final String URL_ = "http://military.china.com/";
+
 	private ExecutorService responseExecutor = Executors.newFixedThreadPool(2);
+
 	// http://tuku.military.china.com/military/
 
 	private static final String TUKU_URL = "http://tuku.military.china.com/military/html/20"; // military.china.com
@@ -126,10 +130,11 @@ public class MilitaryParser {
 	}
 
 	static void getLink(String url) throws Exception {
+		
 		Parser p1 = new Parser();
 		p1.setURL(url);
 		p1.setEncoding("UTF-8");
-		
+
 		NodeFilter filter = new NodeClassFilter(LinkTag.class);
 		NodeList list = p1.extractAllNodesThatMatch(filter);
 		LinkBean bean = null;
@@ -143,27 +148,28 @@ public class MilitaryParser {
 						|| link.getLink().startsWith(TECH_TUKU_URL)
 						|| link.getLink().startsWith(FUN_TUKU_URL)
 						|| link.getLink().startsWith(GAME_TUKU_URL)) {
-					if(null == client.get(link.getLink())){
+					if (null == client.get(link.getLink())) {
 						bean = new LinkBean();
 						bean.setLink(link.getLink());
-						String name = StringUtils
-								.illageString(link.getAttribute("title") == null ? (link
-										.getLinkText() == null ? "无话题" : link
-										.getLinkText())
-										: link.getAttribute("title"));
-						if (name.indexOf("“") != -1 && name.indexOf("”") != -1) {
+						String name = StringUtils.illageString(link
+								.getAttribute("title") == null ? (link
+								.getLinkText() == null ? "无话题" : link
+								.getLinkText()) : link.getAttribute("title"));
+						if (name.indexOf("“") != -1 || name.indexOf("”") != -1) {
 							name = name.replaceAll("“", "");
 							name = name.replace("”", "");
 						}
 						// 判断连接中是否存在创建文件夹时的非法字符
-						if (name.indexOf("\"") != -1 && name.indexOf("\"") != -1) {
+						if (name.indexOf("\"") != -1
+								&& name.indexOf("\"") != -1) {
 							name = name.replace("\"", "");
 						}
-						
+
 						bean.setName(name);
 						LINKHASH.put(bean.getLink(), bean);
-					}else{
-						System.out.println(">> 已存在相同["+link.getLink()+"]");
+						// getLink(bean.getLink());
+					} else {
+						System.out.println(">> 已存在相同[" + link.getLink() + "]");
 					}
 				}
 			}
@@ -203,6 +209,10 @@ public class MilitaryParser {
 		for (WebsiteBean webBean : list) {
 			System.out.println("页面名称：" + webBean.getName() + "页面地址："
 					+ webBean.getUrl());
+			if(!HttpClientUtils.validationURL(webBean.getUrl())){
+				System.err.println("地址不通["+webBean.getUrl()+"]");
+				continue;
+			}
 			getLink(webBean.getUrl());
 			if (LINKHASH.size() > 0) {
 				System.out.println("LINKHASH.size():" + LINKHASH.size());
@@ -210,10 +220,13 @@ public class MilitaryParser {
 				Iterator<String> it = key.iterator();
 				while (it.hasNext()) {
 					LinkBean bean = (LinkBean) LINKHASH.get(it.next());
-					System.out.println("分类名称:" + webBean.getName() + ",链接名称："
-							+ bean.getName() + ",链接地址：" + bean.getLink());
 					Article acticle = null;
-						try {
+					try {
+						if(null != client.get(bean.getLink())){
+							System.err.println("缓存中已存在地址["+bean.getLink()+"]");
+							continue;
+						}
+						if (HttpClientUtils.validationURL(bean.getLink())) {
 							acticle = new Article();
 							acticle.setArticleUrl(bean.getLink());
 							acticle.setTitle(bean.getName());
@@ -230,29 +243,35 @@ public class MilitaryParser {
 									|| bean.getLink().startsWith(
 											"http://pic.news.china.com/")
 									|| bean.getLink().startsWith(
-											"http://tuku.tech.china.com/")) {
-								
-								String html = bean.getLink().substring(bean.getLink().lastIndexOf("/")+1,bean.getLink().lastIndexOf("."));
-								if(bean.getLink().indexOf("_") == -1){ // && html.length() > 6
-//									 老版本图片播放器解析方式
+											"http://tuku.tech.china.com/")
+									|| bean.getLink().startsWith("http://pic.news.china.com/news/")) {
+
+								String html = bean.getLink().substring(
+										bean.getLink().lastIndexOf("/") + 1,
+										bean.getLink().lastIndexOf("."));
+								if (bean.getLink().indexOf("_") == -1) { // &&
+																			// html.length()
+																			// > 6
+									// 老版本图片播放器解析方式
 									String realUrl = HTMLParser.getRealUrl(bean
 											.getLink());
-									System.out.println("老版本图片播放器解析："+realUrl);
-									String xmlUrl = HTMLParser.getXmlUrl(realUrl);
-									if(xmlUrl != null){
+									String xmlUrl = HTMLParser
+											.getXmlUrl(realUrl);
+									if (xmlUrl != null) {
 										acticle.setActicleXmlUrl(xmlUrl);
 										acticle.setActicleRealUrl(realUrl);
-									}else{
+									} else {
 										acticle.setActicleXmlUrl(null);
 										acticle.setActicleRealUrl(null);
 									}
-								}else{
-//									新版本图片播放器解析方式，不需要在解析真实的URL地址，直接将地址中的XML文件解析并且从中获取必要的数据即可，								
-									String xmlUrl = HTMLParser.getXmlUrl2(bean.getLink());
-									if(xmlUrl != null){
+								} else {
+									// 新版本图片播放器解析方式，不需要在解析真实的URL地址，直接将地址中的XML文件解析并且从中获取必要的数据即可，
+									String xmlUrl = HTMLParser.getXmlUrl2(bean
+											.getLink());
+									if (xmlUrl != null) {
 										acticle.setActicleXmlUrl(xmlUrl);
 										acticle.setActicleRealUrl("2");
-									}else{
+									} else {
 										acticle.setActicleXmlUrl(null);
 										acticle.setActicleRealUrl(null);
 									}
@@ -267,19 +286,26 @@ public class MilitaryParser {
 								client.add(bean.getLink(), bean.getLink());
 								acticle.setId(result);
 								String aKey = CacheUtils.getArticleKey(result);
-								if(null == client.get(aKey)){
+								if (null == client.get(aKey)) {
 									client.add(aKey, acticle);
 								}
 								getImage(result);
+							}else{
+								System.out.println(">> 添加文章失败");
 							}
-						} catch (Exception e) {
-							LINKLIST.add(bean);
-							e.printStackTrace();
-//							break;
+						} else {
+							System.err.println(">> getActicle 地址暂不可用 ["
+									+ bean.getLink() + "]");
 							continue;
 						}
+					} catch (Exception e) {
+						LINKLIST.add(bean);
+						e.printStackTrace();
+						// break;
+						continue;
 					}
-//				}
+				}
+				// }
 			}
 			webSiteDao.update(webBean);
 			clearHash();
@@ -432,20 +458,26 @@ public class MilitaryParser {
 	}
 
 	static void getImage(Integer id) throws Exception {
+		System.err.println(" >> IN GetImage Method");
 		Article article = null;
 		String aKey = CacheUtils.getArticleKey(id);
 		try {
-			if(null != client.get(aKey)){
-				System.out.println(">> 从缓存中获取文章对象["+id+"] ");
-				article = (Article)client.get(aKey);
+			if (null != client.get(aKey)) {
+				System.out.println(">> 从缓存中获取文章对象[" + id + "] ");
+				article = (Article) client.get(aKey);
 			}
-			if( null == article){
-				System.out.println(">> 从缓存中未获取文章对象，从数据库中获取文章对象["+id+"] ");
+			if (null == article) {
+				System.out.println(">> 从缓存中未获取文章对象，从数据库中获取文章对象[" + id + "] ");
 				article = articleDao.findById(id);
-				if(null != article)
+				if (null != article)
 					client.add(aKey, article);
 			}
 			if (article != null) {
+				if (!HttpClientUtils.validationURL(article.getArticleUrl())) {
+					System.err.println(">> getImage.地址不通["
+							+ article.getArticleUrl() + "]");
+					return;
+				}
 				if (article.getArticleUrl().startsWith(
 						"http://tuku.news.china.com/")
 						|| article.getArticleUrl().startsWith(
@@ -462,23 +494,44 @@ public class MilitaryParser {
 							|| !article.getActicleXmlUrl().equalsIgnoreCase("")) {
 						List<ImageBean> imgList = XMLParser
 								.readXmlFromURL(article.getActicleXmlUrl());
-						for (ImageBean bean : imgList) {
-							if (client.get(bean.getHttpUrl()) == null) {
-								bean.setArticleId(article.getId());
-								int result = imageDao.insert(bean);
-								if (result == -1) {
-									System.out.println("图片标题为："
-											+ bean.getTitle() + ",未添加到数据库");
-								} else {
-									bean.setId(result);
-									client.add(bean.getHttpUrl(),bean.getHttpUrl());
-									client.add(CacheUtils.getImageKey(result), bean);
-									imgDownload(bean, article.getWebId());
+						if(null != imgList && imgList.size() > 0){
+							for (ImageBean bean : imgList) {
+								if (!HttpClientUtils
+										.validationURL(bean.getImgUrl())
+										|| !HttpClientUtils.validationURL(bean
+												.getHttpUrl())) {
+									System.err.println(">> 地址不通["
+											+ bean.getHttpUrl() + "]");
+									continue;
+								}
+								String length = HttpClientUtils
+										.getHttpHeaderResponse(bean.getHttpUrl(),
+												"Content-Length");
+								System.out.println(">> Content-Length:" + length);
+								if (null != length) {
+									bean.setFileSize(Long.valueOf(length));
+									bean.setStatus(1);
+								}
+								if (client.get(bean.getHttpUrl()) == null) {
+									bean.setArticleId(article.getId());
+									// HttpClientUtils
+									int result = imageDao.insert(bean);
+									if (result == -1) {
+										System.out.println("图片标题为："
+												+ bean.getTitle() + ",未添加到数据库");
+									} else {
+										bean.setId(result);
+										client.add(bean.getHttpUrl(), bean
+												.getHttpUrl());
+										client.add(CacheUtils.getImageKey(result),
+												bean);
+										imgDownload(bean, article.getWebId());
+									}
 								}
 							}
+							article.setText("FD");
+							articleDao.update(article);
 						}
-						article.setText("FD");
-						articleDao.update(article);
 					}
 				}
 			} else {
@@ -491,6 +544,7 @@ public class MilitaryParser {
 	}
 
 	static void imgDownload(ImageBean imgBean, Integer webId) {
+		System.err.println(" >> IN Download Image Method");
 		PicfileBean bean = null;
 		bean = new PicfileBean();
 		String s_fileName = imgBean.getImgUrl().substring(
@@ -500,15 +554,26 @@ public class MilitaryParser {
 				imgBean.getHttpUrl().lastIndexOf("/") + 1,
 				imgBean.getHttpUrl().length());
 		s_fileName = s_fileName.replace(".", "_s.");
+		try{
+			if(picFiledao.getCount("select count(*) from tbl_pic_file where d_image_id = "+imgBean.getId()) > 0){
+				System.err.println(" >> 图片已经下载["+imgBean.getId()+"]完成");
+				return;
+			}
+		}catch(Exception e){
+			return;
+		}
+		
 		try {
-			if(null == client.get(CacheUtils.getDownloadSmallImageKey(imgBean.getId()))){
+			if (null == client.get(CacheUtils.getDownloadSmallImageKey(imgBean
+					.getId()))) {
 				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
 						+ CommonUtil.getDate("") + File.separator
 						+ imgBean.getArticleId() + File.separator
 						+ fileName.replace(".", "_s."));
 			}
-			
-			if(null == client.get(CacheUtils.getDownloadBigImageKey(imgBean.getId()))){
+
+			if (null == client.get(CacheUtils.getDownloadBigImageKey(imgBean
+					.getId()))) {
 				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH
 						+ CommonUtil.getDate("") + File.separator
 						+ imgBean.getArticleId() + File.separator + fileName);
@@ -527,17 +592,21 @@ public class MilitaryParser {
 			try {
 				boolean b = picFiledao.insert(bean);
 				if (b) {
-					client.add(CacheUtils.getDownloadSmallImageKey(imgBean.getId()), "SMALL_"+imgBean.getId());
-					client.add(CacheUtils.getDownloadBigImageKey(imgBean.getId()), "BIG_"+imgBean.getId());
-					if(imageDao.updateLinkStatus(imgBean.getId())){
-						//更新图片地址
-						if(null != client.get(imgBean.getHttpUrl())){
-							client.replace(imgBean.getHttpUrl(), imgBean.getHttpUrl());
-						}else{
-							client.add(imgBean.getHttpUrl(), imgBean.getHttpUrl());
+					client.add(CacheUtils.getDownloadSmallImageKey(imgBean
+							.getId()), "SMALL_" + imgBean.getId());
+					client.add(CacheUtils.getDownloadBigImageKey(imgBean
+							.getId()), "BIG_" + imgBean.getId());
+					if (imageDao.updateLinkStatus(imgBean.getId())) {
+						// 更新图片地址
+						if (null != client.get(imgBean.getHttpUrl())) {
+							client.replace(imgBean.getHttpUrl(), imgBean
+									.getHttpUrl());
+						} else {
+							client.add(imgBean.getHttpUrl(), imgBean
+									.getHttpUrl());
 						}
 					}
-					
+
 				} else {
 					System.out.println("失败");
 				}
@@ -596,15 +665,16 @@ public class MilitaryParser {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 图片下载
+	 * 
 	 * @throws Exception
 	 */
 	static void imgDownloadTest() throws Exception {
 		PicfileBean bean = null;
 		List<ImageBean> list = imageDao.findImage(5, "NED");
-		System.out.println("可以下载的图片记录为："+list.size());
+		System.out.println("可以下载的图片记录为：" + list.size());
 		try {
 			if (list.size() > 0) {
 				System.out.println("list.size():" + list.size());
@@ -625,203 +695,208 @@ public class MilitaryParser {
 							+ CommonUtil.getDate("") + File.separator
 							+ imgBean.getArticleId() + File.separator
 							+ fileName);
-//					bean.setArticleId(imgBean.getArticleId());
-//					bean.setImageId(imgBean.getId());
-//					bean.setTitle(imgBean.getTitle());
-//					bean.setSmallName(CommonUtil.getDate("") + File.separator
-//							+ imgBean.getArticleId() + File.separator
-//							+ s_fileName);
-//					bean.setName(CommonUtil.getDate("") + File.separator
-//							+ imgBean.getArticleId() + File.separator
-//							+ fileName);
-//					bean.setUrl(PIC_SAVE_PATH);
-//					boolean b = picFiledao.insert(bean);
-//					if (b) {
-//						System.out.println("成功！");
-//					} else {
-//						System.out.println("失败");
-//					}
+					// bean.setArticleId(imgBean.getArticleId());
+					// bean.setImageId(imgBean.getId());
+					// bean.setTitle(imgBean.getTitle());
+					// bean.setSmallName(CommonUtil.getDate("") + File.separator
+					// + imgBean.getArticleId() + File.separator
+					// + s_fileName);
+					// bean.setName(CommonUtil.getDate("") + File.separator
+					// + imgBean.getArticleId() + File.separator
+					// + fileName);
+					// bean.setUrl(PIC_SAVE_PATH);
+					// boolean b = picFiledao.insert(bean);
+					// if (b) {
+					// System.out.println("成功！");
+					// } else {
+					// System.out.println("失败");
+					// }
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
 
 	/**
 	 * 获取首页数据
+	 * 
 	 * @throws Exception
 	 */
-	static void index() throws Exception{
+	static void index() throws Exception {
 		Parser parser = new Parser();
 		parser.setURL(URL_);
-		
+
 		// 获取指定ID的DIV内容
 		NodeFilter filter = new NodeClassFilter(LinkTag.class);
 		NodeList nodes = parser.extractAllNodesThatMatch(filter);
-		
-		if(nodes != null && nodes.size() > 0){
+
+		if (nodes != null && nodes.size() > 0) {
 			Article article = null;
-			for(int i=0;i<nodes.size();i++){
-				try{
-				LinkTag link = (LinkTag)nodes.elementAt(i);
-				if (link.getLink().startsWith(SOCIAL_TUKU_URL)
-						|| link.getLink().startsWith(TUKU_URL)
-						|| link.getLink().startsWith(HISTORY_TUKU_URL)
-						|| link.getLink().startsWith(BBS_ARTICLE_URL)
-						|| link.getLink().startsWith(TECH_TUKU_URL)
-						|| link.getLink().startsWith(FUN_TUKU_URL)
-						|| link.getLink().startsWith(GAME_TUKU_URL)) {
-					if(null == client.get(link.getLink())){
-						String name = StringUtils
-								.illageString(link.getAttribute("title") == null ? (link
-										.getLinkText() == null ? "无话题" : link
-										.getLinkText())
-										: link.getAttribute("title"));
-						if (name.indexOf("“") != -1 && name.indexOf("”") != -1) {
-							name = name.replaceAll("“", "");
-							name = name.replace("”", "");
-						}
-						// 判断连接中是否存在创建文件夹时的非法字符
-						if (name.indexOf("\"") != -1 && name.indexOf("\"") != -1) {
-							name = name.replace("\"", "");
-						}
-						System.out.println("name:"+name);
-						article = new Article();
-						article.setWebId(36);
-						article.setArticleUrl(link.getLink());
-						article.setTitle(name);
-						article.setText("NED"); // No Execute Download
-						int key = articleDao.insert(article);
-						if (key > 0) {
-							client.add(link.getLink(), link.getLink());
+			for (int i = 0; i < nodes.size(); i++) {
+				try {
+					LinkTag link = (LinkTag) nodes.elementAt(i);
+					if (link.getLink().startsWith(SOCIAL_TUKU_URL)
+							|| link.getLink().startsWith(TUKU_URL)
+							|| link.getLink().startsWith(HISTORY_TUKU_URL)
+							|| link.getLink().startsWith(BBS_ARTICLE_URL)
+							|| link.getLink().startsWith(TECH_TUKU_URL)
+							|| link.getLink().startsWith(FUN_TUKU_URL)
+							|| link.getLink().startsWith(GAME_TUKU_URL)) {
+						if (null == client.get(link.getLink())) {
+							String name = StringUtils.illageString(link
+									.getAttribute("title") == null ? (link
+									.getLinkText() == null ? "无话题" : link
+									.getLinkText()) : link
+									.getAttribute("title"));
+							if (name.indexOf("“") != -1
+									&& name.indexOf("”") != -1) {
+								name = name.replaceAll("“", "");
+								name = name.replace("”", "");
+							}
+							// 判断连接中是否存在创建文件夹时的非法字符
+							if (name.indexOf("\"") != -1
+									&& name.indexOf("\"") != -1) {
+								name = name.replace("\"", "");
+							}
+							System.out.println("name:" + name);
+							article = new Article();
+							article.setWebId(36);
+							article.setArticleUrl(link.getLink());
+							article.setTitle(name);
+							article.setText("NED"); // No Execute Download
+							int key = articleDao.insert(article);
+							if (key > 0) {
+								client.add(link.getLink(), link.getLink());
+							} else {
+								System.err.println(">> 数据库中已存在相同[" + link.getLink()
+										+ "]");
+							}
+							Thread.sleep(50);
 						} else {
-							System.out.println(">> 已存在相同["+link.getLink()+"]");
+							System.err.println(">> 缓存中已存在相同[" + link.getLink()
+									+ "]");
 						}
-						Thread.sleep(50);
-					}else{
-						System.out.println(">> 已存在相同["+link.getLink()+"]");
 					}
-				}
-				
-				}catch(Exception e){
-					System.out.println(">> Index.Exception:"+e.getMessage());
+
+				} catch (Exception e) {
+					System.out.println(">> Index.Exception:" + e.getMessage());
 					continue;
 				}
 			}
 		}
-		
+
 	}
-	
+
 	public static void main(String args[]) {
 		try {
-			
-//			imgDownloadTest();
-			
-//			add2Cache();
-			
-			patch();
-			
-//			index();
 
-// 			getActicle(5); //5 , 143
- 			
-// 			getActicle(143); //5 , 143
+			// imgDownloadTest();
 
-//			listUnHandleData();
+//			 add2Cache();
+
+			 index();
+
+//			getActicle(5); // 5 , 143
+
+//			getActicle(143); // 5 , 143
 			
+//			WebsiteBean bean = webSiteDao.findById(301);
+			
+//			patchImag(bean);
+
+//			 patch();
+
+			// listUnHandleData();
+
 			clearList();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	static void patch() {
-		try{
-//			List<WebsiteBean> list = webSiteDao.findByParentId(143);
-			Integer[] webIds = {1,4,5,14,17};
-//			for(WebsiteBean webSite:list){
-//				List<Article> articleList = articleDao.findShowImg(webSite.getId(), "NED", 0);
-			for(Integer webId:webIds){
+		try {
+			// List<WebsiteBean> list = webSiteDao.findByParentId(143);
+//			Integer[] webIds = { 1,3, 4,5,14,17,29,34,301,144,145 };
+			Integer[] webIds = {144};
+			// for(WebsiteBean webSite:list){
+			// List<Article> articleList =
+			// articleDao.findShowImg(webSite.getId(), "NED", 0);
+			for (Integer webId : webIds) {
 				List<Article> articleList = articleDao.findByWebId(webId);
-				for(Article article:articleList){
-//					if(1 != article.getWebId() || 3 != article.getWebId()){
+				for (Article article : articleList) {
+					// if(1 != article.getWebId() || 3 != article.getWebId()){
 					getImage(article.getId());
-//					}
+					// }
 				}
 			}
-//			}
-			
-		}catch(Exception e){
-			
+			// }
+
+		} catch (Exception e) {
+
 		}
 	}
 
 	static void add2Cache() throws Exception {
-		
+
 		List<WebsiteBean> webList5 = webSiteDao.findByParentId(5);
-		if(null != webList5){
+		if (null != webList5) {
 			client.add(CacheUtils.getWebListByParentID(5), webList5);
 		}
 		
 		List<WebsiteBean> webList143 = webSiteDao.findByParentId(143);
-		if(null != webList143){
+		if (null != webList143) {
 			client.add(CacheUtils.getWebListByParentID(143), webList143);
 		}
-		
-		//初始化中华军事网网址到缓存
+
+		// 初始化中华军事网网址到缓存
 		List<String> murls = articleDao.findAllArticleURL(5);
-		for(String url:murls){
-			if(null == client.get(url)){
+		for (String url : murls) {
+			if (null == client.get(url)) {
 				client.add(url, url);
-			}else{
-				client.replace(url, url);
 			}
 		}
-		
-		//初始化中华军事网网址到缓存
-		List<String> imgUrls = imageDao.findImageURL(5);
-		for(String url:imgUrls){
-			if(null == client.get(url)){
-				client.add(url, url);
-			}else{
-				client.replace(url, url);
-			}
-		}
-		
-		//初始化中华图库网文章到缓存
+
+		// 初始化中华军事网网址到缓存
+//		List<String> imgUrls = imageDao.findImageURL(5);
+//		for (String url : imgUrls) {
+//			if (null == client.get(url)) {
+//				client.add(url, url);
+//			} else {
+//				client.replace(url, url);
+//			}
+//		}
+
+		// 初始化中华图库网文章到缓存
 		List<String> tkurls = articleDao.findAllArticleURL(143);
-		for(String url:tkurls){
-			if(null == client.get(url)){
+		for (String url : tkurls) {
+			if (null == client.get(url)) {
 				client.add(url, url);
-			}else{
-				client.replace(url, url);
 			}
 		}
-		
-		//初始化中华图库网文章图片到缓存
-		List<String> tkImgUrls = imageDao.findImageURL(143);
-		for(String url:tkImgUrls){
-			if(null == client.get(url)){
-				client.add(url, url);
-			}else{
-				client.replace(url, url);
-			}
-		}
-		
-		//添加父站点为5的文章对象
-		for(WebsiteBean wbean:webList5){
+
+		// 初始化中华图库网文章图片到缓存
+//		List<String> tkImgUrls = imageDao.findImageURL(143);
+//		for (String url : tkImgUrls) {
+//			if (null == client.get(url)) {
+//				client.add(url, url);
+//			} else {
+//				client.replace(url, url);
+//			}
+//		}
+
+		// 添加父站点为5的文章对象
+		for (WebsiteBean wbean : webList5) {
 			List<Article> list = articleDao.findByWebId(wbean.getId());
 			for (Article bean : list) {
 				client.add(CacheUtils.getArticleKey(bean.getId()), bean);
 			}
 		}
-		
-		//添加父站点为143的文章对象
-		for(WebsiteBean wbean:webList143){
+
+		// 添加父站点为143的文章对象
+		for (WebsiteBean wbean : webList143) {
 			List<Article> list = articleDao.findByWebId(wbean.getId());
 			for (Article bean : list) {
 				client.add(CacheUtils.getArticleKey(bean.getId()), bean);
@@ -830,7 +905,8 @@ public class MilitaryParser {
 	}
 
 	static void listUnHandleData() throws Exception {
-		System.out.println("**********************不能解析的数据连接***********************");
+		System.out
+				.println("**********************不能解析的数据连接***********************");
 
 		if (ARTICLELIST.size() > 0) {
 			for (Article acticle : ARTICLELIST) {
@@ -844,6 +920,20 @@ public class MilitaryParser {
 				System.out.println("连接地址：" + bean.getLink());
 				System.out.println("name:" + bean.getName());
 			}
+		}
+	}
+	
+	static void patchImag(WebsiteBean bean) {
+		try{
+			List<Article> artList = articleDao.findByWebId(bean.getId(),"FD");
+			for(Article article:artList){
+				List<ImageBean> imgList = imageDao.findImage(article.getId());
+				for(ImageBean img:imgList){
+					imgDownload(img, bean.getId());
+				}
+			}
+		}catch(Exception e){
+			System.err.println(">> error patch img");
 		}
 	}
 

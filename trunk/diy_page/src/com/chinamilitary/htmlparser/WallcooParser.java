@@ -758,27 +758,57 @@ public class WallcooParser {
 				Object obj = client.get(key);
 				if(null == obj){
 					client.add(key, key);
-				}else{
-					client.replace(key, key);
 				}
 			}
 			long end1 = System.currentTimeMillis();
 			
-			List<String> imageURLList = imageDao.findImageURL(125);
-			long start2 = System.currentTimeMillis();
-			for(String key:imageURLList){
-				Object obj = client.get(key);
-				if(null == obj){
-					client.add(key, key);
-				}else{
-					client.replace(key, key);
-				}
-			}
-			long end2 = System.currentTimeMillis();
+//			List<String> imageURLList = imageDao.findImageURL(125);
+//			long start2 = System.currentTimeMillis();
+//			for(String key:imageURLList){
+//				Object obj = client.get(key);
+//				if(null == obj){
+//					client.add(key, key);
+//				}
+//			}
+//			long end2 = System.currentTimeMillis();
 			System.out.println("文章入缓存花费:"+(end1-start1));
-			System.out.println("图片地址入缓存花费:"+(end2-start2));
+//			System.out.println("图片地址入缓存花费:"+(end2-start2));
 		}catch(Exception e){
 			System.out.println(">> Exception:"+e.getMessage());
+		}
+	}
+	
+	static void update() throws Exception{
+		List<WebsiteBean> list = wesiteDao.findByParentId(125);
+		/**
+		 * 文章获取并入库 List<WebsiteBean> list = wesiteDao.findByParentId(125);
+		 */
+		if (list != null && list.size() > 0) {
+			ResultBean result = null;
+			int i = 0;
+			for (WebsiteBean bean : list) {
+				try{
+					result = hasPaging(bean, "id", "linkid");
+					if (result.isBool()) {
+						List<LinkBean> pageList = result.getList();
+						if (pageList != null && pageList.size() > 0) {
+							for (LinkBean link : pageList) {
+								try {
+									secondURL(link, bean.getId());
+								} catch (org.htmlparser.util.EncodingChangeException e) {
+									LINKHASH.put(link.getLink(), link);
+									continue;
+								}
+							}
+						}
+					}
+					i++;
+					// 更新菜单列表排序
+					wesiteDao.update(bean);
+				}catch(Exception e){
+					System.out.println(">> Exception :"+e.getMessage());
+				}
+			}
 		}
 	}
 	
@@ -787,140 +817,9 @@ public class WallcooParser {
 			//初始化数据到缓存中
 //			init2cache();
 			
-			List<WebsiteBean> list = wesiteDao.findByParentId(125);
-			/**
-			 * 文章获取并入库 List<WebsiteBean> list = wesiteDao.findByParentId(125);
-			 */
-			if (list != null && list.size() > 0) {
-				ResultBean result = null;
-				int i = 0;
-				for (WebsiteBean bean : list) {
-					try{
-						result = hasPaging(bean, "id", "linkid");
-						if (result.isBool()) {
-							List<LinkBean> pageList = result.getList();
-							if (pageList != null && pageList.size() > 0) {
-								for (LinkBean link : pageList) {
-									try {
-										secondURL(link, bean.getId());
-									} catch (org.htmlparser.util.EncodingChangeException e) {
-										LINKHASH.put(link.getLink(), link);
-										continue;
-									}
-								}
-							}
-						}
-						i++;
-						// 更新菜单列表排序
-						wesiteDao.update(bean);
-					}catch(Exception e){
-						System.out.println(">> Exception :"+e.getMessage());
-					}
-				}
-			}
-			/**
-			**/
-
-			//查找文章下的图片数量
-			for (WebsiteBean website : list) {
-				List<Article> aList = articleDao.findShowImg(website.getId(),
-						"NED", 0); //NED_WALLCOO
-				System.out.println("图片数量:"+aList.size());
-				if (aList != null && aList.size() > 0) {
-					int i = 0;
-					ResultBean result = null;
-					for (Article article : aList) {
-						try {
-							System.out
-									.println("URL:" + article.getArticleUrl());
-							result = hasPagingWithArticleSelectTag(article
-									.getArticleUrl());
-							if (result.isBool()) {
-								List<LinkBean> ll = result.getList();
-								System.out.println("分页数量：" + ll.size());
-								if (ll != null && ll.size() > 0) {
-									for (LinkBean bean : ll) {
-										if (!getPicUrlAndThum(article.getId(),
-												bean.getLink())) {
-											continue;
-										}
-									}
-									article.setText("FD");
-									if (articleDao.update(article)) {
-										System.out.println("articleId="
-												+ article.getId() + "\t"
-												+ article.getArticleUrl()
-												+ ",有分页，更新成功!!");
-									}
-								}
-							} else {
-								System.out.println("没有分页");
-								if (!getPicUrlAndThum(article.getId(), article
-										.getArticleUrl())) {
-									continue;
-								}
-								article.setText("FD");
-								if (articleDao.update(article)) {
-									System.out.println("articleId="
-											+ article.getId() + "\t"
-											+ article.getArticleUrl()
-											+ ",无分页，更新成功!!");
-								}
-							}
-						} catch (FileNotFoundException e) {
-							e.printStackTrace();
-							article.setText("FNFE"); // FileNotFoundException
-							articleDao.update(article);
-							System.out.println("文章:"+article.getTitle()+".Exception:");
-							continue;
-						} catch (Exception e) {
-							e.printStackTrace();
-							article.setText("FNFE");//FileNotFoundException
-							articleDao.update(article);
-							System.out.println("文章:"+article.getTitle()+".Exception:");
-							continue;
-						}
-					}
-					i++;
-					System.out.println("共更新" + i + "条记录");
-				}
-			}
-			/**
-			**/
+			update();
 			
-			/**
-			secondURL("http://www.wallcoo.com/engine/index.htm");
-			String url = thirdURL("http://www.wallcoo.com/nature/Sz_216_Hawaii_Sky_and_Sea_Aquamarine_1920x1200/index.html");
-			System.out.println("url:" + url);
-			String url = "http://www.wallcoo.com/animal/MX069_Pretty_Puppies_puppy_garden_adventure/html/wallpaper1.html";
-			System.out
-					.println(url.replace(url.substring(
-							url.lastIndexOf("/") + 1, url.length()),
-							"wallpaper2.html"));
-			ResultBean result = hasPagingWithSelectTag(url);
-			if (result.isBool()) {
-				for (LinkBean bean : result.getList()) {
-					System.out.println(bean.getLink());
-				}
-			}
-			Iterator it1 = LINKHASH.keySet().iterator();
-			int count = 0;
-			while (it1.hasNext()) {
-				String key = (String) it1.next();
-				if (it1.next() instanceof LinkBean) {
-					LinkBean bean = (LinkBean) LINKHASH.get(key);
-					System.out.println("未解析的地址为：" + bean.getLink());
-				}
-				if (it1.next() instanceof LinkTag) {
-					LinkTag link = (LinkTag) it1.next();
-					System.out.println("文章地址:"
-							+ link.getLink()
-							+ "\t"
-							+ (link.getLinkText() == null ? "文章内容" : link
-									.getLinkText()));
-				}
-			}
-			**/
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

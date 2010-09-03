@@ -328,7 +328,7 @@ public class PCPOPHtmlParser {
 //		initHTML(weblist);
 //		System.out.println("数量："+HTMLHASH.size());
 		
-		init();
+//		init();
 			
 		process();
 		
