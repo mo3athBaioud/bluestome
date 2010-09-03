@@ -1,5 +1,6 @@
 package com.chinamilitary.xmlparser;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,14 +100,22 @@ public class XMLParser {
 			if(!"".equalsIgnoreCase(value)){
 				int start = value.indexOf("intro=")+6;
 				int end = value.indexOf("comment");
-				String tmp = value.substring(start,end);
-				System.out.println("value:"+value.replace(tmp, "\"\""));
+				String tmp = value.substring(start,end-1);
+				System.out.println(tmp);
 				String tmp2 = value.replace(tmp, "\"\" ");
-//				 读取XML文件
-				document = reader.read(tmp2);
+//				tmp2 = tmp2.replace("“", "'").replace("”", "'");
+//				String filePath = IOUtil.createFile(new String(tmp2.getBytes("GBK"),"GBK"), "tmp", ".xml");
+//				System.out.println(tmp2);
+//				 读取XML字符串文件
+				try{
+					document = reader.read(tmp2);
+				}catch(Exception ex){
+					System.out.println("ex:"+ex);
+				}
 			}
 		}
 		if(null == document){
+			System.out.println(">> doucment is null");
 			return imageList;
 		}
 //		reader.read(new URL(xmlUrl));// 读取XML文件
@@ -211,7 +220,8 @@ public class XMLParser {
 	
 	public static void main(String args[]){
 		try{
-			XMLParser.readXmlFromURL("http://tuku.game.china.com/game/html/2010-08-19/149536.xml","F:\\china\\military\\pic\\");
+//			XMLParser.readXmlFromURL("http://tuku.game.china.com/game/html/2010-08-23/149750.xml","F:\\china\\military\\pic\\");
+			readXmlFromURL("http://tuku.game.china.com/game/html/2010-08-23/149750.xml");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
