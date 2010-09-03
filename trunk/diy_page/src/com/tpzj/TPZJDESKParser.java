@@ -46,15 +46,13 @@ import com.chinamilitary.util.CommonUtil;
 import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 
-public class TPZJParser {
+public class TPZJDESKParser {
 
-	static String URL_ = "http://www.tpzj.com/";
+	static String URL_ = "http://desk.tpzj.com/";
 
-	static String URL = "http://www.tpzj.com";
+	static String URL = "http://desk.tpzj.com";
 
 	static String IMAGE_URL = "http://image6.tuku.cn/";
-
-	static String VISTA_URL = "http://vista.zol.com.cn";
 
 	static String PIC_SAVE_PATH = "D:\\share\\tpzj\\";
 
@@ -161,7 +159,11 @@ public class TPZJParser {
 					l1 = new LinkBean();
 					LinkTag link2 = (LinkTag) list2.elementAt(i);
 					if (!link2.getLink().startsWith("http://")) {
-						tmp = URL_ + link2.getLink();
+						if(link2.getLink().equalsIgnoreCase("#")){
+							tmp = url;
+						}else{
+							tmp = URL_ + link2.getLink();
+						}
 					} else {
 						tmp = link2.getLink();
 					}
@@ -175,7 +177,10 @@ public class TPZJParser {
 			if (null != p2)
 				p2 = null;
 		} else {
-			result.setBool(b);
+			LinkBean l1 = new LinkBean();
+			l1.setLink(url);
+			result.put(url, l1);
+			result.setBool(true);
 		}
 		return result;
 	}
@@ -207,7 +212,6 @@ public class TPZJParser {
 
 			NodeFilter filter2 = new NodeClassFilter(LinkTag.class);
 			NodeList list2 = p2.extractAllNodesThatMatch(filter2);
-			System.out.println("连接数量:" + list2.size());
 			LinkTag link = (LinkTag) list2.elementAt(list2.size() - 1);
 			if (null != link) {
 				try {
@@ -301,7 +305,7 @@ public class TPZJParser {
 		NodeFilter filter = new NodeClassFilter(Span.class);
 		NodeList list = parser.extractAllNodesThatMatch(filter)
 				.extractAllNodesThatMatch(
-						new HasAttributeFilter("class", "title fs12 fl TC"));
+						new HasAttributeFilter("class", "title fs12 fl TC")); //pic-list fl of
 		if (list != null && list.size() > 0) {
 			Parser p2 = null;
 			for (int i = 0; i < list.size(); i++) {
@@ -335,6 +339,13 @@ public class TPZJParser {
 								article.setActicleRealUrl(tmpurl);
 							}
 							article.setTitle(tmplink.getLinkText());
+//							System.out.println("*****************Start***************");
+//							System.out.println("ArticleUrl:"+article.getArticleUrl());
+//							System.out.println("ActicleXmlUrl:"+article.getActicleXmlUrl());
+//							System.out.println("Title:"+article.getTitle());
+//							System.out.println("Text:"+article.getText());
+//							System.out.println("*****************End***************\n");
+							
 							int key = articleDao.insert(article);
 							if (key > 0) {
 								System.out.print(tmplink.getLinkText() + "\t|"
@@ -392,14 +403,19 @@ public class TPZJParser {
 	 */
 	public static boolean getImage(Article article) throws Exception {
 		boolean b = true;
-		ResultBean result = hasPaging(article.getArticleUrl(), "class",
-				"page f14b");
+		ResultBean result = hasPaging(article.getActicleRealUrl(), "class",
+				"pg");
 		if (result.isBool()) {
 			Iterator it = result.getMap().keySet().iterator();
 			while (it.hasNext()) {
 				String key = (String) it.next();
+				System.out.println("文章地址:"+key);
 				LinkBean link = result.getMap().get(key);
-				b = getImage(link, article.getId());
+				if(!getImage(link,article.getTitle(),article.getId())){
+					b = false;
+					break;
+				}
+				break;
 			}
 		}
 
@@ -413,7 +429,7 @@ public class TPZJParser {
 	 * @param webId
 	 * @throws Exception
 	 */
-	public static boolean getImage(LinkBean link, int artId) throws Exception {
+	public static boolean getImage(LinkBean link,String title, int artId) throws Exception {
 
 		Parser parser = new Parser();
 		parser.setURL(link.getLink());
@@ -423,78 +439,70 @@ public class TPZJParser {
 		NodeFilter filter = new NodeClassFilter(CompositeTag.class);
 		NodeList list = parser
 				.extractAllNodesThatMatch(filter)
-				.extractAllNodesThatMatch(new HasAttributeFilter("class", "lb"));
+				.extractAllNodesThatMatch(new HasAttributeFilter("class", "picbd"));
 		if (null != list && list.size() > 0) {
 			Parser p2 = null;
 			String length = "0";
 			int size = 0;
 			for (int i = 0; i < list.size(); i++) {
-				Div div = (Div) list.elementAt(i);
-				p2 = new Parser();
-				p2.setInputHTML(div.toHtml());
-
-				NodeFilter filter2 = new NodeClassFilter(LinkTag.class);
-				NodeList list2 = p2.extractAllNodesThatMatch(filter2);
-
+				LinkTag ltmp = (LinkTag) list.elementAt(i);
 				ImageBean imgBean = null;
 				String url = null;
 				String imgSrc = null;
-				if (null != list2 && list2.size() > 0) {
-					LinkTag ltmp = (LinkTag) list2.elementAt(0);
-					if (!ltmp.getLink().startsWith("http://")) {
-						url = URL + ltmp.getLink();
-					} else {
-						url = ltmp.getLink();
-					}
-
-					imgSrc = getImageURL(url);
-					if (null != imgSrc) {
-						if (null == client.get(url)) {
-							imgBean = new ImageBean();
-							imgBean = new ImageBean();
-							imgBean.setArticleId(artId);
-							imgBean.setHttpUrl(imgSrc);
-							NodeList tmp = ltmp.getChildren();
-							if (tmp != null && tmp.size() > 0) {
-								ImageTag imgTag = (ImageTag) tmp.elementAt(0);
-								if (null != imgTag.getImageURL())
-									imgBean.setImgUrl(imgTag.getImageURL());
-								if (null != imgTag.getAttribute("alt"))
-									imgBean
-											.setTitle(imgTag
-													.getAttribute("alt"));
-								else
-									imgBean.setTitle("NT:"
-											+ CommonUtil.getDateTimeString());
-							}
-							// length = HttpClientUtils.getHttpHeaderResponse(
-							// imgSrc, "Content-Length");
-							imgBean.setLink("NED");
-							try {
-								size = Integer.parseInt(length);
-								imgBean.setFileSize(Long.valueOf(size));
-								imgBean.setStatus(3);
-							} catch (Exception e) {
-								e.printStackTrace();
-								System.err.println(">> IMAGE SIZE ERROR");
-								size = 0;
-								imgBean.setFileSize(0l);
-								imgBean.setStatus(1);
-							}
-							int key = imageDao.insert(imgBean);
-							if (key > 0) {
-								System.out.println(imgBean.getTime() + "\t|"
-										+ url);
-								client.add(url, url);
-							}
-						} else {
-							System.err.println(">> 已存在相同的内容 ["
-									+ ltmp.getLinkText() + "]");
+				if (!ltmp.getLink().startsWith("http://")) {
+					url = URL + ltmp.getLink();
+				} else {
+					url = ltmp.getLink();
+				}
+				imgSrc = getImageURL(url);
+				
+				if (null != imgSrc) {
+					if (null == client.get(url)) {
+						imgBean = new ImageBean();
+						imgBean = new ImageBean();
+						imgBean.setArticleId(artId);
+						imgBean.setHttpUrl(imgSrc);
+						NodeList tmp = ltmp.getChildren();
+						if (tmp != null && tmp.size() > 0) {
+							ImageTag imgTag = (ImageTag) tmp.elementAt(0);
+							if (null != imgTag.getImageURL())
+								imgBean.setImgUrl(imgTag.getImageURL());
+							if (null != imgTag.getAttribute("alt"))
+								imgBean
+										.setTitle(imgTag
+												.getAttribute("alt"));
+							else
+								imgBean.setTitle(title);
+						}
+						imgBean.setLink("NED");
+						try {
+							size = Integer.parseInt(length);
+							imgBean.setFileSize(Long.valueOf(size));
+							imgBean.setStatus(3);
+						} catch (Exception e) {
+							e.printStackTrace();
+							System.err.println(">> IMAGE SIZE ERROR");
+							size = 0;
+							imgBean.setFileSize(0l);
+							imgBean.setStatus(1);
+						}
+//						System.out.println("Title:"+imgBean.getTitle());
+//						System.out.println("ArticleId:"+imgBean.getArticleId());
+//						System.out.println("大图地址:"+imgBean.getHttpUrl());
+//						System.out.println("小图地址:"+imgBean.getImgUrl());
+						
+						int key = imageDao.insert(imgBean);
+						if (key > 0) {
+							System.out.println(imgBean.getTitle() + "\t|"+ url);
+							client.add(url, url);
 						}
 					} else {
-						resultB = false;
-						break;
+						System.err.println(">> 已存在相同的内容 ["
+								+ ltmp.getLinkText() + "]");
 					}
+				} else {
+					resultB = false;
+					break;
 				}
 
 				if (null != p2)
@@ -520,7 +528,7 @@ public class TPZJParser {
 			NodeFilter filter = new NodeClassFilter(CompositeTag.class);
 			NodeList list = p1.extractAllNodesThatMatch(filter)
 					.extractAllNodesThatMatch(
-							new HasAttributeFilter("class", "a_fen12bi"));
+							new HasAttributeFilter("class", "abpic"));
 
 			if (null != list && list.size() == 1) {
 				LinkTag link = (LinkTag) list.elementAt(0);
@@ -663,9 +671,11 @@ public class TPZJParser {
 			ResultBean result = hasPaging2(bean.getUrl());
 			if (result.isBool()) {
 				Iterator it = result.getMap().keySet().iterator();
+				System.out.println("分页数量:"+result.getMap().size());
 				while (it.hasNext()) {
 					String key = (String) it.next();
 					LinkBean link = result.getMap().get(key);
+					System.out.println("key:"+key);
 					try {
 						secondURL(link, bean.getId());
 					} catch (Exception e) {
@@ -673,8 +683,10 @@ public class TPZJParser {
 						System.out.println("key:" + key);
 						continue;
 					}
+					break;
 				}
 			}
+			break;
 		}
 	}
 
@@ -682,7 +694,7 @@ public class TPZJParser {
 		// init();
 		try {
 			// catalog(URL);
-			 update();
+//			 update();
 			// vistDesk();
 //			 loadImg();
 			 imgDownload();
@@ -692,36 +704,54 @@ public class TPZJParser {
 	}
 
 	static void loadImg() throws Exception {
-		// WebsiteBean bean = webSiteDao.findById(702);
-		List<WebsiteBean> webList = webSiteDao.findByParentId(701);
+		List<WebsiteBean> webList = webSiteDao.findByParentId(801);
 		for (WebsiteBean bean : webList) {
-			List<Article> list = articleDao.findByWebId(bean.getId());
+			List<Article> list = articleDao.findByWebId(bean.getId(),"FD");
 			for (Article art : list) {
-				if (!art.getArticleUrl().startsWith("http://vista.zol.com.cn")) {
+				List<ImageBean> imgList = imageDao.findImage(art.getId());
+				if(imgList.size() == 0){
+					art.setText("NED");
+					if (articleDao.update(art)) {
+						System.out
+								.println("更新记录[" + art.getTitle() + "|"+art.getId()+"]成功");
+					}
+				}else{
 					if (getImage(art)) {
 						art.setText("FD");
 						if (articleDao.update(art)) {
 							System.out
-									.println("更新记录[" + art.getTitle() + "]成功");
+									.println("更新记录[" + art.getTitle() + "|"+art.getId()+"]成功");
 						}
 					}
 				}
+				break;
 			}
 		}
 	}
 
 
 	static void imgDownload() throws Exception {
-		List<ImageBean> list = imageDao.findImage(701);
-		for (ImageBean bean : list) {
-			if (download(bean)) {
-				bean.setStatus(1);
-				bean.setLink("FD");
-				if (imageDao.update(bean)) {
-					System.out.println(">> 更新图片对象[" + bean.getId() + "]成功");
+		List<WebsiteBean> webList = webSiteDao.findByParentId(801);
+		for (WebsiteBean bean : webList) {
+			List<Article> list = articleDao.findByWebId(bean.getId(),"FD");
+			System.out.println(">> 网站["+bean.getId()+"|"+bean.getName()+"|"+bean.getUrl()+"]\t下文章数量"+list.size());
+			for (Article art : list) {
+				List<ImageBean> imglist = imageDao.findImage(art.getId());
+				System.out.println(">> 文章["+art.getId()+"|"+art.getTitle()+"]\t下的图片数量"+imglist.size());
+				for (ImageBean img : imglist) {
+					if(img.getLink().equalsIgnoreCase("NED")){
+						if (download(img)) {
+							img.setStatus(1);
+							img.setLink("FD");
+							if (imageDao.update(img)) {
+								System.out.println(">> 更新图片对象[" + art.getId() + "|"+img.getId()+"]\t成功");
+							}
+						}
+					}
 				}
 			}
 		}
+		
 	}
 
 	static boolean download(ImageBean imgBean) {
