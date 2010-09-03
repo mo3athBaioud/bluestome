@@ -14,6 +14,10 @@ import com.chinamilitary.factory.DAOFactory;
 import com.chinamilitary.memcache.MemcacheClient;
 
 public class Test {
+	
+	public void test() throws Exception{
+		
+	}
 
 	/**
 	 * @param args

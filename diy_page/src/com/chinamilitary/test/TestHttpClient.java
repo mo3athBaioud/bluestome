@@ -61,22 +61,22 @@ public class TestHttpClient {
 //			for(Article bean:list){
 //				test1(bean.getArticleUrl());
 //			}
-//			boolean isTrue = urlValidation("http://www.showimg.com/game2.htm");
+//			boolean isTrue = urlValidation("http://bizhi.zhuoku.com/wall/jie/20070203/0721/001.jpg");
 //			System.out.println("页面是否合法:"+isTrue);
 			
 //			getResponseHeaders("http://image.tuku.china.com/tuku.military.china.com/military//pic/2010-08-09/f003abea-7bd8-478b-b9f8-a11b59d6a0e0.jpg");
-//			getResponseHeaders("http://www.china.com");
+			getResponseHeaders("http://bizhi.zhuoku.com/wall/jie/20070203/0721/001.jpg");
 			
-			pitchImage();
+//			pitchImage();
 //			getImgInfoFromResponse();
 			
 			
-			Iterator it = LINK_NOT_OK.keySet().iterator();
-			System.out.println("无效链接如下\n");
-			while(it.hasNext()){
-				String key = (String)it.next();
-				System.out.println("URL["+key+"] \t状态码["+LINK_NOT_OK.get(key)+"]");
-			}
+//			Iterator it = LINK_NOT_OK.keySet().iterator();
+//			System.out.println("无效链接如下\n");
+//			while(it.hasNext()){
+//				String key = (String)it.next();
+//				System.out.println("URL["+key+"] \t状态码["+LINK_NOT_OK.get(key)+"]");
+//			}
 			
 			LINK_NOT_OK.clear();
 		}catch(Exception e){
@@ -89,14 +89,17 @@ public class TestHttpClient {
 			getMethod = new GetMethod(url);
 			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,new DefaultHttpMethodRetryHandler());
 			// 执行getMethod
+//			getMethod.addRequestHeader("Referer", "http://www.bizhizhan.com/junshikeji/junshikeji-26-8806_2.html");
+//			getMethod.addRequestHeader("Referer", "http://www.zhuoku.com/zhuomianbizhi/computer-pcother/20070203130513(1).htm");
 			int statusCode = httpclient.executeMethod(getMethod);
 			if (statusCode != HttpStatus.SC_OK) {
 				System.err.println("地址["+url+"],状态码["+statusCode+"]");
 				return false;
 			}
-			getMethod.releaseConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally{
+			getMethod.releaseConnection();
 		}
 		return true;
 	}
@@ -106,6 +109,7 @@ public class TestHttpClient {
 		try{
 			getMethod = new GetMethod(url);
 			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,new DefaultHttpMethodRetryHandler());
+			getMethod.addRequestHeader("Referer", "http://www.zhuoku.com/zhuomianbizhi/computer-pcother/20070203130513(1).htm");
 			// 执行getMethod
 			int statusCode = httpclient.executeMethod(getMethod);
 			if(statusCode == HttpStatus.SC_OK){
