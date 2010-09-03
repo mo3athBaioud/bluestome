@@ -90,4 +90,5 @@ public interface ImageDao extends ICommonDao {
 	 * @throws Exception
 	 */
 	boolean update(ImageBean bean) throws Exception;
+	
 }
