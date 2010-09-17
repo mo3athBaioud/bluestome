@@ -36,6 +36,7 @@ import com.chinamilitary.dao.ArticleDao;
 import com.chinamilitary.dao.ImageDao;
 import com.chinamilitary.dao.PicFileDao;
 import com.chinamilitary.dao.WebSiteDao;
+import com.chinamilitary.dao.impl.WebSiteDaoImpl;
 import com.chinamilitary.factory.DAOFactory;
 import com.chinamilitary.memcache.MemcacheClient;
 import com.chinamilitary.test.TestHttpClient;
@@ -43,6 +44,9 @@ import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.CommonUtil;
 import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
+import com.chinamilitary.util.StringUtils;
+import com.common.Constants;
+import com.utils.FileUtils;
 
 public class BIZHIParser {
 
@@ -50,7 +54,13 @@ public class BIZHIParser {
 
 	static String URL = "http://www.bizhi.com";
 
-	static String PIC_SAVE_PATH = "D:\\share\\bizhi\\";
+//	static String PIC_SAVE_PATH = "D:\\share\\bizhi\\";
+	
+	static String PIC_SAVE_PATH = Constants.FILE_SERVER;
+	
+	final static String FILE_SERVER = Constants.FILE_SERVER;
+
+	static int D_PARENT_ID = 1200;
 
 	static List<LinkBean> LINKLIST = new ArrayList<LinkBean>();
 
@@ -104,14 +114,14 @@ public class BIZHIParser {
 							System.out.println(link.getLink() + "\n");
 							tmp.setUrl(link.getLink());
 						}
-						tmp.setParentId(1200);
-					 boolean b = webSiteDao.insert(tmp);
-					 if (b) {
-						 client.add(tmp.getUrl(), tmp.getUrl());
-						 System.out.println("成功");
-					 } else {
-						 System.out.println("失败");
-					 }
+						tmp.setParentId(D_PARENT_ID);
+						boolean b = webSiteDao.insert(tmp);
+						if (b) {
+							client.add(tmp.getUrl(), tmp.getUrl());
+							System.out.println("成功");
+						} else {
+							System.out.println("失败");
+						}
 					}
 				}
 			}
@@ -183,8 +193,7 @@ public class BIZHIParser {
 	 * @return
 	 * @throws Exception
 	 */
-	static ResultBean hasPaging2(String url)
-			throws Exception {
+	static ResultBean hasPaging2(String url) throws Exception {
 		boolean b = false;
 		ResultBean result = new ResultBean();
 		Parser parser = new Parser();
@@ -193,7 +202,8 @@ public class BIZHIParser {
 		// 获取指定ID的DIV内容
 		NodeFilter filter = new NodeClassFilter(Div.class);
 		NodeList list = parser.extractAllNodesThatMatch(filter)
-				.extractAllNodesThatMatch(new HasAttributeFilter("class", "page"));
+				.extractAllNodesThatMatch(
+						new HasAttributeFilter("class", "page"));
 		int pageNum = 1;
 		if (list != null && list.size() > 0) {
 			Parser p2 = new Parser();
@@ -202,31 +212,28 @@ public class BIZHIParser {
 			NodeFilter filter2 = new NodeClassFilter(LinkTag.class);
 			NodeList list2 = p2.extractAllNodesThatMatch(filter2);
 			if (null != list && list2.size() > 0) {
-				
 				String tmp = null;
 				LinkBean l1 = null;
-				if(list2.size() > 10){
+				if (list2.size() > 10) {
 					LinkTag tmpLink = (LinkTag) list2.elementAt(8);
-					try{
+					try {
 						pageNum = Integer.valueOf(tmpLink.getLinkText());
-					}catch(Exception e){
+					} catch (Exception e) {
 						System.err.println(">> 分页出现异常");
 						throw new Exception("分页出现异常");
 					}
-					for(int i=1;i<pageNum+1;i++){
-						tmp = url.replace("1.html", i+".html");
+					for (int i = 1; i < pageNum + 1; i++) {
+						tmp = url.replace("1.html", i + ".html");
 						l1 = new LinkBean();
 						l1.setLink(tmp);
-						l1.setTitle(""+i);
+						l1.setTitle("" + i);
 						result.put(tmp, l1);
-						System.out.println("分页地址："+tmp);
 					}
-					result.setBool(true);
-				}else{
+				} else {
 					for (int i = 0; i < list2.size(); i++) {
 						l1 = new LinkBean();
 						LinkTag link2 = (LinkTag) list2.elementAt(i);
-						if(!link2.getLink().equalsIgnoreCase("#")){
+						if (!link2.getLink().equalsIgnoreCase("#")) {
 							if (!link2.getLink().startsWith("http://")) {
 								tmp = URL + link2.getLink();
 							} else {
@@ -235,24 +242,31 @@ public class BIZHIParser {
 							l1.setLink(tmp);
 							l1.setTitle(link2.getLinkText());
 							result.put(tmp, l1);
-							System.out.println("分页地址："+tmp);
 						}
 						l1.setLink(url);
 						l1.setTitle(link2.getLinkText());
 						result.put(url, l1);
 					}
-					result.setBool(true);
 				}
-				
+
 			}
 			if (null != p2)
 				p2 = null;
+			LinkBean l1 = new LinkBean();
+			l1.setLink(url);
+			l1.setTitle(url);
+			result.put(url, l1);
+			result.setBool(true);
 		} else {
-			result.setBool(b);
+			LinkBean l1 = new LinkBean();
+			l1.setLink(url);
+			l1.setTitle(url);
+			result.put(url, l1);
+			result.setBool(true);
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 获取指定URL下的源码
 	 * 
@@ -314,33 +328,34 @@ public class BIZHIParser {
 
 		// 获取指定ID的TableTag内容
 		NodeFilter filter = new NodeClassFilter(CompositeTag.class);
-		NodeList list = parser
-				.extractAllNodesThatMatch(filter)
-				.extractAllNodesThatMatch(new HasAttributeFilter("class", "uip uip_250"));
+		NodeList list = parser.extractAllNodesThatMatch(filter)
+				.extractAllNodesThatMatch(
+						new HasAttributeFilter("class", "uip uip_250"));
 		if (list != null && list.size() > 0) {
 			Parser p2 = null;
 			CompositeTag div = (CompositeTag) list.elementAt(0);
 			p2 = new Parser();
 			p2.setInputHTML(div.toHtml());
-			
+
 			NodeFilter filter2 = new NodeClassFilter(Span.class);
 			NodeList list2 = p2.extractAllNodesThatMatch(filter2);
 			Article article = null;
 			String url = null;
-			if(null != list2 && list2.size() > 0){
-				for(int i=0;i<list2.size();i++){
-					Span span = (Span)list2.elementAt(i);
+			if (null != list2 && list2.size() > 0) {
+				for (int i = 0; i < list2.size(); i++) {
+					Span span = (Span) list2.elementAt(i);
 					NodeList tmpNode = span.getChildren();
-					if(null != tmpNode && tmpNode.size() > 0){
-						LinkTag linkTag = (LinkTag)tmpNode.elementAt(0);
-						System.out.println(linkTag.getLinkText()+"|"+linkTag.getLink());
-						
+					if (null != tmpNode && tmpNode.size() > 0) {
+						LinkTag linkTag = (LinkTag) tmpNode.elementAt(0);
+						System.out.println(linkTag.getLinkText() + "|"
+								+ linkTag.getLink());
+
 						if (!linkTag.getLink().startsWith("http://")) {
 							url = URL + linkTag.getLink();
 						} else {
 							url = linkTag.getLink();
 						}
-						
+
 						if (null == client.get(url)) {
 							article = new Article();
 							article.setWebId(webId);
@@ -348,27 +363,30 @@ public class BIZHIParser {
 							article.setText("NED"); // NED_WALLCOO
 							article.setIntro("");
 							NodeList tmpNode2 = linkTag.getChildren();
-							if(null != tmpNode2 && tmpNode2.size() > 0){
-								ImageTag imgTag = (ImageTag)tmpNode2.elementAt(0);
+							if (null != tmpNode2 && tmpNode2.size() > 0) {
+								ImageTag imgTag = (ImageTag) tmpNode2
+										.elementAt(0);
 								System.out.println(imgTag.getAttribute("alt")
 										+ "|[" + url + "]");
-								article.setActicleXmlUrl(URL+imgTag.getImageURL());
+								article.setActicleXmlUrl(URL
+										+ imgTag.getImageURL());
 								article.setTitle(imgTag.getAttribute("alt")); // NT:No
 							}
 							int key = articleDao.insert(article);
 							if (key > 0) {
-								System.out.print(article.getTitle() + "\t|" + url);
+								System.out.print(article.getTitle() + "\t|"
+										+ url);
 								client.add(url, url);
 							}
 						} else {
-							System.err.println(">> 已存在相同的内容 [" + linkTag.getLinkText()
-									+ "]");
+							System.err.println(">> 已存在相同的内容 ["
+									+ linkTag.getLinkText() + "]");
 						}
 					}
 				}
 			}
 
-			if (null != p2){
+			if (null != p2) {
 				p2 = null;
 			}
 		}
@@ -390,7 +408,7 @@ public class BIZHIParser {
 			Iterator it = result.getMap().keySet().iterator();
 			while (it.hasNext()) {
 				String key = (String) it.next();
-				System.out.println(""+key);
+				System.out.println("URL:" + key);
 				LinkBean link = result.getMap().get(key);
 				b = getImage(link, article.getId());
 			}
@@ -414,49 +432,53 @@ public class BIZHIParser {
 		String length = "0";
 		NodeFilter filter = new NodeClassFilter(CompositeTag.class);
 		NodeList list = p2.extractAllNodesThatMatch(filter)
-				.extractAllNodesThatMatch(new HasAttributeFilter("id", "listimg"));
+				.extractAllNodesThatMatch(
+						new HasAttributeFilter("id", "listimg"));
 
-		if(null != list && list.size() > 0){
-		Parser p3 = new Parser();
-		p3.setInputHTML(list.toHtml());
+		if (null != list && list.size() > 0) {
+			Parser p3 = new Parser();
+			p3.setInputHTML(list.toHtml());
 
-		NodeFilter filter2 = new NodeClassFilter(LinkTag.class);
-		NodeList list2 = p3.extractAllNodesThatMatch(filter2)
-				.extractAllNodesThatMatch(new HasAttributeFilter("target", "_blank"));
+			NodeFilter filter2 = new NodeClassFilter(LinkTag.class);
+			NodeList list2 = p3.extractAllNodesThatMatch(filter2)
+					.extractAllNodesThatMatch(
+							new HasAttributeFilter("target", "_blank"));
 			String imgSrc = null;
-			if(null != list2 && list2.size() > 0){
+			if (null != list2 && list2.size() > 0) {
 				ImageBean imgBean = null;
 				String url = null;
-				System.out.println(">> 列表数量:"+list2.size());
-				for(int i=0;i<list2.size();i++){
-					LinkTag linkTag = (LinkTag)list2.elementAt(i);
-					
+				System.out.println(">> 列表数量:" + list2.size());
+				for (int i = 0; i < list2.size(); i++) {
+					LinkTag linkTag = (LinkTag) list2.elementAt(i);
+
 					if (!linkTag.getLink().startsWith("http://")) {
 						url = URL + linkTag.getLink();
 					} else {
 						url = linkTag.getLink();
 					}
-					
+
 					imgSrc = getImageURL(url);
-					System.out.println("imgSrc:"+imgSrc);
-					if(null != imgSrc){
+					System.out.println("imgSrc:" + imgSrc);
+					if (null != imgSrc) {
 						if (null == client.get(imgSrc)) {
 							imgBean = new ImageBean();
 							imgBean.setArticleId(artId);
 							imgBean.setHttpUrl(imgSrc);
 							NodeList tmpNode2 = linkTag.getChildren();
-							if(null != tmpNode2 && tmpNode2.size() > 0){
-								if(tmpNode2.elementAt(0) instanceof ImageTag){
-									ImageTag imgTag = (ImageTag)tmpNode2.elementAt(0);
+							if (null != tmpNode2 && tmpNode2.size() > 0) {
+								if (tmpNode2.elementAt(0) instanceof ImageTag) {
+									ImageTag imgTag = (ImageTag) tmpNode2
+											.elementAt(0);
 									if (null != imgTag.getImageURL())
-										imgBean.setImgUrl(URL_+imgTag.getImageURL());
+										imgBean.setImgUrl(URL_
+												+ imgTag.getImageURL());
 									if (null != imgTag.getAttribute("alt"))
-										imgBean
-												.setTitle(imgTag
-														.getAttribute("alt"));
+										imgBean.setTitle(imgTag
+												.getAttribute("alt"));
 									else
 										imgBean.setTitle("NT:"
-												+ CommonUtil.getDateTimeString());
+												+ CommonUtil
+														.getDateTimeString());
 								}
 							}
 							imgBean.setLink("NED");
@@ -472,28 +494,30 @@ public class BIZHIParser {
 								imgBean.setFileSize(0l);
 								imgBean.setStatus(1);
 							}
-							try{
+							try {
 								int key = imageDao.insert(imgBean);
 								if (key > 0) {
-									System.out.println(imgBean.getTitle() + "\t|"+ imgBean.getHttpUrl());
-									client.add(imgBean.getHttpUrl(), imgBean.getHttpUrl());
+									System.out.println(imgBean.getTitle()
+											+ "\t|" + imgBean.getHttpUrl());
+									client.add(imgBean.getHttpUrl(), imgBean
+											.getHttpUrl());
 								}
-							}catch(Exception e){
+							} catch (Exception e) {
 								b = false;
 								break;
 							}
 						} else {
-							System.err.println(">> 已存在相同的内容 ["+ artId + "]");
+							System.err.println(">> 已存在相同的内容 [" + artId + "]");
 						}
 					}
 				}
 			}
 
-			if(null != p3)
+			if (null != p3)
 				p3 = null;
 		}
 
-		if(null != p2)
+		if (null != p2)
 			p2 = null;
 
 		return b;
@@ -565,8 +589,7 @@ public class BIZHIParser {
 							ImageBean imgBean = null;
 							if (cnl.elementAt(0) instanceof ImageTag) {
 								ImageTag it = (ImageTag) cnl.elementAt(0);
-								String url = ""
-										+ getImageUrl(nl.getLink());
+								String url = "" + getImageUrl(nl.getLink());
 								if (null == client.get(url)) {
 									length = HttpClientUtils
 											.getHttpHeaderResponse(url,
@@ -632,7 +655,7 @@ public class BIZHIParser {
 
 	static void init() {
 		try {
-			List<WebsiteBean> webList = webSiteDao.findByParentId(701);
+			List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 			for (WebsiteBean bean : webList) {
 				List<Article> articleList = articleDao
 						.findByWebId(bean.getId());
@@ -650,28 +673,30 @@ public class BIZHIParser {
 	}
 
 	static void update() throws Exception {
-		List<WebsiteBean> webList = webSiteDao.findByParentId(1200);
+		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : webList) {
-				ResultBean result = hasPaging2(bean.getUrl());
-				if (result.isBool()) {
-					Iterator it = result.getMap().keySet().iterator();
-					while (it.hasNext()) {
-						String key = (String) it.next();
-						if(HttpClientUtils.validationURL(key)){
-							LinkBean link = result.getMap().get(key);
-							try {
-								secondURL(link, bean.getId());
-							} catch (Exception e) {
-								e.printStackTrace();
-								System.err.println("**********************ERROR****************************");
-								System.err.println("key:" + key);
-								System.err.println("**********************ERROR-END************************");
-								continue;
-							}
-						}else{
+			ResultBean result = hasPaging2(bean.getUrl());
+			if (result.isBool()) {
+				Iterator it = result.getMap().keySet().iterator();
+				while (it.hasNext()) {
+					String key = (String) it.next();
+					if (HttpClientUtils.validationURL(key)) {
+						LinkBean link = result.getMap().get(key);
+						try {
+							secondURL(link, bean.getId());
+						} catch (Exception e) {
+							e.printStackTrace();
+							System.err
+									.println("**********************ERROR****************************");
+							System.err.println("key:" + key);
+							System.err
+									.println("**********************ERROR-END************************");
 							continue;
 						}
+					} else {
+						continue;
 					}
+				}
 			}
 		}
 	}
@@ -679,62 +704,85 @@ public class BIZHIParser {
 	public static void main(String[] args) {
 		// init();
 		try {
-//			 catalog(URL);
+			// catalog(URL);
 //			 update();
-//			loadImg();
-			imgDownload();
+//			 loadImg();
+//			 imgDownload();
+//			threadParser();
+			movefile();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	static void loadImg() throws Exception {
-		List<WebsiteBean> webList = webSiteDao.findByParentId(1200);
+		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : webList) {
-			List<Article> list = articleDao.findByWebId(bean.getId(),"0");
+			List<Article> list = articleDao.findByWebId(bean.getId(), "FD");
 			for (Article art : list) {
-				List<ImageBean> imgList = imageDao.findImage(art.getId());
-				if(imgList.size() == 0){
-					if (getImage(art)) {
-						art.setText("FD");
-						if (articleDao.update(art)) {
-							System.out
-									.println("更新记录[" + art.getTitle() + "]成功");
-						}
+				 List<ImageBean> imgList = imageDao.findImage(art.getId());
+				 if(imgList.size() == 0){
+				if (getImage(art)) {
+					art.setText("FD");
+					if (articleDao.update(art)) {
+						System.out.println("更新记录[" + art.getTitle() + "]成功");
 					}
 				}
+				 }
+				// break;
 			}
+			// break;
 		}
 	}
 
+	static void loadImg(int webid) throws Exception {
+//			WebsiteBean bean = webSiteDao.findById(webid);
+//			System.out.println(bean.getName()+"|"+bean.getUrl());
+			List<Article> list = articleDao.findByWebId(webid, "FD");
+			for (Article art : list) {
+//				 List<ImageBean> imgList = imageDao.findImage(art.getId());
+				 if (getImage(art)) {
+					 art.setText("FD");
+					 	if (articleDao.update(art)) {
+					 		System.out.println("更新记录[" + art.getTitle() + "]成功");
+					 	}
+				 }
+			}
+	}
+	
 	static void imgDownload() throws Exception {
-		List<WebsiteBean> webList = webSiteDao.findByParentId(1200);
-		for(WebsiteBean website:webList){
-			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
-			List<Article> artList = articleDao.findByWebId(website.getId(), "FD");
-			System.out.println("文章数量:"+artList.size());
-			for(Article article:artList){
+		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
+		for (WebsiteBean website : webList) {
+			System.out.println(website.getId() + "|" + website.getName() + "|"
+					+ website.getUrl());
+			List<Article> artList = articleDao.findByWebId(website.getId(),
+					"FD");
+			System.out.println("文章数量:" + artList.size());
+			for (Article article : artList) {
 				List<ImageBean> list = imageDao.findImage(article.getId());
-				System.out.println(">> 图片数量:["+article.getTitle()+"["+article.getId()+"]]"+list.size()+"\n**************************");
-				if(list.size() == 0){
+				System.out.println(">> 图片数量:[" + article.getTitle() + "["
+						+ article.getId() + "]]" + list.size()
+						+ "\n**************************");
+				if (list.size() == 0) {
 					article.setText("NED");
-					if(articleDao.update(article)){
+					if (articleDao.update(article)) {
 						System.out.println(">> 更新图片记录数据为0的文章成功");
 					}
-				}else{
-					for(ImageBean bean : list) {
-						if(bean.getLink().equalsIgnoreCase("NED")){
-							if(download(bean)){
+				} else {
+					for (ImageBean bean : list) {
+						if (bean.getLink().equalsIgnoreCase("NED")) {
+							if (download(bean)) {
 								bean.setStatus(1);
 								bean.setLink("FD");
-								if(imageDao.update(bean)){
-									System.out.println(">> 更新图片对象["+bean.getId()+"]成功");
+								if (imageDao.update(bean)) {
+									System.out.println(">> 更新图片对象["
+											+ bean.getId() + "]成功");
 								}
 							}
 						}
 					}
 				}
-		}
+			}
 		}
 	}
 
@@ -750,30 +798,28 @@ public class BIZHIParser {
 		s_fileName = s_fileName.replace(".", "_s.");
 		try {
 			bean = new PicfileBean();
-			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
-					+ date + File.separator
-					+ imgBean.getArticleId() + File.separator
+			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH + date
+					+ File.separator + imgBean.getArticleId() + File.separator
 					+ fileName.replace(".", "_s."))) == null) {
-				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
-						+ date + File.separator
-						+ imgBean.getArticleId() + File.separator
-						+ fileName.replace(".", "_s."));
+				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH + date
+						+ File.separator + imgBean.getArticleId()
+						+ File.separator + fileName.replace(".", "_s."));
 			}
 
-			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
-					+ date + File.separator
-					+ imgBean.getArticleId() + File.separator + fileName)) == null) {
-				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH
-						+ date + File.separator
-						+ imgBean.getArticleId() + File.separator + fileName);
+			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH + date
+					+ File.separator + imgBean.getArticleId() + File.separator
+					+ fileName)) == null) {
+				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH + date
+						+ File.separator + imgBean.getArticleId()
+						+ File.separator + fileName);
 			}
 			bean.setArticleId(imgBean.getArticleId());
 			bean.setImageId(imgBean.getId());
 			bean.setTitle(imgBean.getTitle());
-			bean.setSmallName( date+ File.separator
-					+ imgBean.getArticleId() + File.separator + s_fileName);
-			bean.setName(date + File.separator
-					+ imgBean.getArticleId() + File.separator + fileName);
+			bean.setSmallName(date + File.separator + imgBean.getArticleId()
+					+ File.separator + s_fileName);
+			bean.setName(date + File.separator + imgBean.getArticleId()
+					+ File.separator + fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
 				boolean b = picFiledao.insert(bean);
@@ -796,6 +842,206 @@ public class BIZHIParser {
 			return false;
 		}
 		return true;
+	}
+
+	static void movefile() throws Exception{
+		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
+		PicfileBean bean = null;
+		for(WebsiteBean website:webList){
+			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
+			List<Article> artList = articleDao.findByWebId(website.getId(), "FD");
+			System.out.println("文章数量:"+artList.size());
+			for(Article article:artList){
+				List<ImageBean> list = imageDao.findImage(article.getId());
+				for(ImageBean img:list){
+					bean = picFiledao.findByImgIdAndArticleId(img.getId(), article.getId());
+					if(null != bean){
+						if(moveFile(bean)){
+							System.out.println(bean.getId()+"|"+bean.getArticleId()+"|"+bean.getImageId());
+							System.out.println("after move file name:"+bean.getName());
+							System.out.println("after move file smallName:"+bean.getSmallName());
+							System.out.println("-------------------------------------------------------------");
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	static boolean moveFile(PicfileBean bean) {
+		boolean isBig = false;
+		boolean isSmall = false;
+		int start = bean.getName().lastIndexOf(File.separator)+1;
+		int smnStart = bean.getSmallName().lastIndexOf(File.separator)+1;
+		String prx = StringUtils.gerDir(String.valueOf(bean.getArticleId()));
+		String fileName = prx+bean.getArticleId()+File.separator+bean.getName().substring(start);
+		String smallFileName = prx+bean.getArticleId()+File.separator+bean.getSmallName().substring(smnStart);
+		String source = bean.getUrl() + bean.getName();
+		String smgSource = bean.getUrl() + bean.getSmallName();
+		String target = FILE_SERVER+fileName;
+		String smgTarget = FILE_SERVER + smallFileName;
+		bean.setUrl(FILE_SERVER);
+		if(FileUtils.copyFile(source, target)){
+			System.out.println(">> 大图成功!!!");
+			if(FileUtils.deleteFile(source)){
+				System.out.println(">> 删除源大图["+source+"]成功");
+			}
+			bean.setName(fileName);
+			isBig = true;
+		}
+		
+		if(FileUtils.copyFile(smgSource, smgTarget)){
+			System.out.println(">> 小图成功!!!");
+			if(FileUtils.deleteFile(smgSource)){
+				System.out.println(">> 删除源小图["+smgSource+"]成功");
+			}
+			bean.setSmallName(smallFileName);
+			isSmall = true;
+		}
+		if(isBig){
+			if(isBig || isSmall){
+				try{
+					if(picFiledao.update(bean)){
+						System.out.println(">> 更新图片文件["+bean.getId()+"]记录成功!");
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return isBig;
+	}
+	
+	static void threadParser() {
+
+		List<WebsiteBean> webList = null;
+		ParserThread thread = null;
+		List<ParserThread> threadList = new ArrayList<ParserThread>();
+		try {
+			webList = webSiteDao.findByParentId(D_PARENT_ID);
+			for (WebsiteBean bean : webList) {
+				strartMyThread(bean.getId());
+			}
+
+//			Thread th = null;
+//			for (ParserThread runn : threadList) {
+//				th = new Thread(runn, String.valueOf(runn.getWebId()));
+//				th.start();
+//			}
+//			if (null != threadList)
+//				threadList.clear();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 这个方法会启动一个匿名线程线程
+	 */
+	static void strartMyThread(int threadID) {
+		// 要传入匿名线程内使用的参数必须定义为final型
+		final int id = threadID;
+		java.lang.Runnable runner = new Runnable() {
+			public void run() {
+				boolean flag = true;
+				while (flag) {
+					try {
+						// 在匿名线程类调用类中的其它方法
+						// otherMethod(id);
+						loadImg(id);
+//						showThread(id);
+						Thread.sleep(5000);
+					} catch (Exception ef) {
+						ef.printStackTrace();
+//						flag = false;
+					}
+				}
+			}
+		};
+		// 最后，启动这个内部线程
+		Thread t = new Thread(runner,String.valueOf(threadID));
+		t.start();
+	}
+	
+	static void showThread(int id){
+		System.out.println(">> 第"+id+"个线程");
+		
+	}
+
+}
+
+class ParserThread implements Runnable {
+
+	private int webId;
+
+	boolean isRunning = true;
+
+	String message = "No";
+
+	ArticleDao articleDao = DAOFactory.getInstance().getArticleDao();
+
+	WebSiteDao webSiteDao = null;
+
+	ImageDao imageDao = DAOFactory.getInstance().getImageDao();
+
+	// PicFileDao picFiledao = DAOFactory.getInstance().getPicFileDao();
+
+	ParserThread(int webId) {
+		this.webId = webId;
+		init();
+	}
+
+	void init() {
+		try {
+			webSiteDao = new WebSiteDaoImpl();
+		} catch (Exception e) {
+			isRunning = false;
+		}
+	}
+
+	public void run() {
+		while (isRunning) {
+			System.out.println(">> No." + webId + " Thread");
+			try {
+				System.out.println(System.currentTimeMillis() + "|"
+						+ webSiteDao.findById(webId).getName() + "|" + webId);
+				List<Article> list = articleDao.findByWebId(webId, "FD");
+				for (Article art : list) {
+					System.out.println(art.getId() + "|" + art.getTitle() + "|"
+							+ art.getArticleUrl());
+				}
+				Thread.sleep(30000);
+			} catch (Exception e) {
+				isRunning = false;
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public boolean isRunning() {
+		return isRunning;
+	}
+
+	public void setRunning(boolean isRunning) {
+		this.isRunning = isRunning;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public int getWebId() {
+		return webId;
+	}
+
+	public void setWebId(int webId) {
+		this.webId = webId;
 	}
 
 }

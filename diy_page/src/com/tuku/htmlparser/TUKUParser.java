@@ -563,7 +563,7 @@ public class TUKUParser {
 //				thread[i] = new TUKUThread(bean.getId());
 //				thread[i].start();
 //			}
-			
+			update();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -572,7 +572,7 @@ public class TUKUParser {
 	static void update() throws Exception{
 		List<WebsiteBean>  webList = webSiteDao.findByParentId(400);
 		for(WebsiteBean bean:webList){
-			List<Article> articleList = articleDao.findByWebId(bean.getId(),"FD");
+			List<Article> articleList = articleDao.findByWebId(bean.getId(),"0");
 			for(Article article:articleList){
 				List<ImageBean> imgList = imageDao.findImage(article.getId());
 				if(imgList.size() == 0){

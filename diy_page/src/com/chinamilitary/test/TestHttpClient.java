@@ -8,6 +8,7 @@ import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.Header;
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
@@ -28,6 +29,8 @@ public class TestHttpClient {
 	public static HttpClient httpclient = new HttpClient();
 	
 	public static GetMethod getMethod = null;
+	
+	public static PostMethod postMethod = null;
 	
 	static ArticleDao  articleDao = DAOFactory.getInstance().getArticleDao();
 	
@@ -65,7 +68,10 @@ public class TestHttpClient {
 //			System.out.println("页面是否合法:"+isTrue);
 			
 //			getResponseHeaders("http://image.tuku.china.com/tuku.military.china.com/military//pic/2010-08-09/f003abea-7bd8-478b-b9f8-a11b59d6a0e0.jpg");
-			getResponseHeaders("http://bizhi.zhuoku.com/wall/jie/20070203/0721/001.jpg");
+//			getResponseHeaders("http://bizhi.zhuoku.com/wall/jie/20070203/0721/001.jpg");
+//			getResponseHeaders("https://api.twitter.com/oauth/authorize?oauth_token=oMjOck4z2kwxrXHis9VbJdUbgoh2Ez6UVaS6as5U3KU");
+//			boolean isTrue = urlValidation("https://api.twitter.com/oauth/authorize?oauth_token=oMjOck4z2kwxrXHis9VbJdUbgoh2Ez6UVaS6as5U3KU");
+//			System.out.println("页面是否合法:"+isTrue);
 			
 //			pitchImage();
 //			getImgInfoFromResponse();
@@ -77,6 +83,8 @@ public class TestHttpClient {
 //				String key = (String)it.next();
 //				System.out.println("URL["+key+"] \t状态码["+LINK_NOT_OK.get(key)+"]");
 //			}
+			
+			postapplist();
 			
 			LINK_NOT_OK.clear();
 		}catch(Exception e){
@@ -162,6 +170,26 @@ public class TestHttpClient {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
+		}
+	}
+	
+	
+	static void postapplist(){
+		try{
+			postMethod  = new PostMethod("http://218.213.81.103:8080/cache.do?saction=sync");
+	        NameValuePair tableId = new NameValuePair("tableId","5");
+	        NameValuePair keyArray = new NameValuePair("keys","1555,1556,1557,1558");
+	        postMethod.setRequestBody(new NameValuePair[]{tableId,keyArray});
+	        int stats = httpclient.executeMethod(postMethod);
+	        if(stats == 200){
+	        	byte[] result = postMethod.getResponseBody();
+	        	System.out.println("返回结果"+new String(result));
+	        }
+	        System.out.println(stats);
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			postMethod.releaseConnection();
 		}
 	}
 }

@@ -47,12 +47,22 @@ import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.CommonUtil;
 import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
+import com.chinamilitary.util.StringUtils;
+import com.common.Constants;
+import com.utils.FileUtils;
+
 import org.htmlparser.PrototypicalNodeFactory;
 
 public class BIZHIZHANParser {
 
-	private static final String PIC_SAVE_PATH = "d:\\share\\bizhizhan\\";
+//	private static final String PIC_SAVE_PATH = "d:\\share\\bizhizhan\\";
+	
+	static Integer D_PARENT_ID = 600;
 
+	static String PIC_SAVE_PATH = Constants.FILE_SERVER;
+	
+	final static String FILE_SERVER = Constants.FILE_SERVER;
+	
 	static String URL = "http://www.bizhizhan.com";
 
 	static String IMAGE_URL = "http://image6.tuku.cn/";
@@ -398,7 +408,9 @@ public class BIZHIZHANParser {
 			
 //			image();
 			
-			downloadImg();
+//			downloadImg();
+			
+			movefile();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -471,7 +483,7 @@ public class BIZHIZHANParser {
 	static void image() throws Exception{
 		List<WebsiteBean> webList = webSiteDao.findByParentId(600);
 		for(WebsiteBean bean:webList){
-			List<Article> artlist = articleDao.findByWebId(bean.getId(),"FD");
+			List<Article> artlist = articleDao.findByWebId(bean.getId(),"NED");
 			System.out.println("网站["+bean.getId()+"|"+bean.getName()+"|"+bean.getUrl()+"]下的文章数"+artlist.size());
 			for(Article art:artlist){
 				List<ImageBean> imgList = imageDao.findImage(art.getId());
@@ -580,6 +592,75 @@ public class BIZHIZHANParser {
 		return true;
 	}
 
+	static void movefile() throws Exception{
+		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
+		PicfileBean bean = null;
+		for(WebsiteBean website:webList){
+			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
+			List<Article> artList = articleDao.findByWebId(website.getId(), "FD");
+			System.out.println("文章数量:"+artList.size());
+			for(Article article:artList){
+				List<ImageBean> list = imageDao.findImage(article.getId());
+				for(ImageBean img:list){
+					bean = picFiledao.findByImgIdAndArticleId(img.getId(), article.getId());
+					if(null != bean){
+						if(moveFile(bean)){
+							System.out.println(bean.getId()+"|"+bean.getArticleId()+"|"+bean.getImageId());
+							System.out.println("after move file name:"+bean.getName());
+							System.out.println("after move file smallName:"+bean.getSmallName());
+							System.out.println("-------------------------------------------------------------");
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	static boolean moveFile(PicfileBean bean) {
+		boolean isBig = false;
+		boolean isSmall = false;
+		int start = bean.getName().lastIndexOf(File.separator)+1;
+		int smnStart = bean.getSmallName().lastIndexOf(File.separator)+1;
+		String prx = StringUtils.gerDir(String.valueOf(bean.getArticleId()));
+		String fileName = prx+bean.getArticleId()+File.separator+bean.getName().substring(start);
+		String smallFileName = prx+bean.getArticleId()+File.separator+bean.getSmallName().substring(smnStart);
+		String source = bean.getUrl() + bean.getName();
+		String smgSource = bean.getUrl() + bean.getSmallName();
+		String target = FILE_SERVER+fileName;
+		String smgTarget = FILE_SERVER + smallFileName;
+		bean.setUrl(FILE_SERVER);
+		if(FileUtils.copyFile(source, target)){
+			System.out.println(">> 大图成功!!!");
+			if(FileUtils.deleteFile(source)){
+				System.out.println(">> 删除源大图["+source+"]成功");
+			}
+			bean.setName(fileName);
+			isBig = true;
+		}
+		
+		if(FileUtils.copyFile(smgSource, smgTarget)){
+			System.out.println(">> 小图成功!!!");
+			if(FileUtils.deleteFile(smgSource)){
+				System.out.println(">> 删除源小图["+smgSource+"]成功");
+			}
+			bean.setSmallName(smallFileName);
+			isSmall = true;
+		}
+		if(isBig){
+			if(isBig || isSmall){
+				try{
+					if(picFiledao.update(bean)){
+						System.out.println(">> 更新图片文件["+bean.getId()+"]记录成功!");
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return isBig;
+	}
+	
 	/**
 	 * 验证地址是否为可以请求的地址
 	 * @param url

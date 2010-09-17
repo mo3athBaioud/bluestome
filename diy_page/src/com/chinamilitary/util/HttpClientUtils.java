@@ -269,21 +269,27 @@ public static String getHttpHeaderResponse(String url,String headerName){
 	public static void main(String args[]){
 		
 		try{
-			byte[] value2 = getResponseBodyAsByte(null, null,"http://www.bizhizhan.com/uploads/allimg/090830/1-0ZS0102521.jpg");
-			if(null != value2){
-				System.out.println("未增加破解防盗链引用文件长度:"+value2.length);
-			}
+//			byte[] value2 = getResponseBodyAsByte(null, null,"http://www.bizhizhan.com/uploads/allimg/090830/1-0ZS0102521.jpg");
+//			if(null != value2){
+//				System.out.println("未增加破解防盗链引用文件长度:"+value2.length);
+//			}
+//			
+//			long start = System.currentTimeMillis();
+//			byte[] value = getResponseBodyAsByte("http://www.bizhizhan.com//renwenjijiabizhi/shoujitupian-30-4598.html",
+//					"rtime=2; ltime=1282990509523; cnzz_eid=5808015-1282816593-http%3A//www.tuku.cn/; virtualwall=vsid=0c8cafa6001de309645c11edffa3aa43",
+//					"http://www.bizhizhan.com/uploads/allimg/090830/1-0ZS0102521.jpg");
+//			if(null != value){
+//				long end = System.currentTimeMillis();
+//				System.out.println("增加破解防盗链引用后的文件长度:"+value.length);
+//				System.out.println("耗时:"+(end-start));
+//				IOUtil.createFile(value, System.getProperty("user.dir")+"/"+"1-0ZS0102521.jpg");
+//			}
 			
-			long start = System.currentTimeMillis();
-			byte[] value = getResponseBodyAsByte("http://www.bizhizhan.com//renwenjijiabizhi/shoujitupian-30-4598.html",
-					"rtime=2; ltime=1282990509523; cnzz_eid=5808015-1282816593-http%3A//www.tuku.cn/; virtualwall=vsid=0c8cafa6001de309645c11edffa3aa43",
-					"http://www.bizhizhan.com/uploads/allimg/090830/1-0ZS0102521.jpg");
-			if(null != value){
-				long end = System.currentTimeMillis();
-				System.out.println("增加破解防盗链引用后的文件长度:"+value.length);
-				System.out.println("耗时:"+(end-start));
-				IOUtil.createFile(value, System.getProperty("user.dir")+"/"+"1-0ZS0102521.jpg");
-			}
+			//http://www.china.com/zh_cn/ 长度[2010-09-06 18:52]：173574
+			String length = getHttpHeaderResponse("http://www.china.com/zh_cn/","Content-Length");
+			System.out.println("网页长度："+length);
+			
+			
 			
 //			System.out.println("isTRUE:"+urlValidation("http://www.bizhi.com/wallpaper/1150_2.html"));
 		}catch(Exception e){

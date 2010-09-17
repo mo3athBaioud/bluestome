@@ -13,6 +13,7 @@ public class PicFileDaoImpl extends CommonDB implements PicFileDao {
 	private final static String INSERT_SQL = "insert into tbl_pic_file (d_article_id,d_image_id,d_file_url,d_file_title,d_file_name,d_file_small_name) values (?,?,?,?,?,?)";
 	private final static String QUERY_SQL = "select * from tbl_pic_file ";
 	private final static String COUNT_SQL = "select count(*) from tbl_pic_file";
+	final static String UPDATE_SQL = "update tbl_pic_file set d_file_url = ?,d_file_title = ?,d_file_name=?,d_file_small_name=? where d_id = ?";
 	public PicFileDaoImpl() throws Exception {
 		super();
 		// TODO Auto-generated constructor stub
@@ -301,4 +302,34 @@ public class PicFileDaoImpl extends CommonDB implements PicFileDao {
 		else
 			return true;
 	}
+	
+	 /**
+	  * 更新记录
+	  * @param bean
+	  * @return
+	  * @throws Exception
+	  */
+	public boolean update(PicfileBean bean) throws Exception{
+		boolean b = false;
+		//update tbl_pic_file set d_file_url = ?,d_file_title = ?,d_file_name=?,d_file_small_name=? where d_id = ?
+		pstmt = conn.prepareStatement(UPDATE_SQL);
+		pstmt.setString(1, bean.getUrl());
+		pstmt.setString(2, bean.getTitle());
+		pstmt.setString(3, bean.getName());
+		pstmt.setString(4, bean.getSmallName());
+		pstmt.setInt(5, bean.getId());
+		try{
+		int key = pstmt.executeUpdate();
+		if(key == 1){
+			b = true;
+		}
+		}catch(Exception e){
+			System.out.println(e);
+		}finally{
+			if(pstmt != null)
+				pstmt.close();
+		}
+		return b;
+	}
+	
 }

@@ -43,6 +43,8 @@ import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.CommonUtil;
 import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
+import com.chinamilitary.util.StringUtils;
+import com.common.Constants;
 
 public class TUPIANParser {
 
@@ -50,7 +52,7 @@ public class TUPIANParser {
 
 	static String URL = "http://www.tupian.com";
 
-	static String PIC_SAVE_PATH = "D:\\share\\tupian\\";
+	static String PIC_SAVE_PATH = Constants.FILE_SERVER;
 
 	static List<LinkBean> LINKLIST = new ArrayList<LinkBean>();
 
@@ -162,7 +164,13 @@ public class TUPIANParser {
 					result.put(tmp, l1);
 				}
 				result.setBool(true);
+			}else{
+				LinkBean l1 = new LinkBean();
+				l1.setLink(url);
+				result.put(url, l1);
+				result.setBool(true);
 			}
+			
 			if (null != p2)
 				p2 = null;
 		} else {
@@ -541,10 +549,10 @@ public class TUPIANParser {
 		// init();
 		try {
 //			 catalog(URL);
-//			 update();
+			 update();
 			// vistDesk();
 //			loadImg();
-			imgDownload();
+//			imgDownload();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -554,7 +562,7 @@ public class TUPIANParser {
 		// WebsiteBean bean = webSiteDao.findById(702);
 		List<WebsiteBean> webList = webSiteDao.findByParentId(1000);
 		for (WebsiteBean bean : webList) {
-			List<Article> list = articleDao.findByWebId(bean.getId(),"FD");
+			List<Article> list = articleDao.findByWebId(bean.getId(),"NED");
 			for (Article art : list) {
 				if (getImage(art)) {
 					art.setText("FD");
@@ -633,40 +641,55 @@ public class TUPIANParser {
 
 	static boolean download(ImageBean imgBean) {
 		PicfileBean bean = null;
-		String date = CommonUtil.getDate("");
+		bean = new PicfileBean();
 		String s_fileName = imgBean.getImgUrl().substring(
 				imgBean.getImgUrl().lastIndexOf("/") + 1,
 				imgBean.getImgUrl().length());
 		String fileName = imgBean.getHttpUrl().substring(
 				imgBean.getHttpUrl().lastIndexOf("/") + 1,
 				imgBean.getHttpUrl().length());
-		s_fileName = s_fileName.replace(".", "_s.");
+		String length = "0";
 		try {
-			bean = new PicfileBean();
-			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
-					+ date + File.separator
-					+ imgBean.getArticleId() + File.separator
-					+ fileName.replace(".", "_s."))) == null) {
-				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
-						+ date + File.separator
-						+ imgBean.getArticleId() + File.separator
-						+ fileName.replace(".", "_s."));
+			byte[] big = null;
+			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, imgBean.getHttpUrl());
+			if(null == big)
+				return false;
+			length = String.valueOf(big.length);
+			if(length.equalsIgnoreCase("20261")){
+				return false;
 			}
-
+			//小图
+			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName)) == null) {
+				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId() + File.separator
+						+ s_fileName);
+			}
+			
+			//大图
 			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
-					+ date + File.separator
-					+ imgBean.getArticleId() + File.separator + fileName)) == null) {
-				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH
-						+ date + File.separator
-						+ imgBean.getArticleId() + File.separator + fileName);
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ fileName)) == null) {
+				IOUtil.createFile(big, PIC_SAVE_PATH
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId() + File.separator
+						+ fileName);
 			}
 			bean.setArticleId(imgBean.getArticleId());
 			bean.setImageId(imgBean.getId());
 			bean.setTitle(imgBean.getTitle());
-			bean.setSmallName( date+ File.separator
-					+ imgBean.getArticleId() + File.separator + s_fileName);
-			bean.setName(date + File.separator
-					+ imgBean.getArticleId() + File.separator + fileName);
+			bean.setSmallName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName);
+			bean.setName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
 				boolean b = picFiledao.insert(bean);
@@ -685,7 +708,6 @@ public class TUPIANParser {
 			}
 		} catch (IOException e) {
 			System.out.println("网络连接，文件IO异常");
-			e.printStackTrace();
 			return false;
 		}
 		return true;
