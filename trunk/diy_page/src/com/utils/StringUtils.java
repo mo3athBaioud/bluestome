@@ -1,5 +1,6 @@
 package com.utils;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
@@ -830,4 +831,23 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
 		}
 		return new String(ret.array());
 	}
+	
+	/**
+	 * 生成保存目录
+	 * @param input
+	 * @return
+	 */
+	 public static String gerDir(String input){
+		StringBuffer sb = new StringBuffer();
+		if(input.length() < 3){
+			for(int i=0;i<input.length();i++){
+				sb.append(input.charAt(i)+File.separator);
+			}
+		}else{
+			for(int i=0;i<3;i++){
+				sb.append(input.charAt(i)+File.separator);
+			}
+		}
+		return sb.toString();
+	 }
 }

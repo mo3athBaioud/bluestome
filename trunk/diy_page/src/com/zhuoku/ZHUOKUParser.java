@@ -46,10 +46,12 @@ import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.CommonUtil;
 import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
+import com.chinamilitary.util.StringUtils;
+import com.common.Constants;
 
 public class ZHUOKUParser {
 
-	private static final String PIC_SAVE_PATH = "d:\\share\\zhuoku\\";//"d:\\share\\zhuoku\\";
+	private static final String PIC_SAVE_PATH = Constants.FILE_SERVER;//"d:\\share\\zhuoku\\";//"d:\\share\\zhuoku\\";
 
 	static String URL_ = "http://www.zhuoku.com/";
 	
@@ -526,7 +528,7 @@ public class ZHUOKUParser {
 								else
 									imgBean.setTitle(ltmp.getAttribute("title"));
 							}
-							imgBean.setCommentshowurl(link.getLink());
+							imgBean.setCommentshowurl(url);
 							imgBean.setLink("NED");
 							try {
 								size = Integer.parseInt(length);
@@ -552,7 +554,7 @@ public class ZHUOKUParser {
 								if(null != tmpImg){
 									tmpImg.setCommentshowurl(url);
 									if(!imageDao.update(tmpImg)){
-										System.out.println("更新图片记录:["+tmpImg.getTitle() + "]\t|" + url+"\t成功");
+										System.out.println("更新图片记录:["+tmpImg.getArticleId()+"|"+tmpImg.getTitle() + "]\t|" + url+"\t成功");
 										client.add(imgSrc, imgSrc);
 									}
 								}
@@ -562,14 +564,14 @@ public class ZHUOKUParser {
 							if(null != tmpImg){
 								tmpImg.setCommentshowurl(url);
 								if(!imageDao.update(tmpImg)){
-									System.out.println("更新图片记录:["+tmpImg.getTitle() + "]\t|" + url+"\t成功");
+									System.out.println("更新图片记录:["+tmpImg.getArticleId()+"|"+tmpImg.getTitle() + "]\t|" + url+"\t成功");
 									client.add(imgSrc, imgSrc);
 								}
 							}
 						}
 					} else {
 						resultB = false;
-						System.err.println(">> 出现异常，文章ID["+imgBean.getArticleId()+"]\t返回False");
+						System.err.println(">> 出现异常，文章ID["+imgBean.getArticleId()+"|"+imgBean.getArticleId()+"]\t返回False");
 						break;
 					}
 				}
@@ -794,26 +796,27 @@ public class ZHUOKUParser {
 			
 			List<WebsiteBean> subList = webSiteDao.findByParentId(bean.getId());
 			for(WebsiteBean website:subList){
-				List<Article> list = articleDao.findByWebId(website.getId(),"0");
+				List<Article> list = articleDao.findByWebId(website.getId(),"NED");
 				System.out.println("文章列表:"+list.size());
 				for (Article art : list) {
-					List<ImageBean> imgList = imageDao.findImage(art.getId());
-					if(imgList.size() == 0){
+//					List<ImageBean> imgList = imageDao.findImage(art.getId());
+//					if(imgList.size() == 0){
 						if (getImage(art)) {
 							art.setText("FD");
 							if (articleDao.update(art)) {
 								System.out
-										.println("更新记录[" + art.getTitle() + "]成功");
+										.println("更新记录[" + art.getId()+"|"+art.getTitle() + "]成功");
 							}
 						}
-					}else{
-						art.setText("NED");
-						if (articleDao.update(art)) {
-							System.out
-									.println("更新记录[" + art.getTitle() + "]成功");
-						}
-						
-					}
+//					}
+//					else{
+//						art.setText("NED");
+//						if (articleDao.update(art)) {
+//							System.out
+//									.println("更新记录[" + art.getTitle() + "]成功");
+//						}
+//						
+//					}
 				}
 			}
 		}
@@ -832,9 +835,9 @@ public class ZHUOKUParser {
 					System.out.println(">> 文章["+art.getId()+"|"+art.getTitle()+"]\t下的图片数量"+imgList.size());
 					ARTICLE_COM_URL = art.getArticleUrl();
 					for (ImageBean img : imgList) {
-						if((img.getLink().equalsIgnoreCase("NED")) || (img.getStatus() == 3)){
+						if(img.getStatus() != -1){
 							if (download(img,art.getArticleUrl())) {
-								img.setStatus(1);
+								img.setStatus(-1);
 								img.setLink("FD");
 								if (imageDao.update(img)) {
 									System.out.println(">> 更新图片对象["+art.getTitle()+"|" + img.getId() + "]成功!");
@@ -920,21 +923,9 @@ public class ZHUOKUParser {
 		String fileName = imgBean.getHttpUrl().substring(
 				imgBean.getHttpUrl().lastIndexOf("/") + 1,
 				imgBean.getHttpUrl().length());
-		s_fileName = s_fileName.replace(".", "_s.");
-		String date = CommonUtil.getDate("");
 		String length = "0";
 		try {
-			if(null != ARTICLE_COM_URL){
 			byte[] big = null;
-			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
-					+ date + File.separator
-					+ imgBean.getArticleId() + File.separator
-					+ fileName.replace(".", "_s."))) == null) {
-				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
-						+ date + File.separator
-						+ imgBean.getArticleId() + File.separator
-						+ fileName.replace(".", "_s."));
-			}
 			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, imgBean.getHttpUrl());
 			if(null == big)
 				return false;
@@ -942,20 +933,38 @@ public class ZHUOKUParser {
 			if(length.equalsIgnoreCase("20261")){
 				return false;
 			}
+			//小图
+			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName)) == null) {
+				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId() + File.separator
+						+ s_fileName);
+			}
+			
+			//大图
 			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
-					+ date + File.separator
-					+ imgBean.getArticleId() + File.separator + fileName)) == null) {
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ fileName)) == null) {
 				IOUtil.createFile(big, PIC_SAVE_PATH
-						+ date + File.separator
-						+ imgBean.getArticleId() + File.separator + fileName);
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId() + File.separator
+						+ fileName);
 			}
 			bean.setArticleId(imgBean.getArticleId());
 			bean.setImageId(imgBean.getId());
 			bean.setTitle(imgBean.getTitle());
-			bean.setSmallName(CommonUtil.getDate("") + File.separator
-					+ imgBean.getArticleId() + File.separator + s_fileName);
-			bean.setName(CommonUtil.getDate("") + File.separator
-					+ imgBean.getArticleId() + File.separator + fileName);
+			bean.setSmallName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName);
+			bean.setName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
 				boolean b = picFiledao.insert(bean);
@@ -972,10 +981,8 @@ public class ZHUOKUParser {
 				e.printStackTrace();
 				return false;
 			}
-			}
 		} catch (IOException e) {
 			System.out.println("网络连接，文件IO异常");
-			e.printStackTrace();
 			return false;
 		}
 		return true;

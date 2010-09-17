@@ -36,6 +36,7 @@ import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
 import com.chinamilitary.xmlparser.XMLParser;
+import com.common.Constants;
 
 public class MilitaryParser {
 	private static final String URL = "http://tuku.military.china.com/military/html/1_1.html"; // military.china.com
@@ -67,7 +68,9 @@ public class MilitaryParser {
 
 	private static final String GAME_TUKU_URL = "http://tuku.game.china.com/game/html/20";
 
-	private static final String PIC_SAVE_PATH = "F:\\china\\military\\";
+	static String PIC_SAVE_PATH = Constants.FILE_SERVER;
+	
+	final static String FILE_SERVER = Constants.FILE_SERVER;
 
 	private static List<LinkBean> LINKLIST = new ArrayList<LinkBean>();
 
@@ -553,7 +556,6 @@ public class MilitaryParser {
 		String fileName = imgBean.getHttpUrl().substring(
 				imgBean.getHttpUrl().lastIndexOf("/") + 1,
 				imgBean.getHttpUrl().length());
-		s_fileName = s_fileName.replace(".", "_s.");
 		try{
 			if(picFiledao.getCount("select count(*) from tbl_pic_file where d_image_id = "+imgBean.getId()) > 0){
 				System.err.println(" >> 图片已经下载["+imgBean.getId()+"]完成");
@@ -567,26 +569,26 @@ public class MilitaryParser {
 			if (null == client.get(CacheUtils.getDownloadSmallImageKey(imgBean
 					.getId()))) {
 				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
-						+ CommonUtil.getDate("") + File.separator
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 						+ imgBean.getArticleId() + File.separator
-						+ fileName.replace(".", "_s."));
+						+ s_fileName);
 			}
 
 			if (null == client.get(CacheUtils.getDownloadBigImageKey(imgBean
 					.getId()))) {
 				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH
-						+ CommonUtil.getDate("") + File.separator
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 						+ imgBean.getArticleId() + File.separator + fileName);
 			}
 			bean.setArticleId(imgBean.getArticleId());
 			bean.setImageId(imgBean.getId());
 			bean.setTitle(imgBean.getTitle());
 			// webId+File.separator+
-			bean.setSmallName(CommonUtil.getDate("") + File.separator
+			bean.setSmallName(File.separator + StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 					+ imgBean.getArticleId() + File.separator + s_fileName);
 
 			// webId+File.separator+
-			bean.setName(CommonUtil.getDate("") + File.separator
+			bean.setName(File.separator + StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 					+ imgBean.getArticleId() + File.separator + fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
@@ -795,11 +797,11 @@ public class MilitaryParser {
 
 //			 add2Cache();
 
-			 index();
+//			 index();
 
-//			getActicle(5); // 5 , 143
+			getActicle(5); // 5 , 143
 
-//			getActicle(143); // 5 , 143
+			getActicle(143); // 5 , 143
 			
 //			WebsiteBean bean = webSiteDao.findById(301);
 			

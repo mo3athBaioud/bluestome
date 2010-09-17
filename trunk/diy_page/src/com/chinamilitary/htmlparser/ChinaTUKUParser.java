@@ -29,6 +29,7 @@ import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
 import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.xmlparser.XMLParser;
+import com.common.Constants;
 
 
 public class ChinaTUKUParser {
@@ -36,13 +37,18 @@ public class ChinaTUKUParser {
 	static final String URL_ = "http://tuku.china.com/";
 
 	// "http://tuku.tech.china.com/tech",
-	static final String[] CATALOG_URL = { "http://tuku.ent.china.com/fun/",
+	static final String[] CATALOG_URL = { 
+			"http://tuku.ent.china.com/fun/",
 			"http://tuku.military.china.com/military/",
 			"http://tuku.game.china.com/game/",
 			"http://tuku.fun.china.com/fun/",
 			"http://tuku.news.china.com/history/",
 			"http://pic.news.china.com/social/",
-			"http://pic.news.china.com/news/" };
+			"http://pic.news.china.com/news/",
+			"http://pic.sports.china.com/sports/",
+			"http://tuku.travel.china.com/travel/",
+			"http://auto.china.com/autopic/",
+			"http://tuku.culture.china.com/culture/"};
 
 	static MemcacheClient client = MemcacheClient.getInstance();
 
@@ -56,7 +62,7 @@ public class ChinaTUKUParser {
 
 	static HashMap<String, LinkBean> LINKHASH = new HashMap<String, LinkBean>();
 
-	static final String PIC_SAVE_PATH = "F:\\china\\military\\";
+	static final String PIC_SAVE_PATH = Constants.FILE_SERVER;
 
 	static List<LinkBean> LINKLIST = new ArrayList<LinkBean>();
 
@@ -159,7 +165,11 @@ public class ChinaTUKUParser {
 						|| article.getArticleUrl().startsWith(
 								"http://pic.news.china.com/")
 						|| article.getArticleUrl().startsWith(
-								"http://tuku.tech.china.com/")) {
+								"http://tuku.tech.china.com/")
+						|| article.getArticleUrl().startsWith("http://pic.sports.china.com/")
+						|| article.getArticleUrl().startsWith("http://tuku.travel.china.com/")
+						|| article.getArticleUrl().startsWith("http://tuku.auto.china.com/")
+						|| article.getArticleUrl().startsWith("http://tuku.culture.china.com/")) {
 					if (article.getActicleXmlUrl() != null
 							|| !article.getActicleXmlUrl().equalsIgnoreCase("")) {
 						List<ImageBean> imgList = XMLParser
@@ -194,7 +204,9 @@ public class ChinaTUKUParser {
 											.getHttpUrl());
 									client.add(CacheUtils.getImageKey(result),
 											bean);
-									imgDownload(bean, article.getWebId());
+									if(imgDownload(bean, article.getWebId())){
+										System.out.println(">> 保存图片["+bean.getHttpUrl()+"]成功");
+									}
 								}
 							}
 						}
@@ -211,8 +223,7 @@ public class ChinaTUKUParser {
 		}
 	}
 
-	static void imgDownload(ImageBean imgBean, Integer webId) {
-		System.err.println(" >> IN Download Image Method");
+	static boolean imgDownload(ImageBean imgBean, Integer webId) {
 		PicfileBean bean = null;
 		bean = new PicfileBean();
 		String s_fileName = imgBean.getImgUrl().substring(
@@ -221,71 +232,83 @@ public class ChinaTUKUParser {
 		String fileName = imgBean.getHttpUrl().substring(
 				imgBean.getHttpUrl().lastIndexOf("/") + 1,
 				imgBean.getHttpUrl().length());
-		s_fileName = s_fileName.replace(".", "_s.");
+		String length = "0";
 		try {
-			if (null == client.get(CacheUtils.getDownloadSmallImageKey(imgBean
-					.getId()))) {
-				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
-						+ CommonUtil.getDate("") + File.separator
-						+ imgBean.getArticleId() + File.separator
-						+ fileName.replace(".", "_s."));
+			byte[] big = null;
+			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, imgBean.getHttpUrl());
+			if(null == big)
+				return false;
+			length = String.valueOf(big.length);
+			if(length.equalsIgnoreCase("20261")){
+				return false;
 			}
-
-			if (null == client.get(CacheUtils.getDownloadBigImageKey(imgBean
-					.getId()))) {
-				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH
-						+ CommonUtil.getDate("") + File.separator
-						+ imgBean.getArticleId() + File.separator + fileName);
+			//小图
+			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName)) == null) {
+				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId() + File.separator
+						+ s_fileName);
+			}
+			
+			//大图
+			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ fileName)) == null) {
+				IOUtil.createFile(big, PIC_SAVE_PATH
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId() + File.separator
+						+ fileName);
 			}
 			bean.setArticleId(imgBean.getArticleId());
 			bean.setImageId(imgBean.getId());
 			bean.setTitle(imgBean.getTitle());
-			// webId+File.separator+
-			bean.setSmallName(CommonUtil.getDate("") + File.separator
-					+ imgBean.getArticleId() + File.separator + s_fileName);
-
-			// webId+File.separator+
-			bean.setName(CommonUtil.getDate("") + File.separator
-					+ imgBean.getArticleId() + File.separator + fileName);
+			bean.setSmallName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName);
+			bean.setName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
 				boolean b = picFiledao.insert(bean);
 				if (b) {
-					client.add(CacheUtils.getDownloadSmallImageKey(imgBean
-							.getId()), "SMALL_" + imgBean.getId());
-					client.add(CacheUtils.getDownloadBigImageKey(imgBean
-							.getId()), "BIG_" + imgBean.getId());
-					if (imageDao.updateLinkStatus(imgBean.getId())) {
-						// 更新图片地址
-						if (null != client.get(imgBean.getHttpUrl())) {
-							client.replace(imgBean.getHttpUrl(), imgBean
-									.getHttpUrl());
-						} else {
-							client.add(imgBean.getHttpUrl(), imgBean
-									.getHttpUrl());
-						}
-					}
-
+					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+							+ bean.getName()), bean);
+					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+							+ bean.getSmallName()), bean);
 				} else {
-					System.out.println("失败");
+					return false;
 				}
 			} catch (Exception e) {
 				System.out.println("数据库异常");
 				e.printStackTrace();
+				return false;
 			}
 		} catch (IOException e) {
 			System.out.println("网络连接，文件IO异常");
-			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 
 	public static void main(String args[]) {
 
-		// init();
-
+//		 init();
+		StringBuffer esb  = new StringBuffer("Exception:\n");
 		try {
 			for (String url : CATALOG_URL) {
-				getLink(url);
+				try{
+					getLink(url);
+				}catch(Exception e){
+					esb.append("URL["+url+"]:\n"+e.getMessage()+"\n");
+					continue;
+				}
 				Iterator it = LINKHASH.keySet().iterator();
 				while (it.hasNext()) {
 					String key = (String) it.next();
@@ -319,7 +342,11 @@ public class ChinaTUKUParser {
 									|| bean.getLink().startsWith(
 											"http://tuku.tech.china.com/")
 									|| bean.getLink().startsWith(
-											"http://pic.news.china.com/news/")) {
+											"http://pic.news.china.com/news/")
+									|| bean.getLink().startsWith("http://pic.sports.china.com/")
+									|| bean.getLink().startsWith("http://tuku.travel.china.com/")
+									|| bean.getLink().startsWith("http://tuku.auto.china.com/")
+									|| bean.getLink().startsWith("http://tuku.culture.china.com/")) {
 								String html = bean.getLink().substring(
 										bean.getLink().lastIndexOf("/") + 1,
 										bean.getLink().lastIndexOf("."));
@@ -373,8 +400,8 @@ public class ChinaTUKUParser {
 						}
 					} catch (Exception e) {
 						// LINKLIST.add(bean);
-						e.printStackTrace();
 						// break;
+						esb.append("URL["+key+"]:\n"+e.getMessage()+"\n");
 						continue;
 					}
 				}

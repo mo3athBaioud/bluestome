@@ -1,5 +1,6 @@
 package com.chinamilitary.util;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,9 +87,31 @@ public class StringUtils {
 		return String.valueOf(m.appendTail(stringBuffer));
 	}
 	
+	
+	/**
+	 * 生成保存目录
+	 * @param input
+	 * @return
+	 */
+	 public static String gerDir(String input){
+		StringBuffer sb = new StringBuffer();
+		if(input.length() < 3){
+			for(int i=0;i<input.length();i++){
+				sb.append(input.charAt(i)+File.separator);
+			}
+		}else{
+			for(int i=0;i<3;i++){
+				sb.append(input.charAt(i)+File.separator);
+			}
+		}
+		return sb.toString();
+	 }
+	 
 	public static void main(String args[]){
+		String fileName = "20100902/56261/suyang001.jpg";
 		String str = "?1?2?3?4*5**";
 		System.out.println(illageString(str));
+		System.out.println(fileName.substring(0,fileName.lastIndexOf(File.separator)));
 	}
 
 }

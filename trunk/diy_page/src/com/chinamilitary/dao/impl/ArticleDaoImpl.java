@@ -368,20 +368,26 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 	 */
 	public boolean update(Article bean) throws Exception{
 		boolean b = false;
-		pstmt = conn.prepareStatement(UPDATE_SQL);
-		pstmt.setInt(1, bean.getWebId());
-		pstmt.setString(2, bean.getArticleUrl());
-		pstmt.setString(3, bean.getActicleRealUrl() == null ? "" : bean.getActicleRealUrl());
-		pstmt.setString(4, bean.getActicleXmlUrl() == null ? "": bean.getActicleXmlUrl());
-		pstmt.setString(5, bean.getTitle() == null ? "" : bean.getTitle());
-		pstmt.setString(6, bean.getText() == null ? "" : bean.getText());
-		pstmt.setString(7, bean.getIntro() == null ? "" : bean.getIntro());
-		pstmt.setInt(8, bean.getId());
-		int key  = pstmt.executeUpdate();
-		if(key == 1){
-			b = true;
+		try{
+			pstmt = conn.prepareStatement(UPDATE_SQL);
+			pstmt.setInt(1, bean.getWebId());
+			pstmt.setString(2, bean.getArticleUrl());
+			pstmt.setString(3, bean.getActicleRealUrl() == null ? "" : bean.getActicleRealUrl());
+			pstmt.setString(4, bean.getActicleXmlUrl() == null ? "": bean.getActicleXmlUrl());
+			pstmt.setString(5, bean.getTitle() == null ? "" : bean.getTitle());
+			pstmt.setString(6, bean.getText() == null ? "" : bean.getText());
+			pstmt.setString(7, bean.getIntro() == null ? "" : bean.getIntro());
+			pstmt.setInt(8, bean.getId());
+			int key  = pstmt.executeUpdate();
+			if(key == 1){
+				b = true;
+			}
+		}catch(Exception e){
+			return b;
+		}finally{
+			if(null != pstmt)
+				pstmt.close();
 		}
-		releaseSLink();
 		return b;
 	}
 
@@ -393,27 +399,32 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 	public List<Article> findByWebId(Integer webId) throws Exception {
 		List<Article> list = new ArrayList<Article>();
 		Article bean = null;
-		pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id = ? and d_text = ?");
-		pstmt.setInt(1, webId);
-		pstmt.setString(2, "0");
-		rs = pstmt.executeQuery();
-		while(rs.next()){
-			bean = new Article();
-			bean.setId(rs.getInt("d_id"));
-			bean.setWebId(rs.getInt("d_web_id"));
-			bean.setArticleUrl(rs.getString("d_acticle_url"));
-			bean.setActicleRealUrl(rs.getString("d_article_real_url"));
-			bean.setActicleXmlUrl(rs.getString("d_article_xml_url"));
-			bean.setText(rs.getString("d_text"));
-			bean.setTitle(rs.getString("d_title"));
-			bean.setIntro(rs.getString("d_intro"));
-			bean.setCreateTime(rs.getDate("d_createtime"));
-			list.add(bean);
+		try{
+			pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id = ?"); // and d_text = ?
+			pstmt.setInt(1, webId);
+//			pstmt.setString(2, "0");
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				bean = new Article();
+				bean.setId(rs.getInt("d_id"));
+				bean.setWebId(rs.getInt("d_web_id"));
+				bean.setArticleUrl(rs.getString("d_acticle_url"));
+				bean.setActicleRealUrl(rs.getString("d_article_real_url"));
+				bean.setActicleXmlUrl(rs.getString("d_article_xml_url"));
+				bean.setText(rs.getString("d_text"));
+				bean.setTitle(rs.getString("d_title"));
+				bean.setIntro(rs.getString("d_intro"));
+				bean.setCreateTime(rs.getDate("d_createtime"));
+				list.add(bean);
+			}
+		}catch(Exception e){
+			return list;
+		}finally{
+			if(pstmt !=null)
+				pstmt.close();
+			if(rs !=null)
+				rs.close();
 		}
-		if(pstmt !=null)
-			pstmt.close();
-		if(rs !=null)
-			rs.close();
 		return list;
 	}
 
@@ -425,27 +436,33 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 	public List<Article> findByWebId(Integer webId,String text) throws Exception {
 		List<Article> list = new ArrayList<Article>();
 		Article bean = null;
-		pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id = ? and d_text = ? order by d_id");
-		pstmt.setInt(1, webId);
-		pstmt.setString(2, text);
-		rs = pstmt.executeQuery();
-		while(rs.next()){
-			bean = new Article();
-			bean.setId(rs.getInt("d_id"));
-			bean.setWebId(rs.getInt("d_web_id"));
-			bean.setArticleUrl(rs.getString("d_acticle_url"));
-			bean.setActicleRealUrl(rs.getString("d_article_real_url"));
-			bean.setActicleXmlUrl(rs.getString("d_article_xml_url"));
-			bean.setText(rs.getString("d_text"));
-			bean.setTitle(rs.getString("d_title"));
-			bean.setIntro(rs.getString("d_intro"));
-			bean.setCreateTime(rs.getDate("d_createtime"));
-			list.add(bean);
+		try{
+			pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id = ? and d_text = ? order by d_id");
+			pstmt.setInt(1, webId);
+			pstmt.setString(2, text);
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				bean = new Article();
+				bean.setId(rs.getInt("d_id"));
+				bean.setWebId(rs.getInt("d_web_id"));
+				bean.setArticleUrl(rs.getString("d_acticle_url"));
+				bean.setActicleRealUrl(rs.getString("d_article_real_url"));
+				bean.setActicleXmlUrl(rs.getString("d_article_xml_url"));
+				bean.setText(rs.getString("d_text"));
+				bean.setTitle(rs.getString("d_title"));
+				bean.setIntro(rs.getString("d_intro"));
+				bean.setCreateTime(rs.getDate("d_createtime"));
+				list.add(bean);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			return list;
+		}finally{
+			if(pstmt !=null)
+				pstmt.close();
+			if(rs !=null)
+				rs.close();
 		}
-		if(pstmt !=null)
-			pstmt.close();
-		if(rs !=null)
-			rs.close();
 		return list;
 	}
 

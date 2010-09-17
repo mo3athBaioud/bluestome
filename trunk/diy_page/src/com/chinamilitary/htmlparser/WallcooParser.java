@@ -151,6 +151,12 @@ public class WallcooParser {
 				result.add(l1);
 			}
 			result.setBool(true);
+		}else{
+			LinkBean l1 = null;
+			l1 = new LinkBean();
+			l1.setLink(bean.getUrl());
+			result.add(l1);
+			result.setBool(true);
 		}
 
 		return result;
@@ -183,6 +189,7 @@ public class WallcooParser {
 			p2.setEncoding("GB2312");
 			NodeList list4 = p2.parse(lastFilter);
 			if (list4 != null || list4.size() > 0) {
+				System.out.println(">> URL["+link.getLink()+"]的记录数量:"+list4.size());
 				// System.out.println(list4.size());
 				for (int i = 0; i < list4.size(); i++) {
 					// 地址

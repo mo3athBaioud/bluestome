@@ -330,7 +330,7 @@ public class PCPOPHtmlParser {
 		
 //		init();
 			
-		process();
+//		process();
 		
 		processAuthor();
 			
