@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.junit.*;
 
+import com.chinamilitary.bean.Article;
 import com.chinamilitary.bean.PicfileBean;
 import com.chinamilitary.bean.WebsiteBean;
+import com.chinamilitary.dao.ArticleDao;
 import com.chinamilitary.dao.PicFileDao;
 import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.factory.DAOFactory;
@@ -17,13 +19,16 @@ public class PicFileDAOTest {
 
 	PicFileDao picFiledao = null;
 	WebSiteDao webSiteDao = null;
+	ArticleDao articleDao = null;
 	List<PicfileBean> list = null;
 	List<WebsiteBean> webList = null;
-	final static String FILE_SERVER = "D:\\fileserver\\image\\";
+	List<Article> articleList = null;
+	final static String FILE_SERVER = "D:\\fileserver\\imageTest\\";
 	@Before
 	public void init(){
 		picFiledao = DAOFactory.getInstance().getPicFileDao();
 		webSiteDao = DAOFactory.getInstance().getWebSiteDao();
+		articleDao = DAOFactory.getInstance().getArticleDao();
 	}
 	
 	@After
@@ -36,6 +41,8 @@ public class PicFileDAOTest {
 			list.clear();
 		if(null != webList)
 			webList.clear();
+		if(null != articleList)
+			articleList = null;
 		System.gc();
 		System.out.println("gc");
 	}
@@ -53,7 +60,8 @@ public class PicFileDAOTest {
 	
 	@Test
 	public void update() throws Exception{
-		PicfileBean bean = picFiledao.findById(284706);
+		webList = webSiteDao.findByParentId(600);
+		PicfileBean bean = picFiledao.findById(321321);
 		Assert.assertNotNull(bean);
 		System.out.println("name:"+bean.getUrl()+bean.getName());
 		int start = bean.getName().lastIndexOf(File.separator)+1;
@@ -76,9 +84,9 @@ public class PicFileDAOTest {
 		if(FileUtils.copyFile(bean.getUrl()+bean.getSmallName(), smgTarget)){
 			System.out.println(">> 小图成功!!!");
 		}else{
-			if(FileUtils.deleteFile(target)){
+//			if(FileUtils.deleteFile(target)){
 				System.out.println(">> 生成小图失败,删除大图");
-			}
+//			}
 		}
 		
 		
