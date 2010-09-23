@@ -37,7 +37,8 @@ public class ChinaTUKUParser {
 	static final String URL_ = "http://tuku.china.com/";
 
 	// "http://tuku.tech.china.com/tech",
-	static final String[] CATALOG_URL = { 
+	static final String[] CATALOG_URL = {
+			"http://tuku.kaiyun.china.com/kaiyun/",
 			"http://tuku.ent.china.com/fun/",
 			"http://tuku.military.china.com/military/",
 			"http://tuku.game.china.com/game/",
@@ -154,7 +155,10 @@ public class ChinaTUKUParser {
 							+ article.getArticleUrl() + "]");
 					return;
 				}
-				if (article.getArticleUrl().startsWith(
+				//http://tuku.kaiyun.china.com/kaiyun/
+				if ((article.getArticleUrl().startsWith(
+						"http://tuku.kaiyun.china.com/kaiyun/")
+						||article.getArticleUrl().startsWith(
 						"http://tuku.news.china.com/")
 						|| article.getArticleUrl().startsWith(
 								"http://tuku.military.china.com/")
@@ -328,6 +332,8 @@ public class ChinaTUKUParser {
 							acticle.setWebId(301);
 							acticle.setText("NED");
 							if (bean.getLink().startsWith(
+									"http://tuku.kaiyun.china.com/kaiyun/")
+								    ||bean.getLink().startsWith(
 									"http://tuku.ent.china.com/fun/")
 									|| bean.getLink().startsWith(
 											"http://tuku.news.china.com/")
