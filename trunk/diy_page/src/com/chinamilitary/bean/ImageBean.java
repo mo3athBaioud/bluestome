@@ -23,6 +23,7 @@ public class ImageBean implements java.io.Serializable{
 	private Integer status;
 	private Long fileSize;
 	private Date createtime;
+	private String referer;
 	
 	public ImageBean(){
 	}
@@ -145,6 +146,14 @@ public class ImageBean implements java.io.Serializable{
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public String getReferer() {
+		return referer;
+	}
+
+	public void setReferer(String referer) {
+		this.referer = referer;
 	}
 	
 	
