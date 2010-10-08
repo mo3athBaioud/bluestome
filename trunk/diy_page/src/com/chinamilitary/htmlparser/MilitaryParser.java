@@ -546,8 +546,7 @@ public class MilitaryParser {
 		}
 	}
 
-	static void imgDownload(ImageBean imgBean, Integer webId) {
-		System.err.println(" >> IN Download Image Method");
+	static boolean imgDownload(ImageBean imgBean, Integer webId) {
 		PicfileBean bean = null;
 		bean = new PicfileBean();
 		String s_fileName = imgBean.getImgUrl().substring(
@@ -556,70 +555,75 @@ public class MilitaryParser {
 		String fileName = imgBean.getHttpUrl().substring(
 				imgBean.getHttpUrl().lastIndexOf("/") + 1,
 				imgBean.getHttpUrl().length());
-		try{
-			if(picFiledao.getCount("select count(*) from tbl_pic_file where d_image_id = "+imgBean.getId()) > 0){
-				System.err.println(" >> 图片已经下载["+imgBean.getId()+"]完成");
-				return;
-			}
-		}catch(Exception e){
-			return;
-		}
-		
+		String length = "0";
 		try {
-			if (null == client.get(CacheUtils.getDownloadSmallImageKey(imgBean
-					.getId()))) {
+			byte[] big = null;
+			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, imgBean.getHttpUrl());
+			if(null == big)
+				return false;
+			length = String.valueOf(big.length);
+			if(length.equalsIgnoreCase("20261") || length.equalsIgnoreCase("3267") || length.equalsIgnoreCase("4096")){
+				System.out.println(">>> 尝试使用Referer来获取图片");
+				big = HttpClientUtils.getResponseBodyAsByte(imgBean.getReferer(), null, imgBean.getHttpUrl());
+				length = String.valueOf(big.length);
+				if(length.equalsIgnoreCase("20261") || length.equalsIgnoreCase("3267") || length.equalsIgnoreCase("4096")){
+					System.err.println("下载被屏蔽，未突破盗链系统...");
+					return false;
+				}
+			}
+			//小图
+			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName)) == null) {
 				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
 						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 						+ imgBean.getArticleId() + File.separator
 						+ s_fileName);
 			}
-
-			if (null == client.get(CacheUtils.getDownloadBigImageKey(imgBean
-					.getId()))) {
-				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH
+			
+			//大图
+			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ fileName)) == null) {
+				IOUtil.createFile(big, PIC_SAVE_PATH
 						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-						+ imgBean.getArticleId() + File.separator + fileName);
+						+ imgBean.getArticleId() + File.separator
+						+ fileName);
 			}
 			bean.setArticleId(imgBean.getArticleId());
 			bean.setImageId(imgBean.getId());
 			bean.setTitle(imgBean.getTitle());
-			// webId+File.separator+
-			bean.setSmallName(File.separator + StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-					+ imgBean.getArticleId() + File.separator + s_fileName);
-
-			// webId+File.separator+
-			bean.setName(File.separator + StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-					+ imgBean.getArticleId() + File.separator + fileName);
+			bean.setSmallName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName);
+			bean.setName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
 				boolean b = picFiledao.insert(bean);
 				if (b) {
-					client.add(CacheUtils.getDownloadSmallImageKey(imgBean
-							.getId()), "SMALL_" + imgBean.getId());
-					client.add(CacheUtils.getDownloadBigImageKey(imgBean
-							.getId()), "BIG_" + imgBean.getId());
-					if (imageDao.updateLinkStatus(imgBean.getId())) {
-						// 更新图片地址
-						if (null != client.get(imgBean.getHttpUrl())) {
-							client.replace(imgBean.getHttpUrl(), imgBean
-									.getHttpUrl());
-						} else {
-							client.add(imgBean.getHttpUrl(), imgBean
-									.getHttpUrl());
-						}
-					}
-
+					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+							+ bean.getName()), bean);
+					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+							+ bean.getSmallName()), bean);
 				} else {
-					System.out.println("失败");
+					return false;
 				}
 			} catch (Exception e) {
 				System.out.println("数据库异常");
 				e.printStackTrace();
+				return false;
 			}
 		} catch (IOException e) {
 			System.out.println("网络连接，文件IO异常");
-			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 
 	static void imgDownload() throws Exception {
