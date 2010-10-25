@@ -685,7 +685,7 @@ public class TPZJParser {
 			 update();
 			// vistDesk();
 //			 loadImg();
-			 imgDownload();
+//			 imgDownload();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
