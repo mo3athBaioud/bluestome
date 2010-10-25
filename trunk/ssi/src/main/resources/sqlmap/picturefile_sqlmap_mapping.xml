@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="picturefile"
+		type="com.ssi.dal.domain.PictureFile" />
+
+	<resultMap class="picturefile" id="picturefileMap">
+		<result column="d_id" property="id" />
+		<result column="d_article_id" property="articleId" />
+		<result column="d_image_id" property="imageId" />
+		<result column="d_file_url" property="url" />
+		<result column="d_file_title" property="title" />
+		<result column="d_file_name" property="name" />
+		<result column="d_file_small_name" property="smallName" />
+		<result column="d_createtime" property="createTime" />
+		<result column="d_status" property="status" />
+		<result property="article" column="d_article_id"
+			select="GET_ARTICLE_BY_ID" />
+		<result property="image" column="d_image_id"
+			select="GET_IMAGE_BY_ID" />
+	</resultMap>
+
+	<statement id="GET_PICTUREFILE_BY_MAP"
+		parameterClass="java.util.Map" resultMap="picturefileMap">
+		SELECT DISTINCT t.* FROM TBL_PIC_FILE t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="articleid" prepend="and">
+				t.d_article_id = #articleid#
+			</isNotEmpty>
+		</dynamic>
+		<dynamic>
+			<isNotEmpty property="imageid" prepend="and">
+				t.d_image_id = #imageid#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY t.d_id
+	</statement>
+
+	<statement id="GET_PICTUREFILE_BY_IMAGE_ID" parameterClass="java.lang.Integer" resultMap="picturefileMap">
+		SELECT DISTINCT t.* FROM TBL_PIC_FILE t WHERE d_image_id = #value# ORDER BY t.d_id limit 1
+	</statement>
+	
+</sqlMap>
+
+
+
