@@ -706,7 +706,7 @@ public class TPZJDESKParser {
 			// catalog(URL);
 			 update();
 			// vistDesk();
-//			 loadImg();
+			 loadImg();
 //			 imgDownload();
 //			movefile();
 		} catch (Exception e) {
@@ -783,28 +783,28 @@ public class TPZJDESKParser {
 		s_fileName = s_fileName.replace(".", "_s.");
 		try {
 			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
-					+ CommonUtil.getDate("") + File.separator
+					+  StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 					+ imgBean.getArticleId() + File.separator
 					+ fileName.replace(".", "_s."))) == null) {
 				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
-						+ CommonUtil.getDate("") + File.separator
+						+  StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 						+ imgBean.getArticleId() + File.separator
 						+ fileName.replace(".", "_s."));
 			}
 
 			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
-					+ CommonUtil.getDate("") + File.separator
+					+  StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 					+ imgBean.getArticleId() + File.separator + fileName)) == null) {
 				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH
-						+ CommonUtil.getDate("") + File.separator
+						+  StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 						+ imgBean.getArticleId() + File.separator + fileName);
 			}
 			bean.setArticleId(imgBean.getArticleId());
 			bean.setImageId(imgBean.getId());
 			bean.setTitle(imgBean.getTitle());
-			bean.setSmallName(CommonUtil.getDate("") + File.separator
+			bean.setSmallName(File.separator  + StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 					+ imgBean.getArticleId() + File.separator + s_fileName);
-			bean.setName(CommonUtil.getDate("") + File.separator
+			bean.setName( File.separator  + StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 					+ imgBean.getArticleId() + File.separator + fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
