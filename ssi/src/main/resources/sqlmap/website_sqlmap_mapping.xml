@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="website" type="com.ssi.dal.domain.Website" />
+
+	<resultMap class="website" id="websiteMap">
+		<result column="d_id" property="id"/>
+		<result column="d_web_type" property="type"/>
+		<result column="d_parent_id" property="parentId"/>
+		<result column="d_web_url" property="url"/>
+		<result column="d_web_name" property="name"/>
+		<result column="d_createtime" property="createtime"/>							
+		<result column="d_status" property="status"/>							
+		<result property="children" column="d_id" select="GET_CHILD_WEBSITE_BY_FATHER_ID" />						
+		<!-- 
+		<result property="articles" column="d_id" select="GET_ARTICLE_BY_WEB_ID" />						
+		 -->
+		<result property="count" column="d_id" select="GET_ARTICLE_COUNT_BY_WEB_ID" />						
+	</resultMap>
+
+	<statement id="GET_WEBSITE_BY_ID" parameterClass="java.lang.Integer" resultMap="websiteMap">
+    	SELECT t.* FROM tbl_web_site t WHERE t.d_id = #value# ORDER BY t.d_id
+    </statement>
+
+	<statement id="GET_CHILD_WEBSITE_BY_FATHER_ID" parameterClass="java.lang.Integer" resultMap="websiteMap">
+    	SELECT t.* FROM tbl_web_site t WHERE t.d_parent_id = #value# ORDER BY t.d_id
+    </statement>
+    
+</sqlMap>
+
+
+
