@@ -39,4 +39,24 @@ public class PictureFileDAOImpl extends BaseDAOImpl implements IPictureFileDAO {
 			list = (List<PictureFile>)obj;
 		return list;
 	}
+	
+	/**
+	 * 查找最近多少条记录
+	 * @param number 记录数
+	 * @return
+	 */
+	public List<PictureFile> findLastPictureFile(int number){
+		List<PictureFile> list = new ArrayList<PictureFile>();
+		HashMap map = new HashMap();
+		if(number < 0){
+			map.put("limit", 100);
+		}else{
+			map.put("limit", number);
+		}
+		Object obj = getQueryDelegate().queryForList("GET_LASTEST_PICTUREFILE", map, getRoute());
+		if(null != obj)
+			list = (List<PictureFile>)obj;
+		return list;
+	}
+
 }
