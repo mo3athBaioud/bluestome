@@ -40,6 +40,10 @@
 		SELECT DISTINCT t.* FROM TBL_PIC_FILE t WHERE d_image_id = #value# ORDER BY t.d_id limit 1
 	</statement>
 	
+	<statement id="GET_LASTEST_PICTUREFILE" parameterClass="java.util.Map" resultMap="picturefileMap">
+		SELECT DISTINCT t.* FROM TBL_PIC_FILE t where date(d_createtime) = date(now()) ORDER BY d_createtime DESC LIMIT #limit#
+	</statement>
+	
 </sqlMap>
 
 
