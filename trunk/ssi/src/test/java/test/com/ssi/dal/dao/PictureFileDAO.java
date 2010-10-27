@@ -1,5 +1,7 @@
 package test.com.ssi.dal.dao;
 
+import java.util.List;
+
 import org.junit.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -28,7 +30,6 @@ public class PictureFileDAO {
 		}
 	}
 	
-	@Test
 	public void find(){
 		PictureFile picturefile = pictureFileDAO.find(25818, 410437);
 		if(null != picturefile){
@@ -38,6 +39,16 @@ public class PictureFileDAO {
 			System.out.println("\n");
 			System.out.println(">> 文章标题:"+picturefile.getArticle().getTitle());
 			System.out.println(">> 图片标题:"+picturefile.getImage().getTitle());
+		}
+	}
+	
+	@Test
+	public void findLastPictureFile(){
+		List<PictureFile> list = pictureFileDAO.findLastPictureFile(30);
+		if(null != list && list.size() > 0){
+			for(PictureFile pic:list){
+				System.out.println("articleid:"+pic.getArticleId()+",imageid:"+pic.getImageId()+",path"+pic.getName());
+			}
 		}
 	}
 }
