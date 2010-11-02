@@ -1,6 +1,7 @@
 package com.ssi.dal.dao;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.ssi.dal.domain.Image;
 
@@ -33,4 +34,11 @@ public interface IImageDAO {
 	 * @return
 	 */
 	int getCount(HashMap map);
+	
+	/**
+	 * 按条件查找图片记录
+	 * @param map
+	 * @return
+	 */
+	List<Image> find(HashMap map);
 }
