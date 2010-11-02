@@ -143,6 +143,7 @@ public class XMLParser {
 			bean.setLink("NED");
 			bean.setName(name);
 			bean.setTime(time);
+			bean.setReferer(link);
 			imageList.add(bean);
 		}
 		return imageList;
