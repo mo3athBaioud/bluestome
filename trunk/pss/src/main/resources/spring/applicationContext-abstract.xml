@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC
+          "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean abstract="true" id="baseHtmlParser"
+		class="com.ssi.htmlparser.BaseHtmlParser">
+		<property name="client">
+			<ref bean="commonCache" />
+		</property>
+		<property name="articleDocCache">
+			<ref bean="articleDocCache" />
+		</property>
+		<property name="articleCache">
+			<ref bean="articleCache" />
+		</property>
+		<property name="imageCache">
+			<ref bean="imageCache" />
+		</property>
+		<property name="pictureFileCache">
+			<ref bean="pictureFileCache" />
+		</property>
+		<property name="articleDocDao">
+			<ref bean="articleDocDAO" />
+		</property>
+		<property name="articleDao">
+			<ref bean="articleDAO" />
+		</property>
+		<property name="imageDao">
+			<ref bean="imageDAO" />
+		</property>
+		<property name="pictureFileDao">
+			<ref bean="pictureFileDAO" />
+		</property>
+		<property name="websiteDao">
+			<ref bean="websiteDAO" />
+		</property>
+		<property name="PIC_SAVE_PATH">
+			<value>${pic_save_path}</value>
+		</property>
+		<property name="xmlParser">
+			<ref bean="xmlParser" />
+		</property>
+		<property name="htmlParser">
+			<ref bean="htmlParser" />
+		</property>
+	</bean>
+	
+	<bean abstract="true"  id="baseSchedule" class="com.ssi.schedule.BaseSchedule">
+		<property name="client">
+			<ref bean="commonCache" />
+		</property>
+		<property name="articleDocCache">
+			<ref bean="articleDocCache"/>
+		</property>
+		<property name="articleCache">
+			<ref bean="articleCache" />
+		</property>
+		<property name="imageCache">
+			<ref bean="imageCache" />
+		</property>
+		<property name="pictureFileCache">
+			<ref bean="pictureFileCache" />
+		</property>
+		<property name="articleDocDao">
+			<ref bean="articleDocDAO" />
+		</property>
+		<property name="articleDao">
+			<ref bean="articleDAO" />
+		</property>
+		<property name="imageDao">
+			<ref bean="imageDAO" />
+		</property>
+		<property name="pictureFileDao">
+			<ref bean="pictureFileDAO" />
+		</property>
+		<property name="websiteDao">
+			<ref bean="websiteDAO" />
+		</property>
+	</bean>
+
+</beans>

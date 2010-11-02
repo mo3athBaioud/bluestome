@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC
+          "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="memcached" abstract="true"
+		class="com.ssi.common.cache.MemCached">
+		<property name="server">
+			<value>${file.remote.cache.server}</value>
+		</property>
+		<property name="port">
+			<value>${file.remote.cache.port}</value>
+		</property>
+		<property name="timeToLive">
+			<value>${file.remote.cache.timeToLive}</value>
+		</property>
+	</bean>
+	
+	<bean id="commonCache" parent="memcached"
+		class="com.ssi.htmlparser.cache.CommonCache" destroy-method="destroy"
+		init-method="init">
+	</bean>
+	
+	<bean id="imageCache" parent="memcached"
+		class="com.ssi.htmlparser.cache.ImageCache" destroy-method="destroy"
+		init-method="init">
+	</bean>
+	
+	<bean id="articleCache" parent="memcached"
+		class="com.ssi.htmlparser.cache.ArticleCache" destroy-method="destroy"
+		init-method="init">
+	</bean>
+	
+	<bean id="articleDocCache" parent="memcached"
+		class="com.ssi.htmlparser.cache.ArticleDocCache" destroy-method="destroy"
+		init-method="init">
+	</bean>
+	
+	<bean id="fileCache" parent="memcached"
+		class="com.ssi.htmlparser.cache.FileCache" destroy-method="destroy"
+		init-method="init">
+	</bean>
+	
+	<bean id="pictureFileCache" parent="memcached"
+		class="com.ssi.htmlparser.cache.PictureFileCache" destroy-method="destroy"
+		init-method="init">
+	</bean>
+	
+	<bean id="websiteCache" parent="memcached"
+		class="com.ssi.htmlparser.cache.WebsiteCache" destroy-method="destroy"
+		init-method="init">
+	</bean>
+</beans>

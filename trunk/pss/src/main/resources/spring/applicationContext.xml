@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+	<import resource="classpath:spring/applicationContext-prop.xml" />
+	<import resource="classpath:spring/applicationContext-persistence.xml" />
+	<import resource="classpath:spring/applicationContext-dao.xml" />
+	<import resource="classpath:spring/applicationContext-cache.xml" />
+	<import resource="classpath:spring/applicationContext-abstract.xml" />
+	<import resource="classpath:spring/applicationContext-quartz.xml" />
+	<import resource="classpath:spring/applicationContext-htmlparser.xml" />
+	<bean id="exporter" class="org.springframework.jmx.export.MBeanExporter"
+		lazy-init="false">
+		<property name="beans">
+			<map>
+				<entry key="bean:name=sendMessage" value-ref="sendMessage" />
+				<entry key="bean:name=chinaTUKUParser" value-ref="chinaTUKUParser" />
+				<entry key="bean:name=pcpopParser" value-ref="pcpopParser" />
+				<!-- 
+				 -->
+			</map>
+		</property>
+	</bean>
+</beans>

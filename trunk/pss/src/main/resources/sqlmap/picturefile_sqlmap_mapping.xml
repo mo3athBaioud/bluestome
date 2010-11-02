@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="picturefile"
+		type="com.ssi.dal.domain.PictureFile" />
+
+	<resultMap class="picturefile" id="picturefileMap">
+		<result column="d_id" property="id" />
+		<result column="d_article_id" property="articleId" />
+		<result column="d_image_id" property="imageId" />
+		<result column="d_file_url" property="url" />
+		<result column="d_file_title" property="title" />
+		<result column="d_file_name" property="name" />
+		<result column="d_file_small_name" property="smallName" />
+		<result column="d_createtime" property="createTime" />
+		<result column="d_status" property="status" />
+		<!-- 
+		<result property="article" column="d_article_id"
+			select="GET_ARTICLE_BY_ID" />
+		<result property="image" column="d_image_id"
+			select="GET_IMAGE_BY_ID" />
+		 -->
+	</resultMap>
+
+	<statement id="GET_PICTUREFILE_BY_MAP"
+		parameterClass="java.util.Map" resultMap="picturefileMap">
+		SELECT DISTINCT t.* FROM TBL_PIC_FILE t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="articleid" prepend="and">
+				t.d_article_id = #articleid#
+			</isNotEmpty>
+			<isNotEmpty property="imageid" prepend="and">
+				t.d_image_id = #imageid#
+			</isNotEmpty>
+			<isNotEmpty property="url" prepend="and">
+				t.d_file_url = #url#
+			</isNotEmpty>
+			<isNotEmpty property="title" prepend="and">
+				t.d_file_title = #title#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="and">
+				t.d_file_name = #name#
+			</isNotEmpty>
+			<isNotEmpty property="smallName" prepend="and">
+				t.d_file_small_name = #smallName#
+			</isNotEmpty>
+			<isNotEmpty property="status" prepend="and">
+				t.d_status = #status#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="limit">
+				limit #limit#
+			</isNotEmpty>
+		</dynamic>
+		
+	</statement>
+
+	<statement id="GET_PICTUREFILE_BY_IMAGE_ID" parameterClass="java.lang.Integer" resultMap="picturefileMap">
+		SELECT DISTINCT t.* FROM TBL_PIC_FILE t WHERE d_image_id = #value# ORDER BY t.d_id limit 1
+	</statement>
+	
+	<statement id="GET_LASTEST_PICTUREFILE" parameterClass="java.util.Map" resultMap="picturefileMap">
+		SELECT DISTINCT t.* FROM TBL_PIC_FILE t where date(d_createtime) = date(now()) ORDER BY d_createtime DESC LIMIT #limit#
+	</statement>
+	
+	
+	<update id="UPDATE_PICTUREFILE" parameterClass="picturefile">
+		UPDATE TBL_PIC_FILE SET 
+		d_article_id=#articleId#,
+		d_image_id=#imageId#,
+		d_file_url=#url#,
+		d_file_title=#title#,
+		d_file_name=#name#,
+		d_file_small_name=#smallName#,
+		d_createtime=now(),
+		d_status=#status#
+		WHERE D_ID = #id#
+	</update>
+	
+	<insert id="INSERT_PICTUREFILE" parameterClass="picturefile">
+		INSERT INTO TBL_PIC_FILE (d_article_id,d_image_id,d_file_url,d_file_title,d_file_name,d_file_small_name,d_createtime,d_status) 
+		VALUES (#articleId#,#imageId#,#url#,#title#,#name#,#smallName#,now(),#status#) 
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+	
+	<statement id="GET_PICTUREFILE_COUNT"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
+		SELECT COUNT(*) FROM TBL_PIC_FILE T WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="articleid" prepend="and">
+				t.d_article_id = #articleid#
+			</isNotEmpty>
+			<isNotEmpty property="imageid" prepend="and">
+				t.d_image_id = #imageid#
+			</isNotEmpty>
+			<isNotEmpty property="author" prepend="and">
+				t.d_file_url = #url#
+			</isNotEmpty>
+			<isNotEmpty property="grade" prepend="and">
+				t.d_file_title = #title#
+			</isNotEmpty>
+			<isNotEmpty property="tag" prepend="and">
+				t.d_file_name = #name#
+			</isNotEmpty>
+			<isNotEmpty property="status" prepend="and">
+				t.d_file_small_name = #smallName#
+			</isNotEmpty>
+			<isNotEmpty property="createTime" prepend="and">
+				t.d_createtime = #createTime#
+			</isNotEmpty>
+			<isNotEmpty property="modifyTime" prepend="and">
+				t.d_status = #status#
+			</isNotEmpty>
+		</dynamic>
+	</statement>
+	
+</sqlMap>
+
+
+
