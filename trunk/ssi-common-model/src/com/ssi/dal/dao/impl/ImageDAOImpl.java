@@ -1,9 +1,12 @@
 package com.ssi.dal.dao.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.ssi.common.dal.BaseDAOImpl;
 import com.ssi.dal.dao.IImageDAO;
+import com.ssi.dal.domain.Article;
 import com.ssi.dal.domain.Image;
 import com.ssi.dal.domain.PictureFile;
 
@@ -73,6 +76,20 @@ public class ImageDAOImpl extends BaseDAOImpl implements IImageDAO {
 		int count = -1;
 		count = getQueryDelegate().queryForCount("GET_IMAGE_COUNT",map,getRoute());
 		return count;
+	}
+
+	/**
+	 * 按条件查找图片记录
+	 * @param map
+	 * @return
+	 */
+	public List<Image> find(HashMap map){
+		List<Image> list = new ArrayList<Image>();
+		Object obj = getQueryDelegate().queryForList("QUERY_IMAGE_BY_MAP", map, getRoute());
+		if(null != obj){
+			list = (List<Image>)obj;
+		}
+		return list;
 	}
 
 }
