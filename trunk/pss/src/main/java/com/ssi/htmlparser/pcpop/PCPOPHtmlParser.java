@@ -267,7 +267,7 @@ public class PCPOPHtmlParser extends BaseHtmlParser{
 		}
 	}
 
-	void init() {
+	public void init() {
 		try {
 			List<Website> weblist = websiteDao.findByFatherId(166);
 			logger.debug("初始化数据库数据");
