@@ -16,7 +16,7 @@ import com.ssi.htmlparser.cache.PictureFileCache;
 import com.ssi.htmlparser.chinamilitary.HTMLParser;
 import com.ssi.htmlparser.chinamilitary.XMLParser;
 
-public class BaseHtmlParser {
+public abstract class BaseHtmlParser {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -162,4 +162,9 @@ public class BaseHtmlParser {
 		this.articleDocCache = articleDocCache;
 	}
 
+	/**
+	 * 初始化方法
+	 *
+	 */
+	public abstract void init();
 }
