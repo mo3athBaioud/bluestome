@@ -114,6 +114,58 @@
 		</dynamic>
 	</statement>
     
+	<statement id="QUERY_IMAGE_BY_MAP"  parameterClass="java.util.Map" resultMap="imageMap">
+		SELECT * FROM TBL_IMAGE T WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="articleId" prepend="and">
+				t.d_article_id = #articleId#
+			</isNotEmpty>
+			<isNotEmpty property="title" prepend="and">
+				t.d_title = #title#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="and">
+				t.d_name = #name#
+			</isNotEmpty>
+			<isNotEmpty property="imgUrl" prepend="and">
+				t.d_imgurl = #imgUrl#
+			</isNotEmpty>
+			<isNotEmpty property="httpUrl" prepend="and">
+				t.d_httpurl = #httpUrl#
+			</isNotEmpty>
+			<isNotEmpty property="orderId" prepend="and">
+				t.d_orderid = #orderId#
+			</isNotEmpty>
+			<isNotEmpty property="time" prepend="and">
+				t.d_time = #time#
+			</isNotEmpty>
+			<isNotEmpty property="intro" prepend="and">
+				t.d_intro = #intro#
+			</isNotEmpty>
+			<isNotEmpty property="commentsuburl" prepend="and">
+				t.d_commentsuburl = #commentsuburl#
+			</isNotEmpty>
+			<isNotEmpty property="link" prepend="and">
+				t.d_link = #link#
+			</isNotEmpty>
+			<isNotEmpty property="createTime" prepend="and">
+				t.d_createtime = #createTime#
+			</isNotEmpty>
+			<isNotEmpty property="status" prepend="and">
+				t.d_status = #status#
+			</isNotEmpty>
+			<isNotEmpty property="size" prepend="and">
+				t.d_filesize = #size#
+			</isNotEmpty>
+			order by d_id limit 
+			<isNotEmpty property="limit">
+				limit = #limit#
+			</isNotEmpty>
+		</dynamic>
+	</statement>
+	
  	<statement id="GET_COUNT_IMAGE_BY_WEB_ID" parameterClass="java.util.Map" resultMap="imageMap">
 		select d_link,count(*) AS total from tbl_image where d_article_id in (
 		 select distinct d_id from tbl_article where d_web_id in (select distinct d_id from tbl_web_site where d_parent_id = #webid#)
