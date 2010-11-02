@@ -26,6 +26,7 @@ public class Image implements java.io.Serializable{
 	private Date createtime;
 	private int status;
 	private long size;
+	private String referer;
 	
 	private Article article;
 	private PictureFile pictureFile;
@@ -166,6 +167,14 @@ public class Image implements java.io.Serializable{
 
 	public void setPictureFile(PictureFile pictureFile) {
 		this.pictureFile = pictureFile;
+	}
+
+	public String getReferer() {
+		return referer;
+	}
+
+	public void setReferer(String referer) {
+		this.referer = referer;
 	}
 	
 	
