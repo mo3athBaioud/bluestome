@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!--起动Bean-->
+	<bean id="QuartzJobFactory"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="cronReportTrigger" />
+				<!-- 
+				<ref bean="chinaTUKUParserTrigger" />
+				 -->
+				<ref bean="pcpopHTMLParserTrigger" />
+			</list>
+		</property>
+		<!-- 设置是否Spring容器初始化后马上启动Scheduler，默认为true。如果设置为false则需要手工启动Scheduler -->
+		<property name="autoStartup" value="true" />
+	</bean>
+
+	<!--实际的工作Bean-->
+	<bean id="sendMessage" class="com.ssi.schedule.SendMessage" parent="baseSchedule">
+		<property name="id">
+			<value>70915</value>
+		</property>
+	</bean>
+
+	<!--jobBean用于设定启动时运用的Bean与方法-->
+	<bean id="scheduleSendMessage"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="sendMessage" />
+		</property>
+		<property name="targetMethod">
+			<value>process</value>
+		</property>
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--jobBean用于设定启动时运用的Bean与方法-->
+	<bean id="scheduleChinaTUKUParser"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="chinaTUKUParser" />
+		</property>
+		<property name="targetMethod">
+			<value>init</value>
+		</property>
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<!--jobBean用于设定启动时运用的Bean与方法-->
+	<bean id="schedulePCPOPHtmlParser"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="pcpopParser" />
+		</property>
+		<property name="targetMethod">
+			<value>process</value>
+		</property>
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	
+	<!--定时器设定起动频率)-->
+	<bean id="cronReportTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="scheduleSendMessage" />
+		</property>
+		<property name="cronExpression"
+			value="0 0/1 * * * ?" />
+	</bean>
+
+	<!--定时器设定起动频率)-->
+	<bean id="chinaTUKUParserTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="scheduleChinaTUKUParser" />
+		</property>
+		<property name="cronExpression"
+			value="0 40 0/8 * * ?" />
+	</bean>
+
+	<!--定时器设定起动频率)-->
+	<bean id="pcpopHTMLParserTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="schedulePCPOPHtmlParser" />
+		</property>
+		<property name="cronExpression"
+			value="0 7 11 * * ?" />
+	</bean>
+</beans>

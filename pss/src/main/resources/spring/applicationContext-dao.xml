@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC
+          "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="websiteDAO"  parent="baseDAO" class="com.ssi.dal.dao.impl.WebsiteDAOImpl"/>
+	<bean id="articleDAO"  parent="baseDAO" class="com.ssi.dal.dao.impl.ArticleDAOImpl"/>
+	<bean id="articleDocDAO"  parent="baseDAO" class="com.ssi.dal.dao.impl.ArticleDocDAOImpl"/>
+	<bean id="imageDAO"  parent="baseDAO" class="com.ssi.dal.dao.impl.ImageDAOImpl"/>
+	<bean id="pictureFileDAO"  parent="baseDAO" class="com.ssi.dal.dao.impl.PictureFileDAOImpl"/>
+</beans>

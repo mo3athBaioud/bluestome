@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC
+          "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- 页面解析类配置 -->
+	<bean id="xmlParser" class="com.ssi.htmlparser.chinamilitary.XMLParser">
+		<property name="imageDao">
+			<ref bean="imageDAO" />
+		</property>
+	</bean>
+
+	<bean id="htmlParser" class="com.ssi.htmlparser.chinamilitary.HTMLParser">
+		<property name="xmlParser">
+			<ref bean="xmlParser" />
+		</property>
+	</bean>
+
+	<!--  init-method="init"  -->
+	<bean id="chinaTUKUParser"  parent="baseHtmlParser" 
+		class="com.ssi.htmlparser.chinamilitary.ChinaTUKUParser" >
+	</bean>
+	
+	<!-- init-method="process" -->
+	<bean id="pcpopParser"  parent="baseHtmlParser" 
+		class="com.ssi.htmlparser.pcpop.PCPOPHtmlParser">
+	</bean>
+</beans>
