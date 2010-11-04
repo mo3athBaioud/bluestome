@@ -92,6 +92,7 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
 				+ (char) 0x09 + " 	world.";
 		System.out.println(text);
 		System.out.println(filterInvisibleChars(text));
+		System.out.println(gerDir("123456")+"123456");
 	}
 
 	public static String getArrayString(String[] values, String splt,
@@ -926,12 +927,12 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
 	 */
 	public static String gerDir(String input) {
 		StringBuffer sb = new StringBuffer();
-		if (input.length() < 3) {
-			for (int i = 0; i < input.length(); i++) {
+		if (input.length() <= 2) {
+			for (int i = 0; i < input.length()-1; i++) {
 				sb.append(input.charAt(i) + File.separator);
 			}
 		} else {
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < input.length()-2; i++) {
 				sb.append(input.charAt(i) + File.separator);
 			}
 		}
