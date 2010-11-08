@@ -15,6 +15,11 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
 
+/**
+ * 
+ * @author bluestome
+ *
+ */
 public class HttpClientUtils {
 
 	private static HttpClient httpclient = null;
@@ -58,6 +63,10 @@ public class HttpClientUtils {
 	 * @param encode
 	 * @return
 	 * @throws UnsupportedEncodingException
+	 * 
+	 * 修改记录
+	 * 2010-11-08
+	 *  修改对URI中地址中的空格的处理，将空格转化为%20
 	 */
 	public static String encodeURL(String url, String encode)
 			throws UnsupportedEncodingException {
@@ -74,7 +83,10 @@ public class HttpClientUtils {
 									encode));
 					noAsciiPart.delete(0, noAsciiPart.length());
 				}
-				sb.append(c);
+				if((byte)c == 32)
+					sb.append("%20");
+				else
+					sb.append(c);
 			}
 		}
 		return sb.toString();
@@ -344,6 +356,12 @@ public class HttpClientUtils {
 			String length = getHttpHeaderResponse(
 					"http://www.china.com/zh_cn/", "Content-Length");
 			System.out.println("网页长度：" + length);
+			String uri= "http://www.showimg.com/star/my1200994724/big/张学友/Famke_Janssen _22780685.jpg";
+			try{
+				System.out.println(encodeURL(uri,"UTF-8"));
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 
 			// System.out.println("isTRUE:"+urlValidation("http://www.bizhi.com/wallpaper/1150_2.html"));
 		} catch (Exception e) {
