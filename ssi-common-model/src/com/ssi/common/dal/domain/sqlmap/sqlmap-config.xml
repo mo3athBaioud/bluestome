@@ -5,15 +5,15 @@
 		lazyLoadingEnabled="true" maxRequests="3000" maxSessions="3000"
 		maxTransactions="3000" useStatementNamespaces="true" />
 	<sqlMap
-		resource="sqlmap/website_sqlmap_mapping.xml" />
+		resource="com/ssi/common/dal/domain/sqlmap/website_sqlmap_mapping.xml" />
 	<sqlMap
-		resource="sqlmap/article_sqlmap_mapping.xml" />
+		resource="com/ssi/common/dal/domain/sqlmap/article_sqlmap_mapping.xml" />
 	<sqlMap
-		resource="sqlmap/image_sqlmap_mapping.xml" />
+		resource="com/ssi/common/dal/domain/sqlmap/image_sqlmap_mapping.xml" />
 	<sqlMap
-		resource="sqlmap/picturefile_sqlmap_mapping.xml" />
+		resource="com/ssi/common/dal/domain/sqlmap/picturefile_sqlmap_mapping.xml" />
 	<sqlMap
-		resource="sqlmap/chart_sqlmap_mapping.xml" />
+		resource="com/ssi/common/dal/domain/sqlmap/chart_sqlmap_mapping.xml" />
 </sqlMapConfig>
 
 
