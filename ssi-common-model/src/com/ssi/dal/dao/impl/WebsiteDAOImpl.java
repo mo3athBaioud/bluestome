@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ssi.common.dal.BaseDAOImpl;
-import com.ssi.dal.dao.IWebsiteDAO;
-import com.ssi.dal.domain.Count;
-import com.ssi.dal.domain.Website;
+import com.ssi.common.dal.dao.IWebsiteDAO;
+import com.ssi.common.dal.domain.Count;
+import com.ssi.common.dal.domain.Website;
 
 public class WebsiteDAOImpl extends BaseDAOImpl implements IWebsiteDAO {
 
@@ -58,6 +58,19 @@ public class WebsiteDAOImpl extends BaseDAOImpl implements IWebsiteDAO {
 		Object obj = getQueryDelegate().queryForList("GET_COUNT_BY_WEB_ID", webid,getRoute());
 		if(null != obj)
 			list = (List<Count>)obj;
+		return list;
+	}
+
+	/**
+	 * 根据哈希表查找数据
+	 * @param map
+	 * @return
+	 */
+	public List<Website> find(HashMap map){
+		List<Website> list = new ArrayList<Website>();
+		Object obj = getQueryDelegate().queryForList("QUERY_WEBSITE_BY_MAP", map, getRoute());
+		if(null != obj)
+			list = (List<Website>)obj;
 		return list;
 	}
 

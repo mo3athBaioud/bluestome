@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ssi.common.dal.BaseDAOImpl;
-import com.ssi.dal.dao.IImageDAO;
-import com.ssi.dal.domain.Article;
-import com.ssi.dal.domain.Image;
-import com.ssi.dal.domain.PictureFile;
+import com.ssi.common.dal.dao.IImageDAO;
+import com.ssi.common.dal.domain.Article;
+import com.ssi.common.dal.domain.Image;
+import com.ssi.common.dal.domain.PictureFile;
 
 public class ImageDAOImpl extends BaseDAOImpl implements IImageDAO {
 

@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ssi.common.dal.BaseDAOImpl;
-import com.ssi.dal.dao.IPictureFileDAO;
-import com.ssi.dal.domain.PictureFile;
+import com.ssi.common.dal.dao.IPictureFileDAO;
+import com.ssi.common.dal.domain.PictureFile;
 
 public class PictureFileDAOImpl extends BaseDAOImpl implements IPictureFileDAO {
 
