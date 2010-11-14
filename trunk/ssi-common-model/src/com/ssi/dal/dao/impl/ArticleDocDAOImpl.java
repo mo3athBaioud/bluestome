@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ssi.common.dal.BaseDAOImpl;
-import com.ssi.dal.dao.IArticleDocDAO;
-import com.ssi.dal.domain.ArticleDoc;
+import com.ssi.common.dal.dao.IArticleDocDAO;
+import com.ssi.common.dal.domain.ArticleDoc;
 
 public class ArticleDocDAOImpl extends BaseDAOImpl implements IArticleDocDAO {
 
@@ -15,6 +15,21 @@ public class ArticleDocDAOImpl extends BaseDAOImpl implements IArticleDocDAO {
 	 */
 	public int insert(ArticleDoc articleDoc) {
 		int result = -1 ;
+		HashMap map = new HashMap();
+		map.put("title", articleDoc.getTitle());
+		int count = getCount(map);
+		logger.info(">> url["+articleDoc.getUrl()+"],title["+articleDoc.getTitle()+"] 下的数量为:"+count);
+		map.clear();
+		if(count > 0){
+			logger.info(">> PCPOP EXISTS THE SAME TITLE["+articleDoc.getTitle()+"]");
+			return result;
+		}
+		map.put("url", articleDoc.getUrl());
+		if(getCount(map) > 0){
+			logger.info(">> PCPOP EXISTS THE SAME URL["+articleDoc.getUrl()+"]");
+			return result;
+		}
+		map.clear();
 		result = (Integer)getEntityDelegate().insert("INSERT_ARTICLEDOC", articleDoc, getRoute());
 		return result;
 	}

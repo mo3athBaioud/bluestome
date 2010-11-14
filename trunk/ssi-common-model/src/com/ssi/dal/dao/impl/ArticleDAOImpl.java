@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ssi.common.dal.BaseDAOImpl;
-import com.ssi.dal.dao.IArticleDAO;
-import com.ssi.dal.domain.Article;
+import com.ssi.common.dal.dao.IArticleDAO;
+import com.ssi.common.dal.domain.Article;
 
 public class ArticleDAOImpl extends BaseDAOImpl implements IArticleDAO {
 
@@ -25,6 +25,10 @@ public class ArticleDAOImpl extends BaseDAOImpl implements IArticleDAO {
 	 */
 	public int insert(Article article){
 		int result = -1;
+		if(checkExists(article.getTitle(),article.getWebId(),article.getArticleUrl())){
+			logger.info("webid["+article.getWebId()+"],title["+article.getTitle()+"],url["+article.getArticleUrl()+"] exists");
+			return result;
+		}
 		result = (Integer)getEntityDelegate().insert("INSERT_ARTICLE", article, getRoute());
 		return result;
 	}
@@ -71,4 +75,42 @@ public class ArticleDAOImpl extends BaseDAOImpl implements IArticleDAO {
 		return article;
 	}
 
+	/**
+	 * 检查是否存在相同标题的代码
+	 * @param title
+	 * @param webId
+	 * @return
+	 * @throws Exception
+	 */
+	boolean checkExists(String title,Integer webId,String url){
+		boolean b = false;
+		if(null == title || title.equalsIgnoreCase("")){
+			return b;
+		}
+		if(null == url || url.equalsIgnoreCase("")){
+			return b;
+		}
+		HashMap map = new HashMap();
+		map.put("title", title);
+		map.put("webId", webId);
+		map.put("articleUrl", url);
+		int count = getCount(map);
+		if(count > 0){
+			return true;
+		}
+		return b;
+	}
+
+	/**
+	 * 获取总数
+	 * @param map
+	 * @return
+	 */
+	public int getCount(HashMap map){
+		int count = -1;
+		map.put("limit", 1);
+		count = getQueryDelegate().queryForCount("GET_ARTICLE_COUNT",map,getRoute());
+		return count;
+	}
+	
 }
