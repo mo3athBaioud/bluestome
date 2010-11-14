@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	
+ 	<typeAlias alias="chart" type="com.ssi.dal.domain.Chart" />
+
+	<resultMap class="chart" id="chartMap">
+		<result column="d_id" property="id"/>
+		<result column="d_name" property="name"/>
+		<result column="d_total" property="total"/>
+		<result column="d_table_name" property="tableName"/>
+		<result column="d_chart_type" property="chartType"/>
+		<result column="d_createtime" property="createtime"/>
+	</resultMap>
+	
+    <insert id="INSERT_CHART" parameterClass="chart">
+ 		INSERT INTO tbl_chart_daily 
+ 		(D_NAME,D_TOTAL,D_TABLE_NAME,d_chart_type,D_CREATETIME) 
+ 		VALUES (#name#,#total#,#tableName#,#chartType#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+	
+    <update id="UPDATE_CHART" parameterClass="chart">
+ 		UPDATE tbl_chart_daily 
+ 		<!-- 
+ 		set D_TOTAL = #total#,D_CREATETIME = now() where 
+ 		D_NAME = #name# and D_TABLE_NAME = #tableName# and d_chart_type = #chartType#
+ 		 -->
+ 		<dynamic>
+ 			<isNotNull property="total" prepend="set">
+ 				D_TOTAL = #total#
+ 			</isNotNull>
+ 			<isNotNull property="name" prepend="WHERE">
+ 				D_NAME = #name#
+ 			</isNotNull>
+ 			<isNotNull property="tableName" prepend="AND">
+	 			D_TABLE_NAME = #tableName#
+ 			</isNotNull>
+ 			<isNotNull property="chartType" prepend="AND">
+ 				d_chart_type = #chartType#
+ 			</isNotNull>
+ 		</dynamic>
+	</update>
+	
+	<select id="QUERY_ARTICLE_CHART" parameterClass="java.util.HashMap" resultClass="chart">
+		select date(d_createtime) as name,count(*) as total from tbl_article  where 1 = 1
+		<isNotNull property="date" prepend="AND">
+			date(d_createtime) = #date#
+		</isNotNull>
+		<isNotNull property="chart" prepend="AND">
+			date(d_createtime) = DATE(DATE_ADD(now(), INTERVAL -2 DAY))
+		</isNotNull>
+		group by date(d_createtime)
+	</select>
+	
+	<select id="QUERY_ARTICLEDOC_CHART" parameterClass="java.util.HashMap" resultClass="chart">
+		select date(d_createtime) as name,count(*) as total from tbl_article  where 1 = 1
+		<isNotNull property="date" prepend="AND">
+			date(d_createtime) = #date#
+		</isNotNull>
+		<isNotNull property="chart" prepend="AND">
+			date(d_createtime) = DATE(DATE_ADD(now(), INTERVAL -1 DAY))
+		</isNotNull>
+		group by date(d_createtime)
+	</select>
+
+	<select id="QUERY_IMAGE_CHART" parameterClass="java.util.HashMap" resultClass="chart">
+		select date(d_createtime) as name,count(*) as total from tbl_image where 1 = 1
+		<isNotNull property="date" prepend="AND">
+			date(d_createtime) = #date#
+		</isNotNull>
+		<isNotNull property="chart" prepend="AND">
+			date(d_createtime) = DATE(DATE_ADD(now(), INTERVAL -2 DAY))
+		</isNotNull>
+		group by date(d_createtime)
+	</select>
+
+	<select id="QUERY_PICTUREFILE_CHART" parameterClass="java.util.HashMap" resultClass="chart">
+		select date(d_createtime) as name,count(*) as total from tbl_pic_file  where 1 = 1
+		<isNotNull property="date" prepend="AND">
+			date(d_createtime) = #date#
+		</isNotNull>
+		<isNotNull property="chart" prepend="AND">
+			date(d_createtime) = DATE(DATE_ADD(now(), INTERVAL -2 DAY))
+		</isNotNull>
+		group by date(d_createtime)
+	</select>
+	
+	<select id="QUERY_UNIQUE_CHART" parameterClass="chart" resultClass="java.lang.Integer">
+		select count(*) from tbl_chart_daily where d_name = #name# and d_table_name = #tableName# and d_chart_type = #chartType#
+	</select>
+	
+	<select id="QUERY_CHART" parameterClass="java.util.HashMap" resultMap="chartMap">
+		select distinct d_id,d_name,d_total,d_table_name,d_chart_type,d_createtime from tbl_chart_daily where 1 = 1
+		<dynamic>
+			<isNotNull property="name" prepend="AND">
+				d_name = #name#
+			</isNotNull>
+			<isNotNull property="tableName" prepend="AND">
+				d_table_name = #tableName#
+			</isNotNull>
+			<isNotNull property="chartType" prepend="AND">
+				d_chart_type = #chartType#
+			</isNotNull>
+			<isNotNull property="startdate" prepend="AND">
+				date(d_name) BETWEEN #startdate#
+			</isNotNull>
+			<isNotNull property="enddate" prepend="AND">
+				#enddate#
+			</isNotNull>
+		</dynamic>
+		<isNotNull property="limit">
+			limit #limit#
+		</isNotNull>
+	</select>
+</sqlMap>
