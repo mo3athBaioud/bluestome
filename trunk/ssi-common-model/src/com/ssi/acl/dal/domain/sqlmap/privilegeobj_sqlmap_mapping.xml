@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="privilegeObj" type="com.ssi.acl.dal.domain.PrivilegeObject" />
+	<typeAlias alias="rolePriv" type="com.ssi.acl.dal.domain.RolePriv" />
+	
+	<resultMap class="privilegeObj" id="privilegeObjMap">
+		<result column="D_ID" property="id"/>
+		<result column="D_OBJECTINDEX" property="objectIndex"/>
+		<result column="D_OBJECTID" property="objectId"/>							
+		<result column="D_OBJECTNAME" property="objectName"/>	
+		<result column="D_OBJECTRIGHTS" property="objectRight"/>						
+		<result column="D_STATUS" property="status"/>						
+		<result column="D_CREATE_DT" property="createDt"/>						
+		
+		<result property="rolePrivs" column="D_ID" select="FIND_TBL_ROLE_PRIV_BY_PRIVOBJID" />						
+	</resultMap>
+	
+	<resultMap class="rolePriv" id="rolePrivMap">
+		<result column="D_ID" property="id"/>
+		<result column="D_ROLEID" property="roleId"/>
+		<result column="D_PRIVOBJID" property="privilegeId"/>
+		<result column="D_DELETE" property="delete"/>
+		<result column="D_UPDATE" property="update"/>
+		<result column="D_INSERT" property="insert"/>
+		<result column="D_SELECT" property="select"/>
+		<result column="D_CREATE_DT" property="createDt"/>
+		
+		<result property="privilegeObject" column="D_ID" select="FIND_TBL_PRIVILEGEOBJECT_BY_ID" />						
+		<result property="role" column="D_ROLEID" select="FIND_ROLE_BY_ID" />						
+	</resultMap>	
+	
+	
+	<select id="FIND_TBL_ROLE_PRIV_BY_ROLEID" parameterClass="java.lang.Integer" resultMap="rolePrivMap">
+		SELECT * FROM TBL_ROLE_PRIV WHERE D_ROLEID = #value#
+	</select>
+	
+	<select id="FIND_TBL_ROLE_PRIV_BY_PRIVOBJID" parameterClass="java.lang.Integer" resultMap="rolePrivMap">
+		SELECT * FROM TBL_ROLE_PRIV WHERE D_PRIVOBJID = #value#
+	</select>
+	
+	<select id="FIND_TBL_PRIVILEGEOBJECT_BY_ID" parameterClass="java.lang.Integer" resultMap="privilegeObjMap">
+		SELECT * FROM TBL_PRIVILEGEOBJECT WHERE D_ID = #value#
+	</select>
+	
+	<statement id="FIND_TBL_PRIVILEGEOBJECT_BY_HASH"  parameterClass="java.util.HashMap"  resultMap="privilegeObjMap">
+		select * from TBL_PRIVILEGEOBJECT where 1 = 1
+		<dynamic>
+				<isNotEmpty property="objectIndex" prepend="and">
+					D_OBJECTINDEX = #objectIndex#
+				</isNotEmpty>
+				<isNotEmpty property="objectId" prepend="and">
+					D_OBJECTID = #objectId#
+				</isNotEmpty>
+				<isNotEmpty property="objectName" prepend="and">
+					D_OBJECTNAME = #objectName# 
+				</isNotEmpty>
+				<isNotEmpty property="objectRight" prepend="and">
+					D_OBJECTRIGHTS = #objectRight#
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+	
+    <insert id="INSERT_TBL_PRIVILEGEOBJECT" parameterClass="privilegeObj"> 
+ 		INSERT INTO TBL_PRIVILEGEOBJECT 
+ 		(D_OBJECTINDEX,D_OBJECTID,D_OBJECTNAME,D_OBJECTRIGHTS,D_STATUS,D_CREATE_DT) 
+ 		VALUES (#objectIndex#,#objectId#,#objectName#,#objectRight#,#status#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+	
+    <update id="UPDATE_TBL_PRIVILEGEOBJECT" parameterClass="privilegeObj">
+ 		UPDATE TBL_PRIVILEGEOBJECT set 
+			D_OBJECTINDEX = #objectIndex#,
+			D_OBJECTID = #objectId#,
+			D_OBJECTNAME = #objectName#,
+			D_OBJECTRIGHTS = #objectRight#,
+			D_STATUS = #status#
+ 		where D_ID = #id#
+	</update>
+
+	<statement id="GET_TBL_PRIVILEGEOBJECT_COUNT"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(*) FROM TBL_PRIVILEGEOBJECT WHERE 1 = 1
+		<dynamic>
+				<isNotEmpty property="objectIndex" prepend="and">
+					D_OBJECTINDEX = #objectIndex#
+				</isNotEmpty>
+				<isNotEmpty property="objectId" prepend="and">
+					D_OBJECTID = #objectId#
+				</isNotEmpty>
+				<isNotEmpty property="objectName" prepend="and">
+					D_OBJECTNAME = #objectName# 
+				</isNotEmpty>
+				<isNotEmpty property="objectRight" prepend="and">
+					D_OBJECTRIGHTS = #objectRight#
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+     </statement>
+	
+	<delete id="DELETTE_TBL_PRIVILEGEOBJECT_BY_ID" parameterClass="java.lang.Integer">
+		DELETE FROM TBL_PRIVILEGEOBJECT WHERE D_ID = #value#
+	</delete>
+	
+	<!--
+	TBL_ROLE_PRIVILEGE
+	-->
+	
+	<statement id="FIND_TBL_ROLE_PRIV_BY_HASH"  parameterClass="java.util.HashMap"  resultMap="rolePrivMap">
+		select * from TBL_ROLE_PRIV where 1 = 1
+		<dynamic>
+				<isNotEmpty property="roleId" prepend="and">
+					D_ROLEID = #roleId#
+				</isNotEmpty>
+				<isNotEmpty property="privilegeId" prepend="and">
+					D_PRIVOBJID = #privilegeId#
+				</isNotEmpty>
+				<isNotEmpty property="delete" prepend="and">
+					D_DELETE = #delete#
+				</isNotEmpty>
+				<isNotEmpty property="update" prepend="and">
+					D_UPDATE = #update#
+				</isNotEmpty>
+				<isNotEmpty property="insert" prepend="and">
+					D_INSERT = #insert#
+				</isNotEmpty>
+				<isNotEmpty property="select" prepend="and">
+					D_SELECT = #select#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+	
+    <insert id="INSERT_TBL_ROLE_PRIV" parameterClass="rolePriv"> 
+ 		INSERT INTO TBL_ROLE_PRIV 
+ 		(D_ROLEID,D_PRIVOBJID,D_DELETE,D_UPDATE,D_INSERT,D_SELECT,D_CREATE_DT) 
+ 		VALUES (#roleId#,#privilegeId#,#delete#,#update#,#insert#,#select#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+	
+    <update id="UPDATE_TBL_ROLE_PRIV" parameterClass="rolePriv">
+ 		UPDATE TBL_ROLE_PRIV set 
+			D_ROLEID = #roleId#,
+			D_PRIVOBJID = #privilegeId#,
+			D_DELETE = #delete#,
+			D_UPDATE = #update#,
+			D_INSERT = #insert#,
+			D_SELECT = #select#
+ 		where D_ID = #id#
+	</update>
+
+	<statement id="GET_TBL_ROLE_PRIV_COUNT"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(*) FROM TBL_ROLE_PRIV WHERE 1 = 1
+		<dynamic>
+				<isNotEmpty property="roleId" prepend="and">
+					D_ROLEID = #roleId#
+				</isNotEmpty>
+				<isNotEmpty property="privilegeId" prepend="and">
+					D_PRIVOBJID = #privilegeId#
+				</isNotEmpty>
+				<isNotEmpty property="delete" prepend="and">
+					D_DELETE = #delete# 
+				</isNotEmpty>
+				<isNotEmpty property="update" prepend="and">
+					D_UPDATE = #update#
+				</isNotEmpty>
+				<isNotEmpty property="insert" prepend="and">
+					D_INSERT = #insert#
+				</isNotEmpty>
+				<isNotEmpty property="select" prepend="and">
+					D_SELECT = #select#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+     </statement>
+	
+	<delete id="DELETTE_TBL_ROLE_PRIV_BY_ID" parameterClass="java.lang.Integer">
+		DELETE FROM TBL_ROLE_PRIV WHERE D_ID = #value#
+	</delete>
+</sqlMap>

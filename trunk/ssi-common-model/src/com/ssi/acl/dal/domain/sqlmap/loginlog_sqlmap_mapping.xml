@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="loginlog" type="com.ssi.acl.dal.domain.LoginLog" />
+	
+	<resultMap class="loginlog" id="loginlogMap">
+		<result column="D_ID" property="id"/>
+		<result column="D_LOGINNAME" property="loginName"/>
+		<result column="D_OPERATOR_ID" property="operatorId"/>							
+		<result column="D_LOGINIP" property="loginIp"/>							
+		<result column="D_STATUS" property="status"/>							
+		<result column="D_LOGINDESC" property="loginDesc"/>							
+		<result column="D_READSTATUS" property="readStatus"/>							
+		<result column="D_LOGINDT" property="loginDt"/>	
+		
+		<result property="operator" column="D_OPERATOR_ID" select="FIND_OPERATOR_BY_ID" />						
+	</resultMap>
+	
+	<statement id="FIND_TBL_LOGINLOG_BY_HASH"  parameterClass="java.util.HashMap"  resultMap="loginlogMap">
+		select * from TBL_LOGINLOG where 1 = 1
+		<dynamic>
+				<isNotEmpty property="loginName" prepend="and">
+					D_LOGINNAME = #loginName#
+				</isNotEmpty>
+				<isNotEmpty property="operatorId" prepend="and">
+					D_OPERATOR_ID = #operatorId#
+				</isNotEmpty>
+				<isNotEmpty property="loginIp" prepend="and">
+					D_LOGINIP = #loginIp# 
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="loginDesc" prepend="and">
+					D_LOGINDESC = #loginDesc#
+				</isNotEmpty>
+				<isNotEmpty property="readStatus" prepend="and">
+					D_READSTATUS = #readStatus#
+				</isNotEmpty>
+				<isNotEmpty property="loginDt" prepend="and">
+					D_LOGINDT = #loginDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+	
+    <insert id="INSERT_TBL_LOGINLOG" parameterClass="loginlog"> 
+ 		INSERT INTO TBL_LOGINLOG 
+ 		(D_LOGINNAME,D_OPERATOR_ID,D_LOGINIP,D_STATUS,D_LOGINDESC,D_READSTATUS,D_LOGINDT) 
+ 		VALUES (#loginName#,#operatorId#,#loginIp#,#status#,#loginDesc#,#readStatus#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+	
+    <update id="UPDATE_TBL_LOGINLOG" parameterClass="loginlog">
+ 		UPDATE TBL_LOGINLOG set 
+			D_LOGINNAME = #loginName#,
+			D_OPERATOR_ID = #operatorId#,
+			D_LOGINIP = #loginIp#,
+			D_STATUS = #status#,
+			D_LOGINDESC = #loginDesc#,
+			D_READSTATUS = #readStatus#
+ 		where D_ID = #id#
+	</update>
+
+	<statement id="GET_TBL_LOGINLOG_COUNT"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(*) from TBL_LOGINLOG where 1 = 1
+		<dynamic>
+				<isNotEmpty property="loginName" prepend="and">
+					D_LOGINNAME = #loginName#
+				</isNotEmpty>
+				<isNotEmpty property="operatorId" prepend="and">
+					D_OPERATOR_ID = #operatorId#
+				</isNotEmpty>
+				<isNotEmpty property="loginIp" prepend="and">
+					D_LOGINIP = #loginIp# 
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="loginDesc" prepend="and">
+					D_LOGINDESC = #loginDesc#
+				</isNotEmpty>
+				<isNotEmpty property="readStatus" prepend="and">
+					D_READSTATUS = #readStatus#
+				</isNotEmpty>
+				<isNotEmpty property="loginDt" prepend="and">
+					D_LOGINDT = #loginDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+     </statement>
+	
+	<delete id="DELETTE_TBL_LOGINLOG_BY_ID" parameterClass="java.lang.Integer">
+		DELETE FROM TBL_LOGINLOG WHERE D_ID = #value#
+	</delete>
+</sqlMap>
