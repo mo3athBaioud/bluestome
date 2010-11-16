@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="operator" type="com.ssi.acl.dal.domain.Operator" />
+	<typeAlias alias="operatorRole" type="com.ssi.acl.dal.domain.OperatorRole" />
+
+	<resultMap class="operator" id="operatorMap">
+		<result column="D_ID" property="id"/>
+		<result column="D_LOGIN_NAME" property="loginName"/>
+		<result column="D_PASSWORD" property="password"/>
+		<result column="D_REAL_NAME" property="realName"/>							
+		<result column="D_PHONE" property="phone"/>	
+		<result column="D_MOBILE" property="mobile"/>						
+		<result column="D_EMAIL" property="email"/>						
+		<result column="D_FAX" property="fax"/>						
+		<result column="D_QQ" property="qq"/>						
+		<result column="D_MSN" property="msn"/>						
+		<result column="D_OPERATORTYPE" property="operatorType"/>						
+		<result column="D_SPID" property="spid"/>						
+		<result column="D_STATUS" property="status"/>						
+		<result column="D_CREATE_DT" property="createDt"/>						
+		
+		<!-- 
+		<result property="spInfo" column="D_SPID" select="SPECAL_1" />						
+		 -->
+		<result property="code" column="D_OPERATORTYPE" select="FIND_CODE_BY_ID" />						
+		<result property="operatorRoles" column="D_ID" select="FIND_OPERATORROLE_BY_OPERATORID" />						
+	</resultMap>
+	
+	<resultMap class="operatorRole" id="operatorRoleMap">
+		<result column="D_ID" property="id"/>
+		<result column="D_OPERATORID" property="operatorId"/>
+		<result column="D_ROLEID" property="roleId"/>
+		<result column="D_CREATE_DT" property="createDt"/>
+		
+		<result property="operator" column="D_OPERATORID" select="FIND_OPERATOR_BY_ID" />
+		<result property="role" column="D_ROLEID" select="FIND_ROLE_BY_ID" />						
+		<!-- 
+		 -->
+	</resultMap>
+	
+	<select id="FIND_OPERATOR_BY_ID" parameterClass="java.lang.Integer" resultMap="operatorMap">
+		SELECT * from TBL_OPERATOR where D_ID = #value#
+	</select>
+	
+	<select id="FIND_OPERATOR_BY_SPID" parameterClass="java.lang.Integer" resultMap="operatorMap">
+		SELECT * from TBL_OPERATOR where D_SPID = #value#
+	</select>
+	
+	<!-- 
+	<select id="FIND_ROLE_BY_ID" parameterClass="java.lang.Integer" resultMap="roleMap">
+		SELECT * FROM TBL_ROLE WHERE D_ID = #value#
+	</select>
+	 -->
+	 
+	<select id="FIND_OPERATORROLE_BY_OPERATORID" parameterClass="java.lang.Integer" resultMap="operatorRoleMap">
+		SELECT * from TBL_OPERATOR_ROLE where D_OPERATORID = #value#
+	</select>
+	
+	<statement id="FIND_OPERATOR_BY_HASH"  parameterClass="java.util.HashMap"  resultMap="operatorMap">
+		select * from TBL_OPERATOR where 1 = 1
+		<dynamic>
+				<isNotEmpty property="loginName" prepend="and">
+					D_LOGIN_NAME = #loginName#
+				</isNotEmpty>
+				<isNotEmpty property="password" prepend="and">
+					D_PASSWORD = #password#
+				</isNotEmpty>
+				<isNotEmpty property="realName" prepend="and">
+					D_REAL_NAME like '%#realName#%'
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="phone" prepend="and">
+					D_PHONE = #phone#
+				</isNotEmpty>
+				<isNotEmpty property="mobile" prepend="and">
+					D_MOBILE = #mobile#
+				</isNotEmpty>
+				<isNotEmpty property="email" prepend="and">
+					D_EMAIL = #email#
+				</isNotEmpty>
+				<isNotEmpty property="fax" prepend="and">
+					D_FAX = #fax#
+				</isNotEmpty>
+				<isNotEmpty property="qq" prepend="and">
+					D_QQ = #qq#
+				</isNotEmpty>
+				<isNotEmpty property="msn" prepend="and">
+					D_MSN = #msn#
+				</isNotEmpty>
+				<isNotEmpty property="operatorType" prepend="and">
+					D_OPERATORTYPE = #operatorType#
+				</isNotEmpty>
+				<isNotEmpty property="spid" prepend="and">
+					D_SPID = #spid#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by d_id
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+
+    <insert id="INSERT_TBL_OPERATOR" parameterClass="operator"> 
+ 		INSERT INTO TBL_OPERATOR 
+ 		(D_LOGIN_NAME,D_PASSWORD,D_REAL_NAME,D_STATUS,D_PHONE,D_MOBILE,D_EMAIL,D_FAX,D_QQ,D_MSN,D_OPERATORTYPE,D_SPID,D_CREATE_DT) 
+ 		VALUES (#loginName#,#password#,#realName#,#status#,#phone#,#mobile#,#email#,#fax#,#qq#,#msn#,#operatorType#,#spid#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+	
+    <update id="UPDATE_TBL_OPERATOR" parameterClass="operator">
+ 		UPDATE TBL_OPERATOR set 
+			D_LOGIN_NAME = #loginName#,
+			D_PASSWORD = #password#,
+			D_REAL_NAME = #realName#,
+			D_STATUS = #status#,
+			D_PHONE = #phone#,
+			D_MOBILE = #mobile#,
+			D_EMAIL = #email#,
+			D_FAX = #fax#,
+			D_QQ = #qq#,
+			D_MSN = #msn#,
+			D_OPERATORTYPE = #operatorType#,
+			D_SPID = #spid#,
+			D_CREATE_DT = #createDt#
+ 		where D_ID = #id#
+	</update>
+
+	<statement id="GET_TBL_OPERATOR_COUNT"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(*) FROM TBL_OPERATOR WHERE 1 = 1
+		<dynamic>
+				<isNotEmpty property="loginName" prepend="and">
+					D_LOGIN_NAME = #loginName#
+				</isNotEmpty>
+				<isNotEmpty property="password" prepend="and">
+					D_PASSWORD = #password#
+				</isNotEmpty>
+				<isNotEmpty property="realName" prepend="and">
+					D_REAL_NAME like '%#realName#%'
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="phone" prepend="and">
+					D_PHONE = #phone#
+				</isNotEmpty>
+				<isNotEmpty property="mobile" prepend="and">
+					D_MOBILE = #mobile#
+				</isNotEmpty>
+				<isNotEmpty property="email" prepend="and">
+					D_EMAIL = #email#
+				</isNotEmpty>
+				<isNotEmpty property="fax" prepend="and">
+					D_FAX = #fax#
+				</isNotEmpty>
+				<isNotEmpty property="qq" prepend="and">
+					D_QQ = #qq#
+				</isNotEmpty>
+				<isNotEmpty property="msn" prepend="and">
+					D_MSN = #msn#
+				</isNotEmpty>
+				<isNotEmpty property="code.id" prepend="and">
+					D_OPERATORTYPE = #code.id#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_SPID = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		ORDER BY D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+     </statement>
+	
+	<delete id="DELETE_OPERATOR_BY_ID" parameterClass="java.lang.Integer">
+		DELETE FROM TBL_OPERATOR WHERE D_ID = #value#
+	</delete>
+	
+	
+	<select id="FIND_TBL_OPERATOR_ROLE_BY_HASH" parameterClass="java.util.HashMap" resultMap="operatorRoleMap">
+		SELECT * FROM TBL_OPERATOR_ROLE WHERE 1 = 1
+		<dynamic>
+				<isNotEmpty property="operatorId" prepend="and">
+					D_OPERATORID = #operatorId#
+				</isNotEmpty>
+				<isNotEmpty property="roleId" prepend="and">
+					D_ROLEID = #roleId#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="FIND_TBL_OPERATOR_ROLE_COUNT_BY_HASH" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(*) FROM TBL_OPERATOR_ROLE WHERE 1 = 1
+		<dynamic>
+				<isNotEmpty property="operatorId" prepend="and">
+					D_OPERATORID = #operatorId#
+				</isNotEmpty>
+				<isNotEmpty property="roleId" prepend="and">
+					D_ROLEID = #roleId#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<insert id="INSERT_TBL_OPERATOR_ROLE" parameterClass="operatorRole" >
+		INSERT INTO TBL_OPERATOR_ROLE (D_OPERATORID,D_ROLEID,D_CREATE_DT) VALUES (#operatorId#,#roleId#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+	
+	<update id="UPDATE_TBL_OPERATOR_ROLE" parameterClass="operatorRole">
+		UPDATE TBL_OPERATOR_ROLE SET 
+			D_OPERATORID = #operatorId#,
+			D_ROLEID = #roleId#
+		WHERE D_ID = #id#
+	</update>
+	
+	<delete id="DELETE_TBL_OPERATOR_ROLE_BY_ID" parameterClass="java.lang.Integer" >
+		DELETE FROM TBL_OPERATOR_ROLE WHERE D_ID = #value#
+	</delete>
+</sqlMap>
+
+
+

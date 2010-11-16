@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="sysMenu" type="com.ssi.acl.dal.domain.SysMenu" />
+	<typeAlias alias="roleSysMenu" type="com.ssi.acl.dal.domain.RoleSysMenu" />
+	
+	<resultMap class="sysMenu" id="sysMenuMap">
+		<result column="D_ID" property="id"/>
+		<result column="D_MENU_NAME" property="menuName"/>
+		<result column="D_MENU_URL" property="menuUrl"/>							
+		<result column="D_STATUS" property="status"/>	
+		<result column="D_ISDEL" property="isDel"/>						
+		
+		<result column="D_MENU_ID" property="menuId"/>						
+		<result column="D_PARENT_MENU_ID" property="parentMenuId"/>						
+		<result column="D_VISIT_NAME" property="visitName"/>						
+		<result column="D_CREATE_DT" property="createDt"/>
+						
+		<result property="roleSysMenu" column="D_ID" select="FIND_TBL_ROLE_SYSMENU_BY_ID" />						
+	</resultMap>
+	
+	<resultMap class="roleSysMenu" id="roleSysMenuMap">
+		<result column="D_ID" property="id"/>
+		<result column="D_ROLEID" property="roleId"/>
+		<result column="D_SYSMENUID" property="sysMenuId"/>
+		<result column="D_CREATE_DT" property="createDt"/>
+		
+		<result property="sysMenu" column="D_SYSMENUID" select="FIND_TBL_SYSMENU_BY_ID" />						
+		<result property="role" column="D_ROLEID" select="FIND_ROLE_BY_ID" />						
+	</resultMap>
+		
+	<select id="FIND_TBL_SYSMENU_BY_ID" parameterClass="java.lang.Integer" resultMap="sysMenuMap">
+		SELECT * FROM TBL_SYSMENU WHERE D_ID = #value#
+	</select>
+	
+	<select id="FIND_TBL_ROLE_SYSMENU_BY_ID" parameterClass="java.lang.Integer" resultMap="roleSysMenuMap">
+		SELECT * FROM TBL_ROLE_SYSMENU WHERE D_SYSMENUID = #value#
+	</select>
+	
+	<statement id="FIND_TBL_SYSMENU_BY_HASH"  parameterClass="java.util.HashMap"  resultMap="sysMenuMap">
+		SELECT * from TBL_SYSMENU where 1 = 1
+		<dynamic>
+				<isNotEmpty property="menuName" prepend="and">
+					D_MENU_NAME = #menuName#
+				</isNotEmpty>
+				<isNotEmpty property="menuUrl" prepend="and">
+					D_MENU_URL = #menuUrl#
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status# 
+				</isNotEmpty>
+				<isNotEmpty property="isDel" prepend="and">
+					D_ISDEL = #isDel#
+				</isNotEmpty>
+				<isNotEmpty property="menuId" prepend="and">
+					D_MENU_ID = #menuId#
+				</isNotEmpty>
+				<isNotEmpty property="parentMenuId" prepend="and">
+					D_PARENT_MENU_ID = #parentMenuId#
+				</isNotEmpty>
+				<isNotEmpty property="visitName" prepend="and">
+					D_VISIT_NAME = #visitName#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+	
+    <insert id="INSERT_TBL_SYSMENU" parameterClass="sysMenu"> 
+ 		INSERT INTO TBL_SYSMENU 
+ 		(D_MENU_NAME,D_MENU_URL,D_STATUS,D_ISDEL,D_MENU_ID,D_PARENT_MENU_ID,D_VISIT_NAME,D_CREATE_DT) 
+ 		VALUES (#menuName#,#menuUrl#,#status#,#isDel#,#menuId#,#parentMenuId#,#visitName#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+	
+    <update id="UPDATE_TBL_SYSMENU" parameterClass="sysMenu">
+ 		UPDATE TBL_SYSMENU set 
+			D_MENU_NAME = #menuName#,
+			D_MENU_URL = #menuUrl#,
+			D_STATUS = #status#,
+			D_ISDEL = #isDel#,
+			D_MENU_ID = #menuId#,
+			D_PARENT_MENU_ID = #parentMenuId#,
+			D_VISIT_NAME = #visitName#,
+			D_CREATE_DT = #createDt#
+ 		where D_ID = #id#
+	</update>
+
+	<statement id="GET_TBL_SYSMENU_COUNT"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select COUNT(*) from TBL_SYSMENU where 1 = 1
+		<dynamic>
+				<isNotEmpty property="menuName" prepend="and">
+					D_MENU_NAME = #menuName#
+				</isNotEmpty>
+				<isNotEmpty property="menuUrl" prepend="and">
+					D_MENU_URL = #menuUrl#
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status# 
+				</isNotEmpty>
+				<isNotEmpty property="isDel" prepend="and">
+					D_ISDEL = #isDel#
+				</isNotEmpty>
+				<isNotEmpty property="menuId" prepend="and">
+					D_MENU_ID = #menuId#
+				</isNotEmpty>
+				<isNotEmpty property="parentMenuId" prepend="and">
+					D_PARENT_MENU_ID = #parentMenuId#
+				</isNotEmpty>
+				<isNotEmpty property="visitName" prepend="and">
+					D_VISIT_NAME = #visitName#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+     </statement>
+	
+	<delete id="DELETTE_TBL_SYSMENU_BY_ID" parameterClass="java.lang.Integer">
+		DELETE FROM TBL_SYSMENU WHERE D_ID = #value#
+	</delete>
+
+	<!-- TBL_ROLE_SYSMENU -->
+	
+	<statement id="FIND_TBL_ROLE_SYSMENU_BY_HASH"  parameterClass="java.util.HashMap"  resultMap="roleSysMenuMap">
+		SELECT * from TBL_ROLE_SYSMENU where 1 = 1
+		<dynamic>
+				<isNotEmpty property="roleId" prepend="and">
+					D_ROLEID = #roleId#
+				</isNotEmpty>
+				<isNotEmpty property="sysMenuId" prepend="and">
+					D_SYSMENUID = #sysMenuId#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+	
+    <insert id="INSERT_TBL_ROLE_SYSMENU" parameterClass="roleSysMenu"> 
+ 		INSERT INTO TBL_ROLE_SYSMENU 
+ 		(D_ROLEID,D_SYSMENUID,D_CREATE_DT) 
+ 		VALUES (#roleId#,#sysMenuId#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+	
+    <update id="UPDATE_TBL_ROLE_SYSMENU" parameterClass="roleSysMenu">
+ 		UPDATE TBL_ROLE_SYSMENU set 
+			D_ROLEID = #roleId#,
+			D_SYSMENUID = #sysMenuId#,
+			D_CREATE_DT = #createDt#
+ 		where D_ID = #id#
+	</update>
+
+	<statement id="GET_TBL_ROLE_SYSMENU_COUNT"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(*) from TBL_ROLE_SYSMENU where 1 = 1
+		<dynamic>
+				<isNotEmpty property="roleId" prepend="and">
+					D_ROLEID = #roleId#
+				</isNotEmpty>
+				<isNotEmpty property="sysMenuId" prepend="and">
+					D_SYSMENUID = #sysMenuId#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+     </statement>
+	
+	<delete id="DELETTE_TBL_ROLE_SYSMENU_BY_ID" parameterClass="java.lang.Integer">
+		DELETE FROM TBL_ROLE_SYSMENU WHERE D_ID = #value#
+	</delete>
+</sqlMap>

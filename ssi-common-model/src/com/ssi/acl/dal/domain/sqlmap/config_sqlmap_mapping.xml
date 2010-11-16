@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="config" type="com.ssi.acl.dal.domain.Config" />
+
+	<resultMap class="config" id="configMap">
+		<result column="D_ID" property="id"/>
+		<result column="D_CONFIG_NAME" property="configName"/>
+		<result column="D_CONFIG_VALUE" property="configValue"/>
+		<result column="D_CONFIG_DATE" property="configDate"/>							
+		<result column="D_STATUS" property="status"/>						
+		
+	</resultMap>
+	
+	<statement id="GET_CONFIG_BY_HASH"  parameterClass="java.util.HashMap"  resultMap="configMap">
+		select * from TBL_CONFIG where 1 = 1
+		<dynamic>
+				<isNotEmpty property="configName" prepend="and">
+					D_CONFIG_NAME = #configName#
+				</isNotEmpty>
+				<isNotEmpty property="configValue" prepend="and">
+					D_CONFIG_VALUE = #configValue#
+				</isNotEmpty>
+				<isNotEmpty property="configDate" prepend="and">
+					D_CONFIG_DATE like '%#configDate#%'
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by d_id
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+
+    <insert id="INSERT_TBL_CONFIG" parameterClass="config"> 
+ 		INSERT INTO TBL_CONFIG 
+ 		(D_CONFIG_NAME,D_CONFIG_VALUE,D_CONFIG_DATE,D_STATUS) 
+ 		VALUES (#configName#,#configValue#,now(),#status#)
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+    
+    <update id="UPDATE_TBL_CONFIG" parameterClass="config"> 
+ 		UPDATE TBL_CONFIG set 
+ 		D_CONFIG_NAME=#configName#,
+ 		D_CONFIG_VALUE = #configValue#,
+ 		D_STATUS=#status#
+ 		where D_ID = #id#
+	</update>
+	
+
+	<statement id="GET_TBL_CONFIG_COUNT"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select COUNT(*) from TBL_CONFIG where 1 = 1
+		<dynamic>
+				<isNotEmpty property="configName" prepend="and">
+					D_CONFIG_NAME = #configName#
+				</isNotEmpty>
+				<isNotEmpty property="configValue" prepend="and">
+					D_CONFIG_VALUE = #configValue#
+				</isNotEmpty>
+				<isNotEmpty property="configDate" prepend="and">
+					D_CONFIG_DATE like '%#configDate#%'
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by d_id
+		<dynamic>
+			<isNotEmpty property="limit">
+				limit #limit#
+			</isNotEmpty>
+		</dynamic>
+     </statement>
+	
+	
+</sqlMap>
+
+
+

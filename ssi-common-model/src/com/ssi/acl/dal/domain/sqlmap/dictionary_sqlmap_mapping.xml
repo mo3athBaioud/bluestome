@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="dictionary" type="com.ssi.acl.dal.domain.Dictionary" />
+
+	<resultMap class="dictionary" id="dictionaryMap">
+		<result column="D_ID" property="id"/>
+		<result column="D_TABLE" property="table"/>
+		<result column="D_COLUMN" property="column"/>
+		<result column="D_VALUE" property="value"/>
+		<result column="D_DESC" property="desc"/>							
+		<result column="D_OTHER" property="other"/>	
+		<result column="D_CREATE_DT" property="createDt"/>						
+		
+	</resultMap>
+	
+	<statement id="FIND_DICTIONARY_BY_HASH"  parameterClass="java.util.HashMap"  resultMap="dictionaryMap">
+		select * from TBL_DICTIONARY where 1 = 1
+		<dynamic>
+				<isNotEmpty property="table" prepend="and">
+					D_TABLE = #table#
+				</isNotEmpty>
+				<isNotEmpty property="column" prepend="and">
+					D_COLUMN = #column#
+				</isNotEmpty>
+				<isNotEmpty property="value" prepend="and">
+					D_VALUE = #value#
+				</isNotEmpty>
+				<isNotEmpty property="desc" prepend="and">
+					D_DESC like '%#desc#%'
+				</isNotEmpty>
+				<isNotEmpty property="other" prepend="and">
+					D_OTHER = #other#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by d_id
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+		
+    </statement>
+
+    <insert id="INSERT_TBL_DICTIONARY" parameterClass="dictionary"> 
+ 		INSERT INTO TBL_DICTIONARY 
+ 		(D_TABLE,D_COLUMN,D_VALUE,D_DESC,D_OTHER,D_CREATE_DT) 
+ 		VALUES (#table#,#column#,#value#,#desc#,#other#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+	
+    <update id="UPDATE_TBL_DICTIONARY" parameterClass="dictionary">
+ 		UPDATE TBL_DICTIONARY set 
+			D_TABLE = #table#,
+			D_COLUMN = #column#,
+			D_VALUE = #value#,
+			D_DESC = #desc#,
+			D_OTHER = #other#,
+			D_CREATE_DT = #createDt#
+ 		where D_ID = #id#
+	</update>
+
+	<statement id="GET_TBL_DICTIONARY_COUNT"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select * from TBL_DICTIONARY where 1 = 1
+		<dynamic>
+				<isNotEmpty property="table" prepend="and">
+					D_TABLE = #table#
+				</isNotEmpty>
+				<isNotEmpty property="column" prepend="and">
+					D_COLUMN = #column#
+				</isNotEmpty>
+				<isNotEmpty property="value" prepend="and">
+					D_VALUE = #value#
+				</isNotEmpty>
+				<isNotEmpty property="desc" prepend="and">
+					D_DESC like '%#desc#%'
+				</isNotEmpty>
+				<isNotEmpty property="other" prepend="and">
+					D_OTHER = #other#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by d_id
+		<dynamic>
+			<isNotEmpty property="limit">
+				limit #limit#
+			</isNotEmpty>
+		</dynamic>
+     </statement>
+	
+	<delete id="DELETE_TBL_DICTIONARY_BY_ID" parameterClass="java.lang.Integer">
+		DELETE FROM TBL_DICTIONARY WHERE D_ID = #value#
+	</delete>
+	
+</sqlMap>
+
+
+

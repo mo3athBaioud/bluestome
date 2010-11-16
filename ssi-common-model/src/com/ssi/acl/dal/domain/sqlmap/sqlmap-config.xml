@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings cacheModelsEnabled="true" enhancementEnabled="false"
+		lazyLoadingEnabled="true" maxRequests="3000" maxSessions="3000"
+		maxTransactions="3000" useStatementNamespaces="true" />
+	<sqlMap
+		resource="com/ssi/acl/dal/domain/sqlmap/dictionary_sqlmap_mapping.xml" />
+	<sqlMap
+		resource="com/ssi/acl/dal/domain/sqlmap/code_sqlmap_mapping.xml" />
+	<sqlMap
+		resource="com/ssi/acl/dal/domain/sqlmap/config_sqlmap_mapping.xml" />
+	<sqlMap
+		resource="com/ssi/acl/dal/domain/sqlmap/operator_sqlmap_mapping.xml" />
+	<sqlMap
+		resource="com/ssi/acl/dal/domain/sqlmap/role_sqlmap_mapping.xml" />
+	<sqlMap
+		resource="com/ssi/acl/dal/domain/sqlmap/privilegeobj_sqlmap_mapping.xml" />
+	<sqlMap
+		resource="com/ssi/acl/dal/domain/sqlmap/sysmenu_sqlmap_mapping.xml" />
+	<sqlMap
+		resource="com/ssi/acl/dal/domain/sqlmap/routeconfig_sqlmap_mapping.xml" />
+	<sqlMap
+		resource="com/ssi/acl/dal/domain/sqlmap/spinfo_sqlmap_mapping.xml" />
+	<sqlMap
+		resource="com/ssi/acl/dal/domain/sqlmap/loginlog_sqlmap_mapping.xml" />
+</sqlMapConfig>
+
+

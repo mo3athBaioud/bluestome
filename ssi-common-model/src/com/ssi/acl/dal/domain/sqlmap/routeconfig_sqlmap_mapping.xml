@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="routeConfig" type="com.ssi.acl.dal.domain.RouteConfig" />
+
+	<resultMap class="routeConfig" id="routeConfigMap">
+		<result column="D_ID" property="id"/>
+		<result column="D_INTERFACES_ADDR" property="interfacesAddr"/>						
+		<result column="D_ZONE_NUM" property="zoneNum"/>						
+		<result column="D_CITY_NAME" property="cityName"/>						
+		<result column="D_STATUS" property="status"/>						
+		
+	</resultMap>
+	
+	<select id="FIND_TBL_ROUTECONFIG_BY_ID" parameterClass="java.lang.Integer" resultMap="routeConfigMap">
+		select * from TBL_ROUTE_CONFIG where d_id = #value#
+	</select>
+	
+	<statement id="FIND_TBL_ROUTECONFIG_BY_HASH"  parameterClass="java.util.HashMap"  resultMap="routeConfigMap">
+		select * from TBL_ROUTE_CONFIG where 1 = 1
+		<dynamic>
+				<isNotEmpty property="interfacesAddr" prepend="and">
+					D_INTERFACES_ADDR = #interfacesAddr#
+				</isNotEmpty>
+				<isNotEmpty property="zoneNum" prepend="and">
+					D_ZONE_NUM = #zoneNum#
+				</isNotEmpty>
+				<isNotEmpty property="cityName" prepend="and">
+					D_CITY_NAME = #cityName#
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by d_id
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+		
+    </statement>
+
+    <insert id="INSERT_TBL_ROUTECONFIG" parameterClass="routeConfig"> 
+ 		INSERT INTO TBL_ROUTE_CONFIG (D_INTERFACES_ADDR,D_ZONE_NUM,D_CITY_NAME,D_STATUS) 
+ 		VALUES (#interfacesAddr#,#zoneNum#,#cityName#,#status#)
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+	
+    <update id="UPDATE_TBL_ROUTE_CONFIG" parameterClass="routeConfig">
+ 		UPDATE TBL_ROUTE_CONFIG set 
+			D_INTERFACES_ADDR = #interfacesAddr#,
+			D_ZONE_NUM = #zoneNum#,
+			D_CITY_NAME = #cityName#,
+			D_STATUS = #status#
+ 		where D_ID = #id#
+	</update>
+
+	<statement id="GET_TBL_ROUTE_CONFIG_COUNT"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select * from TBL_ROUTE_CONFIG where 1 = 1
+		<dynamic>
+			<isNotEmpty property="interfacesAddr" prepend="and">
+				D_INTERFACES_ADDR = #interfacesAddr#
+			</isNotEmpty>
+			<isNotEmpty property="zoneNum" prepend="and">
+				D_ZONE_NUM = #zoneNum#
+			</isNotEmpty>
+			<isNotEmpty property="cityName" prepend="and">
+				D_CITY_NAME = #cityName#
+			</isNotEmpty>
+			<isNotEmpty property="status" prepend="and">
+				D_STATUS = #status#
+			</isNotEmpty>
+			<isNotEmpty property="id" prepend="and">
+				D_ID = #id#
+			</isNotEmpty>
+		</dynamic>
+		order by d_id
+		<dynamic>
+			<isNotEmpty property="limit">
+				limit #limit#
+			</isNotEmpty>
+		</dynamic>
+     </statement>
+	
+	<delete id="DELETE_TBL_ROUTE_CONFIG_BY_ID" parameterClass="java.lang.Integer">
+		DELETE FROM TBL_ROUTE_CONFIG WHERE D_ID = #value#
+	</delete>
+	
+</sqlMap>
+
+
+

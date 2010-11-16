@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="role" type="com.ssi.acl.dal.domain.Role" />
+	
+	<resultMap class="role" id="roleMap">
+		<result column="D_ID" property="id"/>
+		<result column="D_ROLE_NAME" property="roleName"/>
+		<result column="D_ROLE_DESC" property="roleDesc"/>							
+		<result column="D_ROLE_STATUS" property="roleStatus"/>	
+		<result column="D_CREATE_DT" property="createDt"/>						
+		
+		<!-- 
+		<result property="roleSysMenu" column="D_ID" select="FIND_CODE_BY_ID" />						
+		 -->
+		<result property="rolePrivs"   column="D_ID" select="FIND_TBL_ROLE_PRIV_BY_ROLEID" />						
+		<result property="operatorRoles" column="D_ID" select="FIND_OPERATORROLE_BY_ROLEID" />						
+	</resultMap>
+	
+	<select id="FIND_OPERATORROLE_BY_ROLEID" parameterClass="java.lang.Integer" resultMap="operatorRoleMap">
+		SELECT * FROM TBL_OPERATOR_ROLE WHERE D_ROLEID = #value#
+	</select>
+	
+	<select id="FIND_ROLE_BY_ID" parameterClass="java.lang.Integer" resultMap="roleMap">
+		SELECT * FROM TBL_ROLE WHERE D_ID = #value#
+	</select>
+	
+	<statement id="FIND_TBL_ROLE_BY_HASH"  parameterClass="java.util.HashMap"  resultMap="roleMap">
+		select * from TBL_ROLE where 1 = 1
+		<dynamic>
+				<isNotEmpty property="roleName" prepend="and">
+					D_ROLE_NAME = #roleName#
+				</isNotEmpty>
+				<isNotEmpty property="roleDesc" prepend="and">
+					D_ROLE_DESC = #roleDesc#
+				</isNotEmpty>
+				<isNotEmpty property="roleStatus" prepend="and">
+					D_ROLE_STATUS = #roleStatus# 
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+	
+    <insert id="INSERT_TBL_ROLE" parameterClass="role"> 
+ 		INSERT INTO TBL_ROLE 
+ 		(D_ROLE_NAME,D_ROLE_DESC,D_ROLE_STATUS,D_CREATE_DT) 
+ 		VALUES (#roleName#,#roleDesc#,#roleStatus#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+	
+    <update id="UPDATE_TBL_ROLE" parameterClass="role">
+ 		UPDATE TBL_ROLE set 
+			D_ROLE_NAME = #roleName#,
+			D_ROLE_DESC = #roleDesc#,
+			D_ROLE_STATUS = #roleStatus#
+ 		where D_ID = #id#
+	</update>
+
+	<statement id="GET_TBL_ROLE_COUNT"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(*) FROM TBL_ROLE WHERE 1 = 1
+		<dynamic>
+				<isNotEmpty property="roleName" prepend="and">
+					D_ROLE_NAME = #roleName#
+				</isNotEmpty>
+				<isNotEmpty property="roleDesc" prepend="and">
+					D_ROLE_DESC = #roleDesc#
+				</isNotEmpty>
+				<isNotEmpty property="roleStatus" prepend="and">
+					D_ROLE_STATUS = #roleStatus# 
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by D_ID
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+     </statement>
+	
+	<delete id="DELETTE_TBL_ROLE_BY_ID" parameterClass="java.lang.Integer">
+		DELETE FROM TBL_ROLE WHERE D_ID = #value#
+	</delete>
+</sqlMap>

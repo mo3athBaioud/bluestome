@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="code" type="com.ssi.acl.dal.domain.Code" />
+
+	<resultMap class="code" id="codeMap">
+		<result column="D_ID" property="id"/>
+		<result column="D_CODE_NAME" property="codeName"/>
+		<result column="D_ISDEL" property="isDel"/>
+		<result column="D_DESC" property="desc"/>							
+		<result column="D_CODE_TP" property="codeTp"/>	
+		<result column="D_CREATE_DT" property="createDt"/>						
+		<result column="D_STATUS" property="status"/>						
+		
+		<!-- 
+		<result property="spInfo" column="D_CODE_TP" select="SPECAL_1" />						
+		<result property="operator" column="D_CODE_TP" select="SPECAL_2" />						
+		<result property="privilegeObject" column="D_CODE_TP" select="SPECAL_3" />						
+		 -->
+	</resultMap>
+	
+	<select id="FIND_CODE_BY_ID" parameterClass="java.lang.Integer" resultMap="codeMap">
+		select * from TBL_CODE where d_id = #value#
+	</select>
+	
+	<select id="SPECAL_1" parameterClass="java.lang.String" resultMap="codeMap">
+		select * from TBL_CODE where 1 = 1 AND D_CODE_TP = 'D_SPTYPEID'
+	</select>
+
+	<select id="SPECAL_2" parameterClass="java.lang.String" resultMap="codeMap">
+		select * from TBL_CODE where 1 = 1 AND D_CODE_TP = 'D_OPERATORTYPE'
+	</select>
+	
+	<select id="SPECAL_3" parameterClass="java.lang.String" resultMap="codeMap">
+		select * from TBL_CODE where 1 = 1 AND D_CODE_TP = 'D_OBJECT_TYPE'
+	</select>
+	
+	<statement id="GET_CODE_BY_HASH"  parameterClass="java.util.HashMap"  resultMap="codeMap">
+		select * from TBL_CODE where 1 = 1
+		<dynamic>
+				<isNotEmpty property="codeName" prepend="and">
+					D_CODE_TP = #codeTp#
+				</isNotEmpty>
+				<isNotEmpty property="isDel" prepend="and">
+					D_ISDEL = #isDel#
+				</isNotEmpty>
+				<isNotEmpty property="desc" prepend="and">
+					D_DESC like '%#desc#%'
+				</isNotEmpty>
+				<isNotEmpty property="codeTp" prepend="and">
+					D_CODE_TP = #codeTp#
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+		</dynamic>
+		order by d_id
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+
+    <insert id="INSERT_TBL_CODE" parameterClass="code"> 
+ 		INSERT INTO TBL_CODE 
+ 		(D_CODE_NAME,D_ISDEL,D_DESC,D_CODE_TP,D_CREATE_DT,D_STATUS) 
+ 		VALUES (#codeName#,#isDel#,#desc#,#codeTp#,now(),#status#)
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+    
+    <update id="UPDATE_TBL_CODE" parameterClass="code"> 
+ 		UPDATE TBL_ARTICLE set 
+ 		D_CODE_NAME=#codeName#,
+ 		D_ISDEL = #isDel#,
+ 		D_DESC=#desc#,
+ 		D_CODE_TP=#codeTp#,
+ 		D_STATUS=#status#,
+ 		where D_ID = #id#
+	</update>
+	
+
+	<statement id="GET_TBL_CODE_COUNT"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		SELECT COUNT(*) FROM TBL_CODE WHERE 1 = 1
+		<dynamic>
+				<isNotEmpty property="codeName" prepend="and">
+					D_CODE_TP = #codeTp#
+				</isNotEmpty>
+				<isNotEmpty property="isDel" prepend="and">
+					D_ISDEL = #isDel#
+				</isNotEmpty>
+				<isNotEmpty property="desc" prepend="and">
+					D_DESC like '%#desc#%'
+				</isNotEmpty>
+				<isNotEmpty property="codeTp" prepend="and">
+					D_CODE_TP = #codeTp#
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+		</dynamic>
+		ORDER BY D_ID
+		<dynamic>
+			<isNotEmpty property="limit">
+				LIMIT #limit#
+			</isNotEmpty>
+		</dynamic>
+     </statement>
+	
+	
+</sqlMap>
+
+
+

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="spinfo" type="com.ssi.acl.dal.domain.SpInfo" />
+
+	<resultMap class="spinfo" id="spinfoMap">
+		<result column="D_ID" property="id"/>
+		<result column="D_SPSHORTNAME" property="spShortName"/>
+		<result column="D_SPCODE" property="spCode"/>
+		<result column="D_SPNAME" property="spName"/>
+		<result column="D_MANAGERANGE" property="manageRange"/>							
+		<result column="D_BANKNAME" property="bankName"/>	
+		<result column="D_BANKNO" property="bankNo"/>						
+		<result column="D_LINKMAN_NAME" property="linkManName"/>						
+		<result column="D_LINKMAN_TEL" property="linkManTel"/>						
+		<result column="D_LINKMAN_PHONE" property="linkManPhone"/>						
+		<result column="D_FAX" property="fax"/>						
+		<result column="D_EMAIL" property="email"/>						
+		<result column="D_COMPANY_ADDR" property="companyAddr"/>						
+		<result column="D_WEB_URL" property="webUrl"/>						
+		<result column="D_MESSAGE_ADDR" property="messageAddr"/>						
+		<result column="D_ZIP" property="zip"/>						
+		<result column="D_CUSTOMER_SERVICENAME" property="customerServiceName"/>						
+		<result column="D_CUSTOMER_SERVICETEL" property="customerServiceTel"/>						
+		<result column="D_STATUS" property="status"/>						
+		<result column="D_KEY1" property="key1"/>						
+		<result column="D_KEY2" property="key2"/>						
+		<result column="D_KEY3" property="key3"/>						
+		<result column="D_KEY4" property="key4"/>						
+		<result column="D_SPTYPEID" property="spTypeId"/>						
+		<result column="D_CREATE_DT" property="createDt"/>						
+		<result column="D_PARENT_ID" property="parentId"/>						
+		<result column="D_AREA_CODE" property="areaCode"/>						
+		
+		<result property="operators" column="D_ID" select="FIND_OPERATOR_BY_SPID" />						
+		<result property="code" column="D_SPTYPEID" select="FIND_CODE_BY_ID" />	
+		<result property="areCode" column="D_AREA_CODE" select="FIND_TBL_ROUTECONFIG_BY_ID" />						
+		<!-- 
+		 -->					
+	</resultMap>
+	
+	<statement id="FIND_SP_BY_HASH"  parameterClass="java.util.HashMap"  resultMap="spinfoMap">
+		select * from TBL_SPINFO where 1 = 1
+		<dynamic>
+				<isNotEmpty property="spShortName" prepend="and">
+					D_SPSHORTNAME = #spShortName#
+				</isNotEmpty>
+				<isNotEmpty property="spCode" prepend="and">
+					D_SPCODE = #spCode#
+				</isNotEmpty>
+				<isNotEmpty property="spName" prepend="and">
+					D_SPNAME = #spName#
+				</isNotEmpty>
+				<isNotEmpty property="manageRange" prepend="and">
+					D_MANAGERANGE like '%#manageRange#%'
+				</isNotEmpty>
+				<isNotEmpty property="bankName" prepend="and">
+					D_BANKNAME = #bankName#
+				</isNotEmpty>
+				<isNotEmpty property="bankNo" prepend="and">
+					D_BANKNO = #bankNo#
+				</isNotEmpty>
+				<isNotEmpty property="linkManName" prepend="and">
+					D_LINKMAN_NAME = #linkManName#
+				</isNotEmpty>
+				<isNotEmpty property="linkManTel" prepend="and">
+					D_LINKMAN_TEL = #linkManTel#
+				</isNotEmpty>
+				<isNotEmpty property="linkManPhone" prepend="and">
+					D_LINKMAN_PHONE = #linkManPhone#
+				</isNotEmpty>
+				<isNotEmpty property="fax" prepend="and">
+					D_FAX = #fax#
+				</isNotEmpty>
+				<isNotEmpty property="email" prepend="and">
+					D_EMAIL = #email#
+				</isNotEmpty>
+				<isNotEmpty property="companyAddr" prepend="and">
+					D_COMPANY_ADDR = #companyAddr#
+				</isNotEmpty>
+				<isNotEmpty property="webUrl" prepend="and">
+					D_WEB_URL = #webUrl#
+				</isNotEmpty>
+				<isNotEmpty property="messageAddr" prepend="and">
+					D_MESSAGE_ADDR = #messageAddr#
+				</isNotEmpty>
+				<isNotEmpty property="zip" prepend="and">
+					D_ZIP = #zip#
+				</isNotEmpty>
+				<isNotEmpty property="customerServiceName" prepend="and">
+					D_CUSTOMER_SERVICENAME = #customerServiceName#
+				</isNotEmpty>
+				<isNotEmpty property="customerServiceTel" prepend="and">
+					D_CUSTOMER_SERVICETEL = #customerServiceTel#
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="key1" prepend="and">
+					D_KEY1 = #key1#
+				</isNotEmpty>
+				<isNotEmpty property="key2" prepend="and">
+					D_KEY2 = #key2#
+				</isNotEmpty>
+				<isNotEmpty property="key3" prepend="and">
+					D_KEY3 = #key3#
+				</isNotEmpty>
+				<isNotEmpty property="key4" prepend="and">
+					D_KEY4 = #key4#
+				</isNotEmpty>
+				<isNotEmpty property="spTypeId" prepend="and">
+					D_SPTYPEID = #spTypeId#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="parentId" prepend="and">
+					D_PARENT_ID = #parentId#
+				</isNotEmpty>
+				<isNotEmpty property="areaCode" prepend="and">
+					D_AREA_CODE = #areaCode#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by d_id
+		<dynamic>
+			<isNotEmpty property="start">
+				limit #start#
+			</isNotEmpty>
+			<isNotEmpty property="end">
+				,#end#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+
+    <insert id="INSERT_TBL_SPINFO" parameterClass="spinfo"> 
+ 		INSERT INTO TBL_SPINFO 
+ 		(D_SPSHORTNAME,D_SPCODE,D_SPNAME,D_MANAGERANGE,D_BANKNAME,D_BANKNO,D_LINKMAN_NAME,D_LINKMAN_TEL,D_LINKMAN_PHONE,D_FAX,D_EMAIL,D_COMPANY_ADDR,D_WEB_URL,D_MESSAGE_ADDR,D_ZIP,
+ 		D_CUSTOMER_SERVICENAME,D_CUSTOMER_SERVICETEL,D_STATUS,D_KEY1,D_KEY2,D_KEY3,D_KEY4,
+ 		D_SPTYPEID,D_CREATE_DT,D_PARENT_ID,D_AREA_CODE) 
+ 		VALUES (#spShortName#,#spCode#,#spName#,#manageRange#,#bankName#,#bankNo#,#linkManName#,#linkManTel#,#linkManPhone#,#fax#,
+ 		#email#,#companyAddr#,#webUrl#,#messageAddr#,#zip#,
+ 		#customerServiceName#,#customerServiceTel#,#status#,#key1#,#key2#,#key3#,#key4#,#spTypeId#,now(),#parentId#,#areaCode#)
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+	
+    <update id="UPDATE_TBL_SPINFO" parameterClass="spinfo">
+ 		UPDATE TBL_SPINFO set 
+			D_SPSHORTNAME = #spShortName#,
+			D_SPCODE = #spCode#,
+			D_SPNAME = #spName#,
+			D_MANAGERANGE = #manageRange#,
+			D_BANKNAME = #bankName#,
+			D_BANKNO = #bankNo#,
+			D_LINKMAN_NAME = #linkManName#,
+			D_LINKMAN_TEL = #linkManTel#,
+			D_LINKMAN_PHONE = #linkManPhone#,
+			D_FAX = #fax#,
+			D_EMAIL = #email#,
+			D_COMPANY_ADDR = #companyAddr#,
+			D_WEB_URL = #webUrl#,
+			D_MESSAGE_ADDR = #messageAddr#,
+			D_ZIP = #zip#,
+			D_CUSTOMER_SERVICENAME = #customerServiceName#,
+			D_CUSTOMER_SERVICETEL = #customerServiceTel#,
+			D_STATUS = #status#,
+			D_KEY1 = #key1#,
+			D_KEY2 = #key2#,
+			D_KEY3 = #key3#,
+			D_KEY4 = #key4#,
+			D_SPTYPEID = #spTypeId#,
+			D_CREATE_DT = #createDt#,
+			D_PARENT_ID = #parentId#,
+			D_AREA_CODE = #areaCode#
+ 		where D_ID = #id#
+	</update>
+
+	<statement id="GET_TBL_SPINFO_COUNT"  parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+		select * from TBL_SPINFO where 1 = 1
+		<dynamic>
+				<isNotEmpty property="spShortName" prepend="and">
+					D_SPSHORTNAME = #spShortName#
+				</isNotEmpty>
+				<isNotEmpty property="spCode" prepend="and">
+					D_SPCODE = #spCode#
+				</isNotEmpty>
+				<isNotEmpty property="manageRange" prepend="and">
+					D_MANAGERANGE like '%#manageRange#%'
+				</isNotEmpty>
+				<isNotEmpty property="bankName" prepend="and">
+					D_BANKNAME = #bankName#
+				</isNotEmpty>
+				<isNotEmpty property="bankNo" prepend="and">
+					D_BANKNO = #bankNo#
+				</isNotEmpty>
+				<isNotEmpty property="linkManName" prepend="and">
+					D_LINKMAN_NAME = #linkManName#
+				</isNotEmpty>
+				<isNotEmpty property="linkManTel" prepend="and">
+					D_LINKMAN_TEL = #linkManTel#
+				</isNotEmpty>
+				<isNotEmpty property="linkManPhone" prepend="and">
+					D_LINKMAN_PHONE = #linkManPhone#
+				</isNotEmpty>
+				<isNotEmpty property="fax" prepend="and">
+					D_FAX = #fax#
+				</isNotEmpty>
+				<isNotEmpty property="email" prepend="and">
+					D_EMAIL = #email#
+				</isNotEmpty>
+				<isNotEmpty property="companyAddr" prepend="and">
+					D_COMPANY_ADDR = #companyAddr#
+				</isNotEmpty>
+				<isNotEmpty property="webUrl" prepend="and">
+					D_WEB_URL = #webUrl#
+				</isNotEmpty>
+				<isNotEmpty property="messageAddr" prepend="and">
+					D_MESSAGE_ADDR = #messageAddr#
+				</isNotEmpty>
+				<isNotEmpty property="zip" prepend="and">
+					D_ZIP = #zip#
+				</isNotEmpty>
+				<isNotEmpty property="customerServiceName" prepend="and">
+					D_CUSTOMER_SERVICENAME = #customerServiceName#
+				</isNotEmpty>
+				<isNotEmpty property="customerServiceTel" prepend="and">
+					D_CUSTOMER_SERVICETEL = #customerServiceTel#
+				</isNotEmpty>
+				<isNotEmpty property="status" prepend="and">
+					D_STATUS = #status#
+				</isNotEmpty>
+				<isNotEmpty property="key1" prepend="and">
+					D_KEY1 = #key1#
+				</isNotEmpty>
+				<isNotEmpty property="key2" prepend="and">
+					D_KEY2 = #key2#
+				</isNotEmpty>
+				<isNotEmpty property="key3" prepend="and">
+					D_KEY3 = #key3#
+				</isNotEmpty>
+				<isNotEmpty property="key4" prepend="and">
+					D_KEY4 = #key4#
+				</isNotEmpty>
+				<isNotEmpty property="spTypeId" prepend="and">
+					D_SPTYPEID = #spTypeId#
+				</isNotEmpty>
+				<isNotEmpty property="createDt" prepend="and">
+					D_CREATE_DT = #createDt#
+				</isNotEmpty>
+				<isNotEmpty property="parentId" prepend="and">
+					D_PARENT_ID = #parentId#
+				</isNotEmpty>
+				<isNotEmpty property="areaCode" prepend="and">
+					D_AREA_CODE = #areaCode#
+				</isNotEmpty>
+				<isNotEmpty property="id" prepend="and">
+					D_ID = #id#
+				</isNotEmpty>
+		</dynamic>
+		order by d_id
+		<dynamic>
+			<isNotEmpty property="limit">
+				limit #limit#
+			</isNotEmpty>
+		</dynamic>
+     </statement>
+	
+	<delete id="DELETE_SPINFO_BY_ID" parameterClass="java.lang.Integer">
+		DELETE FROM TBL_SPINFO WHERE D_ID = #value#
+	</delete>
+	
+</sqlMap>
+
+
+
