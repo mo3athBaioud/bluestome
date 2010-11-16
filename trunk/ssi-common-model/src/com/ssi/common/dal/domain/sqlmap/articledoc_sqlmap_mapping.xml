@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="articledoc" type="com.ssi.dal.domain.ArticleDoc" />
+
+	<resultMap class="articledoc" id="articledocMap">
+		<result column="d_id" property="id"/>
+		<result column="d_web_id" property="webId"/>
+		<result column="d_title" property="title"/>
+		<result column="d_url" property="url"/>
+		<result column="d_author" property="author"/>
+		<result column="d_grade" property="grade"/>
+		<result column="d_tag" property="tag"/>							
+		<result column="d_status" property="status"/>	
+		<result column="d_createtime" property="createTime"/>						
+		<result column="d_modifytime" property="modifyTime"/>						
+		<result column="d_publish_time" property="publishTime"/>	
+	</resultMap>
+
+	<statement id="FIND_ARTICLEDOC"  parameterClass="java.util.Map" resultMap="articledocMap">
+    	SELECT DISTINCT t.* FROM TBL_ARTICLE_DOC t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="webId" prepend="and">
+				t.d_web_id = #webId#
+			</isNotEmpty>
+			<isNotEmpty property="title" prepend="and">
+				t.d_title = #title#
+			</isNotEmpty>
+			<isNotEmpty property="url" prepend="and">
+				t.d_url = #url#
+			</isNotEmpty>
+			<isNotEmpty property="author" prepend="and">
+				t.d_author = #author#
+			</isNotEmpty>
+			<isNotEmpty property="grade" prepend="and">
+				t.d_grade = #grade#
+			</isNotEmpty>
+			<isNotEmpty property="tag" prepend="and">
+				t.d_tag = #tag#
+			</isNotEmpty>
+			<isNotEmpty property="status" prepend="and">
+				t.d_status = #status#
+			</isNotEmpty>
+			<isNotEmpty property="createTime" prepend="and">
+				t.d_createtime = #createTime#
+			</isNotEmpty>
+			<isNotEmpty property="modifyTime" prepend="and">
+				t.d_modifytime = #"modifyTime"#
+			</isNotEmpty>
+			<isNotEmpty property="publishTime" prepend="and">
+				t.d_publish_time = #publishTime#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY t.d_id
+		<isNotEmpty property="limit">
+			limit #limit#
+		</isNotEmpty>
+		
+    </statement>
+
+    <!-- 添加文章记录，包括返回ID -->
+    <insert id="INSERT_ARTICLEDOC" parameterClass="articledoc"> 
+ 		INSERT INTO TBL_ARTICLE_DOC
+ 		(d_web_id,d_title,d_url,d_author,d_grade,d_tag,d_status,d_createtime,d_modifytime,d_publish_time) 
+ 		VALUES (#webId#,#title#,#url#,#author#,#grade#,#tag#,#status#,now(),now(),#publishTime#)
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+    
+    <update id="UPDATE_ARTICLEDOC" parameterClass="articledoc"> 
+ 		UPDATE TBL_ARTICLE_DOC set 
+ 		d_web_id=#webId#,
+ 		d_title = #title#,
+ 		d_url = #url#,
+ 		d_author=#author#,
+ 		d_grade=#grade#,
+ 		d_tag=#tag#,
+ 		d_status=#status#,
+ 		d_modifytime=now(),
+ 		d_publish_time=#publishTime#
+ 		where d_id = #id#
+	</update>
+	
+	<statement id="GET_ARTICLEDOC_COUNT"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
+		SELECT COUNT(*) FROM TBL_ARTICLE_DOC T WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="webId" prepend="and">
+				t.d_web_id = #webId#
+			</isNotEmpty>
+			<isNotEmpty property="title" prepend="and">
+				t.d_title = #title#
+			</isNotEmpty>
+			<isNotEmpty property="url" prepend="and">
+				t.d_url = #url#
+			</isNotEmpty>
+			<isNotEmpty property="author" prepend="and">
+				t.d_author = #author#
+			</isNotEmpty>
+			<isNotEmpty property="grade" prepend="and">
+				t.d_grade = #grade#
+			</isNotEmpty>
+			<isNotEmpty property="tag" prepend="and">
+				t.d_tag = #tag#
+			</isNotEmpty>
+			<isNotEmpty property="status" prepend="and">
+				t.d_status = #status#
+			</isNotEmpty>
+			<isNotEmpty property="createTime" prepend="and">
+				t.d_createtime = #createTime#
+			</isNotEmpty>
+			<isNotEmpty property="modifyTime" prepend="and">
+				t.d_modifytime = #"modifyTime"#
+			</isNotEmpty>
+			<isNotEmpty property="publishTime" prepend="and">
+				t.d_publish_time = #publishTime#
+			</isNotEmpty>
+		</dynamic>
+	</statement>
+</sqlMap>
+
+
+
