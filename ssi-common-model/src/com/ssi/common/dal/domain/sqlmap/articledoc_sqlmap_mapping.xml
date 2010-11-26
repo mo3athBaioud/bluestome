@@ -55,8 +55,8 @@
 			</isNotEmpty>
 		</dynamic>
 		ORDER BY t.d_id
-		<isNotEmpty property="limit">
-			limit #limit#
+		<isNotEmpty property="limit" prepend="limit">
+			#limit#
 		</isNotEmpty>
 		
     </statement>

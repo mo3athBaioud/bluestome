@@ -2,7 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap>
 	
- 	<typeAlias alias="chart" type="com.ssi.dal.domain.Chart" />
+ 	<typeAlias alias="chart" type="com.ssi.common.dal.domain.Chart" />
 
 	<resultMap class="chart" id="chartMap">
 		<result column="d_id" property="id"/>
@@ -111,8 +111,8 @@
 				#enddate#
 			</isNotNull>
 		</dynamic>
-		<isNotNull property="limit">
-			limit #limit#
+		<isNotNull property="limit" prepend="limit">
+			#limit#
 		</isNotNull>
 	</select>
 </sqlMap>
