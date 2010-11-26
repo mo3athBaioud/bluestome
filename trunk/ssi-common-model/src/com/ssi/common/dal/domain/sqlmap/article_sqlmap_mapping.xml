@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap>
-	<typeAlias alias="article" type="com.ssi.dal.domain.Article" />
+	<typeAlias alias="article" type="com.ssi.common.dal.domain.Article" />
 
 	<resultMap class="article" id="articleMap">
 		<result column="d_id" property="id"/>
@@ -34,7 +34,103 @@
 	<statement id="GET_ARTICLE_COUNT_BY_WEB_ID" parameterClass="java.lang.Integer" resultClass="java.lang.Integer">
     	SELECT COUNT(T.D_ID) FROM TBL_ARTICLE t WHERE t.D_WEB_ID = #value# ORDER BY t.d_id
     </statement>
+
+    <insert id="INSERT_ARTICLE" parameterClass="article"> 
+ 		INSERT INTO TBL_ARTICLE 
+ 		(d_web_id,d_title,d_acticle_url,d_article_real_url,d_article_xml_url,d_text,d_intro,d_createtime) 
+ 		VALUES (#webId#,#title#,#articleUrl#,#acticleRealUrl#,#acticleXmlUrl#,#text#,#intro#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
     
+    <update id="UPDATE_ARTICLE" parameterClass="article"> 
+ 		UPDATE TBL_ARTICLE set 
+ 		d_web_id=#webId#,
+ 		d_title = #title#,
+ 		d_acticle_url=#articleUrl#,
+ 		d_article_real_url=#acticleRealUrl#,
+ 		d_article_xml_url=#acticleXmlUrl#,
+ 		d_text=#text#,
+ 		d_intro=#intro#
+ 		where d_id = #id#
+	</update>
+	
+	<statement id="QUERY_ARTICLE_BY_MAP"  parameterClass="java.util.Map" resultMap="articleMap">
+    	SELECT DISTINCT t.* FROM TBL_ARTICLE t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="webId" prepend="and">
+				t.d_web_id = #webId#
+			</isNotEmpty>
+			<isNotEmpty property="title" prepend="and">
+				t.d_title = #title#
+			</isNotEmpty>
+			<isNotEmpty property="articleUrl" prepend="and">
+				t.d_acticle_url = #articleUrl#
+			</isNotEmpty>
+			<isNotEmpty property="acticleRealUrl" prepend="and">
+				t.d_article_real_url = #acticleRealUrl#
+			</isNotEmpty>
+			<isNotEmpty property="acticleXmlUrl" prepend="and">
+				t.d_article_xml_url = #acticleXmlUrl#
+			</isNotEmpty>
+			<isNotEmpty property="text" prepend="and">
+				t.d_text = #text#
+			</isNotEmpty>
+			<isNotEmpty property="intro" prepend="and">
+				t.d_intro = #intro#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="limit" prepend="limit">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
+		
+    </statement>
+
+	<statement id="GET_ARTICLE_COUNT"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
+    	SELECT COUNT(*) FROM TBL_ARTICLE t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="webId" prepend="and">
+				t.d_web_id = #webId#
+			</isNotEmpty>
+			<isNotEmpty property="title" prepend="and">
+				t.d_title = #title#
+			</isNotEmpty>
+			<isNotEmpty property="articleUrl" prepend="and">
+				t.d_acticle_url = #articleUrl#
+			</isNotEmpty>
+			<isNotEmpty property="acticleRealUrl" prepend="and">
+				t.d_article_real_url = #acticleRealUrl#
+			</isNotEmpty>
+			<isNotEmpty property="acticleXmlUrl" prepend="and">
+				t.d_article_xml_url = #acticleXmlUrl#
+			</isNotEmpty>
+			<isNotEmpty property="text" prepend="and">
+				t.d_text = #text#
+			</isNotEmpty>
+			<isNotEmpty property="intro" prepend="and">
+				t.d_intro = #intro#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="limit">
+				limit #limit#
+			</isNotEmpty>
+		</dynamic>
+		
+    </statement>
+	
+	
 </sqlMap>
 
 

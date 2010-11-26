@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="sysConfig" type="com.ssi.common.dal.domain.SysConfig" />
+	
+	<resultMap class="sysConfig" id="sysConfigMap">
+		<result column="d_id" property="id"/>
+		<result column="d_name" property="name"/>
+		<result column="d_description" property="description"/>
+		<result column="d_groupid" property="groupid"/>
+		<result column="d_type" property="type"/>
+		<result column="d_value" property="value"/>							
+		<result column="d_create_dt" property="createtime"/>							
+		<result column="d_modify_dt" property="modifytime"/>						
+	</resultMap>
+
+	<statement id="GET_SYSCONFIG_BY_ID" parameterClass="java.lang.Integer" resultMap="sysConfigMap">
+    	SELECT t.* FROM tbl_sysconfig t WHERE t.d_id = #value# ORDER BY t.d_id
+    </statement>
+
+	<statement id="GET_SYSCONFIG_BY_NAME" parameterClass="java.lang.String" resultMap="sysConfigMap">
+    	SELECT t.* FROM tbl_sysconfig t WHERE t.d_name = #value# ORDER BY t.d_id
+    </statement>
+
+  	<statement id="GET_SYSCONFIG_COUNT"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
+		SELECT COUNT(*) FROM tbl_sysconfig T WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="and">
+				t.d_name = #name#
+			</isNotEmpty>
+			<isNotEmpty property="description" prepend="and">
+				t.d_description = #description#
+			</isNotEmpty>
+			<isNotEmpty property="groupid" prepend="and">
+				t.d_groupid = #groupid#
+			</isNotEmpty>
+			<isNotEmpty property="type" prepend="and">
+				t.d_type = #type#
+			</isNotEmpty>
+			<isNotEmpty property="value" prepend="and">
+				t.d_value = #value#
+			</isNotEmpty>
+			<isNotEmpty property="createtime" prepend="and">
+				t.d_createtime = #createtime#
+			</isNotEmpty>
+			<isNotEmpty property="modifytime" prepend="and">
+				t.d_modify_dt = #modifytime#
+			</isNotEmpty>
+		</dynamic>
+	</statement>
+
+   	<statement id="QUERY_SYSCONFIG_BY_MAP"  parameterClass="java.util.Map" resultMap="sysConfigMap">
+		SELECT DISTINCT T.* FROM tbl_sysconfig T WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="and">
+				t.d_name = #name#
+			</isNotEmpty>
+			<isNotEmpty property="description" prepend="and">
+				t.d_description = #description#
+			</isNotEmpty>
+			<isNotEmpty property="groupid" prepend="and">
+				t.d_groupid = #groupid#
+			</isNotEmpty>
+			<isNotEmpty property="type" prepend="and">
+				t.d_type = #type#
+			</isNotEmpty>
+			<isNotEmpty property="value" prepend="and">
+				t.d_value = #value#
+			</isNotEmpty>
+			<isNotEmpty property="createtime" prepend="and">
+				t.d_createtime = #createtime#
+			</isNotEmpty>
+			<isNotEmpty property="modifytime" prepend="and">
+				t.d_modify_dt = #modifytime#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY D_ID 
+		<isNotEmpty property="limit" prepend="limit">
+			#limit#
+		</isNotEmpty>
+	</statement>
+	
+     <insert id="INSERT_SYSCONFIG" parameterClass="sysConfig"> 
+ 		INSERT INTO tbl_sysconfig 
+ 		(d_name,d_description,d_groupid,d_type,d_value,d_create_dt,d_modify_dt) 
+ 		VALUES (#name#,#description#,#groupid#,#type#,#value#,now(),now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+
+    <update id="UPDATE_SYSCONFIG" parameterClass="sysConfig"> 
+ 		UPDATE tbl_sysconfig set 
+ 		d_name=#name#,
+ 		d_description = #description#,
+ 		d_groupid=#groupid#,
+ 		d_type=#type#,
+ 		d_value=#value#,
+ 		d_modify_dt=now()
+ 		where d_id = #id#
+	</update>
+</sqlMap>
+
+
+

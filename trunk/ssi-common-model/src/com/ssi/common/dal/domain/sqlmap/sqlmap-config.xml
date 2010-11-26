@@ -14,6 +14,8 @@
 		resource="com/ssi/common/dal/domain/sqlmap/picturefile_sqlmap_mapping.xml" />
 	<sqlMap
 		resource="com/ssi/common/dal/domain/sqlmap/chart_sqlmap_mapping.xml" />
+	<sqlMap
+		resource="com/ssi/common/dal/domain/sqlmap/sysconfig_sqlmap_mapping.xml" />
 </sqlMapConfig>
 
 
