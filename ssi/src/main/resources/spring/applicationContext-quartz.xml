@@ -6,7 +6,9 @@
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
+				<!-- 
 				<ref bean="cronReportTrigger" />
+				 -->
 			</list>
 		</property>
 		<!-- 设置是否Spring容器初始化后马上启动Scheduler，默认为true。如果设置为false则需要手工启动Scheduler -->

@@ -12,5 +12,9 @@
 	<import resource="classpath:spring/applicationContext-prop.xml" />
 	<import resource="classpath:spring/applicationContext-persistence.xml" />
 	<import resource="classpath:spring/applicationContext-dao.xml" />
+	<import resource="classpath:spring/applicationContext-cache.xml" />
+	<import resource="classpath:spring/applicationContext-service.xml" />
+	<import resource="classpath:spring/applicationContext-action.xml" />
 	<import resource="classpath:spring/applicationContext-quartz.xml" />
+	<import resource="classpath:spring/applicationContext-mail.xml" />
 </beans>
