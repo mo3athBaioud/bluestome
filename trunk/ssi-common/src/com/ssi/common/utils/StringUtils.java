@@ -88,8 +88,11 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
 
 	public static void main(String[] args) {
 		System.out.println(StringUtils.escapeSingleQuotes("<'a'>"));
-		String text = "hello, " + (char) 0x0A + (char) 0x0D + "morning"
-				+ (char) 0x09 + " 	world.";
+		String text = "hello, " + (byte) 0x0A + (byte) 0x0D + "morning"
+				+ (byte) 0x09 + " 	world.";
+		for(byte byt:text.getBytes()){
+			System.out.println("0x"+byt);
+		}
 		System.out.println(text);
 		System.out.println(filterInvisibleChars(text));
 		System.out.println(gerDir("123456")+"123456");
