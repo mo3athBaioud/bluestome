@@ -1,0 +1,109 @@
+/** 相关列表样式定义 **/
+
+/*********** 链接列表样式定义 ************/
+div.linkList {
+	border:1 solid #6699CC;
+	background-color:#E2ECF5;
+}
+div.linkList dl,dt,dd{margin:0;padding:0;}
+div.linkList dt {
+	border-bottom:1 solid #69C;
+	background-color:#A6C4E1;
+	padding:5px 5px;
+	line-height:11pt;
+}
+div.linkList dd {
+	background-image:url(images/ico.gif);
+	background-repeat:no-repeat;
+	padding:2px 2px;
+	padding-left:12px;
+	line-height:11pt;
+}
+div.linkList a {
+	color:#333366;
+	text-decoration:none;
+}
+div.linkList a:hover {
+	color:red;
+	text-decoration:underline;
+}
+/*********** end 链接列表样式定义 ************/
+
+
+/* ---------- 定义显示数据的表格样式 ------------ */
+
+TABLE.list {
+	color:black;
+	background-color:#DDDDDD;/*表现为内部线条颜色*/
+	border:1 solid #6699CC;
+	cursor:default;
+	list:expression(this.cellSpacing=1,this.cellPadding=0);
+}
+TABLE.list CAPTION { 
+	font-size:11pt;color:#366798;height:25px;
+	padding-left:10px;
+	font-weight:normal;
+	text-align:left;
+	/*background-image:url(images/desktop.gif);
+	background-repeat:no-repeat;*/
+}
+TABLE.list TH {
+	height:20px;
+	color:white;
+	font-size:10pt;
+	font-weight:normal;
+	background-color:#6699CC;
+	line-height:15px;
+	background-image:url(images/thBg.gif);
+}
+TABLE.list TH.left {
+	text-align:left;
+	line-height:15px;
+}
+TABLE.list TH.title {
+	text-align:center;
+	color:white;
+	height:25px;
+	font-weight:bold;
+	background-color:#888888;
+	background-image:url(images/thBg.gif);
+}
+
+TABLE.list TH.foot 
+{
+	color:#444444;
+	text-align:right;
+	font-weight:normal;
+	background-color:#E3E9F2;
+	background-image:url(.);
+}
+
+TABLE.list TR {
+	background-color:white;
+	background-color:expression('#EFEFEF,#FFFFFF'.split(',')[rowIndex%2]);
+}
+
+TABLE.list TR TD A { color:#000099; }
+TABLE.list TR TD A:visited { color:#000099; }
+TABLE.list TR TD A:hover { color:#990000; }
+TABLE.list TD {
+	color:#222;
+	padding-left:5px;padding-right:2px;
+}
+
+/*true 和false用于鼠标悬停颜色改变或相临行颜色分辨 为true时表明背景色相对默认有改变*/
+TABLE.list TR.true {
+	background-color:#C7EBC7;
+}
+/*该颜色应与TR的默认背景色一致*/
+TABLE.list TR.false {
+	background-color:white;
+}
+/*鼠标单击时tr的样式*/
+TABLE.list TR.click {
+	background-color:#DDDDDD;
+}
+
+
+
+/* ---------- end 定义显示数据的表格样式 ------------ */

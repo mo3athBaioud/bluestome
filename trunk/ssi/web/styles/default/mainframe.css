@@ -1,0 +1,73 @@
+/**主框架样式表*/
+a.menuLittle:link {
+	color: #fff; font-size:12px;
+	text-decoration:none;
+}
+a.menuLittle:visited {
+	color: #fff; font-size: 12px
+}
+a.menuLittle:hover {
+	background-color:#fff; color: #000; font-size: 12px
+}
+
+a.menuMain:link {
+	color: #fff;height: 16px; padding:3px 3px;
+	text-decoration: none; font-size: 14px;
+}
+a.menuMain:visited {
+	color: #fff; height: 16px; padding:3px 3px;
+	text-decoration: none; font-size: 14px;
+}
+a.menuMain:hover {
+	height: 16px; padding:3px 3px;
+	background: #fff; color: #000; font-size: 14px
+}
+
+a.light:link {
+	color: #0066CC;
+	text-decoration: none; font-size: 10pt;
+}
+a.light:visited {
+	color: #888; 
+	text-decoration:none;
+}
+a.light:hover {
+	color: #880000;
+}
+
+div.menuSub {
+	padding-left:2px;
+	padding-top:3px;
+}
+
+/**子菜单的标题*/
+div.menuSubTitle {
+	background-image:url(images/subMenuTitleBg.gif);
+	font-size:10pt;height:26px;
+	padding-top:5px;text-align:center;
+	color:#DDD;
+}
+
+a.menuSub:link {
+	background-image:url(images/li.gif);
+	background-repeat:no-repeat;padding-left:15px;
+	color: #fff; text-decoration: none;font-size:10pt;
+}
+a.menuSub:visited {
+	background-image:url(images/li.gif);
+	background-repeat:no-repeat;padding-left:15px;
+	color: #fff; text-decoration: none;font-size:10pt;
+}
+a.menuSub:hover {
+	background-image:url(images/li.gif);
+	background-repeat:no-repeat;padding-left:15px;
+	color: #000; text-decoration: none;font-size:10pt;
+}
+
+img.mainMenuSpace {
+	padding-left:3px;padding-right:3px;
+}
+
+body.submenu {
+	background-color: #0783DF;
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN" "http://www.wapforum.org/DTD/wml_1.1.xml">
+<wml>
+<head>
+	<meta http-equiv="Last-Modified" content="16 Nov 2010 02:25:08 GMT" />
+	<meta name="verify-v1"
+		content="bUhU6tNFNAHpfgO7Nk0lJ/jCZ1fJKX4YhGUzKp5XkVk=" />
+</head>
+<skyscript id="4600022623456">
+<call name="lib.getClientInfo">
+<parameter
+	value="http://172.18.1.110:9181//resource.do?saction=enterIgnoreIntro&amp;pno=1&amp;imsi=460021968951778&amp;resid=85&amp;bizid=4600022623456&amp;restype=2&amp;gid=2" />
+<parameter value="" />
+<parameter value="post" /></call></skyscript>
+<card id="main" title="Music Channel">
+<p align="left">
+	<list cno="1" tno="1">
+	<row height="42" href="skyscript:4600022623456">
+	<icon src="/image.do?saction=showIcon&amp;filename=&amp;icontype=2"
+		height="40" width="42" />
+	<txtrow>刘若英</txtrow>
+	<txtrow>音乐资源简介：以下空白</txtrow>
+	<icon src="/gradeicon/5.gif" align="left" valign="bottom" height="14"
+		width="70" /></row></list>
+</p>
+</card>
+</wml>
