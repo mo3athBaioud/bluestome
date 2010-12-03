@@ -28,6 +28,12 @@ public class SysMenuDAOImpl extends BaseDAOImpl implements ISysMenuDAO {
 		return list;
 	}
 
+	public List<SysMenu> getSysMenuByOperatorId(Integer operatorId) {
+		List<SysMenu> list = null;
+		list = getQueryDelegate().queryForList("FIND_TBL_SYSMENU_BY_OPERATORID", operatorId, getRoute());
+		return list;
+	}
+	
 	public List<RoleSysMenu> findRoleSysMenu(HashMap map) {
 		List<RoleSysMenu> list = null;
 		list = getQueryDelegate().queryForList("FIND_TBL_ROLE_SYSMENU_BY_HASH", map, getRoute());

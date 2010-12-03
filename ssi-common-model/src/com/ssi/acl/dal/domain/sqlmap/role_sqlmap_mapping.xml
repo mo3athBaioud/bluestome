@@ -10,8 +10,8 @@
 		<result column="D_ROLE_STATUS" property="roleStatus"/>	
 		<result column="D_CREATE_DT" property="createDt"/>						
 		
+		<result property="roleSysMenu" column="D_ID" select="FIND_TBL_ROLE_SYSMENU_BY_ROLEID" />						
 		<!-- 
-		<result property="roleSysMenu" column="D_ID" select="FIND_CODE_BY_ID" />						
 		 -->
 		<result property="rolePrivs"   column="D_ID" select="FIND_TBL_ROLE_PRIV_BY_ROLEID" />						
 		<result property="operatorRoles" column="D_ID" select="FIND_OPERATORROLE_BY_ROLEID" />						

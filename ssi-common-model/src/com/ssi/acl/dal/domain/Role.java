@@ -26,9 +26,9 @@ public class Role implements java.io.Serializable{
 	
 	private Date createDt;
 	
-    private Set roleSysMenu = new HashSet(0);
+    private Set<RoleSysMenu> roleSysMenu = new HashSet<RoleSysMenu>(0);
     
-    private Set rolePrivs = new HashSet(0);
+    private Set<RolePriv> rolePrivs = new HashSet<RolePriv>(0);
     
     private Set<OperatorRole> operatorRoles = new HashSet(0);
     
@@ -77,11 +77,11 @@ public class Role implements java.io.Serializable{
 		this.roleName = roleName;
 	}
 
-	public Set getRolePrivs() {
+	public Set<RolePriv> getRolePrivs() {
 		return rolePrivs;
 	}
 
-	public void setRolePrivs(Set rolePrivs) {
+	public void setRolePrivs(Set<RolePriv> rolePrivs) {
 		this.rolePrivs = rolePrivs;
 	}
 
@@ -93,11 +93,11 @@ public class Role implements java.io.Serializable{
 		this.roleStatus = roleStatus;
 	}
 
-	public Set getRoleSysMenu() {
+	public Set<RoleSysMenu> getRoleSysMenu() {
 		return roleSysMenu;
 	}
 
-	public void setRoleSysMenu(Set roleSysMenu) {
+	public void setRoleSysMenu(Set<RoleSysMenu> roleSysMenu) {
 		this.roleSysMenu = roleSysMenu;
 	}
 	

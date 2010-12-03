@@ -79,4 +79,11 @@ public interface ISysMenuDAO {
 	 * @return
 	 */
 	int getCountRoleSysMenu(HashMap map);
+	
+	/**
+	 * 根据操作员ID查找菜单
+	 * @param operatorId
+	 * @return
+	 */
+	List<SysMenu> getSysMenuByOperatorId(Integer operatorId);
 }
