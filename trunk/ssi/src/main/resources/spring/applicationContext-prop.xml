@@ -9,6 +9,7 @@
 		<property name="locations">
 			<list>
 				<value>classpath:conf/jdbc.properties</value>
+				<value>classpath:conf/cache.properties</value>
 			</list>
 		</property>
 	</bean>

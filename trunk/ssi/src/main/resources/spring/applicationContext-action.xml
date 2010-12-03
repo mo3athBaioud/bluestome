@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC
+          "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="baseAction" class="com.ssi.web.action.BaseAction" />
+	<bean id="chartAction"  class="com.ssi.web.action.ChartAction" parent="baseAction">
+		<property name="chartService" ref="chartService" />
+	</bean>
+	<bean id="indexAction" class="com.ssi.web.action.IndexAction" parent="baseAction">
+		<property name="websiteService" ref="websiteService" />
+	</bean>
+</beans>

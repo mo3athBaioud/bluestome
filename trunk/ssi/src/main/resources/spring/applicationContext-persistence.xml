@@ -91,7 +91,7 @@
 		<property name="configLocations">
 			<list>
 				<value>
-					classpath:sqlmap/sqlmap-config.xml
+					classpath:com/ssi/common/dal/domain/sqlmap/sqlmap-config.xml
 				</value>
 			</list>
 		</property>
@@ -105,7 +105,7 @@
 		<property name="configLocations">
 			<list>
 				<value>
-					classpath:sqlmap/sqlmap-config.xml
+					classpath:com/ssi/common/dal/domain/sqlmap/sqlmap-config.xml
 				</value>
 			</list>
 		</property>
