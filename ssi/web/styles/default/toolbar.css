@@ -1,0 +1,30 @@
+
+
+/* 鼠标移上按钮的样式 */
+.toolbarButtonMover {
+	/*border-left: 1 solid #CCCCCC; border-right: 1 solid #444444;
+	border-top: 1 solid #CCCCCC; border-bottom: 1 solid #444444;*/
+	padding:3 3;
+	background-color:white;
+	cursor:default;
+	font-size:10pt;
+	background-image:url(images/btnMoverBg.gif);
+}
+
+/* 按钮默认的样式 */
+.toolbarButtonDefault {
+	/*border:1 solid #C2D0EB;*/
+	cursor:default;
+	padding:3 3;
+	font-size:10pt;
+}
+
+/* 按钮被按下的样式 */
+.toolbarButtonMdown {
+	/*border-left: 1 solid #444444; border-right: 1 solid #CCCCCC;
+	border-top: 1 solid #444444; border-bottom: 1 solid #CCCCCC;*/
+	background-color:#DDDDDD;
+	cursor:default;
+	font-size:10pt;padding:3 3;
+}
+

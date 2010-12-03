@@ -1,0 +1,62 @@
+/********************** 表单样式的定义 ***********************/
+INPUT.button {
+	border:1px solid #636A98;
+	color:black;
+	background-color:#BBCCE6;
+	height:23px;
+	font-size:9pt;
+}
+
+INPUT.text {
+	height:20px;
+	vertical-align:middle;
+	border:1 solid #7F9DB9;
+	background-color:white;
+	mm:expression(
+		onfocus = function() {
+			this.style.backgroundColor = "#BFE4F9";
+			this.style.border = "1 solid black";
+		},
+		onblur = function() {
+			this.style.backgroundColor = "white";
+			this.style.border = "1 solid #7F9DB9";
+		}
+	);
+}
+TEXTAREA {
+	border:1 solid #7F9DB9;
+	overflow-y:auto;
+}
+
+/** 放置表单元素的表格样式 */
+
+TABLE.form {
+	background-color:#ddd;/*表现为线条颜色*/
+	border:1 solid #336699;
+}
+TABLE.form caption {
+	text-align:left;
+	color:#003300;font-weight:bold;
+}
+
+TABLE.form TR {
+	/*background-color:#ECF0FB;*/
+	background-color:white;
+}
+
+TABLE.form TH {
+	text-align:left;
+	background-color:#6699cc;
+	background-image:url(images/thBg.gif);
+	color:white;
+	padding-left:5px;
+}
+
+TABLE.form TD {
+	padding:3px 3px;
+}
+
+TABLE.form TD.desc {
+	background-color:#FFFFE0;
+	color:#000044;
+}
