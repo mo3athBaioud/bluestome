@@ -83,12 +83,75 @@ public class HttpClientUtils {
 									encode));
 					noAsciiPart.delete(0, noAsciiPart.length());
 				}
-				if((byte)c == 32)
-					sb.append("%20");
-				else
-					sb.append(c);
+				//字符串过滤 
+				switch(c){
+					case 32:
+						sb.append("%20");
+						break;
+					case 42:
+						sb.append("%2A");
+						break;
+					case 43:
+						sb.append("%2B");
+						break;
+					case 44:
+						sb.append("%2C");
+						break;
+//					case 45:
+//						sb.append("%2D");
+//						break;
+//					case 46:
+//						sb.append("%2E");
+//						break;
+//					case 47:
+//						sb.append("%2F");
+//						break;
+//					case 58:
+//						sb.append("%3A");
+//						break;
+					case 59:
+						sb.append("%3B");
+						break;
+					case 60:
+						sb.append("%3C");
+						break;
+					case 61:
+						sb.append("%3D");
+						break;
+					case 62:
+						sb.append("%3E");
+						break;
+					case 63:
+						sb.append("%3F");
+						break;
+					case 64:
+						sb.append("%40");
+						break;
+					case 91:
+						sb.append("%5B");
+						break;
+					case 92:
+						sb.append("%5C");
+						break;
+					case 93:
+						sb.append("%5D");
+						break;
+//					case 94:
+//						sb.append("%5E");
+//						break;
+//					case 95:
+//						sb.append("%5F");
+//						break;
+					case 96:
+						sb.append("%60");
+						break;
+					default:
+						sb.append(c);
+						break;
+				}
 			}
 		}
+		System.out.println(">> url:"+sb.toString());
 		return sb.toString();
 	}
 
@@ -274,6 +337,7 @@ public class HttpClientUtils {
 	public static byte[] getResponseBodyAsByte(String refence, String cookie,
 			String url) {
 		byte[] value = null;
+		String contentType = null;
 		try {
 			httpclient = new HttpClient();
 			getMethod = new GetMethod(encodeURL(url,"UTF-8"));
@@ -284,8 +348,10 @@ public class HttpClientUtils {
 				getMethod.setRequestHeader("Cookie", cookie);
 			int statusCode = httpclient.executeMethod(getMethod);
 			if (statusCode == HttpStatus.SC_OK) {
+				contentType = getMethod.getResponseHeader("Content-Type").getValue();
 				value = getMethod.getResponseBody();
 			}
+			System.out.println("contentType:"+contentType);
 		} catch (Exception e) {
 			System.err.println(e);
 		} finally {
@@ -353,17 +419,23 @@ public class HttpClientUtils {
 			// }
 
 			// http://www.china.com/zh_cn/ 长度[2010-09-06 18:52]：173574
-			String length = getHttpHeaderResponse(
-					"http://www.china.com/zh_cn/", "Content-Length");
-			System.out.println("网页长度：" + length);
-			String uri= "http://www.showimg.com/star/my1200994724/big/张学友/Famke_Janssen _22780685.jpg";
-			try{
-				System.out.println(encodeURL(uri,"UTF-8"));
-			}catch(Exception e){
-				e.printStackTrace();
-			}
+//			String length = getHttpHeaderResponse(
+//					"http://www.china.com/zh_cn/", "Content-Length");
+//			System.out.println("网页长度：" + length);
+//			String uri= "http://www.showimg.com/star/my1200994724/big/张学友/Famke_Janssen _22780685.jpg";
+//			try{
+//				System.out.println(encodeURL(uri,"UTF-8"));
+//			}catch(Exception e){
+//				e.printStackTrace();
+//			}
 
 			// System.out.println("isTRUE:"+urlValidation("http://www.bizhi.com/wallpaper/1150_2.html"));
+			
+			
+			String url = "http://www.showimg.com/nature/nature20100914/big/02833_034_ZOabx1li[1].jpg";
+			byte[] big = getResponseBodyAsByte(null,null,url);
+			
+			System.out.println("长度:"+big.length);
 		} catch (Exception e) {
 			System.err.println(e);
 		} finally {
