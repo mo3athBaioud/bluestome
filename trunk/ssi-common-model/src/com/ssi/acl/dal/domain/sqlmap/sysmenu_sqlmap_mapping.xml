@@ -33,8 +33,21 @@
 		SELECT * FROM TBL_SYSMENU WHERE D_ID = #value#
 	</select>
 	
+	<select id="FIND_TBL_SYSMENU_BY_OPERATORID" parameterClass="java.lang.Integer" resultMap="sysMenuMap">
+		SELECT A.*
+		FROM TBL_SYSMENU A
+		LEFT JOIN TBL_ROLE_SYSMENU B ON A.D_ID = B.D_SYSMENUID
+		LEFT JOIN TBL_ROLE C ON B.D_ROLEID = C.D_ID
+		LEFT JOIN TBL_OPERATOR_ROLE D ON C.D_ID = D.D_ROLEID
+		WHERE D.D_OPERATORID = #value# AND A.D_ISDEL = 1
+	</select>
+	
 	<select id="FIND_TBL_ROLE_SYSMENU_BY_ID" parameterClass="java.lang.Integer" resultMap="roleSysMenuMap">
 		SELECT * FROM TBL_ROLE_SYSMENU WHERE D_SYSMENUID = #value#
+	</select>
+	
+	<select id="FIND_TBL_ROLE_SYSMENU_BY_ROLEID" parameterClass="java.lang.Integer" resultMap="roleSysMenuMap">
+		SELECT * FROM TBL_ROLE_SYSMENU WHERE D_ROLEID = #value#
 	</select>
 	
 	<statement id="FIND_TBL_SYSMENU_BY_HASH"  parameterClass="java.util.HashMap"  resultMap="sysMenuMap">
