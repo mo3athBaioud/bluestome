@@ -9,13 +9,34 @@
 	<constant name="struts.action.extension" value="cgi" />
 	<constant name="struts.multipart.maxSize" value="524288000" />
 
-	<!-- 
 	<include file="struts-default.xml" />
-	<include file="struts-website.xml" />
-	<include file="struts-article.xml" />
-	<include file="struts-image.xml" />
-	 -->
 	<package name="slimp" extends="struts-default">
-		<!--  -->
+	
+		<action name="article" class="chartAction" method="article">
+			<result name="article">/pages/charts/article.jsp</result>
+		</action>
+		
+		<action name="articleDoc" class="chartAction" method="articleDoc">
+			<result name="articledoc">/pages/charts/articledoc.jsp</result>
+		</action>
+
+		<action name="image" class="chartAction" method="image">
+			<result name="image">/pages/charts/image.jsp</result>
+		</action>
+
+		<action name="picturefile" class="chartAction" method="picturefile">
+			<result name="picturefile">/pages/charts/picturefile.jsp</result>
+		</action>
+		
+		<action name="export2Image" class="chartAction" method="export2Image" />
+		
+		<action name="total" class="chartAction" method="total" >
+			<result name="total">total.jsp</result>
+		</action>
+		
+		<action name="index" class="indexAction" method="index">
+			<result name="main">list.jsp</result>
+		</action>
 	</package>
 </struts>
+ 
