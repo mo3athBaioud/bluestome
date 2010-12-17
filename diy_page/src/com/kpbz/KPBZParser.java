@@ -1,5 +1,4 @@
 package com.kpbz;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -175,9 +174,9 @@ public class KPBZParser {
 						}
 					}
 					
-					if(!HttpClientUtils.urlValidation(tmp)){
-						return result;
-					}
+//					if(!HttpClientUtils.urlValidation(tmp)){
+//						return result;
+//					}
 					
 					l1.setLink(tmp);
 					l1.setTitle(link2.getLinkText());
@@ -382,7 +381,6 @@ public class KPBZParser {
 				String key = (String) it.next();
 				LinkBean link = result.getMap().get(key);
 				b = getImage(link, article.getId());
-				break;
 			}
 		}
 
@@ -451,9 +449,8 @@ public class KPBZParser {
 									imgBean.setTitle("NT:"
 											+ CommonUtil.getDateTimeString());
 							}
-//							length = HttpClientUtils.getHttpHeaderResponse(
-//									imgSrc, "Content-Length");
-							
+							length = HttpClientUtils.getHttpHeaderResponse(
+									imgSrc, "Content-Length");
 							System.out.println("Title:"+imgBean.getTitle());
 							System.out.println("ArticleId:"+imgBean.getArticleId());
 							System.out.println("大图地址:"+imgBean.getHttpUrl());
@@ -665,7 +662,7 @@ public class KPBZParser {
 	static void update() throws Exception {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : webList) {
-				ResultBean result = hasPaging2(bean.getUrl());
+			ResultBean result = hasPaging2(bean.getUrl());
 			if (result.isBool()) {
 				Iterator it = result.getMap().keySet().iterator();
 				while (it.hasNext()) {
@@ -687,10 +684,20 @@ public class KPBZParser {
 		// init();
 		try {
 //			 catalog(URL);
-//			 update();
-//			loadImg();
-//			imgDownload();
-			 movefile();			
+			 update();
+			loadImg();
+			imgDownload();
+//			 movefile();
+			
+//			ResultBean result = hasPaging("http://www.kpbz.net/1920x1200/kuanping576.html","id","pagelist");
+//			if (result.isBool()) {
+//				Iterator it = result.getMap().keySet().iterator();
+//				while (it.hasNext()) {
+//					String key = (String) it.next();
+//					LinkBean link = result.getMap().get(key);
+//					System.out.println(link.getTitle()+":"+link.getLink());
+//				}
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -702,8 +709,8 @@ public class KPBZParser {
 		for (WebsiteBean bean : webList) {
 			List<Article> list = articleDao.findByWebId(bean.getId(),"NED");
 			for (Article art : list) {
-				List<ImageBean> imgList = imageDao.findImage(art.getId());
-				if(imgList.size() == 0){
+//				List<ImageBean> imgList = imageDao.findImage(art.getId());
+//				if(imgList.size() == 0){
 					if (getImage(art)) {
 						art.setText("FD");
 						if (articleDao.update(art)) {
@@ -711,7 +718,7 @@ public class KPBZParser {
 									.println("更新记录[" + art.getTitle() + "]成功");
 						}
 					}
-				}
+//				}
 			}
 		}
 	}

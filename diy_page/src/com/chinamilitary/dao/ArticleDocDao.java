@@ -31,6 +31,13 @@ public interface ArticleDocDao extends ICommonDao {
 	List<ArticleDoc> findAll(Integer status) throws Exception;
 	
 	/**
+	 * 根据记录状态查找记录
+	 * @param status
+	 * @return
+	 * @throws Exception
+	 */
+	List<ArticleDoc> findAll(Integer status,Integer webId) throws Exception;
+	/**
 	 * 根据ID查找记录
 	 * @param id
 	 * @return

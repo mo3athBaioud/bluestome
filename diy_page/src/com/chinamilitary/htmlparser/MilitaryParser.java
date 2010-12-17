@@ -37,6 +37,7 @@ import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
 import com.chinamilitary.xmlparser.XMLParser;
 import com.common.Constants;
+import com.utils.FileUtils;
 
 public class MilitaryParser {
 	private static final String URL = "http://tuku.military.china.com/military/html/1_1.html"; // military.china.com
@@ -70,7 +71,11 @@ public class MilitaryParser {
 
 	static String PIC_SAVE_PATH = Constants.FILE_SERVER;
 	
-	final static String FILE_SERVER = Constants.FILE_SERVER;
+	static int D_PARENT_ID = 301;
+	
+//	final static String FILE_SERVER = Constants.FILE_SERVER;
+	
+	final static String FILE_SERVER = "O:\\fileserver\\image\\";
 
 	private static List<LinkBean> LINKLIST = new ArrayList<LinkBean>();
 
@@ -528,7 +533,13 @@ public class MilitaryParser {
 												.getHttpUrl());
 										client.add(CacheUtils.getImageKey(result),
 												bean);
-										imgDownload(bean, article.getWebId());
+										if(imgDownload(bean, article.getWebId())){
+											bean.setLink("FD");
+											if(imageDao.update(bean)){
+												System.out
+														.println(">> 图片下载成功，更新[tbl_image("+bean.getArticleId()+"|"+bean.getId()+")]图片记录");
+											}
+										}
 									}
 								}
 							}
@@ -611,6 +622,7 @@ public class MilitaryParser {
 							+ bean.getName()), bean);
 					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
 							+ bean.getSmallName()), bean);
+					return true;
 				} else {
 					return false;
 				}
@@ -623,7 +635,6 @@ public class MilitaryParser {
 			System.out.println("网络连接，文件IO异常");
 			return false;
 		}
-		return true;
 	}
 
 	static void imgDownload() throws Exception {
@@ -807,11 +818,15 @@ public class MilitaryParser {
 
 			getActicle(143); // 5 , 143
 			
+//			movefile(5);
+			
+//			movefile(1);
+			
 //			WebsiteBean bean = webSiteDao.findById(301);
 			
 //			patchImag(bean);
 
-//			 patch();
+			 patch();
 
 			// listUnHandleData();
 
@@ -825,13 +840,19 @@ public class MilitaryParser {
 	static void patch() {
 		try {
 			// List<WebsiteBean> list = webSiteDao.findByParentId(143);
-//			Integer[] webIds = { 1,3, 4,5,14,17,29,34,301,144,145 };
-			Integer[] webIds = {144};
+			Integer[] webIds = { 
+					1,3,4,5,6,7,8,9,10,
+					11,12,13,14,15,16,17,18,19,
+					20,21,22,23,24,25,26,27,28,29,
+					30,31,32,33,34,35,301,
+					142,144,145,146,615
+			};
+//			Integer[] webIds = {5,144};
 			// for(WebsiteBean webSite:list){
 			// List<Article> articleList =
 			// articleDao.findShowImg(webSite.getId(), "NED", 0);
 			for (Integer webId : webIds) {
-				List<Article> articleList = articleDao.findByWebId(webId);
+				List<Article> articleList = articleDao.findByWebId(webId,"NED");
 				for (Article article : articleList) {
 					// if(1 != article.getWebId() || 3 != article.getWebId()){
 					getImage(article.getId());
@@ -943,4 +964,78 @@ public class MilitaryParser {
 		}
 	}
 
+	static void movefile(int parentId) throws Exception{
+		List<WebsiteBean> webList = webSiteDao.findByParentId(parentId);
+		PicfileBean bean = null;
+		for(WebsiteBean website:webList){
+			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
+			List<Article> artList = articleDao.findByWebId(website.getId(), "FD");
+			System.out.println("文章数量:"+artList.size());
+			for(Article article:artList){
+				List<ImageBean> list = imageDao.findImage(article.getId());
+				for(ImageBean img:list){
+					System.out.println("ImageID:"+img.getId()+"\tArticleID:"+article.getId());
+					bean = picFiledao.findByImgIdAndArticleId(img.getId(), article.getId());
+					if(null != bean){
+						if(moveFile(bean)){
+							System.out.println(bean.getId()+"|"+bean.getArticleId()+"|"+bean.getImageId());
+							System.out.println("after move file name:"+bean.getName());
+							System.out.println("after move file smallName:"+bean.getSmallName());
+							System.out.println("-------------------------------------------------------------");
+						}
+					}
+					break;
+				}
+//				break;
+			}
+//			break;
+		}
+	}
+	
+	static boolean moveFile(PicfileBean bean) {
+		String tmpUrl = "P:\\share\\file\\military\\";
+		boolean isBig = false;
+		boolean isSmall = false;
+		int start = bean.getName().lastIndexOf(File.separator)+1;
+		int smnStart = bean.getSmallName().lastIndexOf(File.separator)+1;
+		String prx = StringUtils.gerDir(String.valueOf(bean.getArticleId()));
+		String fileName = prx+bean.getArticleId()+File.separator+bean.getName().substring(start);
+		String smallFileName = prx+bean.getArticleId()+File.separator+bean.getSmallName().substring(smnStart);
+		String source = tmpUrl + bean.getName();
+		String smgSource = tmpUrl + bean.getSmallName().replace(File.separator+"s_",File.separator);
+		String target = FILE_SERVER+fileName;
+		String smgTarget = FILE_SERVER + smallFileName.replace(File.separator+"s_",File.separator);
+		bean.setUrl(FILE_SERVER);
+		if(FileUtils.copyFile(source, target)){
+			System.out.println(">> 大图成功!!!");
+			if(FileUtils.deleteFile(source)){
+				System.out.println(">> 删除源大图["+source+"]成功");
+			}
+			bean.setName(fileName);
+			isBig = true;
+		}
+		
+		if(FileUtils.copyFile(smgSource, smgTarget)){
+			System.out.println(">> 小图成功!!!");
+			if(FileUtils.deleteFile(smgSource)){
+				System.out.println(">> 删除源小图["+smgSource+"]成功");
+			}
+			bean.setSmallName(smallFileName);
+			isSmall = true;
+		}
+		if(isBig){
+			if(isBig || isSmall){
+				try{
+					if(picFiledao.update(bean)){
+						System.out.println(">> 更新图片文件["+bean.getId()+"]记录成功!");
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return isBig;
+	}
+	
 }

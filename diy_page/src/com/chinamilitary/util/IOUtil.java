@@ -36,14 +36,13 @@ public class IOUtil {
 			try {
 				url = url.replace(" ", "%20");
 			    urls = new URL(url);
-
 				in = urls.openStream();
 
 				file = new File(fileName);
 				
 				
 				if(file.exists()){
-					System.out.println("存在文件");
+					System.out.println("存在文件["+file.getAbsolutePath()+"]");
 					return;
 				}
 				

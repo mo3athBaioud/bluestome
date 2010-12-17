@@ -44,10 +44,14 @@ import com.chinamilitary.threadpool.ThreadPoolManager;
 import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.CommonUtil;
 import com.chinamilitary.util.HTMLDecoder;
+import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
 import com.chinamilitary.xmlparser.XMLParser;
+import com.common.Constants;
 import com.message.RequestRecordQuene;
+import com.thread.ReConnThread;
+import com.thread.ResourceQuene;
 
 public class ShowimgParser2 {
 
@@ -57,7 +61,7 @@ public class ShowimgParser2 {
 	
 	private static final String URL_ = "http://www.showimg.com/htm/";
 
-	private static final String PIC_SAVE_PATH = "H:\\showimg\\";
+	private static final String PIC_SAVE_PATH =  Constants.FILE_SERVER;
 	
 	private static HashMap<String,LinkBean> LINKHASH = new HashMap<String,LinkBean>();
 	
@@ -66,6 +70,8 @@ public class ShowimgParser2 {
 	private static HashMap<String,ResultBean> PAGELINKHASH = new HashMap<String,ResultBean>();
 	
 	private static int COUNT = 0;
+	
+	static int D_PARENT_ID = 36;
 	
 	private static ThreadPoolManager manager = null;
 	
@@ -953,7 +959,7 @@ public class ShowimgParser2 {
 		try{
 //			init();
 			
-//			index();
+			index();
 			
 			updateArticleFromSource(36);
 			
@@ -981,7 +987,7 @@ public class ShowimgParser2 {
 				if (list != null && list.size() > 0) {
 					for (WebsiteBean bean : list) {
 						if(bean != null){
-							List<Article> alist = articleDao.findShowImg(bean.getId());//47 48 49 50 51 52 
+							List<Article> alist = articleDao.findByWebId(bean.getId(),"NED");//47 48 49 50 51 52 
 							for(Article article:alist){
 								try{
 									getPicUrl(article);
@@ -990,6 +996,9 @@ public class ShowimgParser2 {
 									articleDao.update(article);
 									System.out.println(">> Article["+article.getId()+"],Exception:"+e.getMessage());
 									continue;
+								}finally{
+									article.setText("FD");
+									articleDao.update(article);
 								}
 							}
 						}
@@ -1011,12 +1020,18 @@ public class ShowimgParser2 {
 							articleDao.update(article);
 							System.out.println(">> Article["+article.getId()+"],Exception:"+e.getMessage());
 							continue;
+						}finally{
+							
 						}
 					}
 				}
 			}catch(Exception e){
 				
 			}
+
+			imgDownload();
+			
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
@@ -1144,6 +1159,132 @@ public class ShowimgParser2 {
 //			}
 //		}
 		
+	}
+
+	static void imgDownload() throws Exception {
+		List<WebsiteBean> webList = wesiteDao.findByParentId(D_PARENT_ID);
+		for (WebsiteBean bean : webList) {
+//			List<WebsiteBean> subList = wesiteDao.findByParentId(bean.getId());
+//			for(WebsiteBean website:subList){
+				List<Article> list = articleDao.findByWebId(bean.getId(),"FD");
+				System.out.println(">> 网站["+bean.getId()+"|"+bean.getName()+"|"+bean.getUrl()+"]\t下文章数量"+list.size());
+				for (Article art : list) {
+					List<ImageBean> imgList = imageDao.findImage(art.getId());
+					System.out.println(">> 文章["+art.getId()+"|"+art.getTitle()+"]\t下的图片数量"+imgList.size());
+//					ARTICLE_COM_URL = art.getArticleUrl();
+					for (ImageBean img : imgList) {
+						if(img.getStatus() != -1){
+							if (download(img,art.getArticleUrl())) {
+								img.setStatus(-1);
+								img.setLink("FD");
+//								ResourceQuene.getInstance().setElement(img);
+								if (imageDao.update(img)) {
+									System.out.println(">> 更新图片对象["+art.getTitle()+"|" + img.getId() + "]成功!");
+								}
+							}
+						}
+					}
+//					ARTICLE_COM_URL = null;
+//				}
+			}
+		}
+	}
+	
+	static boolean download(ImageBean imgBean,String url) {
+		PicfileBean bean = null;
+		bean = new PicfileBean();
+		if(null == imgBean.getImgUrl() || "".equalsIgnoreCase(imgBean.getImgUrl())){
+			System.out.println(">> 小图片地址为空");
+			return false;
+		}
+		String s_fileName = imgBean.getImgUrl().substring(
+				imgBean.getImgUrl().lastIndexOf("/") + 1,
+				imgBean.getImgUrl().length());
+		if(null == imgBean.getHttpUrl() || "".equalsIgnoreCase(imgBean.getHttpUrl())){
+			System.out.println(">> 大图片地址为空");
+			return false;
+		}
+		String fileName = imgBean.getHttpUrl().substring(
+				imgBean.getHttpUrl().lastIndexOf("/") + 1,
+				imgBean.getHttpUrl().length());
+		s_fileName = s_fileName.replace(".", "_s.");
+		String length = "0";
+		try {
+			byte[] big = null;
+			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, imgBean.getHttpUrl());
+			if(null == big)
+				return false;
+			length = String.valueOf(big.length);
+			if(length.equalsIgnoreCase("20261")){
+				System.out.println(">> 大图为防盗链图，返回");
+				return false;
+			}
+
+			if(s_fileName.toLowerCase().endsWith(".jpg") || s_fileName.toLowerCase().endsWith(".gif") 
+					|| s_fileName.toLowerCase().endsWith(".png")){
+				//小图
+				if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId() + File.separator
+						+ s_fileName)) == null) {
+					IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
+							+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+							+ imgBean.getArticleId() + File.separator
+							+ s_fileName);
+				}
+			}else{
+				System.out.println(">> 判断小图片类别失败，图片类型不受支持["+fileName+"]");
+				return false;
+			}
+			if(fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".gif") 
+					|| fileName.toLowerCase().endsWith(".png")){
+				//大图
+				if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId() + File.separator
+						+ fileName)) == null) {
+					IOUtil.createFile(big, PIC_SAVE_PATH
+							+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+							+ imgBean.getArticleId() + File.separator
+							+ fileName);
+				}
+			}else{
+				System.out.println(">> 判断大图片类别失败，图片类型不受支持["+fileName+"]");
+				return false;
+			}
+			bean.setArticleId(imgBean.getArticleId());
+			bean.setImageId(imgBean.getId());
+			bean.setTitle(imgBean.getTitle());
+			bean.setSmallName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName);
+			bean.setName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ fileName);
+			bean.setUrl(PIC_SAVE_PATH);
+			try {
+				boolean b = picFileDao.insert(bean);
+				if (b) {
+					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+							+ bean.getName()), bean);
+					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+							+ bean.getSmallName()), bean);
+				} else {
+					System.out.println(">> 添加图片数据失败");
+					return false;
+				}
+			} catch (Exception e) {
+				System.out.println("数据库异常");
+				e.printStackTrace();
+				return false;
+			}
+		} catch (IOException e) {
+			System.out.println("网络连接，文件IO异常");
+			return false;
+		}
+		return true;
 	}
 	
 }

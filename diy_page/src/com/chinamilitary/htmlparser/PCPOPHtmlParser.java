@@ -444,6 +444,7 @@ public class PCPOPHtmlParser {
 				int id = articleDocDao.insert(doc);
 				if(!(id>0)){
 					System.out.println("失败，\t链接名称：" + link.getName() + "\n链接地址："+ link.getLink());
+					client.add(getKey(doc.getUrl()), doc);
 				}else{
 					doc.setId(id);
 					doc.setStatus(1);
@@ -460,7 +461,7 @@ public class PCPOPHtmlParser {
 	 *
 	 */
 	static void processAuthor() throws Exception{
-		List<ArticleDoc> list = articleDocDao.findAll(1);
+		List<ArticleDoc> list = articleDocDao.findAll(1,1310);
 		for(ArticleDoc bean : list){
 			
 			if(!bean.getUrl().startsWith("http://www.pcpop.com/doc/")){

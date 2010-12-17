@@ -16,11 +16,15 @@ import com.chinamilitary.memcache.MemcacheClient;
 import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.CommonUtil;
 import com.chinamilitary.util.IOUtil;
+import com.chinamilitary.util.StringUtils;
+import com.common.Constants;
 
 public class TUKUDownload {
 
-	static String SAVE_PATH = "D:\\share\\tuku\\";
+	static String SAVE_PATH = Constants.FILE_SERVER;
 
+	static int D_PARENT_ID = 400;
+	
 	static MemcacheClient client = MemcacheClient.getInstance();
 
 	static ArticleDao articleDao = DAOFactory.getInstance().getArticleDao();
@@ -62,12 +66,10 @@ public class TUKUDownload {
 		String fileName = imgBean.getHttpUrl().substring(
 				imgBean.getHttpUrl().lastIndexOf("/") + 1,
 				imgBean.getHttpUrl().length());
-		s_fileName = s_fileName.replace(".", "_s.");
-
 		if (null == client.get(CacheUtils.getDownloadSmallImageKey(imgBean
 				.getId()))) {
 			IOUtil.createPicFile(imgBean.getImgUrl(), SAVE_PATH
-					+ CommonUtil.getDate("") + File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 					+ imgBean.getArticleId() + File.separator
 					+ fileName.replace(".", "_s."));
 		}
@@ -75,17 +77,21 @@ public class TUKUDownload {
 		if (null == client.get(CacheUtils.getDownloadBigImageKey(imgBean
 				.getId()))) {
 			IOUtil.createPicFile(imgBean.getHttpUrl(), SAVE_PATH
-					+ CommonUtil.getDate("") + File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 					+ imgBean.getArticleId() + File.separator + fileName);
 		}
 		bean.setArticleId(imgBean.getArticleId());
 		bean.setImageId(imgBean.getId());
 		bean.setTitle(imgBean.getTitle());
-		bean.setSmallName(CommonUtil.getDate("") + File.separator
-				+ imgBean.getArticleId() + File.separator + s_fileName);
+		bean.setSmallName(File.separator
+				+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+				+ imgBean.getArticleId() + File.separator
+				+ s_fileName);
 
-		bean.setName(CommonUtil.getDate("") + File.separator
-				+ imgBean.getArticleId() + File.separator + fileName);
+		bean.setName(File.separator
+				+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+				+ imgBean.getArticleId() + File.separator
+				+ fileName);
 		bean.setUrl(SAVE_PATH);
 
 		boolean b = picFiledao.insert(bean);
@@ -145,7 +151,7 @@ public class TUKUDownload {
 	
 	public static void main(String args[]){
 		try{
-			List<WebsiteBean> list = webSiteDao.findByParentId(400);
+			List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
 			for(WebsiteBean bean:list){
 				patchImag(bean);
 			}

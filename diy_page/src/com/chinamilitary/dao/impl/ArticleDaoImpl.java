@@ -437,7 +437,7 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 		List<Article> list = new ArrayList<Article>();
 		Article bean = null;
 		try{
-			pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id = ? and d_text = ? order by d_id");
+			pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id = ? and (d_text = ?) order by d_id"); // or d_text = '0'
 			pstmt.setInt(1, webId);
 			pstmt.setString(2, text);
 			rs = pstmt.executeQuery();

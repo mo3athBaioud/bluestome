@@ -509,7 +509,55 @@ public class BIZHIParser {
 						} else {
 							System.err.println(">> 已存在相同的内容 [" + artId + "]");
 						}
-					}
+					}else{
+						imgBean = new ImageBean();
+						imgBean.setArticleId(artId);
+						NodeList tmpNode2 = linkTag.getChildren();
+						if (null != tmpNode2 && tmpNode2.size() > 0) {
+							if (tmpNode2.elementAt(0) instanceof ImageTag) {
+								ImageTag imgTag = (ImageTag) tmpNode2
+										.elementAt(0);
+								if (null != imgTag.getImageURL()){
+									imgBean.setImgUrl(URL_
+											+ imgTag.getImageURL());
+									imgBean.setHttpUrl(URL_
+											+ imgTag.getImageURL());
+								}
+								if (null != imgTag.getAttribute("alt"))
+									imgBean.setTitle(imgTag
+											.getAttribute("alt"));
+								else
+									imgBean.setTitle("NT:"
+											+ CommonUtil
+													.getDateTimeString());
+							}
+						}
+						imgBean.setLink("NED");
+						imgBean.setCommentshowurl(link.getLink());
+						try {
+							size = Integer.parseInt(length);
+							imgBean.setFileSize(Long.valueOf(size));
+							imgBean.setStatus(3);
+						} catch (Exception e) {
+							e.printStackTrace();
+							System.err.println(">> IMAGE SIZE ERROR");
+							size = 0;
+							imgBean.setFileSize(0l);
+							imgBean.setStatus(1);
+						}
+						try {
+							int key = imageDao.insert(imgBean);
+							if (key > 0) {
+								System.out.println(imgBean.getTitle()
+										+ "\t|" + imgBean.getHttpUrl());
+//								client.add(imgBean.getHttpUrl(), imgBean
+//										.getHttpUrl());
+							}
+						} catch (Exception e) {
+							b = false;
+							break;
+						}
+										}
 				}
 			}
 
@@ -705,11 +753,11 @@ public class BIZHIParser {
 		// init();
 		try {
 			// catalog(URL);
-//			 update();
-//			 loadImg();
-//			 imgDownload();
+			 update();
+			 loadImg();
+			 imgDownload();
 //			threadParser();
-			movefile();
+//			movefile();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -718,17 +766,17 @@ public class BIZHIParser {
 	static void loadImg() throws Exception {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : webList) {
-			List<Article> list = articleDao.findByWebId(bean.getId(), "FD");
+			List<Article> list = articleDao.findByWebId(bean.getId(), "NED");
 			for (Article art : list) {
-				 List<ImageBean> imgList = imageDao.findImage(art.getId());
-				 if(imgList.size() == 0){
+//				 List<ImageBean> imgList = imageDao.findImage(art.getId());
+//				 if(imgList.size() == 0){
 				if (getImage(art)) {
 					art.setText("FD");
 					if (articleDao.update(art)) {
 						System.out.println("更新记录[" + art.getTitle() + "]成功");
 					}
 				}
-				 }
+//				 }
 				// break;
 			}
 			// break;
@@ -788,7 +836,6 @@ public class BIZHIParser {
 
 	static boolean download(ImageBean imgBean) {
 		PicfileBean bean = null;
-		String date = CommonUtil.getDate("");
 		String s_fileName = imgBean.getImgUrl().substring(
 				imgBean.getImgUrl().lastIndexOf("/") + 1,
 				imgBean.getImgUrl().length());
@@ -798,27 +845,31 @@ public class BIZHIParser {
 		s_fileName = s_fileName.replace(".", "_s.");
 		try {
 			bean = new PicfileBean();
-			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH + date
-					+ File.separator + imgBean.getArticleId() + File.separator
+			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH + 
+					StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
 					+ fileName.replace(".", "_s."))) == null) {
-				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH + date
-						+ File.separator + imgBean.getArticleId()
+				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH + 
+						StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId()
 						+ File.separator + fileName.replace(".", "_s."));
 			}
 
-			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH + date
-					+ File.separator + imgBean.getArticleId() + File.separator
+			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH + 
+					StringUtils.gerDir(String.valueOf(imgBean.getArticleId())) + 
+					imgBean.getArticleId() + File.separator
 					+ fileName)) == null) {
-				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH + date
-						+ File.separator + imgBean.getArticleId()
+				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH + 
+						StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))+ 
+						imgBean.getArticleId()
 						+ File.separator + fileName);
 			}
 			bean.setArticleId(imgBean.getArticleId());
 			bean.setImageId(imgBean.getId());
-			bean.setTitle(imgBean.getTitle());
-			bean.setSmallName(date + File.separator + imgBean.getArticleId()
+			bean.setTitle(imgBean.getTitle() == null ? "无标题" : bean.getTitle());
+			bean.setSmallName(File.separator + StringUtils.gerDir(String.valueOf(imgBean.getArticleId())) + File.separator + imgBean.getArticleId()
 					+ File.separator + s_fileName);
-			bean.setName(date + File.separator + imgBean.getArticleId()
+			bean.setName(File.separator + StringUtils.gerDir(String.valueOf(imgBean.getArticleId())) + File.separator + imgBean.getArticleId()
 					+ File.separator + fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
