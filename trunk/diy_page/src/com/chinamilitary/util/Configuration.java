@@ -9,11 +9,11 @@ import org.apache.log4j.Logger;
 
 public class Configuration {
 	private static final Log logger = LogFactory.getLog(Configuration.class);
-	private static FileInputStream inputFile;
+	private static InputStream inputFile;
 	static Properties Pt=new Properties();
 	public static void LoadConfiguration(){
 		try{
-			inputFile =new FileInputStream("./config.properties");
+			inputFile = Configuration.class.getResourceAsStream("/config.properties");
 			Pt.load(inputFile);
 			inputFile.close();
 			logger.info(".Properties File is loaded!");

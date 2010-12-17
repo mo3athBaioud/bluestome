@@ -1,6 +1,8 @@
 package com.chinamilitary.memcache;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import com.chinamilitary.util.Configuration;
 import com.danga.MemCached.MemCachedClient;
@@ -15,9 +17,10 @@ public class MemcacheClient {
 
 	// 设置与缓存服务器的连接池
 	static {
+		System.out.println(">> memcache:"+Configuration.getValue("memcacheserver.1")+","+Configuration.getValue("memcacheserver.2") );
 		// 服务器列表和其权重
-		String[] servers = { Configuration.getValue("memcacheserver") };
-		Integer[] weights = { 3 };
+		String[] servers = { Configuration.getValue("memcacheserver.1"),Configuration.getValue("memcacheserver.2") };
+		Integer[] weights = { 1,2 };
 
 		// 获取socke连接池的实例对象
 		SockIOPool pool = SockIOPool.getInstance();
@@ -109,5 +112,26 @@ public class MemcacheClient {
 	 */
 	public Object get(String key) {
 		return cache.get(key);
+	}
+	
+	/**
+	 * 获取KEY列表
+	 * @return
+	 */
+	public void listKey(){
+		if(cache.stats().size() > 0){
+			Iterator it = cache.statsItems().keySet().iterator();
+			while(it.hasNext()){
+				System.out.println(">> toString:"+it.next().toString());
+			}
+			Iterator it2 = cache.statsSlabs().keySet().iterator();
+			while(it2.hasNext()){
+				System.out.println(">> toString:"+it2.next().toString());
+			}
+			return;
+		}else{
+			return;
+		}
+//		return cache.statsItems().keySet().iterator();
 	}
 }

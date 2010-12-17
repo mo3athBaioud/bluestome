@@ -162,6 +162,7 @@ public class BIZHIZHANParser {
 		NodeList list = parser.extractAllNodesThatMatch(filter)
 				.extractAllNodesThatMatch(
 						new HasAttributeFilter("class", "page padding5"));
+		LinkBean oplink = null;
 		if (list != null && list.size() > 0) {
 			Parser p2 = new Parser();
 			p2.setInputHTML(list.elementAt(0).toHtml());
@@ -170,7 +171,6 @@ public class BIZHIZHANParser {
 			NodeList optionList = p2.extractAllNodesThatMatch(optionFilter);
 			if (optionList != null && optionList.size() > 1) {
 				result.setBool(true);
-				LinkBean oplink = null;
 				for (int j = 0; j < optionList.size(); j++) {
 					OptionTag option = (OptionTag) optionList.elementAt(j);
 					oplink = new LinkBean();
@@ -181,6 +181,12 @@ public class BIZHIZHANParser {
 			}
 			b = true;
 			result.setBool(b);
+		}else{
+			oplink = new LinkBean();
+			oplink.setLink(url);
+			oplink.setTitle("Title");
+			result.put(url, oplink);
+			result.setBool(true);
 		}
 		return result;
 	}
@@ -341,12 +347,12 @@ public class BIZHIZHANParser {
 					result.put(tmp, oplink);
 				}
 			}
+		}else{
+			oplink = new LinkBean();
+			oplink.setLink(url);
+			result.put(url, oplink);
+			result.setBool(true);
 		}
-		oplink = new LinkBean();
-		oplink.setLink(url);
-		result.put(url, oplink);
-		result.setBool(true);
-
 		return result;
 		}
 
@@ -400,17 +406,17 @@ public class BIZHIZHANParser {
 
 			// getImage("http://www.bizhizhan.com/fzlsjbz/23-1.html");
 			
-//			index();
+			index();
 			
 //			init();
 			
-//			update();
+			update();
 			
-//			image();
+			image();
 			
-//			downloadImg();
+			downloadImg();
 			
-			movefile();
+//			movefile();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -538,7 +544,6 @@ public class BIZHIZHANParser {
 				imgBean.getHttpUrl().lastIndexOf("/") + 1,
 				imgBean.getHttpUrl().length());
 		s_fileName = s_fileName.replace(".", "_s.");
-		String date = CommonUtil.getDate("");
 		String length = "0";
 		try {
 			if(null != ARTICLE_COM_URL){
@@ -555,10 +560,10 @@ public class BIZHIZHANParser {
 				return false;
 			}
 			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
-					+ date + File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 					+ imgBean.getArticleId() + File.separator + fileName)) == null) {
 				IOUtil.createFile(big, PIC_SAVE_PATH
-						+ date + File.separator
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 						+ imgBean.getArticleId() + File.separator + fileName);
 			}
 			bean.setArticleId(imgBean.getArticleId());

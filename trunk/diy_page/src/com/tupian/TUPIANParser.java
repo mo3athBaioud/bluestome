@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.HasAttributeFilter;
@@ -155,7 +156,9 @@ public class TUPIANParser {
 					l1 = new LinkBean();
 					LinkTag link2 = (LinkTag) list2.elementAt(i);
 					if (!link2.getLink().startsWith("http://")) {
-						tmp = url + link2.getLink();
+						String prefix = url.substring(0,url.lastIndexOf("/")+1);
+//						System.out.println("url:"+prefix+link2.getLink());
+						tmp = prefix + link2.getLink();
 					} else {
 						tmp = link2.getLink();
 					}
@@ -163,6 +166,8 @@ public class TUPIANParser {
 					l1.setTitle(link2.getLinkText());
 					result.put(tmp, l1);
 				}
+				l1.setLink(url);
+				result.put(url, l1);
 				result.setBool(true);
 			}else{
 				LinkBean l1 = new LinkBean();
@@ -242,51 +247,39 @@ public class TUPIANParser {
 		parser.setEncoding("UTF-8");
 
 		// 获取指定ID的TableTag内容
-		NodeFilter filter2 = new NodeClassFilter(LinkTag.class);
-		NodeList list = parser.extractAllNodesThatMatch(filter2).extractAllNodesThatMatch(new HasAttributeFilter("class","title"));
+		NodeFilter filter2 = new NodeClassFilter(CompositeTag.class);
+		NodeList list = parser.extractAllNodesThatMatch(filter2).extractAllNodesThatMatch(new HasAttributeFilter("class","pa"));
+//		NodeFilter filter3 = new NodeClassFilter(LinkTag.class);
+//		NodeList list3 = parser.extractAllNodesThatMatch(filter3).extractAllNodesThatMatch(new HasAttributeFilter("class","preview"));
 		if (list != null && list.size() > 0) {
-			Parser p2 = null;
-			for (int i = 0; i < list.size(); i++) {
 				Article article = null;
 				String url = null;
-				if (null != list && list.size() > 0) {
-					LinkTag ltmp = (LinkTag) list.elementAt(i);
-					if (!ltmp.getLink().startsWith("http://")) {
-						url = URL + ltmp.getLink();
-					} else {
-						url = ltmp.getLink();
-					}
-
-					System.out.println("url:"+url);
-					if (null == client.get(url)) {
-						article = new Article();
-						article.setWebId(webId);
-						article.setArticleUrl(url);
-						article.setText("NED"); // NED_WALLCOO
-						article.setIntro("");
-						article.setTitle(ltmp.getLinkText()); // NT:No
-
-//						System.out.println("*****************Start***************");
-//						System.out.println("ArticleUrl:"+article.getArticleUrl());
-//						System.out.println("ActicleXmlUrl:"+article.getActicleXmlUrl());
-//						System.out.println("Title:"+article.getTitle());
-//						System.out.println("Text:"+article.getText());
-//						System.out.println("*****************End***************\n");
+				for (int i = 0; i < list.size(); i++) {
+					CompositeTag tmp = (CompositeTag)list.elementAt(i);
+					if(null != tmp && tmp.getChildCount() > 0){
+						LinkTag node = (LinkTag)tmp.getChild(0);
+						System.out.println(">> 标题:"+node.getLinkText());
+						System.out.println(">> 连接:"+node.getLink());
 						
-						int key = articleDao.insert(article);
-						if (key > 0) {
-							System.out.println(ltmp.getLinkText() + "\t|" + url);
-							client.add(url, url);
+						if (null == client.get(node.getLink())) {
+							article = new Article();
+							article.setTitle(node.getLinkText());
+							article.setWebId(webId);
+							article.setArticleUrl(node.getLink());
+							article.setText("NED"); // NED_WALLCOO
+							article.setIntro("NPP[NO Preview Picture]");
+							
+							int key = articleDao.insert(article);
+							if (key > 0) {
+								System.out.print(node.getLinkText() + "\t|" + url);
+								client.add(node.getLink(), node.getLink());
+							}
+						} else {
+							System.err.println(">> 已存在相同的内容 [" + node.getLinkText()
+									+ "]");
 						}
-					} else {
-						System.err.println(">> 已存在相同的内容 [" + ltmp.getLinkText()
-								+ "]");
 					}
 				}
-
-				if (null != p2)
-					p2 = null;
-			}
 		}
 		if (null != parser)
 			parser = null;
@@ -302,16 +295,14 @@ public class TUPIANParser {
 	public static boolean getImage(Article article) throws Exception {
 		boolean b = true;
 		ResultBean result = hasPaging(article.getArticleUrl(), "class",
-				"pagepagelist");
+				"pages");
 		if (result.isBool()) {
 			Iterator it = result.getMap().keySet().iterator();
 			while (it.hasNext()) {
 				String key = (String) it.next();
-				LinkBean link = result.getMap().get(key);
-				b = getImage(link, article.getId());
+				b = getImage(key, article.getId());
 			}
 		}
-
 		return b;
 	}
 
@@ -322,96 +313,19 @@ public class TUPIANParser {
 	 * @param webId
 	 * @throws Exception
 	 */
-	public static boolean getImage(LinkBean link, int artId) throws Exception {
-
-		Parser parser = new Parser();
-		parser.setURL(link.getLink());
-		parser.setEncoding("UTF-8");
-		boolean resultB = true;
-		// 获取指定ID的TableTag内容
-		NodeFilter filter = new NodeClassFilter(CompositeTag.class);
-		NodeList list = parser
-				.extractAllNodesThatMatch(filter)
-				.extractAllNodesThatMatch(new HasAttributeFilter("class", "lb"));
-		if (null != list && list.size() > 0) {
-			Parser p2 = null;
-			String length = "0";
-			int size = 0;
-			for (int i = 0; i < list.size(); i++) {
-				Div div = (Div) list.elementAt(i);
-				p2 = new Parser();
-				p2.setInputHTML(div.toHtml());
-
-				NodeFilter filter2 = new NodeClassFilter(LinkTag.class);
-				NodeList list2 = p2.extractAllNodesThatMatch(filter2);
-
-				ImageBean imgBean = null;
-				String url = null;
-				String imgSrc = null;
-				if (null != list2 && list2.size() > 0) {
-					LinkTag ltmp = (LinkTag) list2.elementAt(0);
-					if (!ltmp.getLink().startsWith("http://")) {
-						url = URL + ltmp.getLink();
-					} else {
-						url = ltmp.getLink();
-					}
-
-					imgSrc = getImageURL(url);
-					if (null != imgSrc) {
-						if (null == client.get(url)) {
-							imgBean = new ImageBean();
-							imgBean = new ImageBean();
-							imgBean.setArticleId(artId);
-							imgBean.setHttpUrl(imgSrc);
-							NodeList tmp = ltmp.getChildren();
-							if (tmp != null && tmp.size() > 0) {
-								ImageTag imgTag = (ImageTag) tmp.elementAt(0);
-								if (null != imgTag.getImageURL())
-									imgBean.setImgUrl(imgTag.getImageURL());
-								if (null != imgTag.getAttribute("alt"))
-									imgBean
-											.setTitle(imgTag
-													.getAttribute("alt"));
-								else
-									imgBean.setTitle("NT:"
-											+ CommonUtil.getDateTimeString());
-							}
-//							length = HttpClientUtils.getHttpHeaderResponse(
-//									imgSrc, "Content-Length");
-							imgBean.setLink("NED");
-							try {
-								size = Integer.parseInt(length);
-								imgBean.setFileSize(Long.valueOf(size));
-								imgBean.setStatus(3);
-							} catch (Exception e) {
-								e.printStackTrace();
-								System.err.println(">> IMAGE SIZE ERROR");
-								size = 0;
-								imgBean.setFileSize(0l);
-								imgBean.setStatus(1);
-							}
-							int key = imageDao.insert(imgBean);
-							if (key > 0) {
-								System.out.println(imgBean.getTime() + "\t|"
-										+ url);
-								client.add(url, url);
-							}
-						} else {
-							System.err.println(">> 已存在相同的内容 ["
-									+ ltmp.getLinkText() + "]");
-						}
-					} else {
-						resultB = false;
-						break;
-					}
-				}
-
-				if (null != p2)
-					p2 = null;
+	public static boolean getImage(String url, int artId) throws Exception {
+		boolean b = true;
+		ResultBean result = hasPaging(url, "class",
+				"pages");
+		if (result.isBool()) {
+			Iterator it = result.getMap().keySet().iterator();
+			while (it.hasNext()) {
+				String key = (String) it.next();
+//				b = getImage(key, article.getId());
+				System.out.println("图片分页:"+key);
 			}
 		}
-
-		return resultB;
+		return b;
 	}
 
 	/**
@@ -526,12 +440,12 @@ public class TUPIANParser {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(1000);
 		for (WebsiteBean bean : webList) {
 			ResultBean result = hasPaging(bean.getUrl(), "class",
-						"pagelist");
+						"pages");
 			if (result.isBool()) {
 				Iterator it = result.getMap().keySet().iterator();
 				while (it.hasNext()) {
 					String key = (String) it.next();
-					System.out.println("key:"+key);
+					System.out.println("分页地址:"+key);
 					LinkBean link = result.getMap().get(key);
 					try {
 						secondURL(link, bean.getId());
@@ -549,9 +463,9 @@ public class TUPIANParser {
 		// init();
 		try {
 //			 catalog(URL);
-			 update();
+//			 update();
 			// vistDesk();
-//			loadImg();
+			loadImg();
 //			imgDownload();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -563,15 +477,19 @@ public class TUPIANParser {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(1000);
 		for (WebsiteBean bean : webList) {
 			List<Article> list = articleDao.findByWebId(bean.getId(),"NED");
+//			System.out.println(">> 网站名称:"+bean.getName()+",网址["+bean.getUrl()+"],文章数量:"+list.size());
 			for (Article art : list) {
+//				System.out.println("标题:"+art.getTitle()+"\t地址:"+art.getArticleUrl());
 				if (getImage(art)) {
-					art.setText("FD");
-					if (articleDao.update(art)) {
-						System.out
-								.println("更新记录[" + art.getTitle() + "]成功");
-					}
+//					art.setText("FD");
+//					if (articleDao.update(art)) {
+//						System.out
+//								.println("更新记录[" + art.getTitle() + "]成功");
+//					}
 				}
+				break;
 			}
+			break;
 		}
 	}
 

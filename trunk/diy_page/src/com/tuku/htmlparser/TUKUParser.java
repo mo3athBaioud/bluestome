@@ -2,6 +2,7 @@ package com.tuku.htmlparser;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -26,6 +27,7 @@ import com.chinamilitary.bean.Article;
 import com.chinamilitary.bean.ArticleDoc;
 import com.chinamilitary.bean.ImageBean;
 import com.chinamilitary.bean.LinkBean;
+import com.chinamilitary.bean.PicfileBean;
 import com.chinamilitary.bean.ResultBean;
 import com.chinamilitary.bean.WebsiteBean;
 import com.chinamilitary.dao.ArticleDao;
@@ -38,12 +40,18 @@ import com.chinamilitary.test.TestHttpClient;
 import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
+import com.chinamilitary.util.StringUtils;
+import com.utils.FileUtils;
 
 public class TUKUParser {
 
 	static String URL = "http://www.tuku.cn/";
 	
 	static String IMAGE_URL = "http://image6.tuku.cn/";
+	
+	static Integer D_PARENT_ID = 400;
+	
+	final static String FILE_SERVER = "O:\\fileserver\\image\\";
 	
 	static List<LinkBean> LINKLIST = new ArrayList<LinkBean>();
 
@@ -90,7 +98,7 @@ public class TUKUParser {
 					tmp = new WebsiteBean();
 					tmp.setName(link.getLinkText());
 					tmp.setUrl(URL+link.getLink());
-					tmp.setParentId(400);
+					tmp.setParentId(D_PARENT_ID);
 					boolean b = webSiteDao.insert(tmp);
 					if (b) {
 						client.add(tmp.getUrl(), tmp.getUrl());
@@ -461,7 +469,7 @@ public class TUKUParser {
 								ImageTag it = (ImageTag) cnl.elementAt(0);
 								String url = IMAGE_URL + getImageUrl(nl.getLink());
 								if(null == client.get(url)){
-//									length = HttpClientUtils.getHttpHeaderResponse(url,"Content-Length");
+									length = HttpClientUtils.getHttpHeaderResponse(url,"Content-Length");
 									imgBean = new ImageBean();
 									imgBean.setArticleId(articleId);
 									imgBean.setHttpUrl(url);
@@ -518,7 +526,7 @@ public class TUKUParser {
 	
 	static void init() {
 		try{
-			List<WebsiteBean>  webList = webSiteDao.findByParentId(400);
+			List<WebsiteBean>  webList = webSiteDao.findByParentId(D_PARENT_ID);
 			for(WebsiteBean bean:webList){
 				List<Article> articleList = articleDao.findByWebId(bean.getId());
 				for(Article article:articleList){
@@ -538,25 +546,26 @@ public class TUKUParser {
 	public static void main(String[] args){
 		try{
 //			catalog(URL);
-//			for(WebsiteBean bean:webList){
-//				WebsiteBean bean = webSiteDao.findById(423);
-//				ResultBean result = hasPaging(bean.getUrl(), "id", "lblPageCount");
-//				if(result.isBool()){
-//					Iterator it = result.getMap().keySet().iterator();
-//					while(it.hasNext()){
-//						String key = (String)it.next();
-//						LinkBean link = result.getMap().get(key);
+			List<WebsiteBean>  webList = webSiteDao.findByParentId(D_PARENT_ID);
+			for(WebsiteBean bean:webList){
+//				WebsiteBean bean = webSiteDao.findById(D_PARENT_ID);
+				ResultBean result = hasPaging(bean.getUrl(), "id", "lblPageCount");
+				if(result.isBool()){
+					Iterator it = result.getMap().keySet().iterator();
+					while(it.hasNext()){
+						String key = (String)it.next();
+						LinkBean link = result.getMap().get(key);
 //						sb.append(link.getLink()+"\n");
-//						try{
-//							secondURL(link,bean.getId());
-//						}catch(Exception e){
-//							e.printStackTrace();
-//							System.out.println("key:"+key);
-//							continue;
-//						}
-//					}
-//				}
-//			}
+						try{
+							secondURL(link,bean.getId());
+						}catch(Exception e){
+							e.printStackTrace();
+							System.out.println("key:"+key);
+							continue;
+						}
+					}
+				}
+			}
 //			TUKUThread[] thread = new TUKUThread[webList.size()];
 //			for(int i=0;i<webList.size();i++){
 //				WebsiteBean bean = (WebsiteBean)webList.get(i);
@@ -564,15 +573,17 @@ public class TUKUParser {
 //				thread[i].start();
 //			}
 			update();
+			
+//			movefile();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 	
 	static void update() throws Exception{
-		List<WebsiteBean>  webList = webSiteDao.findByParentId(400);
+		List<WebsiteBean>  webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for(WebsiteBean bean:webList){
-			List<Article> articleList = articleDao.findByWebId(bean.getId(),"0");
+			List<Article> articleList = articleDao.findByWebId(bean.getId(),"NED");
 			for(Article article:articleList){
 				List<ImageBean> imgList = imageDao.findImage(article.getId());
 				if(imgList.size() == 0){
@@ -608,10 +619,87 @@ public class TUKUParser {
 							System.err.println(">> 更新记录["+article.getArticleUrl()+"]失败");
 						}
 					}
+				}else{
+					article.setText("FD");
+					if(!articleDao.update(article)){
+						System.err.println(">> 更新记录["+article.getArticleUrl()+"]失败");
+					}
 				}
 			}
 		}
 	}
 	
+	static void movefile() throws Exception{
+		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
+		PicfileBean bean = null;
+		for(WebsiteBean website:webList){
+			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
+			List<Article> artList = articleDao.findByWebId(website.getId(), "NED");
+			System.out.println("文章数量:"+artList.size());
+			for(Article article:artList){
+				List<ImageBean> list = imageDao.findImage(article.getId());
+				for(ImageBean img:list){
+					bean = picFiledao.findByImgIdAndArticleId(img.getId(), article.getId());
+					if(null != bean){
+						if(moveFile(bean)){
+							System.out.println(bean.getId()+"|"+bean.getArticleId()+"|"+bean.getImageId());
+							System.out.println("after move file name:"+bean.getName());
+							System.out.println("after move file smallName:"+bean.getSmallName());
+							System.out.println("-------------------------------------------------------------");
+						}
+					}
+//					break;
+				}
+//				break;
+			}
+//			break;
+		}
+	}
+	
+	static boolean moveFile(PicfileBean bean) {
+		String tmpUrl = "P:\\share\\file\\tuku\\";
+		boolean isBig = false;
+		boolean isSmall = false;
+		int start = bean.getName().lastIndexOf(File.separator)+1;
+		int smnStart = bean.getSmallName().lastIndexOf(File.separator)+1;
+		String prx = StringUtils.gerDir(String.valueOf(bean.getArticleId()));
+		String fileName = prx+bean.getArticleId()+File.separator+bean.getName().substring(start);
+		String smallFileName = prx+bean.getArticleId()+File.separator+bean.getSmallName().substring(smnStart);
+		String source = tmpUrl + bean.getName();
+		String smgSource = tmpUrl + bean.getSmallName().replace(File.separator+"s",File.separator);
+		String target = FILE_SERVER+fileName;
+		String smgTarget = FILE_SERVER + smallFileName.replace(File.separator+"s",File.separator);
+		bean.setUrl(FILE_SERVER);
+		if(FileUtils.copyFile(source, target)){
+			System.out.println(">> 大图成功!!!");
+			if(FileUtils.deleteFile(source)){
+				System.out.println(">> 删除源大图["+source+"]成功");
+			}
+			bean.setName(fileName);
+			isBig = true;
+		}
+		
+		if(FileUtils.copyFile(smgSource, smgTarget)){
+			System.out.println(">> 小图成功!!!");
+			if(FileUtils.deleteFile(smgSource)){
+				System.out.println(">> 删除源小图["+smgSource+"]成功");
+			}
+			bean.setSmallName(smallFileName);
+			isSmall = true;
+		}
+		if(isBig){
+			if(isBig || isSmall){
+				try{
+					if(picFiledao.update(bean)){
+						System.out.println(">> 更新图片文件["+bean.getId()+"]记录成功!");
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return isBig;
+	}
 	
 }

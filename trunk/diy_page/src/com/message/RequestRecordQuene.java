@@ -4,7 +4,7 @@ import java.util.Vector;
 
 public class RequestRecordQuene {
 
-	private Vector quene = new Vector();
+	Vector quene = new Vector();
 
 	private static RequestRecordQuene instance = null;
 

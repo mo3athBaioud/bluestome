@@ -109,28 +109,28 @@ public class VeryCDSoftwareParser {
 				WebsiteBean tmp = null;
 				for (int i = 0; i < linkList.size(); i++) {
 					LinkTag link = (LinkTag) linkList.elementAt(i);
-					System.out.println("text:"+link.getLinkText());
-					System.out.println("link:"+link.getLink());
+					log.info("text:"+link.getLinkText());
+					log.info("link:"+link.getLink());
 					tmp = new WebsiteBean();
 					int start = link.getLinkText().indexOf("d");
 					int end = link.getLinkText().lastIndexOf(")");
 					if(start != -1 && end != -1){
 						tmp.setName(link.getLinkText().substring(0,start));
-						System.out.println(">> tmp.getName():"+tmp.getName());
+						log.info(">> tmp.getName():"+tmp.getName());
 					}
 					if(link.getLink().startsWith("\\")){
 						tmp.setUrl(URL_ + link.getLink());
-						System.out.println("new:"+ URL_ + link.getLink()+ "\n");
+						log.info("new:"+ URL_ + link.getLink()+ "\n");
 					}else{
 						tmp.setUrl(URL+link.getLink());
-						System.out.println("new:"+URL+link.getLink()+"\n");
+						log.info("new:"+URL+link.getLink()+"\n");
 					}
 					tmp.setParentId(_D_PARENT_ID);
 					boolean b = dao.insert(tmp);
 					if (b) {
-						System.out.println("成功");
+						log.info("成功");
 					} else {
-						System.out.println("失败");
+						log.info("失败");
 					}
 				}
 			}
@@ -213,17 +213,17 @@ public class VeryCDSoftwareParser {
 				WebsiteBean tmp = null;
 				for (int i = 0; i < linkList.size(); i++) {
 					LinkTag link = (LinkTag) linkList.elementAt(i);
-					System.out.println(link.getLinkText());
-					System.out.println(URL_ + link.getLink() + "\n");
+					log.info(link.getLinkText());
+					log.info(URL_ + link.getLink() + "\n");
 					tmp = new WebsiteBean();
 					tmp.setName(link.getLinkText());
 					tmp.setUrl(link.getLink());
 					tmp.setParentId(bean.getId());
 					boolean b = dao.insert(tmp);
 					if (b) {
-						System.out.println("成功");
+						log.info("成功");
 					} else {
-						System.out.println("失败");
+						log.info("失败");
 					}
 				}
 			}
@@ -353,7 +353,7 @@ public class VeryCDSoftwareParser {
 			p2.setEncoding("GB2312");
 			NodeList list4 = p2.parse(linkFilter);
 			if (list4 != null || list4.size() > 0) {
-//				System.out.println(">> URL["+link.getLink()+"]的记录数量:"+list4.size());
+//				log.info(">> URL["+link.getLink()+"]的记录数量:"+list4.size());
 				for (int i = 0; i < list4.size(); i++) {
 						LinkTag nl = (LinkTag) list4.elementAt(i);
 						ArticleDoc doc = null;
@@ -368,17 +368,17 @@ public class VeryCDSoftwareParser {
 						if(null == client.get(getKey(doc.getUrl()))){
 							int id = articleDocDao.insert(doc);
 							if(!(id>0)){
-								System.out.println("失败，\t链接名称：" + doc.getTitle() + "\n链接地址："+ doc.getUrl());
+								log.info("失败，\t链接名称：" + doc.getTitle() + "\n链接地址："+ doc.getUrl());
 							}else{
-								System.out.println("\t>> Title:"+doc.getTitle());
-								System.out.println("\t>> Url:"+doc.getUrl());
+								log.info("\t>> Title:"+doc.getTitle());
+								log.info("\t>> Url:"+doc.getUrl());
 								doc.setId(id);
 								doc.setStatus(1);
 								client.add(getKey(doc.getUrl()), doc);
-								System.out.println("Memcached now store this object");
+								log.info("Memcached now store this object");
 							}
 						}else{
-							System.out.println(">> 已存在相同的内容 ["+nl.getLinkText()+"]");
+							log.info(">> 已存在相同的内容 ["+nl.getLinkText()+"]");
 						}
 				}
 			}
@@ -403,7 +403,7 @@ public class VeryCDSoftwareParser {
 						new HasAttributeFilter("class", "topicImg"));
 		ImageTag link = null;
 		if (list != null && list.size() > 0) {
-			System.out.println("\t>> html:"+list.toHtml());
+			log.info("\t>> html:"+list.toHtml());
 			Parser p1 = new Parser();
 			p1.setInputHTML(list.toHtml());
 			p1.setEncoding("GB2312");
@@ -411,7 +411,7 @@ public class VeryCDSoftwareParser {
 			NodeFilter imageFilter = new NodeClassFilter(ImageTag.class);
 			NodeList nodes = p1.extractAllNodesThatMatch(imageFilter);
 			if (nodes != null && nodes.size() > 0) {
-				System.out.println(">> nodes.size:"+nodes.size());
+				log.info(">> nodes.size:"+nodes.size());
 				if (nodes.elementAt(0) instanceof ImageTag) {
 					link = (ImageTag) nodes.elementAt(0);
 				}
@@ -446,7 +446,7 @@ public class VeryCDSoftwareParser {
 						InputTag input = (InputTag)inputList.elementAt(i);
 						String value = input.getAttribute("value");
 						if(null != value){
-							System.out.println("\t>> value:\t"+value);
+							log.info("\t>> value:\t"+value);
 						}
 					}
 				}
@@ -464,7 +464,7 @@ public class VeryCDSoftwareParser {
 			NodeFilter filter = new NodeClassFilter(Div.class);
 			NodeList list = parser.extractAllNodesThatMatch(filter).extractAllNodesThatMatch(new HasAttributeFilter("id","iptcomED2K"));
 			if(null != list && list.size() > 0){
-				System.out.println("\thtml:"+list.toHtml());
+				log.info("\thtml:"+list.toHtml());
 			}
 		}
 	}
@@ -493,7 +493,7 @@ public class VeryCDSoftwareParser {
 				}
 				/**
 				 * String[] ids = div.getIds(); for(int i=0;i<ids.length;i++){
-				 * System.out.println("ids["+i+"]:"+ids[i]); }
+				 * log.info("ids["+i+"]:"+ids[i]); }
 				 */
 			}
 			parser = null;
@@ -532,7 +532,7 @@ public class VeryCDSoftwareParser {
 						Iterator it = result.getMap().keySet().iterator();
 						while(it.hasNext()){
 							String key = (String)it.next();
-//							System.out.println("key:"+key);
+//							log.info("key:"+key);
 //							LinkBean link = (result.getMap().get(key));
 //							try {
 //								secondURL(link, bean.getId());
@@ -546,7 +546,7 @@ public class VeryCDSoftwareParser {
 					// 更新菜单列表排序
 					wesiteDao.update(bean);
 				}catch(Exception e){
-					System.out.println(">> Exception :"+e);
+					log.info(">> Exception :"+e);
 				}
 			}
 		}
@@ -580,19 +580,19 @@ public class VeryCDSoftwareParser {
 						Iterator it = result.getMap().keySet().iterator();
 						while(it.hasNext()){
 							String key = (String)it.next();
-							System.out.println("\tkey:"+key);
-//							LinkBean link = (result.getMap().get(key));
-//							try {
-//								secondURL(link, bean.getId());
-//							} catch (org.htmlparser.util.EncodingChangeException e) {
-//								e.printStackTrace();
-//								continue;
-//							}
+							log.info("\tkey:"+key);
+							LinkBean link = (result.getMap().get(key));
+							try {
+								secondURL(link, bean.getId());
+							} catch (org.htmlparser.util.EncodingChangeException e) {
+								e.printStackTrace();
+								continue;
+							}
 						}
 						result.getMap().clear();
 					}
 				}catch(Exception e){
-					System.out.println(">> Exception :"+e);
+					log.info(">> Exception :"+e);
 				}
 			}
 		}
@@ -605,15 +605,41 @@ public class VeryCDSoftwareParser {
 	 */
 	static boolean needUpdate(WebsiteBean bean){
 		boolean b = true;
-		String value = CATALOGHASH.get(bean.getUrl());
+		String value = CATALOGHASH.get(bean.getUrl().replace("/archives/", "/sto/"));
 		if(null != value &&  !"".equalsIgnoreCase(value)){
 			if(value.equalsIgnoreCase(bean.getName())){
 				b = false;
+			}else{
+				int dbCount = getCatalogCount(bean.getName());
+				int webCount = getCatalogCount(value);
+				log.debug(">> 数据库中的分类总数为:"+dbCount);
+				log.debug(">> 网站中的分类总数为:"+webCount);
+				if(webCount <= dbCount){
+					b = false;
+				}
 			}
 		}
 		return b;
 	}
 	
+	/**
+	 * 获取分类总数
+	 * @param name
+	 * @return
+	 */
+	static int getCatalogCount(String name){
+		int count = 0;
+		int start = name.indexOf("(");
+		int end = name.indexOf(")");
+		if(start != -1 && end != -1){
+			try{
+				count = Integer.valueOf(name.substring(start+1,end));
+			}catch(Exception e){
+				System.err.println(e);
+			}
+		}
+		return count;
+	}
 	public static void main(String args[]) {
 		try {
 			//初始化Archives文章目录
@@ -626,12 +652,14 @@ public class VeryCDSoftwareParser {
 			
 //			update();
 			
+//			test();
+			
 			
 			
 			/*******************************华丽的分割线：测试部分**************************************/
 //			String img = getAlbumPicUrl("http://www.verycd.com/topics/2870019/");
 //			if(null != img){
-//				System.out.println(">>"+img);
+//				log.info(">>"+img);
 //			}
 //			getFileDownloadUrl("http://www.verycd.com/topics/2749864/");
 			
@@ -649,28 +677,28 @@ public class VeryCDSoftwareParser {
 		List<WebsiteBean> list = wesiteDao.findByParentId(_D_PARENT_ID);
 		for(WebsiteBean bean:list){
 			String key = bean.getUrl().replace("/archives","/sto");
-			System.out.println(">> key:"+key);
+			log.info(">> key:"+key);
 			String value = CATALOGHASH.get(key);
 			if(null != value  && !"".equalsIgnoreCase(value)){
-				System.out.println(">> value:"+value);
+				log.info(">> value:"+value);
 				bean.setName(value);
 				if(wesiteDao.update(bean)){
-					System.out.println(">> update website success!");
+					log.info(">> update website success!");
 				}else{
-					System.out.println(">> update website failure!");
+					log.info(">> update website failure!");
 				}
 			}
 		}
 	}
 	
 	static void test() throws Exception{
-		System.out.println("****************************Split Line********************************");
+		log.info("****************************Split Line********************************");
 		Iterator it = CATALOGHASH.keySet().iterator();
 		while(it.hasNext()){
 			String key = (String)it.next();
-			System.out.println(">> key:"+key);
+			log.info(">> key:"+key);
 			String value = CATALOGHASH.get(key);
-			System.out.println(">> value:"+value);
+			log.info(">> value:"+value);
 		}
 	}
 

@@ -52,9 +52,9 @@ public class PicFileDaoImpl extends CommonDB implements PicFileDao {
 		if(null == bean.getName() || bean.getName().equalsIgnoreCase("")){
 			return b;
 		}
-		if(checkExists(bean.getName())){
-			return b;
-		}
+//		if(checkExists(bean.getName())){
+//			return b;
+//		}
 		int count = -1;
 		pstmt = conn.prepareStatement(INSERT_SQL);
 		pstmt.setInt(1, bean.getArticleId());

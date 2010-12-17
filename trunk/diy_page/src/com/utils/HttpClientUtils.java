@@ -145,9 +145,11 @@ public class HttpClientUtils {
 
 		String value = "";
 		String url = "http://tuku.military.china.com/military/html/2010-04-02/139456.xml";
+		String pushUrl = "http://localhost:8080/mrpmusicfs/mrpmusic.do";
 		try {
 			
-			boolean suc = validationURL(url);
+//			boolean suc = validationURL(url);
+			boolean suc = validationURL(pushUrl);
 			
 			System.out.println("suc:"+suc);
 			
@@ -168,13 +170,12 @@ public class HttpClientUtils {
 			if (null != httpclient)
 				httpclient = null;
 		}
-		if (!"".equalsIgnoreCase(value)) {
-			// System.out.println("value:"+value);
-			int start = value.indexOf("intro=") + 6;
-			int end = value.indexOf("comment");
-			String tmp = value.substring(start, end);
-			System.out.println("value:" + value.replace(tmp, "\"\" "));
-		}
+//		if (!"".equalsIgnoreCase(value)) {
+//			int start = value.indexOf("intro=") + 6;
+//			int end = value.indexOf("comment");
+//			String tmp = value.substring(start, end);
+//			System.out.println("value:" + value.replace(tmp, "\"\" "));
+//		}
 	}
 
 }

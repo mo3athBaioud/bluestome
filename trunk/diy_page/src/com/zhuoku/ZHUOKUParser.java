@@ -765,8 +765,8 @@ public class ZHUOKUParser {
 	public static void main(String[] args) {
 		// init();
 		try {
-//			 update();
-//			 loadImg();
+			 update();
+			 loadImg();
 			 imgDownload();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -833,7 +833,7 @@ public class ZHUOKUParser {
 				for (Article art : list) {
 					List<ImageBean> imgList = imageDao.findImage(art.getId());
 					System.out.println(">> 文章["+art.getId()+"|"+art.getTitle()+"]\t下的图片数量"+imgList.size());
-					ARTICLE_COM_URL = art.getArticleUrl();
+//					ARTICLE_COM_URL = art.getArticleUrl();
 					for (ImageBean img : imgList) {
 						if(img.getStatus() != -1){
 							if (download(img,art.getArticleUrl())) {
@@ -845,7 +845,7 @@ public class ZHUOKUParser {
 							}
 						}
 					}
-					ARTICLE_COM_URL = null;
+//					ARTICLE_COM_URL = null;
 				}
 			}
 		}

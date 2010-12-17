@@ -45,6 +45,7 @@ import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
 import com.common.Constants;
+import com.utils.FileUtils;
 
 public class ZOLDESKParser {
 
@@ -57,6 +58,8 @@ public class ZOLDESKParser {
 	static int D_PARENT_ID = 701;
 
 	static String VISTA_URL = "http://vista.zol.com.cn";
+	
+	final static String FILE_SERVER = "O:\\fileserver\\image\\";
 
 	static String PIC_SAVE_PATH = Constants.FILE_SERVER;
 
@@ -397,8 +400,8 @@ public class ZOLDESKParser {
 									imgBean.setTitle("NT:"
 											+ CommonUtil.getDateTimeString());
 							}
-//							length = HttpClientUtils.getHttpHeaderResponse(
-//									imgSrc, "Content-Length");
+							length = HttpClientUtils.getHttpHeaderResponse(
+									imgSrc, "Content-Length");
 							imgBean.setLink("NED");
 							try {
 								size = Integer.parseInt(length);
@@ -616,19 +619,92 @@ public class ZOLDESKParser {
 		// init();
 		try {
 			// catalog(URL);
-//			 update();
+			 update();
 //			 vistDesk();
 //			threadParser();
-//			loadImg();
+			loadImg();
 			imgDownload();
 			
-			
+//			movefile();			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	static void movefile() throws Exception{
+		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
+		PicfileBean bean = null;
+		for(WebsiteBean website:webList){
+			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
+			List<Article> artList = articleDao.findByWebId(website.getId(), "FD");
+			System.out.println("文章数量:"+artList.size());
+			for(Article article:artList){
+				List<ImageBean> list = imageDao.findImage(article.getId());
+				for(ImageBean img:list){
+					bean = picFiledao.findByImgIdAndArticleId(img.getId(), article.getId());
+					if(null != bean){
+						if(moveFile(bean)){
+							System.out.println(bean.getId()+"|"+bean.getArticleId()+"|"+bean.getImageId());
+							System.out.println("after move file name:"+bean.getName());
+							System.out.println("after move file smallName:"+bean.getSmallName());
+							System.out.println("-------------------------------------------------------------");
+						}
+					}
+//					break;
+				}
+//				break;
+			}
+//			break;
+		}
+	}
+	
+	static boolean moveFile(PicfileBean bean) {
+		String tmpUrl = "P:\\share\\file\\zol\\";
+		boolean isBig = false;
+		boolean isSmall = false;
+		int start = bean.getName().lastIndexOf(File.separator)+1;
+		int smnStart = bean.getSmallName().lastIndexOf(File.separator)+1;
+		String prx = StringUtils.gerDir(String.valueOf(bean.getArticleId()));
+		String fileName = prx+bean.getArticleId()+File.separator+bean.getName().substring(start);
+		String smallFileName = prx+bean.getArticleId()+File.separator+bean.getSmallName().substring(smnStart);
+		String source = tmpUrl + bean.getName();
+		String smgSource = tmpUrl + bean.getSmallName();
+		String target = FILE_SERVER+fileName;
+		String smgTarget = FILE_SERVER + smallFileName;
+		bean.setUrl(FILE_SERVER);
+		if(FileUtils.copyFile(source, target)){
+			System.out.println(">> 大图成功!!!");
+			if(FileUtils.deleteFile(source)){
+				System.out.println(">> 删除源大图["+source+"]成功");
+			}
+			bean.setName(fileName);
+			isBig = true;
+		}
+		
+		if(FileUtils.copyFile(smgSource, smgTarget)){
+			System.out.println(">> 小图成功!!!");
+			if(FileUtils.deleteFile(smgSource)){
+				System.out.println(">> 删除源小图["+smgSource+"]成功");
+			}
+			bean.setSmallName(smallFileName);
+			isSmall = true;
+		}
+		if(isBig){
+			if(isBig || isSmall){
+				try{
+					if(picFiledao.update(bean)){
+						System.out.println(">> 更新图片文件["+bean.getId()+"]记录成功!");
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return isBig;
+	}
+	
 	static void loadImg() throws Exception {
 		// WebsiteBean bean = webSiteDao.findById(702);
 		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
@@ -766,7 +842,7 @@ public class ZOLDESKParser {
 		bean = new PicfileBean();
 		String s_fileName = imgBean.getImgUrl().substring(
 				imgBean.getImgUrl().lastIndexOf("/") + 1,
-				imgBean.getImgUrl().length());
+				imgBean.getImgUrl().length()).replace(".", "_s.");
 		String fileName = imgBean.getHttpUrl().substring(
 				imgBean.getHttpUrl().lastIndexOf("/") + 1,
 				imgBean.getHttpUrl().length());

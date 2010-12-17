@@ -1,6 +1,7 @@
 package com.chinamilitary.htmlparser;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,11 +34,16 @@ import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.CommonUtil;
 import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
+import com.chinamilitary.util.StringUtils;
+import com.common.Constants;
 import com.message.RequestRecordQuene;
+import com.utils.FileUtils;
 
 public class QWPPHtmlParser {
 
 	public static final String _URL = "http://www.qwpp.net";
+	
+	static String PIC_SAVE_PATH = Constants.FILE_SERVER;
 	
 	public static String[] URL_PREX = new String[]{
 		"http://www.qwpp.net/lomo/",
@@ -57,6 +63,10 @@ public class QWPPHtmlParser {
 		"http://www.qwpp.net/sc/"
 	};
 	
+	static int D_PARENT_ID = 148;
+	
+	final static String FILE_SERVER = "O:\\fileserver\\image\\";
+	
 	public static final String SAVE_DIR = "F:\\qwpp\\";
 	
 	private static List<LinkBean> LINKLIST = new ArrayList<LinkBean>();
@@ -75,7 +85,9 @@ public class QWPPHtmlParser {
 	
 	private static WebSiteDao wesiteDao = DAOFactory.getInstance().getWebSiteDao();
 	
-	private static PicFileDao picFileDao = DAOFactory.getInstance().getPicFileDao();
+	static WebSiteDao webSiteDao = DAOFactory.getInstance().getWebSiteDao();
+
+	static PicFileDao picFiledao = DAOFactory.getInstance().getPicFileDao();
 	
 	private static int _COUNT = 0;
 	
@@ -398,7 +410,7 @@ public class QWPPHtmlParser {
 	static void downloadArticleImage(){
 		try{
 		long start = System.currentTimeMillis();
-		List<WebsiteBean> rootURL = wesiteDao.findByParentId(148);
+		List<WebsiteBean> rootURL = wesiteDao.findByParentId(D_PARENT_ID);
 		for(WebsiteBean bean:rootURL){
 			List<Article> list  = articleDao.findShowImg(bean.getId(),"FD",1);
 			for(Article art:list){
@@ -430,7 +442,7 @@ public class QWPPHtmlParser {
 	
 	static void init2cache() {
 		try{
-			List<String> articleURLlist = articleDao.findAllArticleURL(148);
+			List<String> articleURLlist = articleDao.findAllArticleURL(D_PARENT_ID);
 			long start1 = System.currentTimeMillis();
 			for(String key:articleURLlist){
 				Object obj = client.get(key);
@@ -440,7 +452,7 @@ public class QWPPHtmlParser {
 			}
 			long end1 = System.currentTimeMillis();
 			
-//			List<String> imageURLList = imageDao.findImageURL(148);
+//			List<String> imageURLList = imageDao.findImageURL(D_PARENT_ID);
 //			long start2 = System.currentTimeMillis();
 //			for(String key:imageURLList){
 //				Object obj = client.get(key);
@@ -461,53 +473,243 @@ public class QWPPHtmlParser {
 			
 //			init2cache();
 			
-			List<WebsiteBean> rootURL = wesiteDao.findByParentId(148);
-			if(null != rootURL){
-				//获取网站下的文章
-				for(WebsiteBean bean:rootURL){
-					System.out.println(">> 解析地址:["+bean.getUrl()+"]");
-					
-					if(!HttpClientUtils.validationURL(bean.getUrl())){
-						System.out.println(">> QWPP Catalog URL["+bean.getUrl()+"] NOT OK");
-						continue;
-					}
-					
-					ResultBean  result = hasPaging(bean.getUrl(),"class","show_page");
-					for(LinkBean ll : result.getList()){
-						//获取分页连接
-						articelPerPage(ll.getLink(),"id","Channel1",bean.getId());
-					}
-				}
-				
-				//获取文章下的图片地址
-				for(WebsiteBean bean:rootURL){
-					List<Article> list  = articleDao.findShowImg(bean.getId(),"NED",1);
-					for(Article art:list){
-							if(!HttpClientUtils.validationURL(art.getArticleUrl())){
-								System.out.println(">> QWPP Article URL["+bean.getUrl()+"] NOT OK");
-								continue;
-							}
-							System.out.println("标题："+art.getTitle() + "\t\t所属类别ID:"+art.getWebId());
-							getPicUrl(art, "id", "piclist2");
-							art.setText("FD");
-							if(articleDao.update(art)){
-								System.out.println("更新文章["+art.getTitle()+"]成功");
-							}
-						_COUNT++;
-					}
-				}
-			}
-			/**
-			**/
-//			System.out.println("已解析图片地址的数量："+_COUNT);
-//			downloadArticleImage();
-			System.out.println("已下载的图片数量："+_COUNT);
+			update();
 			
-//			articelPerPage("http://www.qwpp.net/sc/11-29.html","id","Channel1");
-//			getPicUrl("http://www.qwpp.net/sc/shishangchaoliu/200811/26-525.html", "id", "piclist2");
-//			download("http://www.qwpp.net/uploads/allimg/081126/11AFMN6-6.jpg");
+//			movefile();
+			
+			imgDownload();
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	static void update() throws Exception{
+		List<WebsiteBean> rootURL = wesiteDao.findByParentId(D_PARENT_ID);
+		if(null != rootURL){
+			//获取网站下的文章
+			for(WebsiteBean bean:rootURL){
+				System.out.println(">> 解析地址:["+bean.getUrl()+"]");
+				
+				if(!HttpClientUtils.validationURL(bean.getUrl())){
+					System.out.println(">> QWPP Catalog URL["+bean.getUrl()+"] NOT OK");
+					continue;
+				}
+				
+				ResultBean  result = hasPaging(bean.getUrl(),"class","show_page");
+				for(LinkBean ll : result.getList()){
+					//获取分页连接
+					articelPerPage(ll.getLink(),"id","Channel1",bean.getId());
+				}
+			}
+			
+			//获取文章下的图片地址
+			for(WebsiteBean bean:rootURL){
+				List<Article> list  = articleDao.findShowImg(bean.getId(),"NED",1);
+				for(Article art:list){
+						if(!HttpClientUtils.validationURL(art.getArticleUrl())){
+							System.out.println(">> QWPP Article URL["+bean.getUrl()+"] NOT OK");
+							continue;
+						}
+						System.out.println("标题："+art.getTitle() + "\t\t所属类别ID:"+art.getWebId());
+						getPicUrl(art, "id", "piclist2");
+						art.setText("FD");
+						if(articleDao.update(art)){
+							System.out.println("更新文章["+art.getTitle()+"]成功");
+						}
+					_COUNT++;
+				}
+			}
+		}
+	}
+	static void imgDownload() throws Exception {
+		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
+		for (WebsiteBean website : webList) {
+			System.out.println(website.getId() + "|" + website.getName() + "|"
+					+ website.getUrl());
+			List<Article> artList = articleDao.findByWebId(website.getId(),
+					"FD");
+			System.out.println("文章数量:" + artList.size());
+			for (Article article : artList) {
+				List<ImageBean> list = imageDao.findImage(article.getId());
+				System.out.println(">> 图片数量:[" + article.getTitle() + "["
+						+ article.getId() + "]]" + list.size()
+						+ "\n**************************");
+				if (list.size() == 0) {
+					article.setText("NED");
+					if (articleDao.update(article)) {
+						System.out.println(">> 更新图片记录数据为0的文章成功");
+					}
+				} else {
+					for (ImageBean bean : list) {
+						if (bean.getLink().equalsIgnoreCase("NED")) {
+							if (download(bean)) {
+								bean.setStatus(1);
+								bean.setLink("FD");
+								if (imageDao.update(bean)) {
+									System.out.println(">> 更新图片对象["
+											+ bean.getId() + "]成功");
+								}
+							}
+						}
+					}
+					article.setText("FD");
+					articleDao.update(article);
+				}
+			}
+		}
+	}
+
+	static boolean download(ImageBean imgBean) {
+		long start = System.currentTimeMillis();
+		PicfileBean bean = null;
+		String s_fileName = imgBean.getImgUrl().substring(
+				imgBean.getImgUrl().lastIndexOf("/") + 1,
+				imgBean.getImgUrl().length());
+		String fileName = imgBean.getHttpUrl().substring(
+				imgBean.getHttpUrl().lastIndexOf("/") + 1,
+				imgBean.getHttpUrl().length());
+		s_fileName = s_fileName.replace(".", "_s.");
+		try {
+			bean = new PicfileBean();
+//			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH + 
+//					StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+//					+ imgBean.getArticleId() + File.separator
+//					+ fileName.replace(".", "_s."))) == null) {
+//				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH + 
+//						StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+//						+ imgBean.getArticleId()
+//						+ File.separator + fileName.replace(".", "_s."));
+//			}
+
+			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH + 
+					StringUtils.gerDir(String.valueOf(imgBean.getArticleId())) + 
+					imgBean.getArticleId() + File.separator
+					+ fileName)) == null) {
+				long iostart = System.currentTimeMillis();
+				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH + 
+						StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))+ 
+						imgBean.getArticleId()
+						+ File.separator + fileName);
+				long ioend = System.currentTimeMillis();
+				System.out.println("保存文件耗时:"+(ioend-iostart)+"ms");
+			}
+			bean.setArticleId(imgBean.getArticleId());
+			bean.setImageId(imgBean.getId());
+			if(imgBean.getTitle() == null || imgBean.getTitle().equalsIgnoreCase("")){
+				bean.setTitle("无标题");
+			}else{
+				bean.setTitle(imgBean.getTitle());
+			}
+			bean.setSmallName(File.separator + StringUtils.gerDir(String.valueOf(imgBean.getArticleId())) + imgBean.getArticleId()
+					+ File.separator + fileName);
+			bean.setName(File.separator + StringUtils.gerDir(String.valueOf(imgBean.getArticleId())) + imgBean.getArticleId()
+					+ File.separator + fileName);
+			bean.setUrl(PIC_SAVE_PATH);
+			try {
+				long dbstart = System.currentTimeMillis();
+				boolean b = picFiledao.insert(bean);
+				long dbend = System.currentTimeMillis();
+				System.out.println("数据入库耗时:"+(dbend-dbstart)+"ms");
+				if (b) {
+					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+							+ bean.getName()), bean);
+					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+							+ bean.getSmallName()), bean);
+					long end = System.currentTimeMillis();
+					System.out.println("耗时:"+(end-start)+"ms");
+					return true;
+				} else {
+					long end = System.currentTimeMillis();
+					System.out.println("耗时:"+(end-start)+"ms");
+					return false;
+				}
+			} catch (Exception e) {
+				long end = System.currentTimeMillis();
+				System.out.println("耗时:"+(end-start)+"ms");
+				System.out.println("数据库异常");
+				e.printStackTrace();
+				return false;
+			}
+		} catch (IOException e) {
+			long end = System.currentTimeMillis();
+			System.out.println("耗时:"+(end-start)+"ms");
+			System.out.println("网络连接，文件IO异常");
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	static void movefile() throws Exception{
+		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
+		PicfileBean bean = null;
+		for(WebsiteBean website:webList){
+			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
+			List<Article> artList = articleDao.findByWebId(website.getId(), "FD");
+			System.out.println("文章数量:"+artList.size());
+			for(Article article:artList){
+				List<ImageBean> list = imageDao.findImage(article.getId());
+				for(ImageBean img:list){
+					bean = picFiledao.findByImgIdAndArticleId(img.getId(), article.getId());
+					if(null != bean){
+						if(moveFile(bean)){
+							System.out.println(bean.getId()+"|"+bean.getArticleId()+"|"+bean.getImageId());
+							System.out.println("after move file name:"+bean.getName());
+							System.out.println("after move file smallName:"+bean.getSmallName());
+							System.out.println("-------------------------------------------------------------");
+						}
+					}
+//					break;
+				}
+//				break;
+			}
+//			break;
+		}
+	}
+	
+	static boolean moveFile(PicfileBean bean) {
+		String tmpUrl = "P:\\share\\file\\qwpp\\";
+		boolean isBig = false;
+		boolean isSmall = false;
+		int start = bean.getName().lastIndexOf(File.separator)+1;
+		int smnStart = bean.getSmallName().lastIndexOf(File.separator)+1;
+		String prx = StringUtils.gerDir(String.valueOf(bean.getArticleId()));
+		String fileName = prx+bean.getArticleId()+File.separator+bean.getName().substring(start);
+		String smallFileName = prx+bean.getArticleId()+File.separator+bean.getSmallName().substring(smnStart);
+		String source = tmpUrl + bean.getName();
+		String smgSource = tmpUrl + bean.getSmallName();
+		String target = FILE_SERVER+fileName;
+		String smgTarget = FILE_SERVER + smallFileName;
+		bean.setUrl(FILE_SERVER);
+		if(FileUtils.copyFile(source, target)){
+			System.out.println(">> 大图成功!!!");
+			if(FileUtils.deleteFile(source)){
+				System.out.println(">> 删除源大图["+source+"]成功");
+			}
+			bean.setName(fileName);
+			isBig = true;
+		}
+		
+		if(FileUtils.copyFile(smgSource, smgTarget)){
+			System.out.println(">> 小图成功!!!");
+			if(FileUtils.deleteFile(smgSource)){
+				System.out.println(">> 删除源小图["+smgSource+"]成功");
+			}
+			bean.setSmallName(smallFileName);
+			isSmall = true;
+		}
+		if(isBig){
+			if(isBig || isSmall){
+				try{
+					if(picFiledao.update(bean)){
+						System.out.println(">> 更新图片文件["+bean.getId()+"]记录成功!");
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return isBig;
 	}
 }
