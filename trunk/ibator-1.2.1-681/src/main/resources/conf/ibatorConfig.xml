@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE ibatorConfiguration PUBLIC "-//Apache Software Foundation//DTD Apache iBATIS Ibator Configuration 1.0//EN" "http://ibatis.apache.org/dtd/ibator-config_1_0.dtd" >
+<ibatorConfiguration>
+	<classPathEntry
+		location="E:\Workspaces\5.CMP\googleapi\web\WEB-INF\lib\mysql-connector-java-3.1.11-bin.jar" />
+	<ibatorContext id="Project">
+	<!-- 
+		<ibatorPlugin
+			type="org.apache.ibatis.ibator.plugins.RenameExampleClassPlugin">
+			<property name="searchString" value="Example$" />
+			<property name="replaceString" value="Repository" />
+		</ibatorPlugin>
+		<ibatorPlugin
+			type="org.apache.ibatis.ibator.plugins.SerializablePlugin">
+		</ibatorPlugin>
+		 -->
+		<jdbcConnection
+			driverClass="org.gjt.mm.mysql.Driver"
+			connectionURL="jdbc:mysql://127.0.0.1:3306/dedecms" userId="root"
+			password="123456" />
+		<javaModelGenerator targetPackage="com.bluestome.common.dal.model"
+			targetproject="Project" />
+		<sqlMapGenerator targetPackage="com.bluestome.common.dal.model.sqlmap"
+			targetproject="Project" />
+		<daoGenerator targetPackage="com.bluestome.common.dal"
+			targetproject="Project" type="GENERIC-CI" />
+		<table schema="" tableName="Staff" />
+	</ibatorContext>
+</ibatorConfiguration>
