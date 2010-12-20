@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TBL_PROVINCE_CHANNEL" >
+  <!-- 通道文件信息-->
+  <resultMap id="channelFileInfoResult" class="com.sky.commons.channel.domain.ChannelFileInfo" >
+    <result column="provinceCode" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="fileName" property="fileName" jdbcType="VARCHAR" />
+    <result column="filebytes" property="fileBytes" 
+    typeHandler="org.springframework.orm.ibatis.support.BlobByteArrayTypeHandler"/>
+    <result column="startPrice" property="startPrice" jdbcType="DECIMAL" />
+    <result column="endPrice" property="endPrice" jdbcType="DECIMAL" />
+  </resultMap>
+  <!-- 根据省份code获取起始金额为0的通道文件，只返回一个结果 -->
+  <select id="getChannelFileInfo" resultMap="channelFileInfoResult" parameterClass="java.lang.String">
+ 	 SELECT * FROM TBL_CHANNEL_FILE_INFO T 
+ 	 where t.provincecode=#provinceCode#
+ 	 and startprice=0
+ 	 and rownum&lt;2
+  </select>
+  <!-- 返回所有起始金额为0的通道文件信息 -->
+   <select id="selectAllChannelFileInfosStart0" resultMap="channelFileInfoResult">
+    select *
+    from TBL_CHANNEL_FILE_INFO
+    WHERE STARTPRICE=0
+   </select>
+   
+  <!-- 保存新通道文件信息 -->
+  <parameterMap id="saveChannelFileInfoParameters" class="java.util.HashMap">
+        <parameter property="returnCode" jdbcType="DECIMAL" javaType="java.lang.Integer" mode="OUT"/>
+  		<parameter property="provinceCode" jdbcType="VARCHAR2" javaType="java.lang.String" mode="IN"/>
+  		<parameter property="fileName" jdbcType="VARCHAR2" javaType="java.lang.String" mode="IN"/>
+  		<parameter property="fileBytes" 
+  		typeHandler="org.springframework.orm.ibatis.support.BlobByteArrayTypeHandler" mode="IN"/>
+  		<parameter property="startPrice" jdbcType="DECIMAL" javaType="java.lang.Integer" mode="IN"/>
+  		<parameter property="endPrice" jdbcType="DECIMAL" javaType="java.lang.Integer" mode="IN"/>
+  		<parameter property="starttime" jdbcType="TIMESTAMP" javaType="java.util.Date" mode="IN"/>
+  		<parameter property="endtime" jdbcType="TIMESTAMP" javaType="java.util.Date" mode="IN"/>
+  </parameterMap>
+  <procedure id="saveChannelFileInfoProcedure" resultClass="int" 
+  parameterMap="saveChannelFileInfoParameters" >
+         {?=call fun_saveChannelFileInfo(?,?,?,?,?,?,?)}
+  </procedure>
+  
+  
+</sqlMap>

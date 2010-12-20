@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 运行时候环境-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	<!-- 邮件发送对象 -->
+	<bean id="mailServer"
+		class="com.sky.music.message.impl.MailServer">
+		<property name="mailFrom">
+			<value>monitor1@email.sky-mobi.com</value>
+		</property>
+		<property name="mailTo">
+			<list>
+				<value>zjf@email.sky-mobi.com</value>
+			</list>
+		</property>
+		<!-- 
+		<property name="mailCC">
+			<list>
+				<value>zjf@email.sky-mobi.com</value>
+			</list>
+		</property> -->
+		<property name="subject">
+			<value>MrpMusic.Server</value>
+		</property>
+		<property name="content">
+			<value>test</value>
+		</property>
+		<property name="smtpHost">
+			<value>email.sky-mobi.com</value>
+		</property>
+		<property name="userAccount">
+			<value>monitor1</value>
+		</property>
+		<property name="password">
+			<value>report@monitor1</value>
+		</property>
+		<!-- 时间间隔设置(单位:分),该设置用以限定多少时间去除发送次数限制 -->
+		<property name="interval">
+			<value>10</value>
+		</property>
+		<!-- 单位时间内发送次数限制 <=0代表没有限制,interval限制失效-->
+		<property name="sendLimit">
+			<value>5</value>
+		</property>
+	</bean>
+</beans>

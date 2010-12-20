@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC
+          "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+	<!-- runtime evionment-->
+<beans>
+	<import resource="../support/ds/c3p0.xml" /> 
+	<import resource="commons-spring_dao.xml" />
+	<import resource="commons-spring_service.xml" />
+	<!-- 
+	<import resource="../support/webservices.xml" />
+	 -->
+	<!-- 
+	-->
+	<!-- memcached 
+<import resource="../support/cache/memcached.xml"/>-->
+	<!-- ehcache -->
+	<import resource="../support/cache/ehcache.xml" />
+
+	<!-- context param -->
+	<bean class="com.sky.commons.config.SystemConfig">
+		<property name="cache_valid" value="true"/>
+		<property name="path_channel_file" value="d:/"/>
+		<property name="cache_key_channel_file_prefix" value="COMMONSCHFILEINFO#"/>
+		<property name="cache_key_ip_province" value="COMMONS_IP_PROVINCE"/>
+		<property name="cache_object_live_time_channel_file" value="1800"/>
+		<property name="cache_object_live_time_ip_province" value="1296000"/>
+	</bean>
+
+
+
+</beans>

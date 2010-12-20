@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+<!-- 
+	<bean id="com.sky.commons.ip.service.impl.IpServiceImpl"
+		class="com.sky.commons.ip.service.impl.IpServiceImpl">
+		<property name="cache"><ref bean="commons-cache"/></property> 
+		<property name="ipDao"><ref bean="com.sky.commons.ip.dao.ibatis.IpDaoImpl"/></property>
+	</bean>
+ -->		
+	<bean id="com.sky.commons.channel.service.impl.ChannelServiceImpl"
+		class="com.sky.commons.channel.service.impl.ChannelServiceImpl">
+		<property name="cache"><ref bean="commons-cache"/></property>
+		<property name="channelDao"><ref bean="com.sky.commons.channel.dao.ibatis.ChannelDaoImpl"/></property>
+		<!-- 
+		<property name="ipService"><ref bean="com.sky.commons.ip.service.impl.IpServiceImpl"/></property>
+		 -->
+	</bean>
+
+	<bean id="com.sky.commons.channel.service.impl.HsmanChannelServiceImpl"
+		class="com.sky.commons.channel.service.impl.HsmanChannelServiceImpl">
+		<property name="cache"><ref bean="commons-cache"/></property>
+		<property name="hsmanChannelDao"><ref bean="com.sky.commons.channel.dao.ibatis.HsmanChannelDaoImpl"/></property>
+		<!-- 
+		<property name="ipService"><ref bean="com.sky.commons.ip.service.impl.IpServiceImpl"/></property>
+		 -->
+	</bean>
+
+
+</beans>

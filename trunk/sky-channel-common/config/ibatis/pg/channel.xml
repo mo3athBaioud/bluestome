@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TBL_CHANNEL_INFO">
+	<!-- 1.不带厂商的通道信息配置  -->
+	<!-- 通道文件信息-->
+	<resultMap id="channelFileInfoResult"
+		class="com.sky.commons.channel.domain.ChannelFileInfo">
+		<result column="provinceCode" property="provinceCode"
+			jdbcType="VARCHAR" />
+		<result column="fileName" property="fileName"
+			jdbcType="VARCHAR" />
+		<result column="filebytes" property="fileBytes"
+			typeHandler="org.springframework.orm.ibatis.support.BlobByteArrayTypeHandler" />
+		<result column="startPrice" property="startPrice"
+			jdbcType="DECIMAL" />
+		<result column="endPrice" property="endPrice"
+			jdbcType="DECIMAL" />
+	</resultMap>
+	<!-- 根据省份code获取起始金额为0的通道文件，只返回一个结果 -->
+	<select id="getChannelFileInfo" resultMap="channelFileInfoResult"
+		parameterClass="java.lang.String">
+		SELECT * FROM TBL_CHANNEL_FILE_INFO T where
+		t.provincecode=#provinceCode# and startprice=0 limit 1
+	</select>
+	<!-- 根据省份code获取起始金额为0的通道文件，只返回一个结果 -->
+	<select id="getChannelFileInfoByMcc"
+		resultMap="channelFileInfoResult" parameterClass="java.lang.String">
+		SELECT * FROM TBL_CHANNEL_FILE_INFO T where t.provincecode=#mcc#
+		and startprice=0 limit 1
+	</select>
+	<!-- 返回所有起始金额为0的通道文件信息 -->
+	<select id="selectAllChannelFileInfosStart0"
+		resultMap="channelFileInfoResult">
+		select * from TBL_CHANNEL_FILE_INFO WHERE STARTPRICE=0
+	</select>
+
+	<!-- 保存新通道文件信息 -->
+	<parameterMap id="saveChannelFileInfoParameters"
+		class="java.util.HashMap">
+		<parameter property="returnCode" jdbcType="INTEGER" mode="OUT" />
+		<parameter property="provinceCode" mode="IN" />
+		<parameter property="fileName" mode="IN" />
+		<parameter property="fileBytes" mode="IN" />
+		<parameter property="startPrice" mode="IN" />
+		<parameter property="endPrice" mode="IN" />
+		<parameter property="starttime" mode="IN" />
+		<parameter property="endtime" mode="IN" />
+	</parameterMap>
+	<procedure id="saveChannelFileInfoProcedure" resultClass="int"
+		parameterMap="saveChannelFileInfoParameters">
+		{?=call fun_saveChannelFileInfo(?,?,?,?,?,?,?)}
+	</procedure>
+
+
+	<!--  2.带有厂商的通道数据库配置 -->
+	<!-- 通道文件信息-->
+	<resultMap id="hsmanChannelFileInfoResult"
+		class="com.sky.commons.channel.domain.HsmanChannelFileInfo">
+		<result column="mcc" property="mcc"
+			jdbcType="VARCHAR" />
+		<result column="hsman" property="hsman"
+			jdbcType="VARCHAR" />
+		<result column="fileName" property="fileName"
+			jdbcType="VARCHAR" />
+		<result column="filebytes" property="fileBytes"
+			typeHandler="org.springframework.orm.ibatis.support.BlobByteArrayTypeHandler" />
+		<result column="startPrice" property="startPrice"
+			jdbcType="DECIMAL" />
+		<result column="endPrice" property="endPrice"
+			jdbcType="DECIMAL" />
+	</resultMap>
+	<!-- 根据省份code获取起始金额为0的通道文件，只返回一个结果 -->
+	<select id="getHsmanChannelFileInfo" resultMap="hsmanChannelFileInfoResult"
+		parameterClass="java.util.HashMap">
+		SELECT * FROM TBL_HSMAN_CHANNEL_FILE_INFO T where
+		t.mcc = #mcc# and t.hsman=#hsman# and startprice=0 limit 1
+	</select>
+	
+	<!-- 保存新通道文件信息 -->
+	<parameterMap id="saveHsmanChannelFileInfoParameters"
+		class="java.util.HashMap">
+		<parameter property="returnCode" jdbcType="INTEGER" mode="OUT" />
+		<parameter property="mcc" mode="IN" />
+		<parameter property="hsman" mode="IN" />
+		<parameter property="fileName" mode="IN" />
+		<parameter property="fileBytes" mode="IN" />
+		<parameter property="startPrice" mode="IN" />
+		<parameter property="endPrice" mode="IN" />
+		<parameter property="starttime" mode="IN" />
+		<parameter property="endtime" mode="IN" />
+	</parameterMap>
+	<procedure id="saveHsmanChannelFileInfoProcedure" resultClass="java.lang.Integer"
+		parameterMap="saveHsmanChannelFileInfoParameters">
+		{?=call fun_savehsmanchannelfileinfo(?,?,?,?,?,?,?,?)}
+	</procedure>
+	
+</sqlMap>

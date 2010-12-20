@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="TBL_IP_PROVINCE" >
+  <resultMap id="ipProvinceResult" class="com.sky.commons.ip.bean.IpProvinceRelation" >
+    <result column="IP_START_NUM" property="ipStartNum" jdbcType="DECIMAL" />
+    <result column="IP_END_NUM" property="ipEndNum" jdbcType="DECIMAL" />
+    <result column="IP_START" property="ipStart" jdbcType="VARCHAR" />
+    <result column="IP_END" property="ipEnd" jdbcType="VARCHAR" />
+    <result column="PROVINCE_NAME" property="provinceName" jdbcType="VARCHAR" />
+    <result column="PROVINCE_ID" property="province" jdbcType="VARCHAR" />
+    <result column="PROVIDER_ID" property="provider" jdbcType="DECIMAL" />
+  </resultMap>
+
+<!-- get all ip and province relations -->
+  <select id="selectIpProvinces" resultMap="ipProvinceResult">
+    select IP_START_NUM, IP_END_NUM, IP_START, IP_END, PROVINCE_NAME, PROVINCE_ID, PROVIDER_ID
+    from BS_IP_PROVINCE order by IP_START_NUM
+  </select>
+
+</sqlMap>
