@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--ehcache-->
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!-- cache -->
+    <bean id="commons-cache"
+		class="com.sky.commons.cache.impl.EhcacheImpl" lazy-init="true">
+		<property name="cache" ref="commons-ehCache"/>
+	</bean>    
+
+    <bean id="commons-ehCache" 
+    	class="org.springframework.cache.ehcache.EhCacheFactoryBean"
+    	lazy-init="true">
+    	<property name="cacheName" value="bizEntry" />
+    	<property name="maxElementsInMemory" value="1000000" />
+    	<property name="eternal" value="false" />
+    	<property name="timeToIdle" value="86400" />
+    	<property name="timeToLive" value="0" />
+    	<property name="overflowToDisk" value="false" />
+    </bean>
+	
+</beans>

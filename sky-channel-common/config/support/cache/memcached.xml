@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--ehcache-->
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+		<!-- memcached instance -->
+	<bean id="commons-cache" init-method="init" destroy-method="destory"
+		class="com.sky.commons.cache.impl.MemCachedImpl">
+		<property name="serverList">
+			<list>
+				<!-- value>172.16.10.100:11211</value-->
+				<value>127.0.0.1:11211</value>
+			</list>
+		</property>
+		<property name="weights">
+			<list>
+				<value>1</value>
+			</list>
+		</property>
+		<property name="initialConnections">
+			<value>25</value>
+		</property>
+		<property name="minSpareConnections">
+			<value>10</value>
+		</property>
+		<property name="maxSpareConnections">
+			<value>200</value>
+		</property>
+		<property name="maxIdleTime">
+			<value>1800000</value>
+		</property>
+		<property name="maxBusyTime">
+			<value>300000</value>
+		</property>
+		<property name="maintThreadSleep">
+			<value>3000</value>
+		</property>
+		<property name="socketTimeOut">
+			<value>3000</value>
+		</property>
+		<property name="socketConnectTO">
+			<value>3000</value>
+		</property>
+		<property name="failover">
+			<value>true</value>
+		</property>
+		<property name="nagleAlg">
+			<value>false</value>
+		</property>
+	</bean>
+</beans>

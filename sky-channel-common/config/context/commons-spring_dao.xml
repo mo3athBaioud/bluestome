@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="commons-lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler" />
+	<!-- ibatis sqlMapClient -->
+	<bean id="commons-sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation">
+			<value>classpath:ibatis/SqlMapConfig.xml</value>
+		</property>
+		<property name="lobHandler" ref="commons-lobHandler" />
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+
+	<bean id="com.sky.commons.channel.dao.ibatis.ChannelDaoImpl" class="com.sky.commons.channel.dao.ibatis.ChannelDaoImpl">
+		<property name="sqlMapClient">
+			<ref bean="commons-sqlMapClient" />
+		</property>
+	</bean>
+	<!-- 
+	<bean id="channelDAOTransaction" parent="transactionManagerRootProxy">
+		<property name="target">
+			<ref bean="channelDao" />
+		</property>
+	</bean> -->
+
+	<bean id="com.sky.commons.ip.dao.ibatis.IpDaoImpl" class="com.sky.commons.ip.dao.ibatis.IpDaoImpl">
+		<property name="sqlMapClient">
+			<ref bean="commons-sqlMapClient" />
+		</property>
+	</bean>
+
+
+	<!--  带有厂商的DAO配置  -->
+	<bean id="com.sky.commons.channel.dao.ibatis.HsmanChannelDaoImpl" class="com.sky.commons.channel.dao.ibatis.HsmanChannelDaoImpl">
+		<property name="sqlMapClient">
+			<ref bean="commons-sqlMapClient" />
+		</property>
+	</bean>
+</beans>
