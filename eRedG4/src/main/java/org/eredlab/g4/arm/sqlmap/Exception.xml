@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<!-- 异常消息管理手工映射SQL语句 -->
+<sqlMap>
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto"/>
+	
+	<!-- 异常消息管理-异常列表 -->
+	<select id="queryExceptionsForManage" parameterClass="map" resultClass="dto">
+		SELECT exceptionid, exceptioncode, exceptionmsg, exceptionsolution, remark
+		  FROM eaexception a
+		 WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty prepend="AND" property="exceptionid"> 
+									a.exceptionid = #exceptionid#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="exceptioncode"> 
+									a.exceptioncode = #exceptioncode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="queryParam"> 
+				                    a.exceptioncode like '%$queryParam$%' or a.exceptionmsg like '%$queryParam$%'
+			</isNotEmpty>
+		</dynamic>
+		 ORDER BY exceptionid desc		
+	</select>
+	
+	<select id="queryExceptionsForManageForPageCount" parameterClass="map" resultClass="java.lang.Integer">
+		SELECT count(*) as count
+		  FROM eaexception a WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty prepend="AND" property="exceptionid"> 
+									a.exceptionid = #exceptionid#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="exceptioncode"> 
+									a.exceptioncode = #exceptioncode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="queryParam"> 
+				                    a.exceptioncode like '%$queryParam$%' or a.exceptionmsg like '%queryParam%'
+			</isNotEmpty>			
+		</dynamic>
+	</select>
+	
+	<!-- 插入一条异常消息表记录 -->
+	<insert id="saveExceptionItem" parameterClass="dto">
+		INSERT INTO eaexception (
+		   exceptionid, exceptioncode, exceptionmsg, 
+		   exceptionsolution, remark) 
+		VALUES ( #exceptionid#, #exceptioncode#, #exceptionmsg#,
+		    #exceptionsolution#, #remark#)
+	</insert>
+	
+	<!-- 删除异常信息表  -->
+	<delete id="deletExceptionItem" parameterClass="map" >
+		DELETE FROM eaexception
+		      WHERE exceptionid = #exceptionid#
+	</delete>
+	
+	<!-- 根据主键更新异常信息表 -->
+	<update id="updateExceptionItem" parameterClass="dto">
+         UPDATE eaexception
+		<dynamic prepend="SET"> 
+			<isNotEmpty prepend="," property="exceptioncode">
+	         exceptioncode = #exceptioncode#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="exceptionmsg">
+	         exceptionmsg = #exceptionmsg#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="exceptionsolution">
+	         exceptionsolution = #exceptionsolution#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="remark">
+	         remark = #remark#
+			</isNotEmpty>							
+		</dynamic> 
+	        WHERE exceptionid = #exceptionid#    
+	</update>
+	
+	<!-- 检查异常代码唯一性 -->
+	<select id="checkExceptionCode" parameterClass="map" resultClass="java.lang.Integer">
+		SELECT count(*) as count
+		  FROM eaexception a WHERE exceptioncode = #exceptioncode#
+	</select>
+</sqlMap>
