@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<!-- 权限参考模型 -->
+<sqlMapConfig>
+  <sqlMap resource="org/eredlab/g4/arm/sqlmap/Organization.xml"/>
+  <sqlMap resource="org/eredlab/g4/arm/sqlmap/Resource.xml"/>
+  <sqlMap resource="org/eredlab/g4/arm/sqlmap/User.xml"/>
+  <sqlMap resource="org/eredlab/g4/arm/sqlmap/Role.xml"/>
+  <sqlMap resource="org/eredlab/g4/arm/sqlmap/Exception.xml"/>
+  <sqlMap resource="org/eredlab/g4/arm/sqlmap/Param.xml"/>
+  <sqlMap resource="org/eredlab/g4/arm/sqlmap/IdGenerator.xml"/>
+  <sqlMap resource="org/eredlab/g4/arm/sqlmap/ArmTagSupport.xml"/>
+  <sqlMap resource="org/eredlab/g4/arm/sqlmap/Monitor.xml"/>
+  <sqlMap resource="org/eredlab/g4/demo/sqlmap/demo.xml"/>
+</sqlMapConfig>

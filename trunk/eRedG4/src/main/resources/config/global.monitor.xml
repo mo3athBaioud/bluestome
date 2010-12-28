@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SpringBean切面监控 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	
+	<!-- 全局IReader监控 -->	
+	<aop:config>  
+		<aop:aspect id="globalReaderMonitor" ref="aspectBean">   
+			<aop:pointcut id="globalReaderPointcut"  
+				expression="execution(* org.eredlab.g4.bmf.base.IReaderImpl.*(..))" />  
+			<aop:around pointcut-ref="globalReaderPointcut" method="doDaoAround"/> 
+			<aop:after-throwing pointcut-ref="globalReaderPointcut" method="doDaoThrowing" throwing="ex"/>   
+		</aop:aspect>  
+	</aop:config> 
+	
+	<!-- 全局Dao监控 -->
+	<aop:config>  
+		<aop:aspect id="globalDaoMonitor" ref="aspectBean">   
+			<aop:pointcut id="globalDaoPointcut"  
+				expression="execution(* org.eredlab.g4.bmf.base.BaseDaoImpl.*(..))" />  
+			<aop:around pointcut-ref="globalDaoPointcut" method="doDaoAround"/> 
+			<aop:after-throwing pointcut-ref="globalDaoPointcut" method="doDaoThrowing" throwing="ex"/>   
+		</aop:aspect>  
+	</aop:config> 
+	
+	<!-- 系统管理模块BPO监控  -->
+	<aop:config>  
+		<aop:aspect id="armBpoMonitor" ref="aspectBean">   
+			<aop:pointcut id="armBpoPointcut"  
+				expression="execution(* org.eredlab.g4.arm.bpo.*.*(..))" />  
+			<aop:around pointcut-ref="armBpoPointcut" method="doBpoAround"/>  
+			<aop:after-throwing pointcut-ref="armBpoPointcut" method="doBpoThrowing" throwing="ex"/>  
+		</aop:aspect>  
+	</aop:config> 
+	
+	<!-- 切面Bean -->
+	<bean id="aspectBean" class="org.eredlab.g4.bmf.aop.SpringBeanAspect" /> 
+</beans>

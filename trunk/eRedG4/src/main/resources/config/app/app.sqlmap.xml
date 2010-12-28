@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<!-- 业务系统 -->
+<sqlMapConfig>
+  <sqlMap resource="org/eredlab/g4/demo/sqlmap/demo.xml"/>
+</sqlMapConfig>
