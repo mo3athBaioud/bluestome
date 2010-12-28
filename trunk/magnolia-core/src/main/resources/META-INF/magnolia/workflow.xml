@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <name>workflow</name>
+  <displayName>Workflow</displayName>
+  <description>Workflow using OpenWFE</description>
+  <class>info.magnolia.module.workflow.WorkflowModule</class>
+  <version>3.0</version>
+  <dependencies>
+    <dependency>
+      <name>adminInterface</name>
+      <version>3.0</version>
+    </dependency>
+    <dependency>
+       <name>dms</name>
+        <version>3.0</version>
+        <optional>true</optional>
+    </dependency>
+  </dependencies>
+  <servlets>
+    <servlet>
+      <class>info.magnolia.module.workflow.servlets.FlowDefServlet</class>
+      <mappings>
+        <mapping>/.magnolia/flows</mapping>
+      </mappings>
+      <name>FlowsDefinitions</name>
+      <comment>Servlet to see flow definition.</comment>
+    </servlet>
+  </servlets>
+  <repositories>
+    <repository>
+      <name>magnolia</name>
+      <nodeTypeFile>/mgnl-nodetypes/owfe-nodetypes.xml</nodeTypeFile>
+      <workspaces>
+        <workspace>Store</workspace>
+        <workspace>Expressions</workspace>
+      </workspaces>
+    </repository>
+  </repositories>
+</module>
