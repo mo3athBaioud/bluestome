@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- main definition -->
+<!ELEMENT module (name, displayName, class, version, description, dependencies, repositories, servlets)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT displayName (#PCDATA)>
+<!ELEMENT version (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT class (#PCDATA)>
+
+<!-- dependencies to other modules -->
+<!ELEMENT dependencies (dependency+)>
+<!ELEMENT dependency (name,version)>
+
+<!-- servlet to register -->
+<!ELEMENT servlets (servlet)>
+<!ELEMENT servlet (class,mappings,name,comment,params)>
+<!ELEMENT mapping (#PCDATA)>
+<!ELEMENT mappings (mapping+)>
+<!ELEMENT comment (#PCDATA)>
+<!ELEMENT params (param)>
+<!ELEMENT param (name,value)>
+<!ELEMENT value (#PCDATA)>
+
+<!-- repositories to register -->
+<!ELEMENT repositories (repository)>
+<!ELEMENT repository (name,nodeTypeFile)>
+<!ELEMENT nodeTypeFile EMPTY>

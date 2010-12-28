@@ -1,0 +1,44 @@
+<!-- form for sorting and grouping -->
+<input type="hidden" name="sortBy" value="${this.sortBy}"/>
+<input type="hidden" name="sortByOrder" value="${this.sortByOrder}"/>
+<input type="hidden" name="groupBy" value="${this.groupBy}"/>
+<input type="hidden" name="groupByOrder" value="${this.groupByOrder}"/>
+
+<script>
+	var ${this.name};
+	
+	MgnlDHTMLUtil.addOnLoad(function(){
+        ${this.name} = new mgnl.controls.List('${this.name}', document.mgnlForm);
+        // add the columns
+        <#list this.children as column>
+            new mgnl.controls.ListColumn(
+                ${this.name}, // the list itself
+                '${column.width}', // 100 or 200px --> px means fixed size
+                ${column_index} // index of this column
+            );
+        </#list>
+        
+		${this.name}.resize();
+	});
+	
+	MgnlDHTMLUtil.addOnResize(function(){${this.name}.resize();});
+</script>
+
+<#if this.contextMenu?exists>
+	${this.contextMenu.html}
+	<script>
+		${this.contextMenu.javascript}
+	</script>
+</#if>
+
+<div style="position:relative">
+	<#if this.groupableFields?has_content || this.sortableFields?has_content>
+		<div id="${this.name}SortGroupDiv" class="mgnlListSortGroupDiv mgnlText">
+			<#include "ListControlSortGroup.html"/>
+		</div>
+	</#if>
+	
+	<div id="${this.name}ContentDiv" class="mgnlListContentDiv mgnlBgLight" >
+		<#include "ListControlContent.html"/>
+	</div>
+</div>
