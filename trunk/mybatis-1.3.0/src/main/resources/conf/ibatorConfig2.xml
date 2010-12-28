@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ibatorConfiguration
+PUBLIC "-//Apache Software Foundation//DTD Apache iBATIS Ibator Configuration 1.0//EN"
+"http://ibatis.apache.org/dtd/ibator-config_1_0.dtd">
+
+<ibatorConfiguration>
+	<classPathEntry
+		location="E:\2.WS\1.PRODUCT\diy_page\lib\mysql-connector-java-3.1.11-bin.jar" />
+
+	<ibatorContext id="SampleiBator" targetRuntime="Ibatis2Java5">
+		<jdbcConnection
+			driverClass="org.gjt.mm.mysql.Driver"
+			connectionURL="jdbc:mysql://127.0.0.1:3306/decms" userId="root"
+			password="123456" />
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<javaModelGenerator targetPackage="org.mybaties"
+			targetProject="E:\2.WS\3.STUDY\ibator\src\main\java\">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<sqlMapGenerator targetPackage="org.mybaties.xml"
+			targetProject="E:\2.WS\3.STUDY\ibator\src\main\java\">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<daoGenerator type="GENERIC-CI" targetPackage="org.mybaties.dao"
+			targetProject="E:\2.WS\3.STUDY\ibator\src\main\java\">
+			<property name="enableSubPackages" value="true" />
+		</daoGenerator>
+		
+		<table schema="dedecms" tableName="tbl_addonarticle"
+			domainObjectName="Addonarticle">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="aid" sqlStatement="MySql"
+				identity="true" />
+		</table>
+	</ibatorContext>
+</ibatorConfiguration>
+
