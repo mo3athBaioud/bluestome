@@ -17,18 +17,18 @@ PUBLIC "-//Apache Software Foundation//DTD Apache iBATIS Ibator Configuration 1.
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
 
-		<javaModelGenerator targetPackage="org.mybaties"
+		<javaModelGenerator targetPackage="org.mybaties.dal.domain"
 			targetProject="E:\2.WS\3.STUDY\ibator\src\main\java\">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
-		<sqlMapGenerator targetPackage="org.mybaties.xml"
+		<sqlMapGenerator targetPackage="org.mybaties.dal.domain.sqlmap"
 			targetProject="E:\2.WS\3.STUDY\ibator\src\main\java\">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
-		<daoGenerator type="GENERIC-CI" targetPackage="org.mybaties.dao"
+		<daoGenerator type="GENERIC-CI" targetPackage="org.mybaties.dal.domain.dao" implementationPackage="org.mybaties.dal.domain.dao.impl"
 			targetProject="E:\2.WS\3.STUDY\ibator\src\main\java\">
 			<property name="enableSubPackages" value="true" />
 		</daoGenerator>
