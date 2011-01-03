@@ -81,26 +81,90 @@ public class IndexParser {
 
 	/**
 	 * 获取分类链接
-	 * 
+	 * 微型车
+	 * 小型车
+	 * 紧凑型车
+	 * 中型车
 	 * @param url
 	 * @throws Exception
 	 */
 	static void catalog(String url) throws Exception { // WebsiteBean bean
 		Parser parser = new Parser();
 		parser.setURL(url);
+		parser.setEncoding("gb2312");
+		NodeFilter fileter = new NodeClassFilter(Div.class);
+		NodeList list = parser.extractAllNodesThatMatch(fileter)
+				.extractAllNodesThatMatch(
+						new HasAttributeFilter("class", "auto_car_nav"));
+
+		if (null != list && list.size() > 0) {
+			Div div = (Div) list.elementAt(0);
+			Parser p2 = new Parser();
+			p2.setInputHTML(div.toHtml());
+			NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
+			NodeList linkList = p2.extractAllNodesThatMatch(linkFilter);
+			if (linkList != null && linkList.size() > 0) {
+				WebsiteBean tmp = null;
+				for (int i = 0; i < linkList.size(); i++) {
+					LinkTag link = (LinkTag) linkList.elementAt(i);
+//					if (link.getLink().endsWith(".html")) {
+						System.out.println(link.getLinkText());
+						tmp = new WebsiteBean();
+						tmp.setName(link.getLinkText());
+						if (!link.getLink().startsWith("http://")) {
+							System.out.println(URL + link.getLink() + "\n");
+//							tmp.setUrl(URL + link.getLink());
+						} else {
+							System.out.println(link.getLink() + "\n");
+//							tmp.setUrl(link.getLink());
+						}
+//						tmp.setParentId(D_PARENT_ID);
+//						boolean b = webSiteDao.insert(tmp);
+//						if (b) {
+//							client.add(tmp.getUrl(), tmp.getUrl());
+//							System.out.println("成功");
+//						} else {
+//							System.out.println("失败");
+//						}
+//					}
+				}
+			}
+			if (null != p2)
+				p2 = null;
+		}
+		if (null != parser)
+			parser = null;
+	}
+	
+	/**
+	 * 获取汽车按名字分类
+	 * @param url
+	 * @throws Exception
+	 */
+	/*  分类链接中会调用如下js方法OpenBrand(brandId,typeId)，其中主要是对typeId为类型参数，
+	 *  typeId:1:价格,2:图片,3:视频
+	 *  brandId【品牌】:分组Id
+	 */
+	static void catCatalogList(String url) throws Exception { // WebsiteBean bean
+		Parser parser = new Parser();
+		parser.setURL(url);
+		parser.setEncoding("gb2312");
 		NodeFilter fileter = new NodeClassFilter(Div.class);
 		NodeList list = parser.extractAllNodesThatMatch(fileter)
 				.extractAllNodesThatMatch(
 						new HasAttributeFilter("id", "carmenulist"));
 
 		if (null != list && list.size() > 0) {
+			System.out.println( " >> 图片所在ID分类数量：" + list.size());
 			Div div = (Div) list.elementAt(0);
 			Parser p2 = new Parser();
 			p2.setInputHTML(div.toHtml());
+			System.out.println(" >> div内容：\r"+div.toHtml());
 			NodeFilter linkFilter = new NodeClassFilter(Div.class);
 			NodeList linkList = p2.extractAllNodesThatMatch(linkFilter).extractAllNodesThatMatch(
 					new HasAttributeFilter("class", "p1"));
 			if (linkList != null && linkList.size() > 0) {
+				System.out.println( " >> 图片具体DIV数量：" + linkList.size());
 				for (int i = 0; i < linkList.size(); i++) {
 					Div sub = (Div) linkList.elementAt(i);
 					System.out.println(" >> div.toHtml:"+sub.toHtml());
@@ -683,7 +747,7 @@ public class IndexParser {
 	public static void main(String[] args) {
 		// init();
 		try {
-			catalog(IMAGE_URL);
+			catCatalogList(IMAGE_URL);
 //			 update();
 //			 loadImg();
 //			 imgDownload();
