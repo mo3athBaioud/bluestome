@@ -68,9 +68,21 @@ public class RequestRecordThread extends Thread {
 		Object obj = ResourceQueneInsert.getInstance().getElement();
 		if(null != obj){
 			if(obj instanceof Article){
-				System.out.println(" >> Article Insert");
+				Article art = (Article)obj;
+				try{
+					System.out.println(" >> Article Insert");
+					DAOFactory.getInstance().getArticleDao().insert(art);
+				}catch(Exception e){
+					System.err.println(" >> executeInsert.Article.Exception:"+e);
+				}
 			}else if(obj instanceof ImageBean){
-				System.out.println(" >> ImageBean Insert");
+				ImageBean img = (ImageBean)obj;
+				try{
+					System.out.println(" >> ImageBean Insert");
+					DAOFactory.getInstance().getImageDao().insert(img);
+				}catch(Exception e){
+					System.err.println(" >> executeInsert.ImageBean.Exception:"+e);
+				}
 			}else if(obj instanceof ArticleDoc){
 				ArticleDoc doc = (ArticleDoc)obj;
 				try{
@@ -80,7 +92,13 @@ public class RequestRecordThread extends Thread {
 					System.err.println(" >> executeInsert.ArticleDoc.Exception:"+e);
 				}
 			}else if(obj instanceof PicfileBean){
-				System.out.println(" >> PicfileBean Insert");
+				PicfileBean pic = (PicfileBean)obj;
+				try{
+					DAOFactory.getInstance().getPicFileDao().insert(pic);
+					System.out.println(" >> PicfileBean Insert");
+				}catch(Exception e){
+					System.err.println(" >> executeInsert.PicfileBean.Exception:"+e);
+				}
 			}else if(obj instanceof String){
 				String str = (String)obj;
 				System.out.println(" >> Unknow Object:"+str);
