@@ -10,6 +10,7 @@ import com.chinamilitary.bean.ImageBean;
 import com.chinamilitary.bean.ArticleDoc;
 import com.chinamilitary.bean.PicfileBean;
 import com.chinamilitary.factory.DAOFactory;
+import com.chinamilitary.memcache.MemcacheClient;
 
 public class RequestRecordThread extends Thread {
 	
@@ -22,6 +23,11 @@ public class RequestRecordThread extends Thread {
 	private boolean isRunning = true;
 	
 	private long sleeptime = 0;
+	
+	/**
+	 * 缓存
+	 */
+	static MemcacheClient client = MemcacheClient.getInstance();
 	
 	public RequestRecordThread(){
 		System.out.println("获取队列入库记录线程启动!!!");
@@ -100,8 +106,14 @@ public class RequestRecordThread extends Thread {
 					System.err.println(" >> executeInsert.PicfileBean.Exception:"+e);
 				}
 			}else if(obj instanceof String){
-				String str = (String)obj;
-				System.out.println(" >> Unknow Object:"+str);
+				String key = (String)obj;
+//				System.out.println(" >> Unknow Object:"+key);
+				if(null != client.get(key)){
+					System.out.println(">> 从缓存中获取数据:"+client.get(key));
+					if(client.remove(key)){
+						System.out.println( " >> 从缓存中删除数据["+key+"]成功!" );
+					}
+				}
 			}
 		}
 	}
