@@ -8,9 +8,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
@@ -54,10 +56,21 @@ public class IndexParser {
 	static String URL_ = "http://www.autohome.com.cn/";
 	
 	static String IMAGE_URL = "http://car.autohome.com.cn/pic/index.html";
-
+	
+	static String CAR_HOME_URL = "http://car.autohome.com.cn";
+	
+	//type = 1 价格
+	static String PRICE_URL_TMP = "http://car.autohome.com.cn/LeftMenu/List.aspx?typeId=1&isSubPage=0&brandId=0&fctId=0&seriesId=0";	
+	
+	//type = 2 图片
+	static String IMAGE_URL_TMP = "http://car.autohome.com.cn/LeftMenu/List.aspx?typeId=2&isSubPage=0&brandId=0&fctId=0&seriesId=0";
+	
+	//type = 3 视频
+	static String VIDEO_URL_TMP = "http://car.autohome.com.cn/LeftMenu/List.aspx?typeId=3&isSubPage=0&brandId=0&fctId=0&seriesId=0";	
+	
 	static String URL = "http://www.autohome.com.cn";
 
-	static Integer D_PARENT_ID = -999;
+	static Integer D_PARENT_ID = 1500;
 
 	static String PIC_SAVE_PATH = Constants.FILE_SERVER;
 	
@@ -68,6 +81,8 @@ public class IndexParser {
 	static List<Article> ARTICLELIST = new ArrayList<Article>();
 
 	static HashMap<String, LinkBean> LINKHASH = new HashMap<String, LinkBean>();
+	
+	static HashMap<String, String> URLHASH = new HashMap<String, String>();
 
 	static MemcacheClient client = MemcacheClient.getInstance();
 
@@ -107,16 +122,17 @@ public class IndexParser {
 				WebsiteBean tmp = null;
 				for (int i = 0; i < linkList.size(); i++) {
 					LinkTag link = (LinkTag) linkList.elementAt(i);
+					if(null != link.getLinkText() && !"".equalsIgnoreCase(link.getLinkText())){
 //					if (link.getLink().endsWith(".html")) {
 						System.out.println(link.getLinkText());
 						tmp = new WebsiteBean();
 						tmp.setName(link.getLinkText());
 						if (!link.getLink().startsWith("http://")) {
 							System.out.println(URL + link.getLink() + "\n");
-//							tmp.setUrl(URL + link.getLink());
+							tmp.setUrl(URL + link.getLink());
 						} else {
 							System.out.println(link.getLink() + "\n");
-//							tmp.setUrl(link.getLink());
+							tmp.setUrl(link.getLink());
 						}
 //						tmp.setParentId(D_PARENT_ID);
 //						boolean b = webSiteDao.insert(tmp);
@@ -127,6 +143,7 @@ public class IndexParser {
 //							System.out.println("失败");
 //						}
 //					}
+					}
 				}
 			}
 			if (null != p2)
@@ -146,37 +163,42 @@ public class IndexParser {
 	 *  brandId【品牌】:分组Id
 	 */
 	static void catCatalogList(String url) throws Exception { // WebsiteBean bean
-		Parser parser = new Parser();
-		parser.setURL(url);
-		parser.setEncoding("gb2312");
-		NodeFilter fileter = new NodeClassFilter(Div.class);
-		NodeList list = parser.extractAllNodesThatMatch(fileter)
-				.extractAllNodesThatMatch(
-						new HasAttributeFilter("id", "carmenulist"));
-
-		if (null != list && list.size() > 0) {
-			System.out.println( " >> 图片所在ID分类数量：" + list.size());
-			Div div = (Div) list.elementAt(0);
+		String body = HttpClientUtils.getResponseBody(url);
+		if (null != body && !"".equalsIgnoreCase(body)) {
+			//对正文的内容进行切分
+			String[] bodys = body.split("\r\n");
+			if(bodys.length == 0){
+				return;
+			}
+			String tmp = bodys[0].replace("document.writeln(\"", "").replace("\");", "").replace("document.write(\"", "").replace("'", "\"");
 			Parser p2 = new Parser();
-			p2.setInputHTML(div.toHtml());
-			System.out.println(" >> div内容：\r"+div.toHtml());
+			p2.setInputHTML(tmp);
 			NodeFilter linkFilter = new NodeClassFilter(Div.class);
 			NodeList linkList = p2.extractAllNodesThatMatch(linkFilter).extractAllNodesThatMatch(
 					new HasAttributeFilter("class", "p1"));
 			if (linkList != null && linkList.size() > 0) {
-				System.out.println( " >> 图片具体DIV数量：" + linkList.size());
 				for (int i = 0; i < linkList.size(); i++) {
 					Div sub = (Div) linkList.elementAt(i);
-					System.out.println(" >> div.toHtml:"+sub.toHtml());
+					int subCount = sub.getChildCount();
+					if(subCount == 3){
+						if(sub.getChild(2) instanceof LinkTag){
+							LinkTag lt = (LinkTag)sub.getChild(2);
+							URLHASH.put(lt.getLinkText(),lt.getLink());
+//							StringTokenizer st = new StringTokenizer(lt.getLinkText());
+//							while (st.hasMoreTokens()) {
+//						         System.out.println(st.nextToken() + "|"+lt.getLink());
+//						         HttpClientUtils.getResponseBody(CAR_HOME_URL+lt.getLink());
+//						         break;
+//						     }
+						}
+					}
 				}
 			}
 			if (null != p2)
 				p2 = null;
 		}
-		if (null != parser)
-			parser = null;
 	}
-
+	
 	/**
 	 * 获取分类下的分页信息
 	 * 
@@ -747,15 +769,52 @@ public class IndexParser {
 	public static void main(String[] args) {
 		// init();
 		try {
-			catCatalogList(IMAGE_URL);
+//			catalog(URL);
+//			PRICE_URL_TMP,IMAGE_URL_TMP,VIDEO_URL_TMP
+			catCatalogList(VIDEO_URL_TMP);
 //			 update();
 //			 loadImg();
 //			 imgDownload();
 //			 movefile();
+			Iterator it = URLHASH.keySet().iterator();
+			String[] hsname = new String[URLHASH.size()];
+			List<String> ids = new ArrayList<String>();
+			int i = 0;
+			while(it.hasNext()){
+				String key = (String)it.next();
+//				System.out.println("key:"+key);
+//				String value = URLHASH.get(key);
+//				System.out.println("value:"+value);
+				hsname[i] = key;
+				i++;
+			}
+			
+			System.out.println(" >> 数量:"+URLHASH.size());
+			Arrays.sort(hsname);
+			
+			for(String hsnam:hsname){
+				String id = getIdFromURL(URLHASH.get(hsnam));
+				System.out.println(" >> "+hsnam+"|\t"+id);
+				ids.add(id);
+			}
+			
+//			System.out.println(" >> id:"+ids.size());
+			URLHASH.clear();
+			ids.clear();
 			System.exit(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	static String getIdFromURL(String url){
+		String id = "-1";
+		int start = url.lastIndexOf("-");
+		int end = url.lastIndexOf(".");
+		id = url.substring(start+1,end);
+//		System.out.println(">>"+id);
+		
+		return id;
 	}
 
 	static void loadImg() throws Exception {
