@@ -60,13 +60,18 @@ public class IndexParser {
 	static String CAR_HOME_URL = "http://car.autohome.com.cn";
 	
 	//type = 1 价格
-	static String PRICE_URL_TMP = "http://car.autohome.com.cn/LeftMenu/List.aspx?typeId=1&isSubPage=0&brandId=0&fctId=0&seriesId=0";	
+	static String PRICE_URL_TMP = "http://car.autohome.com.cn/LeftMenu/List.aspx?typeId=1&isSubPage=0&brandId=0&fctId=0&seriesId=0";
+	static String SHORT_PRICE_URL = "http://car.autohome.com.cn/price/brand-{id}.html";
 	
 	//type = 2 图片
 	static String IMAGE_URL_TMP = "http://car.autohome.com.cn/LeftMenu/List.aspx?typeId=2&isSubPage=0&brandId=0&fctId=0&seriesId=0";
+	static String SHORT_IMAGE_URL = "http://car.autohome.com.cn/pic/brand-{id}.html";
 	
 	//type = 3 视频
 	static String VIDEO_URL_TMP = "http://car.autohome.com.cn/LeftMenu/List.aspx?typeId=3&isSubPage=0&brandId=0&fctId=0&seriesId=0";	
+	static String SHORT_VIDEO_URL = "http://car.autohome.com.cn/video/brand-{id}.html";
+	
+	static String COMMON_DETAIL_URL = "http://car.autohome.com.cn/LeftMenu/List.aspx?typeId={type}&isSubPage=0&brandId={id}&fctId=0&seriesId=0";
 	
 	static String URL = "http://www.autohome.com.cn";
 
@@ -183,7 +188,14 @@ public class IndexParser {
 					if(subCount == 3){
 						if(sub.getChild(2) instanceof LinkTag){
 							LinkTag lt = (LinkTag)sub.getChild(2);
-							URLHASH.put(lt.getLinkText(),lt.getLink());
+							String txt = lt.getLinkText();
+							if(txt.lastIndexOf("(") > -1){
+								int start = txt.lastIndexOf("(");
+								String brand = txt.substring(0,start);
+								int end = txt.lastIndexOf(")");
+								String num = txt.substring(start+1,end);
+								URLHASH.put(brand.trim()+":"+num,lt.getLink());
+							}
 //							StringTokenizer st = new StringTokenizer(lt.getLinkText());
 //							while (st.hasMoreTokens()) {
 //						         System.out.println(st.nextToken() + "|"+lt.getLink());
@@ -724,67 +736,20 @@ public class IndexParser {
 		return title;
 	}
 
-	static void init() {
-		try {
-			List<WebsiteBean> webList = webSiteDao.findByParentId(701);
-			for (WebsiteBean bean : webList) {
-				List<Article> articleList = articleDao
-						.findByWebId(bean.getId());
-				for (Article article : articleList) {
-					if (null == client.get(article.getArticleUrl())) {
-						client.add(article.getArticleUrl(), article
-								.getArticleUrl());
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	static void update() throws Exception {
-		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
-		for (WebsiteBean bean : webList) {
-			ResultBean result = hasPaging2(bean.getUrl());
-			if (result.isBool()) {
-				Iterator it = result.getMap().keySet().iterator();
-				System.out.println("分页数量:"+result.getMap().size());
-				while (it.hasNext()) {
-					String key = (String) it.next();
-					LinkBean link = result.getMap().get(key);
-					System.out.println("key:"+key);
-					try {
-						secondURL(link, bean.getId());
-					} catch (Exception e) {
-						e.printStackTrace();
-						System.out.println("key:" + key);
-						continue;
-					}
-				}
-			}
-		}
-	}
 
 	public static void main(String[] args) {
-		// init();
 		try {
-//			catalog(URL);
 //			PRICE_URL_TMP,IMAGE_URL_TMP,VIDEO_URL_TMP
-			catCatalogList(VIDEO_URL_TMP);
-//			 update();
-//			 loadImg();
-//			 imgDownload();
-//			 movefile();
+			catCatalogList(PRICE_URL_TMP);
+//			catCatalogList(IMAGE_URL_TMP);
+//			catCatalogList(VIDEO_URL_TMP);
+			
 			Iterator it = URLHASH.keySet().iterator();
 			String[] hsname = new String[URLHASH.size()];
 			List<String> ids = new ArrayList<String>();
 			int i = 0;
 			while(it.hasNext()){
 				String key = (String)it.next();
-//				System.out.println("key:"+key);
-//				String value = URLHASH.get(key);
-//				System.out.println("value:"+value);
 				hsname[i] = key;
 				i++;
 			}
@@ -794,11 +759,19 @@ public class IndexParser {
 			
 			for(String hsnam:hsname){
 				String id = getIdFromURL(URLHASH.get(hsnam));
-				System.out.println(" >> "+hsnam+"|\t"+id);
-				ids.add(id);
+				System.out.println(">>"+id);
+				findTree(id);
+//				System.out.println(" ["+hsnam.split(":")[0]+"]\tIMAGE >> "+SHORT_IMAGE_URL.replace("{id}", id));
+//				System.out.println(" ["+hsnam.split(":")[0]+"]\tPRICE >> "+SHORT_PRICE_URL.replace("{id}", id));
+//				System.out.println(" ["+hsnam.split(":")[0]+"]\tVIDEO >> "+SHORT_VIDEO_URL.replace("{id}", id));
+				System.out.println("\r\n");
 			}
 			
-//			System.out.println(" >> id:"+ids.size());
+//			findTree("112");
+//			findTree("58");
+//			findTree("71");
+//			findTree("35");
+			
 			URLHASH.clear();
 			ids.clear();
 			System.exit(0);
@@ -812,211 +785,66 @@ public class IndexParser {
 		int start = url.lastIndexOf("-");
 		int end = url.lastIndexOf(".");
 		id = url.substring(start+1,end);
-//		System.out.println(">>"+id);
-		
 		return id;
 	}
-
-	static void loadImg() throws Exception {
-		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
-		for (WebsiteBean bean : webList) {
-			List<Article> list = articleDao.findByWebId(bean.getId(),"NED");
-//			List<Article> list = articleDao.findByWebId(bean.getId());
-			System.out.println(bean.getId()+"|文章数量"+list.size());
-			for (Article art : list) {
-//				List<ImageBean> imgList = imageDao.findImage(art.getId());
-//				if(imgList.size() == 0){
-//					art.setText("NED");
-//					if (articleDao.update(art)) {
-//						System.out
-//								.println("更新记录[" + art.getTitle() + "|"+art.getId()+"]成功");
-//					}
-//				}else{
-					if (getImage(art)) {
-						if(!art.getText().equalsIgnoreCase("FD")){
-							art.setText("FD");
-							if (articleDao.update(art)) {
-								System.out
-										.println("更新记录[" + art.getTitle() + "|"+art.getId()+"]成功");
+	
+	static void findTree(String id) throws Exception { // WebsiteBean bean
+		HashMap<String,List<LinkTag>> tree = new HashMap<String,List<LinkTag>>();
+		String body = HttpClientUtils.getResponseBody(COMMON_DETAIL_URL.replace("{type}", "1").replace("{id}", id));
+		if (null != body && !"".equalsIgnoreCase(body)) {
+			//对正文的内容进行切分
+			String[] bodys = body.split("\r\n");
+			if(bodys.length == 0){
+				return;
+			}
+			String tmp = bodys[0].replace("document.writeln(\"", "").replace("\");", "").replace("document.write(\"", "").replace("'", "\"");
+			Parser p1 = new Parser();
+			p1.setInputHTML(tmp);
+			NodeFilter linkFilter = new NodeClassFilter(Div.class);
+			NodeList linkList = p1.extractAllNodesThatMatch(linkFilter).extractAllNodesThatMatch(
+					new HasAttributeFilter("id", "bl"+id));
+			if (linkList != null) {
+				Parser p2 = new Parser();
+				p2.setInputHTML(linkList.toHtml());
+				NodeFilter p2filter = new NodeClassFilter(Div.class);
+				NodeList p2list = p2.extractAllNodesThatMatch(p2filter);
+				if(p2list.size() > 0){
+					List father = null;
+					for (int i = 0; i < p2list.size(); i++) {
+						Div sub = (Div) p2list.elementAt(i);
+						String attrs = sub.getAttribute("class");
+						if(null != attrs && attrs.startsWith("p")){
+							if(attrs.equalsIgnoreCase("p2")){
+								//获取子目录
+								Node node = sub.getChild(0);
+								if(node instanceof LinkTag){
+									father =  new ArrayList();
+									LinkTag link = (LinkTag)node;
+									tree.put(link.getLinkText(), father);
+								}
+							}else{
+								Node node = sub.getChild(0);
+								if(node instanceof LinkTag){
+									LinkTag link = (LinkTag)node;
+									father.add(link);
+								}
 							}
 						}
 					}
-//				}
-//				break;
-			}
-		}
-	}
-
-
-	static void imgDownload() throws Exception {
-		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
-		for (WebsiteBean bean : webList) {
-			List<Article> list = articleDao.findByWebId(bean.getId(),"FD");
-			System.out.println(">> 网站["+bean.getId()+"|"+bean.getName()+"|"+bean.getUrl()+"]\t下文章数量"+list.size());
-			for (Article art : list) {
-				List<ImageBean> imglist = imageDao.findImage(art.getId());
-				System.out.println(">> 文章["+art.getId()+"|"+art.getTitle()+"]\t下的图片数量"+imglist.size());
-				for (ImageBean img : imglist) {
-					if(img.getLink().equalsIgnoreCase("NED")){
-						if (download(img)) {
-							img.setStatus(1);
-							img.setLink("FD");
-							if (imageDao.update(img)) {
-								System.out.println(">> 更新图片对象[" + art.getId() + "|"+img.getId()+"]\t成功");
-							}
+					Iterator it = tree.keySet().iterator();
+					while(it.hasNext()){
+						String key = (String)it.next();
+						System.out.println("-|"+key);
+						List<LinkTag> value = tree.get(key);
+						for(LinkTag link:value){
+							System.out.println("---|"+link.getLinkText()+"|"+CAR_HOME_URL+link.getLink());
 						}
 					}
+					tree.clear();
 				}
 			}
+			if (null != p1)
+				p1 = null;
 		}
-		
-	}
-
-	static boolean download(ImageBean imgBean) {
-		PicFileDao dao = null;
-		PicfileBean bean = null;
-		dao = DAOFactory.getInstance().getPicFileDao();
-		bean = new PicfileBean();
-		String s_fileName = imgBean.getImgUrl().substring(
-				imgBean.getImgUrl().lastIndexOf("/") + 1,
-				imgBean.getImgUrl().length());
-		String fileName = imgBean.getHttpUrl().substring(
-				imgBean.getHttpUrl().lastIndexOf("/") + 1,
-				imgBean.getHttpUrl().length());
-		s_fileName = s_fileName.replace(".", "_s.");
-		try {
-			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
-					+  StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-					+ imgBean.getArticleId() + File.separator
-					+ fileName.replace(".", "_s."))) == null) {
-				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
-						+  StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-						+ imgBean.getArticleId() + File.separator
-						+ fileName.replace(".", "_s."));
-			}
-
-			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
-					+  StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-					+ imgBean.getArticleId() + File.separator + fileName)) == null) {
-				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH
-						+  StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-						+ imgBean.getArticleId() + File.separator + fileName);
-			}
-			bean.setArticleId(imgBean.getArticleId());
-			bean.setImageId(imgBean.getId());
-			bean.setTitle(imgBean.getTitle());
-			bean.setSmallName(File.separator  + StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-					+ imgBean.getArticleId() + File.separator + s_fileName);
-			bean.setName( File.separator  + StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-					+ imgBean.getArticleId() + File.separator + fileName);
-			bean.setUrl(PIC_SAVE_PATH);
-			try {
-				boolean b = picFiledao.insert(bean);
-				if (b) {
-					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
-							+ bean.getName()), bean);
-					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
-							+ bean.getSmallName()), bean);
-				} else {
-					return false;
-				}
-			} catch (Exception e) {
-				System.out.println("数据库异常,");
-				e.printStackTrace();
-				return false;
-			}
-		} catch (IOException e) {
-			System.out.println("网络连接，文件IO异常");
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-
-	static void movefile() throws Exception{
-		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
-		PicfileBean bean = null;
-		for(WebsiteBean website:webList){
-			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
-			List<Article> artList = articleDao.findByWebId(website.getId(), "FD");
-			System.out.println("文章数量:"+artList.size());
-			for(Article article:artList){
-				List<ImageBean> list = imageDao.findImage(article.getId());
-				for(ImageBean img:list){
-					bean = picFiledao.findByImgIdAndArticleId(img.getId(), article.getId());
-					if(null != bean){
-						if(moveFile(bean)){
-							System.out.println(bean.getId()+"|"+bean.getArticleId()+"|"+bean.getImageId());
-							System.out.println("after move file name:"+bean.getName());
-							System.out.println("after move file smallName:"+bean.getSmallName());
-							System.out.println("-------------------------------------------------------------");
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	static boolean moveFile(PicfileBean bean) {
-		boolean isBig = false;
-		boolean isSmall = false;
-		int start = bean.getName().lastIndexOf(File.separator)+1;
-		int smnStart = bean.getSmallName().lastIndexOf(File.separator)+1;
-		String prx = StringUtils.gerDir(String.valueOf(bean.getArticleId()));
-		String fileName = prx+bean.getArticleId()+File.separator+bean.getName().substring(start);
-		String smallFileName = prx+bean.getArticleId()+File.separator+bean.getSmallName().substring(smnStart);
-		String source = bean.getUrl() + bean.getName();
-		String smgSource = bean.getUrl() + bean.getSmallName();
-		String target = FILE_SERVER+fileName;
-		String smgTarget = FILE_SERVER + smallFileName;
-		bean.setUrl(FILE_SERVER);
-		if(FileUtils.copyFile(source, target)){
-			System.out.println(">> 大图成功!!!");
-			if(FileUtils.deleteFile(source)){
-				System.out.println(">> 删除源大图["+source+"]成功");
-			}
-			bean.setName(fileName);
-			isBig = true;
-		}
-		
-		if(FileUtils.copyFile(smgSource, smgTarget)){
-			System.out.println(">> 小图成功!!!");
-			if(FileUtils.deleteFile(smgSource)){
-				System.out.println(">> 删除源小图["+smgSource+"]成功");
-			}
-			bean.setSmallName(smallFileName);
-			isSmall = true;
-		}
-		if(isBig){
-			if(isBig || isSmall){
-				try{
-					if(picFiledao.update(bean)){
-						System.out.println(">> 更新图片文件["+bean.getId()+"]记录成功!");
-					}
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		return isBig;
-	}
-	
-	/**
-	 * 测试方法
-	 * @throws Exception
-	 */
-	static void test() throws Exception{
-		ResultBean result = hasPaging2("http://desk.tpzj.com/html/260/index.html");
-		if (result.isBool()) {
-			Iterator it = result.getMap().keySet().iterator();
-			while (it.hasNext()) {
-				String key = (String) it.next();
-				System.out.println("key:" + key);
-				LinkBean link = (LinkBean) result.getMap().get(key);
-				secondURL(link, 0);
-			}
-		}
-		
 	}
 }
