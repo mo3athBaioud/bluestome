@@ -339,6 +339,11 @@ public class ChinaTUKUParser {
 		}
 	}
 	
+	public static void processC() throws Exception{
+		patch();
+		update();
+	}
+	
 	public static void update() throws Exception{
 		StringBuffer esb  = new StringBuffer("Exception:\n");
 		for (String url : CATALOG_URL) {
