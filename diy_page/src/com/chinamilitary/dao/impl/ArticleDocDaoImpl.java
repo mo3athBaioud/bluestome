@@ -227,10 +227,18 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 
 	public int insert(ArticleDoc bean) throws Exception {
 		int key = -1;
-		//REPLACE(d_title, '：', ':')
-		if(getCountByTitle(bean.getTitle().replace("：", ":")) > 0){
-			System.out.println("已存在相同标题："+bean.getTitle());
+		if(null == bean.getUrl() || "".equals(bean.getUrl())){
 			return key;
+		}
+		if(null == bean.getTitle() || "".equals(bean.getTitle())){
+			System.out.println("标题为空!");
+			return key;
+		}
+		if(bean.getTitle().indexOf("：") != -1){
+			if(getCountByTitle(bean.getTitle().replace("：", ":")) != -1){
+				System.out.println("已存在相同标题："+bean.getTitle());
+				return key;
+			}
 		}
 		
 		Long start = System.currentTimeMillis();
@@ -313,7 +321,7 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 		return count;
 	}
 
-	public synchronized int getCount(String url,String title) throws Exception {
+	public int getCount(String url,String title) throws Exception {
 		int count = 0;
 		pstmt = conn.prepareStatement(COUNT_SQL+" where d_url = ?");// and d_title = ?
 		pstmt.setString(1,url);
@@ -326,7 +334,7 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 		return count;
 	}
 
-	public synchronized int getCountByURL(String url,Integer webId) throws Exception{
+	public int getCountByURL(String url,Integer webId) throws Exception{
 		int count = 0;
 		pstmt = conn.prepareStatement(COUNT_SQL+" where d_url = ? and d_web_id = ? limit 1");// and d_title = ?
 		pstmt.setString(1,url);
@@ -340,8 +348,11 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 		return count;
 	}
 
-	public synchronized int getCountByURL(String url) throws Exception{
+	public int getCountByURL(String url) throws Exception{
 		int count = 0;
+		if(null == url || "".equalsIgnoreCase(url)){
+			return count;
+		}
 		pstmt = conn.prepareStatement(COUNT_SQL+" where d_url = ? limit 1");// and d_title = ?
 		pstmt.setString(1,url);
 		rs = pstmt.executeQuery();
@@ -353,7 +364,7 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 		return count;
 	}
 
-	public synchronized int getCountByTitle(String title) throws Exception {
+	public int getCountByTitle(String title) throws Exception {
 		int count = 0;
 		pstmt = conn.prepareStatement(COUNT_SQL+" where d_title = ? limit 1");// and d_title = ?
 		pstmt.setString(1,title);
@@ -366,7 +377,7 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 		return count;
 	}
 
-	public synchronized int getCountByTitle(String title,Integer webId) throws Exception {
+	public int getCountByTitle(String title,Integer webId) throws Exception {
 		int count = 0;
 		pstmt = conn.prepareStatement(COUNT_SQL+" where d_title = ? and d_web_id = ?");// and d_title = ?
 		pstmt.setString(1,title);
