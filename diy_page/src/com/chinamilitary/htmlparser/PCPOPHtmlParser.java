@@ -27,6 +27,9 @@ import com.chinamilitary.dao.ArticleDocDao;
 import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.factory.DAOFactory;
 import com.chinamilitary.memcache.MemcacheClient;
+import com.thread.RequestRecordThread;
+import com.thread.ResourceQueneInsert;
+import com.thread.ResourceQueneUpdate;
 
 public class PCPOPHtmlParser {
 
@@ -240,6 +243,7 @@ public class PCPOPHtmlParser {
 			if (linkList != null && linkList.size() > 0) {
 				for (int i = 0; i < linkList.size(); i++) {
 					LinkTag link = (LinkTag) linkList.elementAt(i);
+//					System.out.println("title:"+link.getLinkText()+"\t"+link.getLink());
 					LinkBean bean = null;
 					if (link.getLink().toLowerCase().startsWith(pre) && !link.getLinkText().equalsIgnoreCase("详细内容")){
 						if(null == client.get(getKey(link.getLink()))){
@@ -247,9 +251,12 @@ public class PCPOPHtmlParser {
 							bean.setLink(link.getLink());
 							bean.setName(link.getLinkText());
 							LINKHASH.put(link.getLink(), bean);
-						}else{
-							System.out.println(">> 已存在 ["+link.getLink()+"] 地址");
 						}
+//						else{
+//							client.add(link.getLink(), link);
+//							ResourceQueneInsert.getInstance().setElement(link.getLink());
+//							System.out.println(">> 已存在 ["+link.getLink()+"] 地址");
+//						}
 					}
 				}
 			}
@@ -330,7 +337,10 @@ public class PCPOPHtmlParser {
 		
 //		init();
 			
-//		process();
+//		Thread th = new Thread(new RequestRecordThread(),"recordupdate");
+//		th.start();
+			
+		process();
 		
 		processAuthor();
 			
@@ -345,6 +355,11 @@ public class PCPOPHtmlParser {
 		}
 	}
 	
+	public static void processC() throws Exception{
+		process();
+		processAuthor();
+		
+	}
 	static void contentProcess(){
 		try{
 			List<ArticleDoc> list = articleDocDao.findAll(2);
@@ -441,16 +456,24 @@ public class PCPOPHtmlParser {
 				doc.setTitle(link.getName());
 				doc.setUrl(link.getLink());
 				doc.setWebId(webid);
+//				ResourceQueneInsert.getInstance().setElement(doc);
 				int id = articleDocDao.insert(doc);
-				if(!(id>0)){
-					System.out.println("失败，\t链接名称：" + link.getName() + "\n链接地址："+ link.getLink());
-					client.add(getKey(doc.getUrl()), doc);
-				}else{
+				if(id > 0){
 					doc.setId(id);
 					doc.setStatus(1);
 					client.add(getKey(doc.getUrl()), doc);
-					System.out.println("Memcached now store this object");
+//					System.out.println("Memcached now store this object");
 				}
+				
+//				if(!(id>0)){
+//					System.out.println("失败，\t链接名称：" + link.getName() + "\n链接地址："+ link.getLink());
+//					client.add(getKey(doc.getUrl()), doc);
+//				}else{
+//					doc.setId(id);
+//					doc.setStatus(1);
+//					client.add(getKey(doc.getUrl()), doc);
+//					System.out.println("Memcached now store this object");
+//				}
 			}
 		}
 		LINKHASH.clear();
@@ -467,43 +490,51 @@ public class PCPOPHtmlParser {
 			if(!bean.getUrl().startsWith("http://www.pcpop.com/doc/")){
 				continue;
 			}
-			System.out.println("获取文章数据");
+//			System.out.println("获取文章数据");
 			//更新文章的作者和发布时间
 			try{
 				String author = author(bean.getUrl());
+//				System.out.println("author:"+author);
 				String tmp1 = author.substring(author.lastIndexOf("作者")+3,author.lastIndexOf("编辑")-1);
 				String tmp2 = author.substring(0,author.indexOf(":")-2);
+				if(null == tmp1 || null ==  tmp2){
+					break;
+				}
 				bean.setAuthor(tmp1);
 				bean.setPublishTime(tmp2);
 				bean.setStatus(2);
+//				ResourceQueneUpdate.getInstance().setElement(bean);
 				if(!articleDocDao.update(bean)){
-					System.out.println("更新作者失败:"+bean.getUrl());
+					System.err.println("更新作者失败:"+bean.getUrl());
 				}else{
 					System.out.println("["+bean.getId()+"]更新成功:"+bean.getUrl());
 				}
 			}catch(java.io.FileNotFoundException e){
 				bean.setStatus(10);
+//				ResourceQueneUpdate.getInstance().setElement(bean);
 				if(!articleDocDao.update(bean)){
-					System.out.println("更新作者失败:"+bean.getUrl());
+					System.err.println("更新作者失败:"+bean.getUrl());
 				}else{
-					System.out.println("["+bean.getId()+"]更新记录状态为10[文件或地址查找找不到]:"+bean.getUrl());
+					System.err.println("["+bean.getId()+"]更新记录状态为10[文件或地址查找找不到]:"+bean.getUrl());
 				}
 				continue;
 			}catch(org.htmlparser.util.ParserException e){
 				bean.setStatus(10);
+//				ResourceQueneUpdate.getInstance().setElement(bean);
 				if(!articleDocDao.update(bean)){
-					System.out.println("更新作者失败:"+bean.getUrl());
+					System.err.println("更新作者失败:"+bean.getUrl());
 				}else{
-					System.out.println("["+bean.getId()+"]更新记录状态为10[URL解析失败]:"+bean.getUrl());
+					System.err.println("["+bean.getId()+"]更新记录状态为10[URL解析失败]:"+bean.getUrl());
 				}
 				continue;
 			}catch(Exception e){
 				bean.setStatus(11);
 				bean.setContent(e.getMessage());
+//				ResourceQueneUpdate.getInstance().setElement(bean);
 				if(!articleDocDao.update(bean)){
-					System.out.println("更新作者和文章发布时间失败:"+bean.getUrl());
+					System.err.println("更新作者和文章发布时间失败:"+bean.getUrl());
 				}else{
-					System.out.println("["+bean.getId()+"]更新记录状态为11[其他异常情况]:"+bean.getUrl());
+					System.err.println("["+bean.getId()+"]更新记录状态为11[其他异常情况]:"+bean.getUrl());
 				}
 				continue;
 			}
@@ -560,6 +591,9 @@ public class PCPOPHtmlParser {
 				String author = author(bean.getUrl());
 				String tmp1 = author.substring(author.lastIndexOf("作者")+3,author.lastIndexOf("编辑")-1);
 				String tmp2 = author.substring(0,author.indexOf(":")-2);
+				if(null == tmp1 || null == tmp2){
+					break;
+				}
 				bean.setAuthor(tmp1);
 				bean.setPublishTime(tmp2);
 				bean.setStatus(2);
