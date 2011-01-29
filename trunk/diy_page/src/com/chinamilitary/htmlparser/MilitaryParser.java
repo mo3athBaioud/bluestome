@@ -836,6 +836,20 @@ public class MilitaryParser {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 对外调用入口
+	 * @throws Exception
+	 */
+	public static void processC() throws Exception{
+		
+		getActicle(5); // 5 , 143
+
+		getActicle(143); // 5 , 143
+		
+		patch();
+		
+	}
 
 	static void patch() {
 		try {

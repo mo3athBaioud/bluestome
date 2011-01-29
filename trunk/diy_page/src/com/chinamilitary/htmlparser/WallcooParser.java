@@ -43,7 +43,7 @@ import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
 import com.common.Constants;
 import com.message.RequestRecordQuene;
-import com.thread.ResourceQuene;
+import com.thread.ResourceQueneInsert;
 
 //import com.chinamilitary.util.StringUtils;
 
@@ -814,8 +814,10 @@ public class WallcooParser {
 						if (pageList != null && pageList.size() > 0) {
 							for (LinkBean link : pageList) {
 								try {
+									System.out.println(" >> link:"+link.getLink());
 									secondURL(link, bean.getId());
 								} catch (org.htmlparser.util.EncodingChangeException e) {
+									e.printStackTrace();
 									LINKHASH.put(link.getLink(), link);
 									continue;
 								}

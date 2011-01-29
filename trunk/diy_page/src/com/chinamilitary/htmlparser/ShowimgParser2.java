@@ -50,8 +50,7 @@ import com.chinamilitary.util.StringUtils;
 import com.chinamilitary.xmlparser.XMLParser;
 import com.common.Constants;
 import com.message.RequestRecordQuene;
-import com.thread.ReConnThread;
-import com.thread.ResourceQuene;
+import com.thread.ResourceQueneInsert;
 
 public class ShowimgParser2 {
 
