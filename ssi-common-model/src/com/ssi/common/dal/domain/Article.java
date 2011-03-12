@@ -1,32 +1,46 @@
 package com.ssi.common.dal.domain;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-public class Article implements java.io.Serializable{
-	
+/**
+ * 
+ * 文章对象 tbl_article
+ * 
+ * @author bluestome
+ * 
+ */
+public class Article extends AbstractEntity {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1291002935203524161L;
+
 	private Integer id;
+
 	private Integer webId;
+
 	private String articleUrl;
+
 	private String acticleRealUrl;
+
 	private String acticleXmlUrl;
+
 	private String title;
+
 	private String text;
+
 	private String intro;
-	private Date createTime;
-	
+
+	private Date createTime = new Date();
+
+	// 网站对象
 	private Website website;
-	private Set images = new HashSet(0);
-	
-	public Article(){
+
+	public Article() {
 	}
-	
-	public Article(Integer webId,String articleUrl){
+
+	public Article(Integer webId, String articleUrl) {
 		this.webId = webId;
 		this.articleUrl = articleUrl;
 	}
@@ -103,14 +117,6 @@ public class Article implements java.io.Serializable{
 		this.intro = intro;
 	}
 
-	public Set getImages() {
-		return images;
-	}
-
-	public void setImages(Set images) {
-		this.images = images;
-	}
-
 	public Website getWebsite() {
 		return website;
 	}
@@ -119,5 +125,4 @@ public class Article implements java.io.Serializable{
 		this.website = website;
 	}
 
-	
 }

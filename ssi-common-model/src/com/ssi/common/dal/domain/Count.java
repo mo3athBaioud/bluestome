@@ -1,6 +1,17 @@
 package com.ssi.common.dal.domain;
 
-public class Count {
+/**
+ * 统计对象
+ * 
+ * @author bluestome
+ * 
+ */
+public class Count extends AbstractEntity {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private String name;
 

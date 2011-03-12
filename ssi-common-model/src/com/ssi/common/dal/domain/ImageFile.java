@@ -29,6 +29,8 @@ public class ImageFile extends AbstractEntity {
 	private String desc;
 
 	private Date createTime = new Date();
+	
+	private int status;
 
 	// 文章对象
 	private Article article;
@@ -37,7 +39,6 @@ public class ImageFile extends AbstractEntity {
 	private Image image;
 
 	public ImageFile() {
-
 	}
 
 	public ImageFile(Integer articleId, Integer imageId, String url,
@@ -136,6 +137,14 @@ public class ImageFile extends AbstractEntity {
 
 	public void setImage(Image image) {
 		this.image = image;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	

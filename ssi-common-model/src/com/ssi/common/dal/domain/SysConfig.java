@@ -1,29 +1,37 @@
 package com.ssi.common.dal.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 系统配置类
+ * 系统配置类 tbl_sysconfig
+ * 
  * @author bluestome
- *
+ * 
  */
-public class SysConfig implements Serializable {
+public class SysConfig extends AbstractEntity {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7662699072918415962L;
+
 	private Integer id;
+
 	private String name;
+
 	private String description;
+
 	private Integer groupid;
+
 	private String type;
+
 	private String value;
-	private Date createtime;
-	private Date modifytime;
-	
-	public SysConfig(){
+
+	private Date createtime = new Date();
+
+	private Date modifytime = new Date();
+
+	public SysConfig() {
 	}
 
 	public String getDescription() {
@@ -89,7 +97,5 @@ public class SysConfig implements Serializable {
 	public void setModifytime(Date modifytime) {
 		this.modifytime = modifytime;
 	}
-	
-	
-	
+
 }

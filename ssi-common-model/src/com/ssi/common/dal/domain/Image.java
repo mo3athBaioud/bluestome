@@ -2,36 +2,58 @@ package com.ssi.common.dal.domain;
 
 import java.util.Date;
 
-
-public class Image implements java.io.Serializable{
+/**
+ * 图片对象 tbl_image
+ * 
+ * @author bluestome
+ * 
+ */
+public class Image extends AbstractEntity {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7126894035875863901L;
-	/**
-	 * 
-	 */
+
 	private Integer id;
+
 	private Integer articleId;
+
 	private String title;
+
 	private String name;
+
 	private String imgUrl;
+
 	private String httpUrl;
+
 	private Integer orderId;
+
 	private String time;
+
 	private String intro;
+
 	private String commentsuburl;
+
 	private String commentshowurl;
+
 	private String link;
+
 	private Date createtime;
+
 	private int status;
+
 	private long size;
+
 	private String referer;
-	
+
+	//文章对象
 	private Article article;
+
+	//图片文件对象
 	private PictureFile pictureFile;
-	public Image(){
+
+	public Image() {
 	}
 
 	public String getCommentshowurl() {
@@ -177,7 +199,5 @@ public class Image implements java.io.Serializable{
 	public void setReferer(String referer) {
 		this.referer = referer;
 	}
-	
-	
-	
+
 }

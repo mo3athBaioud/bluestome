@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Website implements java.io.Serializable{
-	/**
-	 * 
-	 */
+/**
+ * 网站对象 tbl_web_site
+ * 
+ * @author bluestome
+ * 
+ */
+public class Website extends AbstractEntity {
+
 	private static final long serialVersionUID = 9138376143415042891L;
 
 	private Integer id;
-	
+
 	private Integer type;
 
 	private Integer parentId;
@@ -23,11 +27,11 @@ public class Website implements java.io.Serializable{
 	private Date createtime;
 
 	private Integer status;
-	
+
 	private int count = 0;
-	
+
 	private List<Article> articles = new ArrayList<Article>();
-	
+
 	private List<Website> children = new ArrayList<Website>();
 
 	public Website() {
@@ -113,5 +117,4 @@ public class Website implements java.io.Serializable{
 		this.count = count;
 	}
 
-	
 }

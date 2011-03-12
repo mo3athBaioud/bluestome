@@ -2,30 +2,49 @@ package com.ssi.common.dal.domain;
 
 import java.util.Date;
 
-public class PictureFile implements java.io.Serializable{
-	
+/**
+ * 图片文件对象 tbl_pic_file
+ * 
+ * @author bluestome
+ * 
+ */
+public class PictureFile extends AbstractEntity {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7664072343386712672L;
+
 	private Integer id;
+
 	private Integer articleId;
+
 	private Integer imageId;
+
 	private String url;
+
 	private String title;
+
 	private String name;
+
 	private String smallName;
+
 	private String desc;
-	private Date createTime;
+
+	private Date createTime = new Date();
+
 	private int status;
-	
-//	private Article article;
-//	private Image image;
-	
-	public PictureFile(){
-		
+
+	// 文章对象
+	private Article article;
+
+	// 图片对象
+	private Image image;
+
+	public PictureFile() {
+
 	}
-	
+
 	public String getDesc() {
 		return desc;
 	}
@@ -106,22 +125,20 @@ public class PictureFile implements java.io.Serializable{
 		this.status = status;
 	}
 
-//	public Article getArticle() {
-//		return article;
-//	}
-//
-//	public void setArticle(Article article) {
-//		this.article = article;
-//	}
-//
-//	public Image getImage() {
-//		return image;
-//	}
-//
-//	public void setImage(Image image) {
-//		this.image = image;
-//	}
+	public Article getArticle() {
+		return article;
+	}
 
-	
-	
+	public void setArticle(Article article) {
+		this.article = article;
+	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
+
 }
