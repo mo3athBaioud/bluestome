@@ -1,9 +1,14 @@
 package com.ssi.common.dal.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class Chart implements Serializable {
+/**
+ * 图标对象 tbl_chart_daily
+ * 
+ * @author bluestome
+ * 
+ */
+public class Chart extends AbstractEntity {
 
 	/**
 	 * 

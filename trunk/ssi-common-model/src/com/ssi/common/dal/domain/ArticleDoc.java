@@ -1,9 +1,14 @@
 package com.ssi.common.dal.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class ArticleDoc implements Serializable {
+/**
+ * 文章文档对象 tbl_article_doc
+ * 
+ * @author bluestome
+ * 
+ */
+public class ArticleDoc extends AbstractEntity {
 	/**
 	 * 
 	 */
@@ -29,9 +34,9 @@ public class ArticleDoc implements Serializable {
 
 	private String publishTime;
 
-	private Date createTime;
+	private Date createTime = new Date();
 
-	private Date modifyTime;
+	private Date modifyTime = new Date();
 
 	public ArticleDoc() {
 	}
