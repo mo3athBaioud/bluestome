@@ -11,6 +11,7 @@
 		<result column="d_web_url" property="url" />
 		<result column="d_web_name" property="name" />
 		<result column="d_createtime" property="createtime" />
+		<result column="d_modifytime" property="modifytime" />
 		<result column="d_status" property="status" />
 		<result property="children" column="d_id"
 			select="GET_CHILD_WEBSITE_BY_FATHER_ID" />
@@ -23,8 +24,8 @@
 
      <insert id="website.insert" parameterClass="website"> 
  		INSERT INTO tbl_web_site 
- 		(d_web_type,d_parent_id,d_web_url,d_web_name,d_status,d_createtime) 
- 		VALUES (#type#,#parentId#,#url#,#name#,#status#,#createtime#)
+ 		(d_web_type,d_parent_id,d_web_url,d_web_name,d_status,d_createtime,d_createtime,d_modifytime) 
+ 		VALUES (#type#,#parentId#,#url#,#name#,#status#,#createtime#,now())
  		<selectKey resultClass="int" type="post" keyProperty="id">
  			select LAST_INSERT_ID() as value
  		</selectKey>
@@ -37,6 +38,7 @@
  		d_web_url=#url#,
  		d_web_name=#name#,
  		d_status=#status#,
+ 		d_modifytime = now()
  		where d_id = #id#
 	</update>
 	
