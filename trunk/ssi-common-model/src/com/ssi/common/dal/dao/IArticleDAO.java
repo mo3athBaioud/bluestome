@@ -16,20 +16,6 @@ public interface IArticleDAO extends EntityDAO<Article>{
 	Article findById(Integer id);
 	
 	/**
-	 * 添加记录
-	 * @param article
-	 * @return
-	 */
-//	int insert(Article article);
-	
-	/**
-	 * 更新方法
-	 * @param article
-	 * @return
-	 */
-//	int update(Article article);
-	
-	/**
 	 * 根据对象查找记录
 	 * @param map
 	 * @return
