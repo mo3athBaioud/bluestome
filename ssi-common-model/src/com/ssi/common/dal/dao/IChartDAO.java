@@ -3,23 +3,10 @@ package com.ssi.common.dal.dao;
 import java.util.HashMap;
 import java.util.List;
 
+import com.ssi.common.dal.EntityDAO;
 import com.ssi.common.dal.domain.Chart;
 
-public interface IChartDAO {
-	
-	/**
-	 * 添加图片对象
-	 * @param chart
-	 * @return
-	 */
-	int insert(Chart chart);
-	
-	/**
-	 * 更新记录
-	 * @param chart
-	 * @return
-	 */
-	int update(Chart chart);
+public interface IChartDAO extends EntityDAO<Chart>{
 	
 	/**
 	 * 检查唯一性

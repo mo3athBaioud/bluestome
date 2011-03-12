@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ssi.common.dal.BaseDAOImpl;
+import com.ssi.common.dal.IbatisEntityDao;
 import com.ssi.common.dal.dao.IChartDAO;
 import com.ssi.common.dal.domain.Chart;
 
-public class ChartDAOImpl extends BaseDAOImpl implements IChartDAO {
+public class ChartDAOImpl extends IbatisEntityDao<Chart> implements IChartDAO {
 
 	public List<Chart> article(HashMap map) {
 		List<Chart> list = new ArrayList<Chart>();
@@ -39,20 +40,10 @@ public class ChartDAOImpl extends BaseDAOImpl implements IChartDAO {
 		return list;
 	}
 
-	public int insert(Chart chart) {
-		int result = (Integer)getEntityDelegate().insert("INSERT_CHART", chart, getRoute());
-		return result;
-	}
-
 	public List<Chart> pictureFile(HashMap map) {
 		List<Chart> list = new ArrayList<Chart>();
 		list = getQueryDelegate().queryForList("QUERY_PICTUREFILE_CHART", map, getRoute());
 		return list;
-	}
-
-	public int update(Chart chart) {
-		int result = getEntityDelegate().update("UPDATE_CHART", chart, getRoute());
-		return result;
 	}
 
 }

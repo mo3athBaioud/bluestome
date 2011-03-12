@@ -5,11 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ssi.common.dal.BaseDAOImpl;
+import com.ssi.common.dal.IbatisEntityDao;
 import com.ssi.common.dal.dao.IWebsiteDAO;
 import com.ssi.common.dal.domain.Count;
 import com.ssi.common.dal.domain.Website;
 
-public class WebsiteDAOImpl extends BaseDAOImpl implements IWebsiteDAO {
+public class WebsiteDAOImpl extends IbatisEntityDao<Website> implements IWebsiteDAO {
 
 	/**
 	 * 根据父ID查找网站子记录

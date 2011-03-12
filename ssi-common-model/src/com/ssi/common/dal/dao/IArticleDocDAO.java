@@ -3,23 +3,10 @@ package com.ssi.common.dal.dao;
 import java.util.HashMap;
 import java.util.List;
 
+import com.ssi.common.dal.EntityDAO;
 import com.ssi.common.dal.domain.*;
-public interface IArticleDocDAO {
+public interface IArticleDocDAO extends EntityDAO<ArticleDoc>{
 
-	/**
-	 * 添加记录
-	 * @param articleDoc
-	 * @return
-	 */
-	int insert(ArticleDoc articleDoc);
-	
-	/**
-	 * 更新记录
-	 * @param articleDoc
-	 * @return
-	 */
-	int update(ArticleDoc articleDoc);
-	
 	/**
 	 * 根据MAP查找记录
 	 * @param map

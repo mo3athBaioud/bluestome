@@ -3,9 +3,10 @@ package com.ssi.common.dal.dao;
 import java.util.HashMap;
 import java.util.List;
 
+import com.ssi.common.dal.EntityDAO;
 import com.ssi.common.dal.domain.Article;
 
-public interface IArticleDAO {
+public interface IArticleDAO extends EntityDAO<Article>{
 
 	/**
 	 * 根据记录ID查找记录
@@ -19,14 +20,14 @@ public interface IArticleDAO {
 	 * @param article
 	 * @return
 	 */
-	int insert(Article article);
+//	int insert(Article article);
 	
 	/**
 	 * 更新方法
 	 * @param article
 	 * @return
 	 */
-	int update(Article article);
+//	int update(Article article);
 	
 	/**
 	 * 根据对象查找记录

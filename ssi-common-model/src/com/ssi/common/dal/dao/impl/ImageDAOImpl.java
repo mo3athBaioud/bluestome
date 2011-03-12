@@ -5,12 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ssi.common.dal.BaseDAOImpl;
+import com.ssi.common.dal.IbatisEntityDao;
 import com.ssi.common.dal.dao.IImageDAO;
 import com.ssi.common.dal.domain.Article;
 import com.ssi.common.dal.domain.Image;
 import com.ssi.common.dal.domain.PictureFile;
 
-public class ImageDAOImpl extends BaseDAOImpl implements IImageDAO {
+public class ImageDAOImpl extends IbatisEntityDao<Image> implements IImageDAO {
 
 	/**
 	 * 根据ID查找记录
@@ -19,27 +20,6 @@ public class ImageDAOImpl extends BaseDAOImpl implements IImageDAO {
 		return find(id,"FD");
 	}
 	
-	/**
-	 * 添加图片记录
-	 * @param image
-	 * @return
-	 */
-	public int insert(Image image){
-		int result = -1;
-		result = (Integer)getEntityDelegate().insert("INSERT_IMAGE",image,getRoute());
-		return result;
-	}
-
-	/**
-	 * 更新图片记录
-	 * @param image
-	 * @return
-	 */
-	public int update(Image image){
-		int result = -1;
-		result = getEntityDelegate().update("UPDATE_IMAGE",image,getRoute());
-		return result;
-	}
 	/**
 	 * 
 	 * @param id

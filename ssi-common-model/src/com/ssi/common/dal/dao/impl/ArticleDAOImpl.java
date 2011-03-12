@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ssi.common.dal.BaseDAOImpl;
+import com.ssi.common.dal.IbatisEntityDao;
 import com.ssi.common.dal.dao.IArticleDAO;
 import com.ssi.common.dal.domain.Article;
 
-public class ArticleDAOImpl extends BaseDAOImpl implements IArticleDAO {
+public class ArticleDAOImpl extends IbatisEntityDao<Article> implements IArticleDAO {
 
 	/**
 	 * 根据ID查找记录
@@ -23,25 +24,25 @@ public class ArticleDAOImpl extends BaseDAOImpl implements IArticleDAO {
 	 * @param article
 	 * @return
 	 */
-	public int insert(Article article){
-		int result = -1;
-		if(checkExists(article.getTitle(),article.getWebId(),article.getArticleUrl())){
-			logger.info("webid["+article.getWebId()+"],title["+article.getTitle()+"],url["+article.getArticleUrl()+"] exists");
-			return result;
-		}
-		result = (Integer)getEntityDelegate().insert("INSERT_ARTICLE", article, getRoute());
-		return result;
-	}
+//	public int insert(Article article){
+//		int result = -1;
+//		if(checkExists(article.getTitle(),article.getWebId(),article.getArticleUrl())){
+//			logger.info("webid["+article.getWebId()+"],title["+article.getTitle()+"],url["+article.getArticleUrl()+"] exists");
+//			return result;
+//		}
+//		result = (Integer)getEntityDelegate().insert("INSERT_ARTICLE", article, getRoute());
+//		return result;
+//	}
 	/**
 	 * 更新方法
 	 * @param article
 	 * @return
 	 */
-	public int update(Article article){
-		int result = -1;
-		result = getEntityDelegate().update("UPDATE_ARTICLE", article, getRoute());
-		return result;
-	}
+//	public int update(Article article){
+//		int result = -1;
+//		result = getEntityDelegate().update("UPDATE_ARTICLE", article, getRoute());
+//		return result;
+//	}
 	
 	/**
 	 * 根据对象查找记录
