@@ -21,6 +21,25 @@
 			select="GET_ARTICLE_COUNT_BY_WEB_ID" />
 	</resultMap>
 
+     <insert id="website.insert" parameterClass="website"> 
+ 		INSERT INTO tbl_web_site 
+ 		(d_web_type,d_parent_id,d_web_url,d_web_name,d_status,d_createtime) 
+ 		VALUES (#type#,#parentId#,#url#,#name#,#status#,#createtime#)
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+
+    <update id="website.update" parameterClass="website"> 
+ 		UPDATE tbl_web_site set 
+ 		d_web_type=#type#,
+ 		d_parent_id = #parentId#,
+ 		d_web_url=#url#,
+ 		d_web_name=#name#,
+ 		d_status=#status#,
+ 		where d_id = #id#
+	</update>
+	
 	<statement id="GET_WEBSITE_BY_ID" parameterClass="java.lang.Integer"
 		resultMap="websiteMap">
 		SELECT t.* FROM tbl_web_site t WHERE t.d_id = #value# ORDER BY

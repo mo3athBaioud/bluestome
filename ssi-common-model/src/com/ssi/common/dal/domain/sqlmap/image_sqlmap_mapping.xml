@@ -40,7 +40,7 @@
 
 
 
-	<update id="UPDATE_IMAGE" parameterClass="image">
+	<update id="image.update" parameterClass="image">
 		UPDATE TBL_IMAGE SET d_article_id = #articleId#,
 		d_title=#title#, d_name=#name#, d_imgurl=#imgUrl#,
 		d_httpurl=#httpUrl#, d_orderid=#orderId#, d_time=#time#,
@@ -50,7 +50,7 @@
 		WHERE d_id = #id#
 	</update>
 
-	<insert id="INSERT_IMAGE" parameterClass="image">
+	<insert id="image.insert" parameterClass="image">
 		INSERT INTO TBL_IMAGE
 		(d_article_id,d_title,d_name,d_imgurl,d_httpurl,d_orderid,d_time,d_intro,d_commentsuburl,d_commentshowurl,d_link,d_createtime,d_status,d_filesize)
 		VALUES

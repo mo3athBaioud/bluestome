@@ -86,7 +86,7 @@
 		</isNotEmpty>
 	</statement>
 	
-     <insert id="INSERT_SYSCONFIG" parameterClass="sysConfig"> 
+     <insert id="sysconfig.insert" parameterClass="sysConfig"> 
  		INSERT INTO tbl_sysconfig 
  		(d_name,d_description,d_groupid,d_type,d_value,d_create_dt,d_modify_dt) 
  		VALUES (#name#,#description#,#groupid#,#type#,#value#,now(),now())
@@ -95,7 +95,7 @@
  		</selectKey>
 	</insert>
 
-    <update id="UPDATE_SYSCONFIG" parameterClass="sysConfig"> 
+    <update id="sysconfig.update" parameterClass="sysConfig"> 
  		UPDATE tbl_sysconfig set 
  		d_name=#name#,
  		d_description = #description#,

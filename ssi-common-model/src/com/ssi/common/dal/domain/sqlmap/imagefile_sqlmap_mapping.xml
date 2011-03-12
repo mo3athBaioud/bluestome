@@ -65,7 +65,7 @@
 		SELECT DISTINCT t.* FROM TBL_PIC_FILE t where date(d_createtime) = date(now()) ORDER BY d_createtime DESC LIMIT #limit#
 	</statement>
 	
-	<update id="UPDATE_IMAGEFILE" parameterClass="imagefile">
+	<update id="imagefile.update" parameterClass="imagefile">
 		UPDATE TBL_PIC_FILE SET 
 		d_article_id=#articleId#,
 		d_image_id=#imageId#,
@@ -78,7 +78,7 @@
 		WHERE D_ID = #id#
 	</update>
 	
-	<insert id="INSERT_IMAGEEFILE" parameterClass="imagefile">
+	<insert id="imagefile.insert" parameterClass="imagefile">
 		INSERT INTO TBL_PIC_FILE (d_article_id,d_image_id,d_file_url,d_file_title,d_file_name,d_file_small_name,d_createtime,d_status) 
 		VALUES (#articleId#,#imageId#,#url#,#title#,#name#,#smallName#,now(),#status#) 
  		<selectKey resultClass="int" type="post" keyProperty="id">
