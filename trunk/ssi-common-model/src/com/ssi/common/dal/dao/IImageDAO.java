@@ -3,9 +3,10 @@ package com.ssi.common.dal.dao;
 import java.util.HashMap;
 import java.util.List;
 
+import com.ssi.common.dal.EntityDAO;
 import com.ssi.common.dal.domain.Image;
 
-public interface IImageDAO {
+public interface IImageDAO extends EntityDAO<Image>{
 
 	/**
 	 * 根据ID查找记录
@@ -13,20 +14,6 @@ public interface IImageDAO {
 	 * @return
 	 */
 	Image findById(Integer id);
-	
-	/**
-	 * 添加图片记录
-	 * @param image
-	 * @return
-	 */
-	int insert(Image image);
-	
-	/**
-	 * 更新图片记录
-	 * @param image
-	 * @return
-	 */
-	int update(Image image);
 	
 	/**
 	 * 获取总数

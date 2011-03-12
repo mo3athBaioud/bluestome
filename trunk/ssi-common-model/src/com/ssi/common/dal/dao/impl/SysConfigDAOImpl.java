@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ssi.common.dal.BaseDAOImpl;
+import com.ssi.common.dal.IbatisEntityDao;
 import com.ssi.common.dal.dao.ISysConfigDAO;
 import com.ssi.common.dal.domain.SysConfig;
 
-public class SysConfigDAOImpl  extends BaseDAOImpl implements ISysConfigDAO {
+public class SysConfigDAOImpl  extends IbatisEntityDao<SysConfig> implements ISysConfigDAO {
 
 	public List<SysConfig> find(HashMap map) {
 		List<SysConfig> list = new ArrayList<SysConfig>();
@@ -31,18 +32,6 @@ public class SysConfigDAOImpl  extends BaseDAOImpl implements ISysConfigDAO {
 	public int getCount(HashMap map) {
 		int result = -1;
 		result = (Integer)getQueryDelegate().queryForObject("GET_SYSCONFIG_COUNT", map, getRoute());
-		return result;
-	}
-
-	public int insert(SysConfig config) {
-		int result = -1;
-		result = (Integer)getEntityDelegate().insert("INSERT_SYSCONFIG", config, getRoute());
-		return result;
-	}
-
-	public int update(SysConfig config) {
-		int result = -1;
-		result = (Integer)getEntityDelegate().update("UPDATE_SYSCONFIG", config, getRoute());
 		return result;
 	}
 

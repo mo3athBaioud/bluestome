@@ -3,9 +3,10 @@ package com.ssi.common.dal.dao;
 import java.util.HashMap;
 import java.util.List;
 
+import com.ssi.common.dal.EntityDAO;
 import com.ssi.common.dal.domain.PictureFile;
 
-public interface IPictureFileDAO {
+public interface IPictureFileDAO extends EntityDAO<PictureFile>{
 
 	/**
 	 * 根据文章ID和图片ID查找记录
@@ -14,18 +15,6 @@ public interface IPictureFileDAO {
 	 * @return
 	 */
 	PictureFile find(Integer articleId,Integer imageId);
-	
-	/**
-	 * 添加操作
-	 * @param picture
-	 * @return
-	 */
-	boolean insert(PictureFile picture);
-	/**
-	 * 更新操作
-	 * @return
-	 */
-	int update(PictureFile picture);
 	
 	/**
 	 * 查找最近多少条记录

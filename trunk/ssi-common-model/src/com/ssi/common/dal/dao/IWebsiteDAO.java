@@ -3,9 +3,10 @@ package com.ssi.common.dal.dao;
 import java.util.HashMap;
 import java.util.List;
 
+import com.ssi.common.dal.EntityDAO;
 import com.ssi.common.dal.domain.Count;
 import com.ssi.common.dal.domain.Website;
-public interface IWebsiteDAO {
+public interface IWebsiteDAO extends EntityDAO<Website>{
 
 	
 	/**
