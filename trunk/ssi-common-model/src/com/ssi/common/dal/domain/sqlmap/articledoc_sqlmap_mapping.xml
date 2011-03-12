@@ -54,10 +54,15 @@
 				t.d_publish_time = #publishTime#
 			</isNotEmpty>
 		</dynamic>
-		ORDER BY t.d_id
-		<isNotEmpty property="limit" prepend="limit">
-			#limit#
-		</isNotEmpty>
+		ORDER BY t.d_id asc
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
 		
     </statement>
 
