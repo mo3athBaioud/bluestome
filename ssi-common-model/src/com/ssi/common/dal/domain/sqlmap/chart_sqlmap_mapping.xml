@@ -105,7 +105,7 @@
 				d_chart_type = #chartType#
 			</isNotNull>
 			<isNotNull property="startdate" prepend="AND">
-				date(d_name) BETWEEN #startdate#
+				date_trunc('day', d_createtime) BETWEEN #startdate#
 			</isNotNull>
 			<isNotNull property="enddate" prepend="AND">
 				#enddate#
