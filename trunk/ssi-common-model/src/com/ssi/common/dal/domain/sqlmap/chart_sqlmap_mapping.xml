@@ -13,7 +13,7 @@
 		<result column="d_createtime" property="createtime"/>
 	</resultMap>
 	
-    <insert id="INSERT_CHART" parameterClass="chart">
+    <insert id="chart.insert" parameterClass="chart">
  		INSERT INTO tbl_chart_daily 
  		(D_NAME,D_TOTAL,D_TABLE_NAME,d_chart_type,D_CREATETIME) 
  		VALUES (#name#,#total#,#tableName#,#chartType#,now())
@@ -22,7 +22,7 @@
  		</selectKey>
 	</insert>
 	
-    <update id="UPDATE_CHART" parameterClass="chart">
+    <update id="chart.update" parameterClass="chart">
  		UPDATE tbl_chart_daily 
  		<!-- 
  		set D_TOTAL = #total#,D_CREATETIME = now() where 

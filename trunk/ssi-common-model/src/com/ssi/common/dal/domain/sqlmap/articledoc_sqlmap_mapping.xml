@@ -62,7 +62,7 @@
     </statement>
 
     <!-- 添加文章记录，包括返回ID -->
-    <insert id="INSERT_ARTICLEDOC" parameterClass="articledoc"> 
+    <insert id="articledoc.insert" parameterClass="articledoc"> 
  		INSERT INTO TBL_ARTICLE_DOC
  		(d_web_id,d_title,d_url,d_author,d_grade,d_tag,d_status,d_createtime,d_modifytime,d_publish_time) 
  		VALUES (#webId#,#title#,#url#,#author#,#grade#,#tag#,#status#,now(),now(),#publishTime#)
@@ -71,7 +71,7 @@
  		</selectKey>
 	</insert>
     
-    <update id="UPDATE_ARTICLEDOC" parameterClass="articledoc"> 
+    <update id="articledoc.update" parameterClass="articledoc"> 
  		UPDATE TBL_ARTICLE_DOC set 
  		d_web_id=#webId#,
  		d_title = #title#,

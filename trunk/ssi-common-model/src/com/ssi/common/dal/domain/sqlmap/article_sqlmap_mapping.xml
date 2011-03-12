@@ -35,7 +35,7 @@
     	SELECT COUNT(T.D_ID) FROM TBL_ARTICLE t WHERE t.D_WEB_ID = #value# ORDER BY t.d_id
     </statement>
 
-    <insert id="INSERT_ARTICLE" parameterClass="article"> 
+    <insert id="article.insert" parameterClass="article"> 
  		INSERT INTO TBL_ARTICLE 
  		(d_web_id,d_title,d_acticle_url,d_article_real_url,d_article_xml_url,d_text,d_intro,d_createtime) 
  		VALUES (#webId#,#title#,#articleUrl#,#acticleRealUrl#,#acticleXmlUrl#,#text#,#intro#,now())
@@ -44,7 +44,7 @@
  		</selectKey>
 	</insert>
     
-    <update id="UPDATE_ARTICLE" parameterClass="article"> 
+    <update id="article.update" parameterClass="article"> 
  		UPDATE TBL_ARTICLE set 
  		d_web_id=#webId#,
  		d_title = #title#,

@@ -3,9 +3,7 @@
 <sqlMap>
 	<typeAlias alias="picturefile"
 		type="com.ssi.common.dal.domain.PictureFile" />
-	<typeAlias alias="imagefile"
-		type="com.ssi.common.dal.domain.ImageFile" />
-
+		
 	<resultMap class="picturefile" id="picturefileMap">
 		<result column="d_id" property="id" />
 		<result column="d_article_id" property="articleId" />
@@ -24,24 +22,6 @@
 		 -->
 	</resultMap>
 
-	<resultMap class="imagefile" id="imagefileMap">
-		<result column="d_id" property="id" />
-		<result column="d_article_id" property="articleId" />
-		<result column="d_image_id" property="imageId" />
-		<result column="d_file_url" property="url" />
-		<result column="d_file_title" property="title" />
-		<result column="d_file_name" property="name" />
-		<result column="d_file_small_name" property="smallName" />
-		<result column="d_createtime" property="createTime" />
-		<result column="d_status" property="status" />
-		<result property="article" column="d_article_id"
-			select="GET_ARTICLE_BY_ID" />
-		<!-- 
-		<result property="image" column="d_image_id"
-			select="GET_IMAGE_BY_ID" />
-		 -->
-	</resultMap>
-	
 	<statement id="GET_PICTUREFILE_BY_MAP"
 		parameterClass="java.util.Map" resultMap="picturefileMap">
 		SELECT DISTINCT t.* FROM TBL_PIC_FILE t WHERE 1 = 1
@@ -85,7 +65,7 @@
 		SELECT DISTINCT t.* FROM TBL_PIC_FILE t where date(d_createtime) = date(now()) ORDER BY d_createtime DESC LIMIT #limit#
 	</statement>
 	
-	<update id="UPDATE_PICTUREFILE" parameterClass="picturefile">
+	<update id="picturefile.update" parameterClass="picturefile">
 		UPDATE TBL_PIC_FILE SET 
 		d_article_id=#articleId#,
 		d_image_id=#imageId#,
@@ -98,7 +78,7 @@
 		WHERE D_ID = #id#
 	</update>
 	
-	<insert id="INSERT_PICTUREFILE" parameterClass="picturefile">
+	<insert id="picturefile.insert" parameterClass="picturefile">
 		INSERT INTO TBL_PIC_FILE (d_article_id,d_image_id,d_file_url,d_file_title,d_file_name,d_file_small_name,d_createtime,d_status) 
 		VALUES (#articleId#,#imageId#,#url#,#title#,#name#,#smallName#,now(),#status#) 
  		<selectKey resultClass="int" type="post" keyProperty="id">
