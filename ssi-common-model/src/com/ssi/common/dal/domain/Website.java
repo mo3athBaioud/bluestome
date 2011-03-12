@@ -16,17 +16,19 @@ public class Website extends AbstractEntity {
 
 	private Integer id;
 
-	private Integer type;
+	private Integer type = 1;
 
-	private Integer parentId;
+	private Integer parentId = 0;
 
 	private String url;
 
 	private String name;
 
-	private Date createtime;
+	private Date createtime = new Date();
+	
+	private Date modifytime;
 
-	private Integer status;
+	private Integer status = 1;
 
 	private int count = 0;
 
@@ -116,5 +118,15 @@ public class Website extends AbstractEntity {
 	public void setCount(int count) {
 		this.count = count;
 	}
+
+	public Date getModifytime() {
+		return modifytime;
+	}
+
+	public void setModifytime(Date modifytime) {
+		this.modifytime = modifytime;
+	}
+	
+	
 
 }
