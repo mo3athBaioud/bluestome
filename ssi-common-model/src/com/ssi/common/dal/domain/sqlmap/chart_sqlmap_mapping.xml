@@ -53,6 +53,15 @@
 			date(d_createtime) = DATE(DATE_ADD(now(), INTERVAL -2 DAY))
 		</isNotNull>
 		group by date(d_createtime)
+		order by date(d_createtime)
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
 	</select>
 	
 	<select id="QUERY_ARTICLEDOC_CHART" parameterClass="java.util.HashMap" resultClass="chart">
@@ -64,6 +73,15 @@
 			date(d_createtime) = DATE(DATE_ADD(now(), INTERVAL -1 DAY))
 		</isNotNull>
 		group by date(d_createtime)
+		order by date(d_createtime)
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
 	</select>
 
 	<select id="QUERY_IMAGE_CHART" parameterClass="java.util.HashMap" resultClass="chart">
@@ -75,6 +93,15 @@
 			date(d_createtime) = DATE(DATE_ADD(now(), INTERVAL -2 DAY))
 		</isNotNull>
 		group by date(d_createtime)
+		order by date(d_createtime)
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
 	</select>
 
 	<select id="QUERY_PICTUREFILE_CHART" parameterClass="java.util.HashMap" resultClass="chart">
@@ -86,6 +113,15 @@
 			date(d_createtime) = DATE(DATE_ADD(now(), INTERVAL -2 DAY))
 		</isNotNull>
 		group by date(d_createtime)
+		order by date(d_createtime)
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
 	</select>
 	
 	<select id="QUERY_UNIQUE_CHART" parameterClass="chart" resultClass="java.lang.Integer">
@@ -111,8 +147,14 @@
 				#enddate#
 			</isNotNull>
 		</dynamic>
-		<isNotNull property="limit" prepend="limit">
-			#limit#
-		</isNotNull>
+		order by d_id asc
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
 	</select>
 </sqlMap>

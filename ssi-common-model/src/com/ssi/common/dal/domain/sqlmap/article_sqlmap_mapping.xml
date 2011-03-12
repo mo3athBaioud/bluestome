@@ -20,7 +20,16 @@
 	</resultMap>
 
 	<statement id="GET_ARTICLE_BY_MAP"  parameterClass="java.util.Map" resultMap="articleMap">
-    	SELECT DISTINCT t.* FROM TBL_ARTICLE t WHERE 1 = 1 and t.d_id = #id# and t.d_text = #text#  ORDER BY t.d_id
+    	SELECT DISTINCT t.* FROM TBL_ARTICLE t WHERE 1 = 1 and t.d_id = #id# and t.d_text = #text#  
+    	ORDER BY t.d_id asc
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
     </statement>
 
 	<statement id="GET_ARTICLE_BY_ID"  parameterClass="java.lang.Integer" resultMap="articleMap">
@@ -28,7 +37,16 @@
     </statement>
     
 	<statement id="GET_ARTICLE_BY_WEB_ID" parameterClass="java.lang.Integer" resultMap="articleMap">
-    	SELECT DISTINCT t.* FROM TBL_ARTICLE t WHERE t.D_WEB_ID = #value# ORDER BY t.d_id
+    	SELECT DISTINCT t.* FROM TBL_ARTICLE t WHERE t.D_WEB_ID = #value# 
+    	ORDER BY t.d_id asc
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
     </statement>
      
 	<statement id="GET_ARTICLE_COUNT_BY_WEB_ID" parameterClass="java.lang.Integer" resultClass="java.lang.Integer">
@@ -84,13 +102,15 @@
 				t.d_intro = #intro#
 			</isNotEmpty>
 		</dynamic>
-		ORDER BY t.d_id
+		ORDER BY t.d_id asc
 		<dynamic>
-			<isNotEmpty property="limit" prepend="limit">
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
 				#limit#
 			</isNotEmpty>
 		</dynamic>
-		
     </statement>
 
 	<statement id="GET_ARTICLE_COUNT"  parameterClass="java.util.Map" resultClass="java.lang.Integer">

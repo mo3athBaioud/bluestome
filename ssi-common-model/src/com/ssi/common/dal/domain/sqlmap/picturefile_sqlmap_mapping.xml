@@ -48,13 +48,15 @@
 				t.d_status = #status#
 			</isNotEmpty>
 		</dynamic>
-		ORDER BY t.d_id
+		ORDER BY t.d_id asc
 		<dynamic>
-			<isNotEmpty property="limit" prepend="limit">
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
 				#limit#
 			</isNotEmpty>
 		</dynamic>
-		
 	</statement>
 
 	<statement id="GET_PICTUREFILE_BY_IMAGE_ID" parameterClass="java.lang.Integer" resultMap="picturefileMap">
@@ -62,7 +64,16 @@
 	</statement>
 	
 	<statement id="GET_LASTEST_PICTUREFILE" parameterClass="java.util.Map" resultMap="picturefileMap">
-		SELECT DISTINCT t.* FROM TBL_PIC_FILE t where date(d_createtime) = date(now()) ORDER BY d_createtime DESC LIMIT #limit#
+		SELECT DISTINCT t.* FROM TBL_PIC_FILE t where date(d_createtime) = date(now()) 
+		ORDER BY d_createtime DESC 
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
 	</statement>
 	
 	<update id="picturefile.update" parameterClass="picturefile">

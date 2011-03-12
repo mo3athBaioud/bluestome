@@ -51,7 +51,15 @@
 	<statement id="GET_CHILD_WEBSITE_BY_FATHER_ID"
 		parameterClass="java.lang.Integer" resultMap="websiteMap">
 		SELECT t.* FROM tbl_web_site t WHERE t.d_parent_id = #value#
-		ORDER BY t.d_id
+		ORDER BY t.d_id asc
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
 	</statement>
 
 	<statement id="GET_WEBSITE_COUNT" parameterClass="java.util.Map"
@@ -108,10 +116,15 @@
 				t.d_status = #status#
 			</isNotEmpty>
 		</dynamic>
-		ORDER BY D_ID
-		<isNotEmpty property="limit" prepend="limit">
-			#limit#
-		</isNotEmpty>
+		ORDER BY D_ID asc
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
 	</statement>
 
 	<statement id="GET_COUNT_BY_WEB_ID"

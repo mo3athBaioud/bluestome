@@ -20,6 +20,14 @@
 
 	<statement id="GET_SYSCONFIG_BY_NAME" parameterClass="java.lang.String" resultMap="sysConfigMap">
     	SELECT t.* FROM tbl_sysconfig t WHERE t.d_name = #value# ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
     </statement>
 
   	<statement id="GET_SYSCONFIG_COUNT"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
@@ -80,10 +88,15 @@
 				t.d_modify_dt = #modifytime#
 			</isNotEmpty>
 		</dynamic>
-		ORDER BY D_ID 
-		<isNotEmpty property="limit" prepend="limit">
-			#limit#
-		</isNotEmpty>
+		ORDER BY D_ID asc
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
 	</statement>
 	
      <insert id="sysconfig.insert" parameterClass="sysConfig"> 

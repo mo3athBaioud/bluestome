@@ -157,9 +157,14 @@
 			</isNotEmpty>
 		</dynamic>
 		order by d_id
-		<isNotEmpty property="limit" prepend="limit">
-			#limit#
-		</isNotEmpty>
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
 	</statement>
 
 	<statement id="GET_COUNT_IMAGE_BY_WEB_ID"
