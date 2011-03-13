@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap>
-	<typeAlias alias="articledoc" type="com.ssi.dal.domain.ArticleDoc" />
+	<typeAlias alias="articledoc" type="com.ssi.common.dal.domain.ArticleDoc" />
 
 	<resultMap class="articledoc" id="articledocMap">
 		<result column="d_id" property="id"/>
@@ -54,7 +54,12 @@
 				t.d_publish_time = #publishTime#
 			</isNotEmpty>
 		</dynamic>
-		ORDER BY t.d_id asc
+		ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="asc">
+				$asc$
+			</isNotEmpty>
+		</dynamic>
 		<dynamic>
 			<isNotEmpty property="offset" prepend="limit">
 				#offset#

@@ -88,7 +88,12 @@
 				t.d_modify_dt = #modifytime#
 			</isNotEmpty>
 		</dynamic>
-		ORDER BY D_ID asc
+		ORDER BY D_ID
+		<dynamic>
+			<isNotEmpty property="asc">
+				$asc$
+			</isNotEmpty>
+		</dynamic>
 		<dynamic>
 			<isNotEmpty property="offset" prepend="limit">
 				#offset#

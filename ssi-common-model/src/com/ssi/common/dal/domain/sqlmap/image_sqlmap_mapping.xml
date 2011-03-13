@@ -29,7 +29,13 @@
 	<statement id="GET_IMAGE_BY_MAP" parameterClass="java.util.Map"
 		resultMap="imageMap">
 		SELECT DISTINCT t.* FROM TBL_IMAGE t WHERE 1 = 1 and t.d_id =
-		#id# and t.D_LINK = #link# ORDER BY t.d_id
+		#id# and t.D_LINK = #link# 
+		ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="asc">
+				$asc$
+			</isNotEmpty>
+		</dynamic>
 	</statement>
 
 	<statement id="GET_IMAGE_BY_ID" parameterClass="java.lang.Integer"
@@ -157,6 +163,11 @@
 			</isNotEmpty>
 		</dynamic>
 		order by d_id
+		<dynamic>
+			<isNotEmpty property="asc">
+				$asc$
+			</isNotEmpty>
+		</dynamic>
 		<dynamic>
 			<isNotEmpty property="offset" prepend="limit">
 				#offset#

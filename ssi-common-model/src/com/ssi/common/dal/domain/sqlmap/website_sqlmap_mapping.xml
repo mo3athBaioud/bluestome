@@ -24,7 +24,7 @@
 
      <insert id="website.insert" parameterClass="website"> 
  		INSERT INTO tbl_web_site 
- 		(d_web_type,d_parent_id,d_web_url,d_web_name,d_status,d_createtime,d_createtime,d_modifytime) 
+ 		(d_web_type,d_parent_id,d_web_url,d_web_name,d_status,d_createtime,d_modifytime) 
  		VALUES (#type#,#parentId#,#url#,#name#,#status#,#createtime#,now())
  		<selectKey resultClass="int" type="post" keyProperty="id">
  			select LAST_INSERT_ID() as value
@@ -35,11 +35,10 @@
  		UPDATE tbl_web_site set 
  		d_web_type=#type#,
  		d_parent_id = #parentId#,
- 		d_web_url=#url#,
  		d_web_name=#name#,
  		d_status=#status#,
  		d_modifytime = now()
- 		where d_id = #id#
+ 		where d_id = #id# and d_web_url = #url#
 	</update>
 	
 	<statement id="GET_WEBSITE_BY_ID" parameterClass="java.lang.Integer"
@@ -52,14 +51,6 @@
 		parameterClass="java.lang.Integer" resultMap="websiteMap">
 		SELECT t.* FROM tbl_web_site t WHERE t.d_parent_id = #value#
 		ORDER BY t.d_id asc
-		<dynamic>
-			<isNotEmpty property="offset" prepend="limit">
-				#offset#
-			</isNotEmpty>
-			<isNotEmpty property="limit" prepend=",">
-				#limit#
-			</isNotEmpty>
-		</dynamic>
 	</statement>
 
 	<statement id="GET_WEBSITE_COUNT" parameterClass="java.util.Map"
@@ -116,7 +107,12 @@
 				t.d_status = #status#
 			</isNotEmpty>
 		</dynamic>
-		ORDER BY D_ID asc
+		ORDER BY D_ID
+		<dynamic>
+			<isNotEmpty property="asc">
+				$asc$
+			</isNotEmpty>
+		</dynamic>
 		<dynamic>
 			<isNotEmpty property="offset" prepend="limit">
 				#offset#
