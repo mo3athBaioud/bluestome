@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="image" extends="struts-default" namespace="/image">
+    
+		<action name="showImage" class="imageAction" method="showImage">
+			<result name="success">/pages/images.jsp</result>
+		</action>
+		
+		<action name="image" class="imageAction" method="image" />
+		
+	</package>
+</struts>

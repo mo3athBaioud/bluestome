@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+
+	<bean id="articleService"
+		class="com.ssi.cms.web.service.impl.ArticleServiceImpl">
+		<property name="articleDAO">
+			<ref bean="articleDAO" />
+		</property>
+	</bean>
+
+	<bean id="articleDocService"
+		class="com.ssi.cms.web.service.impl.ArticleDocServiceImpl">
+		<property name="articleDocDAO">
+			<ref bean="articleDocDAO" />
+		</property>
+	</bean>
+	
+	<bean id="imageService"
+		class="com.ssi.cms.web.service.impl.ImageServiceImpl">
+		<property name="imageDAO">
+			<ref bean="imageDAO" />
+		</property>
+	</bean>
+
+	<bean id="websiteService"
+		class="com.ssi.cms.web.service.impl.WebsiteServiceImpl">
+		<property name="websiteDao">
+			<ref bean="websiteDAO" />
+		</property>
+	</bean>
+
+</beans>
