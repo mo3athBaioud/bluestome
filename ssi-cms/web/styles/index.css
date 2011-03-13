@@ -1,0 +1,96 @@
+a {
+	color: #15428B;
+}
+
+a:link,a:visited {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+#header {
+	background: #7F99BE url(../images/layout-browser-hd-bg.gif) repeat-x
+		center;
+	visibility: hidden;
+}
+
+#header h1 {
+	font-size: 16px;
+	font-weight: bold;
+	color: #fff;
+	padding: 5px 10px;
+}
+
+.start-bg {
+	background-image: url(../images/bg.jpg);
+}
+
+.icon-nav {
+	background-image: url(../images/folder_go.png) !important;
+}
+
+.icon-settings {
+	background-image: url(../images/folder_wrench.png) !important;
+}
+
+.icon-add {
+	background-image: url(../images/add.gif) !important;
+}
+
+.icon-edit {
+	background-image: url(../images/edit.gif) !important;
+}
+
+.icon-del {
+	background-image: url(../images/del.gif) !important;
+}
+
+.icon-del-gray {
+	background-image: url(../images/del_gray.gif) !important;
+}
+
+.icon-search {
+	background-image: url(../images/search.gif) !important;
+}
+
+.icon-grid {
+	background-image: url(../images/grid.png) !important;
+}
+
+.icon-plugin {
+	background-image: url(../images/plugin.gif) !important;
+}
+
+.icon-delete {
+	background-image: url(../images/delete.gif) !important;
+}
+
+.icon-info {
+	background-image: url(../images/info.gif) !important;
+}
+.icon-world {
+	background-image: url(../images/world.png) !important;
+}
+.icon-html {
+	background-image: url(../images/html.png) !important;
+}
+.icon-save {
+	background-image: url(../images/disk.png) !important;
+}
+.upload-icon {
+	background: url('../image_add.png') no-repeat 0 0 !important;
+}
+
+/*-----------*/
+.x-grid3-row-body p {
+	margin: 5px 5px 10px 5px !important;
+}
+
+body,td,th {
+	font-family:
+		'Geneva, Arial, Helvetica, sans-serif,lucida grande, tahoma, arial, sans-serif'
+		;
+	font-size: 12px;
+}

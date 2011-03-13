@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC
+          "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<bean id="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource" abstract="false"
+		singleton="true" lazy-init="default" autowire="default"
+		dependency-check="default" destroy-method="close">
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="minPoolSize" value="${jdbc.minPoolSize}" />
+		<property name="maxIdleTime" value="${jdbc.maxIdleTime}" />
+		<property name="initialPoolSize"
+			value="${jdbc.initialPoolSize}" />
+	</bean>
+
+	<bean id="logDataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource" abstract="false"
+		singleton="true" lazy-init="default" autowire="default"
+		dependency-check="default" destroy-method="close">
+		<property name="driverClass" value="${log.jdbc.driver}" />
+		<property name="jdbcUrl" value="${log.jdbc.url}" />
+		<property name="user" value="${log.jdbc.username}" />
+		<property name="password" value="${log.jdbc.password}" />
+		<property name="minPoolSize" value="${log.jdbc.minPoolSize}" />
+		<property name="maxIdleTime" value="${log.jdbc.maxIdleTime}" />
+		<property name="initialPoolSize"
+			value="${log.jdbc.initialPoolSize}" />
+	</bean>
+
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		singleton="true" lazy-init="default">
+		<property name="dataSource">
+			<ref local="dataSource" />
+		</property>
+	</bean>
+
+	<bean id="transactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<bean id="logTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		singleton="true" lazy-init="default">
+		<property name="dataSource">
+			<!-- 引用日志数据库 -->
+			<ref local="logDataSource" />
+		</property>
+	</bean>
+
+	<bean id="logTransactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager" ref="logTransactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<list>
+				<value>*Service</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+				<value>logTransactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="sqlMap"
+		class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocations">
+			<list>
+				<value>
+					classpath:com/ssi/common/dal/domain/sqlmap/sqlmap-config.xml
+				</value>
+			</list>
+		</property>
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+
+	<bean id="logSqlMap"
+		class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocations">
+			<list>
+				<value>
+					classpath:com/ssi/common/dal/domain/sqlmap/sqlmap-config.xml
+				</value>
+			</list>
+		</property>
+		<property name="dataSource">
+			<ref bean="logDataSource" />
+		</property>
+	</bean>
+
+	<bean id="jdbcTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+
+	<bean id="dbRouteConfig" class="com.ssi.common.dal.DBRouteConfig"
+		init-method="init" singleton="true">
+		<property name="allNodeNameList">
+			<list>
+				<value>download</value>
+				<value>logmusic</value>
+				<!-- 
+				-->
+			</list>
+		</property>
+	</bean>
+
+	<bean id="queryDelegate" class="com.ssi.common.dal.QueryDelegate"
+		init-method="init" singleton="true">
+		<property name="dbRouteConfig">
+			<ref bean="dbRouteConfig" />
+		</property>
+		<property name="sqlMapList">
+			<map>
+				<entry key="download">
+					<ref local="sqlMap" />
+				</entry>
+				<entry key="logmusic">
+					<ref local="logSqlMap" />
+				</entry>
+				<!-- 
+				-->
+			</map>
+		</property>
+	</bean>
+
+	<bean id="entityDelegate" class="com.ssi.common.dal.EntityDelegate"
+		init-method="init" singleton="true">
+		<property name="dbRouteConfig">
+			<ref bean="dbRouteConfig" />
+		</property>
+		<property name="sqlMapList">
+			<map>
+				<entry key="download">
+					<ref local="sqlMap" />
+				</entry>
+				<entry key="logmusic">
+					<ref local="logSqlMap" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean abstract="true" id="baseDAO"
+		class="com.ssi.common.dal.BaseDAOImpl">
+		<property name="queryDelegate">
+			<ref bean="queryDelegate" />
+		</property>
+		<property name="entityDelegate">
+			<ref bean="entityDelegate" />
+		</property>
+		<property name="route">
+			<bean class="com.ssi.common.dal.DBRoute"
+				factory-method="create">
+				<constructor-arg value="download" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="jdbcUtils" class="com.ssi.common.dal.JdbcUtils"
+		singleton="true">
+		<property name="dbRouteConfig">
+			<ref bean="dbRouteConfig" />
+		</property>
+		<property name="jdbcTemplateList">
+			<map>
+				<entry key="download">
+					<ref local="jdbcTemplate" />
+				</entry>
+			</map>
+		</property>
+		<property name="defaultDb" value="download" />
+	</bean>
+</beans>

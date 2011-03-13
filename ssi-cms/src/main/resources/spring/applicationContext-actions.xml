@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+
+	<bean id="baseAction" class="com.ssi.cms.web.action.BaseAction"
+		scope="prototype" />
+
+	<bean id="indexAction"
+		class="com.ssi.cms.web.action.IndexAction" scope="prototype"
+		parent="baseAction">
+		<property name="showImgUrl">
+			<value>${showing.img}</value>
+		</property>
+		<property name="militaryChina">
+			<value>${military.china}</value>
+		</property>
+		<property name="websiteService">
+			<ref bean="websiteService" />
+		</property>
+	</bean>
+
+	<bean id="articleAction"
+		class="com.ssi.cms.web.action.ArticleAction" scope="prototype"
+		parent="baseAction">
+		<property name="articleService">
+			<ref bean="articleService" />
+		</property>
+		<property name="articleDocService">
+			<ref bean="articleDocService" />
+		</property>
+	</bean>
+
+	<bean id="imageAction"
+		class="com.ssi.cms.web.action.ImageAction" scope="prototype"
+		parent="baseAction">
+		<property name="imageService">
+			<ref bean="imageService" />
+		</property>
+	</bean>
+
+	<bean id="websiteAction"
+		class="com.ssi.cms.web.action.WebsiteAction" scope="prototype"
+		parent="baseAction">
+		<property name="websiteService">
+			<ref bean="websiteService" />
+		</property>
+	</bean>
+
+</beans>

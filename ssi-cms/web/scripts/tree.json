@@ -1,0 +1,7 @@
+[{
+		"text":"站点管理",
+		"id":"01",
+		"href":"pages/websites/website.jsp",
+		"leaf":true,
+		"hrefTarget":"mainFrame"
+}]
