@@ -102,7 +102,12 @@
 				t.d_intro = #intro#
 			</isNotEmpty>
 		</dynamic>
-		ORDER BY t.d_id asc
+		ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="asc">
+				$asc$
+			</isNotEmpty>
+		</dynamic>
 		<dynamic>
 			<isNotEmpty property="offset" prepend="limit">
 				#offset#
