@@ -13,6 +13,7 @@
 	<include file="struts-website.xml" />
 	<include file="struts-article.xml" />
 	<include file="struts-image.xml" />
+	<include file="struts-usgs.xml" />
 	<package name="slimp" extends="struts-default">
 	</package>
 </struts>
