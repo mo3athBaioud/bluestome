@@ -17,7 +17,12 @@
 		<result column="d_createtime" property="createtime"/>						
 		<result column="d_modifytime" property="modifytime"/>						
 	</resultMap>
-
+	
+	<statement id="earthquakedetail.getByInfoId"  parameterClass="java.lang.Integer" resultMap="quakedetailMap">
+    	SELECT DISTINCT t.* FROM tbl_usgs_erathquakedetail t WHERE 1 = 1 and d_info_id = #value#
+   	</statement>
+	
+	
     <insert id="earthquakedetail.insert" parameterClass="quakedetail"> 
  		INSERT INTO tbl_usgs_erathquakedetail 
  		(d_info_id,d_location,d_region,d_distinces,d_lu,d_parameters,d_source,d_remarks,d_eventId,d_createtime,d_modifytime) 
