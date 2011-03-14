@@ -1,6 +1,7 @@
 package com.ssi.common.dal;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -75,4 +76,11 @@ public interface EntityDAO<T> {
 	 * @return 查询结果
 	 */
 	List<T> queryForList(String statementId, Object parameters);
+	
+	/**
+	 * 获取总数
+	 * @param map
+	 * @return
+	 */
+	int getCount(HashMap map);
 }
