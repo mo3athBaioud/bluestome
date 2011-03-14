@@ -1,6 +1,7 @@
 package com.ssi.common.dal;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,4 +97,14 @@ public class IbatisEntityDao<T> extends IbatisGenericDao implements
 	public Integer update(T o) {
 		return super._update(o);
 	}
+	
+	/**
+	 * 获取总数
+	 * @param map
+	 * @return
+	 */
+	public int getCount(HashMap map){
+		return _getCount(entityClass, map);
+	}
+	
 }
