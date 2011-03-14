@@ -46,4 +46,11 @@
 		</property>
 	</bean>
 
+	<bean id="usgsAction"
+		class="com.ssi.cms.web.action.UsgsAction" scope="prototype"
+		parent="baseAction">
+		<property name="usgsService">
+			<ref bean="usgsService" />
+		</property>
+	</bean>
 </beans>

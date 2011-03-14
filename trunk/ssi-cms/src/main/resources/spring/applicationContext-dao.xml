@@ -10,4 +10,9 @@
 	<bean id="pictureFileDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.PictureFileDAOImpl"/>
 	<bean id="imageFileDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.ImageFileDAOImpl"/>
 	<bean id="chartDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.ChartDAOImpl"/>
+	
+	
+	<bean id="earthQuakeInfoDAO"    parent="baseDAO" class="com.ssi.dal.usgs.dao.impl.EarthQuakeInfoDAOImpl"/>
+	<bean id="earthQuakeDetailDAO"  parent="baseDAO" class="com.ssi.dal.usgs.dao.impl.EarthQuakeDetailDAOImpl"/>
+	<bean id="earthQuakeRegionDAO"  parent="baseDAO" class="com.ssi.dal.usgs.dao.impl.EarthRegionDAOImpl"/>
 </beans>
