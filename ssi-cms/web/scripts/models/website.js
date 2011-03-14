@@ -743,7 +743,7 @@ Ext.onReady(function(){
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
 		if(grid.getSelectionModel().isSelected(rowIndex)){
 			var record = app.grid.getSelectionModel().getSelected();
-			app.text_search_code.setValue(record.get('d_web_name'));
+//			app.text_search_code.setValue(record.get('d_web_name'));
 			update(record);
 			/**
 			var url = record.get('d_web_url');

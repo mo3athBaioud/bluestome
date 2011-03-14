@@ -507,7 +507,7 @@ Ext.onReady(function(){
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
 				if(grid.getSelectionModel().isSelected(rowIndex)){
 					var record = app.grid.getSelectionModel().getSelected();
-					app.text_search_code.setValue(record.get('d_title'));
+//					app.text_search_code.setValue(record.get('d_title'));
 					Ext.get('op').dom.value += "ID:"+record.get('d_id') +　"\t" + record.get('d_title') + "\t" + record.get('d_acticle_url') 
 							+ '\td_web_id:'+webId
 							+ "\n---------------------------------------------------------------------------------------------------\n";
