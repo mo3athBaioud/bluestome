@@ -30,4 +30,13 @@
 		</property>
 	</bean>
 
+	<bean id="usgsService"
+		class="com.ssi.cms.web.service.impl.UsgsServiceImpl">
+		<property name="earthQuakeDetailDAO">
+			<ref bean="earthQuakeDetailDAO" />
+		</property>
+		<property name="earthQuakeInfoDAO">
+			<ref bean="earthQuakeInfoDAO" />
+		</property>
+	</bean>
 </beans>
