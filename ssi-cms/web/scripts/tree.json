@@ -3,5 +3,6 @@
 		"id":"01",
 		"href":"pages/websites/website.jsp",
 		"leaf":true,
+		"icon":"images/html.png",
 		"hrefTarget":"mainFrame"
 }]
