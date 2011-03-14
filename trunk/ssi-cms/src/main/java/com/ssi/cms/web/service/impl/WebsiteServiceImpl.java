@@ -57,7 +57,7 @@ public class WebsiteServiceImpl implements IWebsiteService {
 
 	public int getCount(String colName, String value) {
 		HashMap map = new HashMap();
-		if(null != colName && !"".equals("")){
+		if(null != colName && !"".equals(colName)){
 			map.put(colName, value);
 		}else{
 			map.put("name", value);
@@ -140,37 +140,37 @@ public class WebsiteServiceImpl implements IWebsiteService {
 		sb.append("[\n");
 		int i=0;
 		for(Website bean:list){
-			sb.append("\t\t{\n");
-			sb.append("\t\t\"text\":\t\""+bean.getName()+"\",\n");
-			sb.append("\t\t\"id\":\"" + bean.getId()+"\",\n");
-			if(null != bean.getChildren() && bean.getChildren().size() > 0){
-//				sb.append("\t\t\t\"href\":\""+request.getContextPath()+"website/toTree.cgi?id="+bean.getParentId()+"\",\n");
-//				sb.append("\t\t\t\"href\":\""+request.getContextPath()+"/website/sub.cgi?id="+bean.getId()+"\",\n");
-//				sb.append("\t\t\t\"hrefTarget\":\"mainFrame\",\n");
-				sb.append("\t\t\t\"icon\":\""+request.getContextPath()+"/images/world_link.png\",\n");
-				sb.append("\t\t\t\"children\":");
-				sb.append(tree2(bean.getChildren(),request));
-			}else{
-				sb.append("\t\t\t\"icon\":\""+request.getContextPath()+"/images/html.png\",\n");
-				sb.append("\t\t\t\"leaf\":true,\n");
-				switch(bean.getType()){
-					case 1:
-						sb.append("\t\t\t\"href\":\""+request.getContextPath()+"/pages/articles/article.jsp?id="+bean.getId()+"\",\n");
-						break;
-					case 2:
-						sb.append("\t\t\t\"href\":\""+request.getContextPath()+"/pages/articlesdoc/articledoc.jsp?id="+bean.getId()+"\",\n");
-						break;
-					default:
-						sb.append("\t\t\t\"href\":\""+request.getContextPath()+"/pages/articles/article.jsp?id="+bean.getId()+"\",\n");
-						break;
+				sb.append("\t\t{\n");
+				sb.append("\t\t\"text\":\t\""+bean.getName()+"\",\n");
+				sb.append("\t\t\"id\":\"" + bean.getId()+"\",\n");
+				if(null != bean.getChildren() && bean.getChildren().size() > 0){
+	//				sb.append("\t\t\t\"href\":\""+request.getContextPath()+"website/toTree.cgi?id="+bean.getParentId()+"\",\n");
+	//				sb.append("\t\t\t\"href\":\""+request.getContextPath()+"/website/sub.cgi?id="+bean.getId()+"\",\n");
+	//				sb.append("\t\t\t\"hrefTarget\":\"mainFrame\",\n");
+					sb.append("\t\t\t\"icon\":\""+request.getContextPath()+"/images/world_link.png\",\n");
+					sb.append("\t\t\t\"children\":");
+					sb.append(tree2(bean.getChildren(),request));
+				}else{
+						sb.append("\t\t\t\"icon\":\""+request.getContextPath()+"/images/html.png\",\n");
+						sb.append("\t\t\t\"leaf\":true,\n");
+						switch(bean.getType()){
+							case 1:
+								sb.append("\t\t\t\"href\":\""+request.getContextPath()+"/pages/articles/article.jsp?id="+bean.getId()+"\",\n");
+								break;
+							case 2:
+								sb.append("\t\t\t\"href\":\""+request.getContextPath()+"/pages/articlesdoc/articledoc.jsp?id="+bean.getId()+"\",\n");
+								break;
+							default:
+								sb.append("\t\t\t\"href\":\""+request.getContextPath()+"/pages/articles/article.jsp?id="+bean.getId()+"\",\n");
+								break;
+						}
+						sb.append("\t\t\t\"hrefTarget\":\"mainFrame\"");
 				}
-				sb.append("\t\t\t\"hrefTarget\":\"mainFrame\"");
-			}
-			sb.append("}");
-			if(i<list.size()-1){
-				sb.append(",\n");
-			}
-			i++;
+				sb.append("}");
+				if(i<list.size()-1){
+					sb.append(",\n");
+				}
+				i++;
 		}
 		sb.append("\n]");
 		return sb.toString();
@@ -215,7 +215,8 @@ public class WebsiteServiceImpl implements IWebsiteService {
 	private boolean chkUnquie(Website website){
 		HashMap map = new HashMap();
 		map.put("url", website.getUrl());
-		if(getCount(map) > 0){
+		int count = getCount(map);
+		if(count > 0){
 			return true;
 		}
 		return false;
