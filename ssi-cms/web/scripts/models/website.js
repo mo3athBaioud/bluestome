@@ -66,6 +66,7 @@ Ext.onReady(function(){
 				mode:'local',
 				store : new Ext.data.SimpleStore({
 					data : [
+							['parentId','父站点类型'],
 							['name', '站点名称'],
 							['type','站点类型'],
 							['status','站点状态']
@@ -110,7 +111,15 @@ Ext.onReady(function(){
 			success:function(response,option){
 				var obj = Ext.util.JSON.decode(response.responseText);
 				if(obj.success){
-					app.ds_website.load({params : {start:0,limit:app.limit}}); //,colName:app.colName,value:app.values
+		 			Ext.Msg.show({
+						title : '系统提示',
+						msg : '找到'+obj.count+'条关于['+app.values+']的数据',
+						fn : function() {
+							app.ds_website.load({params : {start:0,limit:app.limit}});
+						},
+						buttons : Ext.Msg.OK,
+						icon : Ext.MessageBox.INFO
+					});
 				}else{
 		 			Ext.Msg.show({
 						title : '系统提示',
