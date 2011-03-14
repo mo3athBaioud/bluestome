@@ -36,6 +36,10 @@ public class EarthQuakeInfo implements Serializable {
 	private Date createtime = new Date();
 
 	private Date modifytime;
+	
+	
+	//地震详情
+	private EarthQuakeDetail detail;
 
 	public String getComments() {
 		return comments;
@@ -117,4 +121,13 @@ public class EarthQuakeInfo implements Serializable {
 		this.modifytime = modifytime;
 	}
 
+	public EarthQuakeDetail getDetail() {
+		return detail;
+	}
+
+	public void setDetail(EarthQuakeDetail detail) {
+		this.detail = detail;
+	}
+
+	
 }
