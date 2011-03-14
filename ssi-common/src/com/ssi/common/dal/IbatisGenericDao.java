@@ -63,6 +63,21 @@ public class IbatisGenericDao extends BaseDAOImpl {
 	}
 
 	/**
+	 * 获取总数
+	 * @param entityClass
+	 * @param map
+	 * @return
+	 */
+	public Integer _getCount(Class entityClass,HashMap map){
+		Integer totalCount = (Integer) getQueryDelegate()
+		.queryForObject(
+				getStatementId(entityClass,
+						IbatisGenericDao.POSTFIX_COUNT),
+						map,getRoute());
+		return totalCount;
+	}
+	
+	/**
 	 * 根据ID删除对象
 	 */
 	public <T> void removeById(Class<T> entityClass, Serializable id) {
