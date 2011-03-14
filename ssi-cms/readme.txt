@@ -1,0 +1,1 @@
+USGS:http://earthquake.usgs.gov/earthquakes/eqarchives/last_event/world/
