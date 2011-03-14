@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="earthquakeinfo" type="com.ssi.dal.usgs.domain.EarthQuakeInfo" />
+
+	<resultMap class="earthquakeinfo" id="earthquakeinfoMap">
+		<result column="d_id" property="id"/>
+		<result column="d_date" property="date"/>
+		<result column="d_latitude" property="latitude"/>
+		<result column="d_longitude" property="longitude"/>
+		<result column="d_depth" property="depth"/>
+		<result column="d_magnitude" property="magnitude"/>							
+		<result column="d_comments" property="comments"/>	
+		<result column="d_createtime" property="createtime"/>						
+		<result column="d_modifytime" property="modifytime"/>						
+		<result column="d_url" property="url"/>						
+	</resultMap>
+
+    <insert id="earthquakeinfo.insert" parameterClass="earthquakeinfo"> 
+ 		INSERT INTO tbl_usgs_erathquakeinfo 
+ 		(d_date,d_latitude,d_longitude,d_depth,d_magnitude,d_comments,d_url,d_createtime,d_modifytime) 
+ 		VALUES (#date#,#latitude#,#longitude#,#depth#,#magnitude#,#comments#,#url#,#createtime#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+    
+    <update id="earthquakeinfo.update" parameterClass="earthquakeinfo"> 
+ 		UPDATE 
+ 			tbl_usgs_erathquakeinfo 
+ 		set 
+	 		d_date=#date#,
+	 		d_latitude = #latitude#,
+	 		d_longitude=#longitude#,
+	 		d_depth=#depth#,
+	 		d_magnitude=#magnitude#,
+	 		d_comments=#comments#,
+	 		d_url=#url#,
+	 		d_modifytime=now()
+ 		where d_id = #id#
+	</update>
+	
+	<statement id="earthquakeinfo.selectByMap"  parameterClass="java.util.Map" resultMap="earthquakeinfoMap">
+    	SELECT t.* FROM tbl_usgs_erathquakeinfo t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="date" prepend="and">
+				t.d_date = #date#
+			</isNotEmpty>
+			<isNotEmpty property="latitude" prepend="and">
+				t.d_latitude = #latitude#
+			</isNotEmpty>
+			<isNotEmpty property="longitude" prepend="and">
+				t.d_longitude = #longitude#
+			</isNotEmpty>
+			<isNotEmpty property="depth" prepend="and">
+				t.d_depth = #depth#
+			</isNotEmpty>
+			<isNotEmpty property="magnitude" prepend="and">
+				t.d_magnitude = #magnitude#
+			</isNotEmpty>
+			<isNotEmpty property="comments" prepend="and">
+				t.d_comments = #comments#
+			</isNotEmpty>
+			<isNotEmpty property="url" prepend="and">
+				t.d_url = #url#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="asc">
+				$asc$
+			</isNotEmpty>
+		</dynamic>
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+    
+	<statement id="earthquakeinfo.count"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
+    	SELECT COUNT(*) FROM tbl_usgs_erathquakeinfo t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="date" prepend="and">
+				t.d_date = #date#
+			</isNotEmpty>
+			<isNotEmpty property="latitude" prepend="and">
+				t.d_latitude = #latitude#
+			</isNotEmpty>
+			<isNotEmpty property="longitude" prepend="and">
+				t.d_longitude = #longitude#
+			</isNotEmpty>
+			<isNotEmpty property="depth" prepend="and">
+				t.d_depth = #depth#
+			</isNotEmpty>
+			<isNotEmpty property="magnitude" prepend="and">
+				t.d_magnitude = #magnitude#
+			</isNotEmpty>
+			<isNotEmpty property="comments" prepend="and">
+				t.d_comments = #comments#
+			</isNotEmpty>
+			<isNotEmpty property="url" prepend="and">
+				t.d_url = #url#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+</sqlMap>
+
+
+
