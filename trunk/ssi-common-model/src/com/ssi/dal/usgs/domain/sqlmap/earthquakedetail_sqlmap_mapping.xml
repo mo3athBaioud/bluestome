@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="quakedetail" type="com.ssi.dal.usgs.domain.EarthQuakeDetail" />
+
+	<resultMap class="quakedetail" id="quakedetailMap">
+		<result column="d_id" property="id"/>
+		<result column="d_info_id" property="infoid"/>
+		<result column="d_location" property="location"/>
+		<result column="d_region" property="region"/>
+		<result column="d_distinces" property="distinces"/>
+		<result column="d_lu" property="lu"/>
+		<result column="d_parameters" property="parameters"/>							
+		<result column="d_source" property="source"/>	
+		<result column="d_remarks" property="remarks"/>	
+		<result column="d_eventId" property="eventId"/>	
+		<result column="d_createtime" property="createtime"/>						
+		<result column="d_modifytime" property="modifytime"/>						
+	</resultMap>
+
+    <insert id="earthquakedetail.insert" parameterClass="quakedetail"> 
+ 		INSERT INTO tbl_usgs_erathquakedetail 
+ 		(d_info_id,d_location,d_region,d_distinces,d_lu,d_parameters,d_source,d_remarks,d_eventId,d_createtime,d_modifytime) 
+ 		VALUES (#infoid#,#location#,#region#,#distinces#,#lu#,#parameters#,#source#,#remarks#,#eventId#,#createtime#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+    
+    <update id="earthquakedetail.update" parameterClass="quakedetail"> 
+ 		UPDATE 
+ 			tbl_usgs_erathquakedetail 
+		set 
+	 		d_info_id=#infoid#,
+	 		d_location = #location#,
+	 		d_region=#region#,
+	 		d_distinces=#distinces#,
+	 		d_lu=#lu#,
+	 		d_parameters=#parameters#,
+	 		d_source=#source#
+	 		d_remarks=#remarks#
+	 		d_eventId=#eventId#
+	 		d_modifytime=now()
+ 		where 
+ 			d_id = #id#
+	</update>
+	
+	<statement id="earthquakedetail.selectByMap"  parameterClass="java.util.Map" resultMap="quakedetailMap">
+    	SELECT DISTINCT t.* FROM tbl_usgs_erathquakedetail t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="infoid" prepend="and">
+				t.d_info_id = #infoid#
+			</isNotEmpty>
+			<isNotEmpty property="location" prepend="and">
+				t.d_location = #location#
+			</isNotEmpty>
+			<isNotEmpty property="region" prepend="and">
+				t.d_region = #region#
+			</isNotEmpty>
+			<isNotEmpty property="distinces" prepend="and">
+				t.d_distinces = #distinces#
+			</isNotEmpty>
+			<isNotEmpty property="lu" prepend="and">
+				t.d_lu = #lu#
+			</isNotEmpty>
+			<isNotEmpty property="parameters" prepend="and">
+				t.d_parameters = #parameters#
+			</isNotEmpty>
+			<isNotEmpty property="source" prepend="and">
+				t.d_source = #source#
+			</isNotEmpty>
+			<isNotEmpty property="remarks" prepend="and">
+				t.d_remarks = #remarks#
+			</isNotEmpty>
+			<isNotEmpty property="eventId" prepend="and">
+				t.d_eventId = #eventId#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="asc">
+				$asc$
+			</isNotEmpty>
+		</dynamic>
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+
+	<statement id="earthquakedetail.count"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
+    	SELECT COUNT(*) FROM tbl_usgs_erathquakedetail t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="infoid" prepend="and">
+				t.d_info_id = #infoid#
+			</isNotEmpty>
+			<isNotEmpty property="location" prepend="and">
+				t.d_location = #location#
+			</isNotEmpty>
+			<isNotEmpty property="region" prepend="and">
+				t.d_region = #region#
+			</isNotEmpty>
+			<isNotEmpty property="distinces" prepend="and">
+				t.d_distinces = #distinces#
+			</isNotEmpty>
+			<isNotEmpty property="lu" prepend="and">
+				t.d_lu = #lu#
+			</isNotEmpty>
+			<isNotEmpty property="parameters" prepend="and">
+				t.d_parameters = #parameters#
+			</isNotEmpty>
+			<isNotEmpty property="source" prepend="and">
+				t.d_source = #source#
+			</isNotEmpty>
+			<isNotEmpty property="remarks" prepend="and">
+				t.d_remarks = #remarks#
+			</isNotEmpty>
+			<isNotEmpty property="eventId" prepend="and">
+				t.d_eventId = #eventId#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="limit">
+				limit #limit#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+	
+	
+</sqlMap>
+
+
+

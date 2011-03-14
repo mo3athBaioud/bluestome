@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="region" type="com.ssi.dal.usgs.domain.EarthRegion" />
+
+	<resultMap class="region" id="regionMap">
+		<result column="d_id" property="id"/>
+		<result column="d_region_name" property="name"/>
+		<result column="d_region_url" property="url"/>
+		<result column="d_region_desc" property="desc"/>
+		<result column="d_status" property="status"/>
+		<result column="d_createtime" property="createtime"/>						
+		<result column="d_modifytime" property="modifytime"/>						
+	</resultMap>
+
+    <insert id="earthregion.insert" parameterClass="region"> 
+ 		INSERT INTO tbl_usgs_region 
+ 		(d_region_name,d_region_url,d_region_desc,d_status,d_createtime,d_modifytime) 
+ 		VALUES (#name#,#url#,#desc#,#status#,#createtime#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+    
+    <update id="earthregion.update" parameterClass="region"> 
+ 		update 
+ 			tbl_usgs_region 
+ 		set 
+	 		d_region_name = #name#,
+	 		d_region_url = #url#,
+	 		d_region_desc = #desc#,
+	 		d_status = #status#,
+	 		d_modifytime=now()
+ 		where d_id = #id#
+	</update>
+	
+	<statement id="earthregion.selectByMap"  parameterClass="java.util.Map" resultMap="regionMap">
+    	SELECT DISTINCT t.* FROM tbl_usgs_region t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="and">
+				t.d_region_name = #name#
+			</isNotEmpty>
+			<isNotEmpty property="url" prepend="and">
+				t.d_region_url = #url#
+			</isNotEmpty>
+			<isNotEmpty property="status" prepend="and">
+				t.d_status = #status#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="asc">
+				$asc$
+			</isNotEmpty>
+		</dynamic>
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+
+	<statement id="earthregion.count"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
+    	SELECT COUNT(*) FROM tbl_usgs_region t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="and">
+				t.d_region_name = #name#
+			</isNotEmpty>
+			<isNotEmpty property="url" prepend="and">
+				t.d_region_url = #url#
+			</isNotEmpty>
+			<isNotEmpty property="status" prepend="and">
+				t.d_status = #status#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+	
+	
+</sqlMap>
+
+
+
