@@ -49,7 +49,7 @@
 
 	<statement id="GET_CHILD_WEBSITE_BY_FATHER_ID"
 		parameterClass="java.lang.Integer" resultMap="websiteMap">
-		SELECT t.* FROM tbl_web_site t WHERE t.d_parent_id = #value#
+		SELECT t.* FROM tbl_web_site t WHERE t.d_parent_id = #value# and t.d_status = 1
 		ORDER BY t.d_id asc
 	</statement>
 
