@@ -34,11 +34,12 @@
     <update id="website.update" parameterClass="website"> 
  		UPDATE tbl_web_site set 
  		d_web_type=#type#,
+ 		d_web_url = #url#,
  		d_parent_id = #parentId#,
  		d_web_name=#name#,
  		d_status=#status#,
  		d_modifytime = now()
- 		where d_id = #id# and d_web_url = #url#
+ 		where d_id = #id#
 	</update>
 	
 	<statement id="GET_WEBSITE_BY_ID" parameterClass="java.lang.Integer"
