@@ -27,6 +27,47 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
 
 	public static final Log logger = LogFactory.getLog(StringUtils.class);
 
+	/**
+	 * 格式化HTML代码，返回文本内容
+	 */
+	public static String Html2Text(String inputString) {
+		String htmlStr = inputString; // 含html标签的字符串
+		String textStr = "";
+		java.util.regex.Pattern p_script;
+		java.util.regex.Matcher m_script;
+		java.util.regex.Pattern p_style;
+		java.util.regex.Matcher m_style;
+		java.util.regex.Pattern p_html;
+		java.util.regex.Matcher m_html;
+
+		try {
+			String regEx_script = "<[\\s]*?script[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?script[\\s]*?>"; // 定义script的正则表达式{或<script[^>]*?>[\\s\\S]*?<\\/script>
+																										// }
+			String regEx_style = "<[\\s]*?style[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?style[\\s]*?>"; // 定义style的正则表达式{或<style[^>]*?>[\\s\\S]*?<\\/style>
+																									// }
+			String regEx_html = "<[^>]+>"; // 定义HTML标签的正则表达式
+
+			p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE);
+			m_script = p_script.matcher(htmlStr);
+			htmlStr = m_script.replaceAll(""); // 过滤script标签
+
+			p_style = Pattern.compile(regEx_style, Pattern.CASE_INSENSITIVE);
+			m_style = p_style.matcher(htmlStr);
+			htmlStr = m_style.replaceAll(""); // 过滤style标签
+
+			p_html = Pattern.compile(regEx_html, Pattern.CASE_INSENSITIVE);
+			m_html = p_html.matcher(htmlStr);
+			htmlStr = m_html.replaceAll(""); // 过滤html标签
+
+			textStr = htmlStr;
+
+		} catch (Exception e) {
+			System.err.println("Html2Text: " + e.getMessage());
+		}
+
+		return textStr;// 返回文本字符串
+	}
+
 	public static String[] invisibleChars = { new String("" + (char) 0x0A),
 			new String("" + (char) 0x0D), new String("" + (char) 0x09) };
 
@@ -87,15 +128,19 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
 	}
 
 	public static void main(String[] args) {
+		System.out.println(Html2Text("<font color='red'>NEAR THE EAST COAST OF HONSHU, JAPAN</font>"));
+		
+		/**
 		System.out.println(StringUtils.escapeSingleQuotes("<'a'>"));
 		String text = "hello, " + (byte) 0x0A + (byte) 0x0D + "morning"
 				+ (byte) 0x09 + " 	world.";
-		for(byte byt:text.getBytes()){
-			System.out.println("0x"+byt);
+		for (byte byt : text.getBytes()) {
+			System.out.println("0x" + byt);
 		}
 		System.out.println(text);
 		System.out.println(filterInvisibleChars(text));
-		System.out.println(gerDir("123456")+"123456");
+		System.out.println(gerDir("123456") + "123456");
+		**/
 	}
 
 	public static String getArrayString(String[] values, String splt,
@@ -931,11 +976,11 @@ public class StringUtils extends org.apache.commons.lang.StringUtils {
 	public static String gerDir(String input) {
 		StringBuffer sb = new StringBuffer();
 		if (input.length() <= 2) {
-			for (int i = 0; i < input.length()-1; i++) {
+			for (int i = 0; i < input.length() - 1; i++) {
 				sb.append(input.charAt(i) + File.separator);
 			}
 		} else {
-			for (int i = 0; i < input.length()-2; i++) {
+			for (int i = 0; i < input.length() - 2; i++) {
 				sb.append(input.charAt(i) + File.separator);
 			}
 		}
