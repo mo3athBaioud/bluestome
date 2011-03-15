@@ -17,7 +17,7 @@
 		<!-- 
 		<script type="text/javascript" src="${ctx}/scripts/models/image.js"></script>
 		 -->
-		<script type="text/javascript" src="${ctx}/scripts/test/image-dataview.js"></script>
+		<script type="text/javascript" src="${ctx}/scripts/models/image-dataview.js"></script>
 		<script type="text/javascript">
 		    	var project = '${ctx}';
 				var articleId = '${param.id}';
