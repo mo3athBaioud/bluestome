@@ -100,10 +100,10 @@ Ext.onReady(function(){
 					title : '系统提示',
 					msg : '请选择要获取URL的数据!',
 					buttons : Ext.Msg.OK,
-					fn : function() {
-						dnfield.focus(true);
-						btn.enable();
-					},
+//					fn : function() {
+//						dnfield.focus(true);
+//						btn.enable();
+//					},
 					icon : Ext.MessageBox.ERROR
 				});
 			}
@@ -143,10 +143,10 @@ Ext.onReady(function(){
 						title : '系统提示',
 						msg : obj.msg,
 						buttons : Ext.Msg.OK,
-						fn : function() {
-							dnfield.focus(true);
-							btn.enable();
-						},
+//						fn : function() {
+//							dnfield.focus(true);
+//							btn.enable();
+//						},
 						icon : Ext.MessageBox.ERROR
 					});
 				}
@@ -156,10 +156,10 @@ Ext.onReady(function(){
 					title : '系统提示',
 					msg : '服务器内部错误',
 					buttons : Ext.Msg.OK,
-					fn : function() {
-						dnfield.focus(true);
-						btn.enable();
-					},
+//					fn : function() {
+//						dnfield.focus(true);
+//						btn.enable();
+//					},
 					icon : Ext.MessageBox.ERROR
 				});
             }
@@ -427,10 +427,10 @@ Ext.onReady(function(){
 												title : '系统提示',
 												msg : '修改文章"' + dnfield.getValue() + '"成功!',
 												buttons : Ext.Msg.OK,
-												fn : function() {
-													dnfield.focus(true);
-													btn.enable();
-												},
+//												fn : function() {
+//													dnfield.focus(true);
+//													btn.enable();
+//												},
 												icon : Ext.MessageBox.INFO
 											});
 											app.ds_article.load({params : {start : 0,limit : app.limit}});
@@ -440,10 +440,10 @@ Ext.onReady(function(){
 												title : '错误提示',
 												msg : '"' + dnfield.getValue() + '" ' + '名称可能已经存在或者您没有更新数据的权限!',
 												buttons : Ext.Msg.OK,
-												fn : function() {
-													dnfield.focus(true);
-													btn.enable();
-												},
+//												fn : function() {
+//													dnfield.focus(true);
+//													btn.enable();
+//												},
 												icon : Ext.Msg.ERROR
 											});
 										}

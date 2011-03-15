@@ -388,10 +388,10 @@ Ext.onReady(function(){
 												title : '错误提示',
 												msg : '"' + dnfield.getValue() + '" ' + '名称可能已经存在或者您没有更新数据的权限!',
 												buttons : Ext.Msg.OK,
-												fn : function() {
-													dnfield.focus(true);
-													btn.enable();
-												},
+//												fn : function() {
+//													dnfield.focus(true);
+//													btn.enable();
+//												},
 												icon : Ext.Msg.ERROR
 											})
 										}
