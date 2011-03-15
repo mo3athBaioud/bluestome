@@ -212,6 +212,41 @@ public class WebsiteServiceImpl implements IWebsiteService {
 	}
 	
 	/**
+	 * 根据站点id禁用站点
+	 * @param id
+	 * @return
+	 */
+	public boolean disable(Integer id){
+		Website web = findById(id);
+		if(null != web){
+			web.setStatus(0);
+			int result = websiteDao.update(web);
+			if(result > 0){
+				return true;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 根据站点id启用站点
+	 * @param id
+	 * @return
+	 */
+	public boolean enable(Integer id){
+		Website web = findById(id);
+		if(null != web){
+			web.setStatus(1);
+			int result = websiteDao.update(web);
+			if(result > 0){
+				return true;
+			}
+		}
+		return true;
+	}
+
+	
+	/**
 	 * 检查是否存在相同的网址
 	 * @param website
 	 * @return true:已存在  false:不存在
