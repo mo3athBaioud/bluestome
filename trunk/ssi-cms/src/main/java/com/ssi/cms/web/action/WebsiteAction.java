@@ -31,6 +31,9 @@ public class WebsiteAction extends BaseAction {
 
 	private Integer id;
 	
+	//ID数组
+	private Integer[] ids;
+	
 	private Integer webType = 1;
 	
 	public String showSubWeb() throws Exception{
@@ -184,6 +187,63 @@ public class WebsiteAction extends BaseAction {
 		}
 	}
 	
+	/**
+	 * 批量修改站点为禁用状态
+	 * @throws IOException
+	 */
+	public void disable() throws IOException{
+		response.setCharacterEncoding("UTF-8");
+		try{
+			StringBuffer sb = new StringBuffer();
+			boolean b = true;
+			sb.append("如下站点ID，未禁用成功[");
+			for(Integer id:ids){
+				if(!websiteService.disable(id)){
+					sb.append(id).append(",");
+				}
+			}
+			sb.append("]\r");
+			if(b){
+				logger.debug(" >> 禁用结果"+sb.toString());
+				response.getWriter().print("{success:true,msg:'禁用站点成功!'}");
+			}else{
+				response.getWriter().print("{failure:true,msg:'禁用站点发生异常'}");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.debug(">> WebsiteAction.update:" + e);
+			response.getWriter().print("{failure:true,msg:'禁用站点发生异常'}");
+		}
+	}
+	
+	/**
+	 * 批量修改站点为启用状态
+	 * @throws IOException
+	 */
+	public void enable() throws IOException{
+		response.setCharacterEncoding("UTF-8");
+		try{
+			StringBuffer sb = new StringBuffer();
+			boolean b = true;
+			sb.append("如下站点ID，未启用成功[");
+			for(Integer id:ids){
+				if(!websiteService.enable(id)){
+					sb.append(id).append(",");
+				}
+			}
+			sb.append("]\r");
+			if(b){
+				System.out.println(" >> 启用结果"+sb.toString());
+				response.getWriter().print("{success:true,msg:'启用站点成功!'}");
+			}else{
+				response.getWriter().print("{failure:true,msg:'启用站点发生异常'}");
+			}
+		}catch(Exception e){
+			logger.debug(">> WebsiteAction.enable" + e);
+			response.getWriter().print("{failure:true,msg:'启用站点发生异常'}");
+		}
+	}
+	
 	public Integer getWebType() {
 		return webType;
 	}
@@ -264,4 +324,13 @@ public class WebsiteAction extends BaseAction {
 		this.websiteService = websiteService;
 	}
 
+	public Integer[] getIds() {
+		return ids;
+	}
+
+	public void setIds(Integer[] ids) {
+		this.ids = ids;
+	}
+
+	
 }
