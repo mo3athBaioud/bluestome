@@ -2,6 +2,7 @@ package com.ssi.cms.web.action;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.ssi.common.utils.JSONUtils;
-
+import com.ssi.common.utils.StringUtils;
 import com.ssi.cms.web.service.IUsgsService;
 import com.ssi.dal.usgs.domain.EarthQuakeInfo;
 
@@ -31,8 +32,9 @@ public class UsgsAction extends BaseAction {
 	public void list() throws IOException{
 		response.setCharacterEncoding("UTF-8");
 		HashMap map = new HashMap();
-		map.put("offset", 0);
-		map.put("limit",20);
+		map.put("asc", "desc");
+		map.put("offset", start);
+		map.put("limit",limit);
 		try{
 			infoList = usgsService.find(map);
 			if(null != infoList && infoList.size() > 0){
@@ -59,6 +61,7 @@ public class UsgsAction extends BaseAction {
 	public void toJson(HttpServletResponse response, List list,int count) throws Exception {
 		PrintWriter out = response.getWriter();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		DecimalFormat  to = new   DecimalFormat( "0.0"); 
 		response.setCharacterEncoding("UTF-8");
 		JSONArray jsonArr = new JSONArray();
 		StringBuffer buffer =new StringBuffer();
@@ -68,20 +71,34 @@ public class UsgsAction extends BaseAction {
 			JSONObject  json=new JSONObject();
 			EarthQuakeInfo bean= (EarthQuakeInfo)it.next();
 			json.put("d_id", bean.getId());
-			json.put("d_date", bean.getDate());
+			json.put("d_date", bean.getDate().trim().replace("/", "-").replace("  ", " ")); //.replace("/", "-").replace("  ", " ")
+//			System.out.println(" >> "+bean.getDate().trim().replace("/", "-").replace("  ", " "));
+//			json.put("d_date", "2013-03-15");
 			json.put("d_latitude", bean.getLatitude());
 			json.put("d_longitude", bean.getLongitude());
 			json.put("d_depth", bean.getDepth());
-			json.put("d_magnitude", bean.getMagnitude());
-			json.put("d_comments", bean.getComments());
+			json.put("d_magnitude", to.format(bean.getMagnitude()));
+			json.put("d_comments", StringUtils.Html2Text(bean.getComments()));
 			json.put("d_url", bean.getUrl());
 			String str = sdf.format(bean.getCreatetime());
 			json.put("d_createtime", str);
 			String mtr = sdf.format(bean.getModifytime());
 			json.put("d_modifytime", mtr);
+			json.put("d_location", StringUtils.Html2Text(bean.getComments()));
 			if(null != bean.getDetail()){
-				json.put("d_eventId", bean.getDetail().getEventId());
+				json.put("d_eventid", bean.getDetail().getEventId());
 				json.put("d_distinces", bean.getDetail().getDistinces());
+				json.put("d_remarks", bean.getDetail().getRemarks());
+				json.put("d_source", bean.getDetail().getSource());
+				json.put("d_lu", bean.getDetail().getLu());
+				json.put("d_parameters", bean.getDetail().getParameters());
+			}else{
+				json.put("d_eventid", "unknow");
+				json.put("d_distinces", "unknow");
+				json.put("d_remarks", "unknow");
+				json.put("d_source", "unknow");
+				json.put("d_lu", "unknow");
+				json.put("d_parameters", "unknow");
 			}
 			jsonArr.add(json);
 		}
