@@ -11,6 +11,7 @@
 		</action>
 		
 		<action name="image" class="imageAction" method="image" />
+		<action name="showImg" class="imageAction" method="showImg" />
 		
 	</package>
 </struts>
