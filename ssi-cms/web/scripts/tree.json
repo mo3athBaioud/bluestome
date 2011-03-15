@@ -5,4 +5,11 @@
 		"leaf":true,
 		"icon":"images/html.png",
 		"hrefTarget":"mainFrame"
+},{
+		"text":"USGS-地震数据管理",
+		"id":"02",
+		"href":"pages/usgs/usgs.jsp",
+		"leaf":true,
+		"icon":"images/html.png",
+		"hrefTarget":"mainFrame"
 }]
