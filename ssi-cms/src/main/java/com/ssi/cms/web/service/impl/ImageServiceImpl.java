@@ -44,6 +44,7 @@ public class ImageServiceImpl implements ImageIService {
 		if(null != colName || !"".equals("")){
 			map.put(colName, value);
 		}
+		map.put("title", value);
 		map.put("articleId", articleId);
 		return imageDAO.getCount(map);
 	}
@@ -71,12 +72,12 @@ public class ImageServiceImpl implements ImageIService {
 		if(null == pageSize){
 			pageSize = 20;
 		}
-//		map.put(colName, value);
 		if(asc){
 			map.put("asc", "asc");
 		}else{
 			map.put("asc", "desc");
 		}
+		map.put(colName, value);
 		map.put("limit", pageSize);
 		map.put("offset", startIndex);
 		map.put("articleId", articleId);
