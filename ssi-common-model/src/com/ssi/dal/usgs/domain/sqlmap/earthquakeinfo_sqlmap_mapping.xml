@@ -69,7 +69,7 @@
 				t.d_url = #url#
 			</isNotEmpty>
 		</dynamic>
-		ORDER BY t.d_id
+		ORDER BY t.d_date
 		<dynamic>
 			<isNotEmpty property="asc">
 				$asc$
