@@ -183,10 +183,10 @@ public class WebsiteServiceImpl implements IWebsiteService {
 	 */
 	public boolean update(Website website){
 		boolean b = false;
-		if(chkUnquie(website)){
-			logger.info(" >> website.url["+website.getUrl()+"] exists!");
-			return b;
-		}
+//		if(chkUnquie(website)){
+//			logger.info(" >> website.url["+website.getUrl()+"] exists!");
+//			return b;
+//		}
 		int result = websiteDao.update(website);
 		if(result > 0){
 			return true;
