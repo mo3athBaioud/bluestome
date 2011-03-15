@@ -1,5 +1,6 @@
 package com.ssi.cms.web.action;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -38,6 +39,43 @@ public class ImageAction extends BaseAction {
 			logger.debug(">> ImageAction.showImage Exception:"+e);
 		}
 		return SUCCESS;
+	}
+	
+	/**
+	 * 重定向图片地址
+	 * @throws IOException
+	 */
+	public void showImg() throws IOException{
+		//展现的图片类型 1：大图 0：小图
+		response.setCharacterEncoding("UTF-8");
+		String type = "1";
+		try{
+			type = request.getParameter("type") == null ? "1":request.getParameter("type");
+			image = imageService.findById(id);
+			if(null != image){
+				if(type.equals("1")){
+					logger.info(request.getRemoteAddr()+"访问了["+image.getTitle()+"]大图片");
+					if(null != image.getPictureFile()){
+						response.sendRedirect(URL_PREFIX+image.getPictureFile().getName());
+					}else{
+						response.sendRedirect(image.getHttpUrl());
+					}
+				}else{
+					logger.info(request.getRemoteAddr()+"访问了["+image.getTitle()+"]小图片");
+					if(null != image.getPictureFile()){
+						response.sendRedirect(URL_PREFIX+image.getPictureFile().getSmallName());
+					}else{
+						response.sendRedirect(image.getImgUrl());
+					}
+				}
+			}else{
+				logger.debug(">> ImageAction.showImg 未找到图片["+image.getTitle()+"]");
+				response.sendRedirect(request.getContextPath()+"/images/nopic.jpg");
+			}
+		}catch(Exception e){
+			logger.error(">> ImageAction.showImg 未找图片["+id+"]");
+			response.sendRedirect(request.getContextPath()+"/images/404.gif");
+		}
 	}
 	
 	public void image() throws Exception{
