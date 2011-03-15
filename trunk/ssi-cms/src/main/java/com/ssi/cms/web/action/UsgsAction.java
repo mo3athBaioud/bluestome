@@ -18,6 +18,7 @@ import net.sf.json.JSONObject;
 import com.ssi.common.utils.JSONUtils;
 import com.ssi.common.utils.StringUtils;
 import com.ssi.cms.web.service.IUsgsService;
+import com.ssi.dal.usgs.domain.EarthQuakeDetail;
 import com.ssi.dal.usgs.domain.EarthQuakeInfo;
 
 public class UsgsAction extends BaseAction {
@@ -28,25 +29,42 @@ public class UsgsAction extends BaseAction {
 	 */
 	private static final long serialVersionUID = 1L;
 	private IUsgsService usgsService;
+	
+	private EarthQuakeInfo quakeInfo;
+	private EarthQuakeDetail quakeDetail;
 
 	public void list() throws IOException{
 		response.setCharacterEncoding("UTF-8");
-		HashMap map = new HashMap();
-		map.put("asc", "desc");
-		map.put("offset", start);
-		map.put("limit",limit);
+//		HashMap map = new HashMap();
+//		map.put("asc", "desc");
+//		map.put("offset", start);
+//		map.put("limit",limit);
 		try{
-			infoList = usgsService.find(map);
+			infoList = usgsService.getPageList(colName, value, start, limit, false);
 			if(null != infoList && infoList.size() > 0){
-				int count = usgsService.getCount(map);
+				int count = usgsService.getCount(colName, value);
 				toJson(response, infoList, count);
 			}else{
-				logger.debug(">> WebsiteAction.article 未查询到有效数据");
+				logger.debug(">> UsgsAction.list 未查询到有效数据");
 				response.getWriter().print("{failure:true,msg:'未找到数据!'}");
 			}
 		
 		}catch(Exception e){
 			logger.debug(">> WebsiteAction.article" + e);
+			response.getWriter().print("{failure:true,msg:'查询USGS地震信息发生异常'}");
+		}
+	}
+	
+	/**
+	 * 更新内容
+	 * @throws IOException 
+	 */
+	public void update() throws IOException{
+		response.setCharacterEncoding("UTF-8");
+		try{
+			response.getWriter().print("{success:true,msg:'更新成功!'}");
+		}catch(Exception e){
+			logger.debug(">> UsgsAction.update" + e);
 			response.getWriter().print("{failure:true,msg:'查询文章发生异常'}");
 		}
 	}
@@ -62,47 +80,61 @@ public class UsgsAction extends BaseAction {
 		PrintWriter out = response.getWriter();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		DecimalFormat  to = new   DecimalFormat( "0.0"); 
+		DecimalFormat  dto = new   DecimalFormat( "0.00"); 
 		response.setCharacterEncoding("UTF-8");
 		JSONArray jsonArr = new JSONArray();
 		StringBuffer buffer =new StringBuffer();
-		Iterator it=list.iterator();
-		buffer.append("{count:").append(count).append(",success:true,usgs:");
-		while(it.hasNext()){
-			JSONObject  json=new JSONObject();
-			EarthQuakeInfo bean= (EarthQuakeInfo)it.next();
-			json.put("d_id", bean.getId());
-			json.put("d_date", bean.getDate().trim().replace("/", "-").replace("  ", " ")); //.replace("/", "-").replace("  ", " ")
-			json.put("d_latitude", bean.getLatitude());
-			json.put("d_longitude", bean.getLongitude());
-			json.put("d_depth", bean.getDepth());
-			json.put("d_magnitude", to.format(bean.getMagnitude()));
-			json.put("d_comments", StringUtils.Html2Text(bean.getComments()));
-			json.put("d_url", bean.getUrl());
-			String str = sdf.format(bean.getCreatetime());
-			json.put("d_createtime", str);
-			String mtr = sdf.format(bean.getModifytime());
-			json.put("d_modifytime", mtr);
-			json.put("d_location", StringUtils.Html2Text(bean.getComments()));
-			if(null != bean.getDetail()){
-				json.put("d_eventid", bean.getDetail().getEventId());
-				json.put("d_distinces", bean.getDetail().getDistinces());
-				json.put("d_remarks", bean.getDetail().getRemarks());
-				json.put("d_source", bean.getDetail().getSource());
-				json.put("d_lu", bean.getDetail().getLu());
-				json.put("d_parameters", bean.getDetail().getParameters());
-			}else{
-				json.put("d_eventid", "unknow");
-				json.put("d_distinces", "unknow");
-				json.put("d_remarks", "unknow");
-				json.put("d_source", "unknow");
-				json.put("d_lu", "unknow");
-				json.put("d_parameters", "unknow");
+		try{
+			Iterator it=list.iterator();
+			buffer.append("{count:").append(count).append(",success:true,usgs:");
+			while(it.hasNext()){
+				JSONObject  json=new JSONObject();
+				EarthQuakeInfo bean= (EarthQuakeInfo)it.next();
+				json.put("d_id", bean.getId());
+				json.put("d_date", bean.getDate().trim().replace("/", "-").replace("  ", " ")); //.replace("/", "-").replace("  ", " ")
+				json.put("d_latitude", bean.getLatitude());
+				json.put("d_longitude", bean.getLongitude());
+				json.put("d_depth", dto.format(bean.getDepth()));
+				json.put("d_magnitude", to.format(bean.getMagnitude()));
+				json.put("d_comments", StringUtils.Html2Text(bean.getComments()));
+				json.put("d_url", bean.getUrl());
+				String str = sdf.format(bean.getCreatetime());
+				json.put("d_createtime", str);
+				String mtr = sdf.format(bean.getModifytime());
+				json.put("d_modifytime", mtr);
+				json.put("d_location", StringUtils.Html2Text(bean.getComments()));
+				if(null != bean.getDetail()){
+					json.put("d_eventid", bean.getDetail().getEventId());
+					json.put("d_distinces", bean.getDetail().getDistinces());
+					json.put("d_remarks", bean.getDetail().getRemarks());
+					json.put("d_source", bean.getDetail().getSource());
+					json.put("d_lu", bean.getDetail().getLu());
+					json.put("d_parameters", bean.getDetail().getParameters());
+				}else{
+					json.put("d_eventid", "unknow");
+					json.put("d_distinces", "unknow");
+					json.put("d_remarks", "unknow");
+					json.put("d_source", "unknow");
+					json.put("d_lu", "unknow");
+					json.put("d_parameters", "unknow");
+				}
+				jsonArr.add(json);
 			}
-			jsonArr.add(json);
+	    	buffer.append(jsonArr.toString()).append("}");
+			out.print(buffer.toString());
+		}catch(Exception e){
+			
+		}finally{
+			out.close();
+			if(null != to)
+				to = null;
+			if(null != dto)
+				dto = null;
+			if(null != sdf)
+				sdf = null;
+			if(null != buffer)
+				buffer = null;
 		}
-    	buffer.append(jsonArr.toString()).append("}");
-		out.print(buffer.toString());
-		out.close();
 	}
 	
 	
@@ -120,6 +152,22 @@ public class UsgsAction extends BaseAction {
 
 	public void setInfoList(List<EarthQuakeInfo> infoList) {
 		this.infoList = infoList;
+	}
+
+	public EarthQuakeDetail getQuakeDetail() {
+		return quakeDetail;
+	}
+
+	public void setQuakeDetail(EarthQuakeDetail quakeDetail) {
+		this.quakeDetail = quakeDetail;
+	}
+
+	public EarthQuakeInfo getQuakeInfo() {
+		return quakeInfo;
+	}
+
+	public void setQuakeInfo(EarthQuakeInfo quakeInfo) {
+		this.quakeInfo = quakeInfo;
 	}
 	
 	
