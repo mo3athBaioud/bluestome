@@ -6,5 +6,6 @@
 <struts>
     <package name="usgs" extends="struts-default" namespace="/usgs">
 		<action name="list" class="usgsAction" method="list" />
+		<action name="update" class="usgsAction" method="update" />
 	</package>
 </struts>
