@@ -118,5 +118,19 @@ public interface IWebsiteService {
 	 * @return
 	 */
 	boolean insert(Website website);
+	
+	
+	/**
+	 * 根据站点id禁用站点
+	 * @param id
+	 * @return
+	 */
+	boolean disable(Integer id);
 
+	/**
+	 * 根据站点id启用站点
+	 * @param id
+	 * @return
+	 */
+	boolean enable(Integer id);
 }
