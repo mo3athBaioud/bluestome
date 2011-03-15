@@ -84,7 +84,7 @@
                     itemSelector: 'div.thumb-wrap',
                     emptyText: '没有上传图片！',
                     plugins: [new Ext.DataView.DragSelector({
-                        dragSafe: true
+                        dragSafe: false
                     }), new Ext.DataView.LabelEditor({
                         dataIndex: 'title'
                     })],
@@ -93,7 +93,7 @@
                         data.id = data.d_id;
                         data.showtitle = (data.d_title.trim()) ? data.d_title : '无标题';
                         data.imgUrl = (data.d_imgurl.trim()) ? data.d_imgurl : '无图片';
-                        data.tips = '标题：' + data.showtitle;
+                        data.tips = '标题：' + data.showtitle+'_'+data.id;
                         data.srcSmallImgUrl=data.d_src_imgurl;
                         data.srcBigImgUrl=data.d_src_httpurl;
                         return data;
@@ -119,7 +119,9 @@
                             var data = store.getAt(index);
                             if (typeof data == 'object') {
 //                                window.open(data.data.d_httpurl);
-								window.open(data.data.d_httpurl,'image','top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
+//                                window.open(project+'/image/showImg.cgi?id='+data.id);
+								window.open(project+'/image/showImg.cgi?type=1&id='+data.data.d_id,'image','top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
+//								window.open(data.data.d_httpurl,'image','top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
                             }
                         }
                     }
@@ -193,7 +195,7 @@
                             var datas = obj.getSelectedRecords();
                             for (var i = 0; i < datas.length; i++) {
                                 var data = datas[i].data;
-                                window.open(data.imgUrl);
+                                window.open(project+'/image/showImg.cgi?type=1&id='+data.id);
                             }
                         }
                         else {
@@ -261,7 +263,8 @@
                             var datas = obj.getSelectedRecords();
                             for (var i = 0; i < datas.length; i++) {
                                 var data = datas[i].data;
-                                window.open(data.imgUrl);
+                                window.open(project+'/image/showImg.cgi?type=0&id='+data.id);
+//                                window.open(data.imgUrl);
                             }
                         }
                         else {
