@@ -72,8 +72,6 @@ public class UsgsAction extends BaseAction {
 			EarthQuakeInfo bean= (EarthQuakeInfo)it.next();
 			json.put("d_id", bean.getId());
 			json.put("d_date", bean.getDate().trim().replace("/", "-").replace("  ", " ")); //.replace("/", "-").replace("  ", " ")
-//			System.out.println(" >> "+bean.getDate().trim().replace("/", "-").replace("  ", " "));
-//			json.put("d_date", "2013-03-15");
 			json.put("d_latitude", bean.getLatitude());
 			json.put("d_longitude", bean.getLongitude());
 			json.put("d_depth", bean.getDepth());
