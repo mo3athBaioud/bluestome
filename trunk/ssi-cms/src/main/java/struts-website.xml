@@ -21,6 +21,9 @@
 		<action name="update" class="websiteAction" method="update" />
 		<action name="insert" class="websiteAction" method="insert" />
 		
+		<action name="disable" class="websiteAction" method="disable" />
+		<action name="enable"  class="websiteAction" method="enable" />
+		
 		<action name="sub" class="websiteAction" method="sub">
 			<result name="success">/pages/websites/sub.jsp</result>
 		</action>
