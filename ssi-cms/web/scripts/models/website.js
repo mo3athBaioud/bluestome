@@ -469,6 +469,7 @@ Ext.onReady(function(){
 						},{
 							fieldLabel : '站点地址',
 							name : 'website.url',
+							readOnly:true,
 							value : record.get('d_web_url')
 						},{
 							xtype:'combo',
@@ -738,6 +739,7 @@ Ext.onReady(function(){
 				},{
 					fieldLabel : '站点地址',
 					name : 'website.url',
+					readOnly:true,
 					value : record.get('d_web_url')
 				},{
 					xtype:'combo',
