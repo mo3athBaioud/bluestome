@@ -81,13 +81,13 @@ Ext.onReady(function(){
     
     var expander = new Ext.grid.RowExpander({
         tpl : new Ext.Template(
-            '<p><b>EventId:</b><br/>{d_eventid}</p>',
-            '<p><b>Region:</b><br/>{d_comments}</p>',
-            '<p><b>Distinces:</b><br/>{d_distinces}</p>',
-            '<p><b>Source:</b><br/>{d_source}</p>',
-            '<p><b>Url:</b><br/><a href={d_url} target="_blank">Link</a></p>',
-            '<p><b>Remarks:</b><br/>{d_remarks}</p><br>',
-            '<p><b>Parameters:</b><br/>{d_parameters}</p><br>'
+            '<p><b>事件ID:</b><br/>{d_eventid}</p>',
+            '<p><b>区域:</b><br/>{d_comments}</p>',
+            '<p><b>距离:</b><br/>{d_distinces}</p>',
+            '<p><b>来源:</b><br/>{d_source}</p>',
+            '<p><b>网址:</b><br/>{d_url}<a href={d_url} target="_blank"><img src="'+project+'/images/world_go.png"/></a></p>',
+            '<p><b>备注:</b><br/>{d_remarks}</p><br>',
+            '<p><b>参数:</b><br/>{d_parameters}</p><br>'
         )
     });
     
@@ -95,31 +95,19 @@ Ext.onReady(function(){
     app.cm_usgs = new Ext.grid.ColumnModel([
 	    expander,
         {header: "ID",width: 50,sortable: true, dataIndex: 'd_id'}, //width: 50, 
-        {header: "事件编号",width: 150,dataIndex: 'd_eventid'}, //width: 50, 
-        {header: "发生时间", width: 200,dataIndex: 'd_date'
-//        	renderer:function(value){ 
-//				if(value instanceof Date){ 
-//					return new Date(value).format("Y-m-d"); 
-//				}else{ 
-//					return '"'+value+'"';
-//				} 
-//			}
-		},
+        {header: "事件编号",width: 100,dataIndex: 'd_eventid'}, //width: 50, 
+        {header: "发生时间", width: 150,dataIndex: 'd_date'},
         {header: "地震级别", width: 100, sortable: true, dataIndex: 'd_magnitude',
         	renderer:function(value){ 
         		if(value > 6){
-        			return "<font color=red>"+value+"</font>";
+        			return "<font color=red><b>"+value+"</b></font>";
         		}else{
         			return value;
         		}
 			}},
         {header: "纬度", width: 100, sortable: true, dataIndex: 'd_latitude'},
-        {header: "经度", width: 100, sortable: true, dataIndex: 'd_longitude'}
-//        {header: "地点", width: 100, sortable: true, dataIndex: 'd_location'
-//        	renderer:function(value){ 
-//				return value; 
-//			}
-//		}
+        {header: "经度", width: 100, sortable: true, dataIndex: 'd_longitude'},
+        {header: "记录时间", width: 100, sortable: true, dataIndex: 'd_createtime'}
     ]);
     
 	app.search_comb_queyrCol_code = new Ext.form.ComboBox({
@@ -133,7 +121,9 @@ Ext.onReady(function(){
 					data : [
 							['date', '发生时间'],
 							['magnitude','地震级别'],
-							['depth','震源深度']
+							['depth','震源深度'],
+							['longitude','经度'],
+							['latitude','纬度']
 				    ],
 					fields : ['id', 'name']
 				}),	
@@ -178,17 +168,17 @@ Ext.onReady(function(){
 		listeners : {
 			'specialkey' : function(field, e) {
 				if (e.getKey() == Ext.EventObject.ENTER) {
-//					app.searchcode();
-					Ext.Msg.show({
-						title : '系统提示',
-						msg : '此功能正在开发，请等待发布!',
-						buttons : Ext.Msg.OK,
-						fn : function() {
-							dnfield.focus(true);
-							btn.enable();
-						},
-						icon : Ext.MessageBox.INFO
-					});
+					app.searchcode();
+//					Ext.Msg.show({
+//						title : '系统提示',
+//						msg : '此功能正在开发，请等待发布!',
+//						buttons : Ext.Msg.OK,
+//						fn : function() {
+//							dnfield.focus(true);
+//							btn.enable();
+//						},
+//						icon : Ext.MessageBox.INFO
+//					});
 				}
 			}
 		}
@@ -198,7 +188,7 @@ Ext.onReady(function(){
 		app.colName = app.search_comb_queyrCol_code.getValue();
 		app.values =app.text_search_code.getValue();
 		Ext.Ajax.request({
-			url : project+'/usgs/list.cgi?',
+			url : project+'/usgs/list.cgi',
 			params : {
 				colName : app.colName,
 				value : app.values
@@ -212,10 +202,10 @@ Ext.onReady(function(){
 						title : '系统提示',
 						msg : obj.msg,
 						buttons : Ext.Msg.OK,
-						fn : function() {
-							dnfield.focus(true);
-							btn.enable();
-						},
+//						fn : function() {
+//							dnfield.focus(true);
+//							btn.enable();
+//						},
 						icon : Ext.MessageBox.ERROR
 					});
 				}
@@ -225,10 +215,10 @@ Ext.onReady(function(){
 					title : '系统提示',
 					msg : '服务器内部错误',
 					buttons : Ext.Msg.OK,
-					fn : function() {
-						dnfield.focus(true);
-						btn.enable();
-					},
+//					fn : function() {
+//						dnfield.focus(true);
+//						btn.enable();
+//					},
 					icon : Ext.MessageBox.ERROR
 				});
             }
@@ -268,32 +258,32 @@ Ext.onReady(function(){
 		}
 	});
 	
-	app.update_code_btn = new Ext.Button({ 
-		text : '编辑',
-		iconCls : 'icon-edit',
-		handler : function() {
-			Ext.Msg.show({
-				title : '系统提示',
-				msg : '此功能正在开发，请等待发布!',
-				buttons : Ext.Msg.OK,
-				icon : Ext.MessageBox.INFO
-			});
-		}
-	});
+//	app.update_code_btn = new Ext.Button({ 
+//		text : '编辑',
+//		iconCls : 'icon-edit',
+//		handler : function() {
+//			Ext.Msg.show({
+//				title : '系统提示',
+//				msg : '此功能正在开发，请等待发布!',
+//				buttons : Ext.Msg.OK,
+//				icon : Ext.MessageBox.INFO
+//			});
+//		}
+//	});
 	
-	/**
-	app.update_code_btn = new Ext.Button({ 
+	app.update_usgs_btn = new Ext.Button({ 
 		text : '编辑',
 		iconCls : 'icon-edit',
 		handler : function() {
 			if(app.grid.getSelectionModel().getSelected()){
 			var record = app.grid.getSelectionModel().getSelected();
-				var updateWin = new Ext.Window({ 
-					title : '编辑',
+				var updateWin = new Ext.Window({
+					title : '编辑地震信息',
 					iconCls:'icon-edit',
-					width : 450,
+					width : 500,
 					resizable : false,
 					autoHeight : true,
+//					height:600,
 					modal : true,
 					closeAction : 'close',
 					items : [new Ext.FormPanel({
@@ -312,44 +302,40 @@ Ext.onReady(function(){
 						items : [
 						{ 
 							fieldLabel : '类型ID',
-							id : 'article.id',
-							name : 'article.id',
+							id : 'quakeInfo.id',
+							name : 'quakeInfo.id',
 							readOnly:true,
 							value : record.get('d_id')
 						},{
-							fieldLabel : '标题',
-							name : 'article.title',
-							value : record.get('d_title')
+							fieldLabel : '发生时间',
+							name : 'quakeInfo.date',
+							value : record.get('d_date'),
+							readOnly:true
 						},{
-							fieldLabel : '外部地址',
-							name : 'article.articleUrl',
-							value : record.get('d_acticle_url')
+							fieldLabel : '经度',
+							name : 'quakeInfo.latitude',
+							value : record.get('d_latitude')
 						},{
-							fieldLabel : '内容URL',
-							name : 'article.acticleRealUrl',
-							value : record.get('d_article_real_url')
+							fieldLabel : '纬度',
+							name : 'quakeInfo.longitude',
+							value : record.get('d_longitude')
 						},{
-							fieldLabel : '内容XML',
-							name : 'article.acticleXmlUrl',
-							value : record.get('d_article_xml_url')
+							fieldLabel : '深度',
+							name : 'quakeInfo.depth',
+							value : record.get('d_depth')
 						},{
-							fieldLabel : '时间',
+							fieldLabel : '震级',
 							xtype:'hidden',
-							name : 'article.createTime',
-							value:record.get('d_createtime')
+							name : 'quakeInfo.magnitude',
+							value:record.get('d_magnitude')
 						},{
-							fieldLabel : '所属网站',
-							name : 'article.webId',
-							value : webId
+							fieldLabel : '备注',
+							name : 'quakeInfo.comments',
+							value:record.get('d_comments')
 						},{
-							fieldLabel : '状态',
-							name : 'article.text',
-							value : record.get('d_text')
-						},{
-							fieldLabel : '介绍',
-							xtype:'textarea',
-							name : 'article.intro',
-							value:record.get('d_intro')
+							fieldLabel : '原址',
+							name : 'quakeInfo.url',
+							value : record.get('d_url')
 						}],
 						buttonAlign : 'right',
 						minButtonWidth : 60,
@@ -358,20 +344,17 @@ Ext.onReady(function(){
 							handler : function(btn) {
 								var frm = this.ownerCt.form;
 								if (frm.isValid()) {
-									btn.disable();
-									var dnfield = frm.findField('article.title');
+//									btn.disable();
+									var dnfield = frm.findField('quakeInfo.date');
+									var magnitude = frm.findField('quakeInfo.magnitude');
 									frm.submit({
 										waitTitle : '请稍候',
 										waitMsg : '正在提交表单数据,请稍候...',
 										success : function(form, action) {
 											Ext.Msg.show({
 												title : '系统提示',
-												msg : '修改文章"' + dnfield.getValue() + '"成功!',
+												msg : '修改地震信息"' + dnfield.getValue() + '|'+magnitude.getValue()+ '"成功!',
 												buttons : Ext.Msg.OK,
-												fn : function() {
-													dnfield.focus(true);
-													btn.enable();
-												},
 												icon : Ext.MessageBox.INFO
 											});
 											app.ds_usgs.load({params : {start : 0,limit : app.limit}});
@@ -379,7 +362,7 @@ Ext.onReady(function(){
 										failure : function() {
 											Ext.Msg.show({
 												title : '错误提示',
-												msg : '"' + dnfield.getValue() + '" ' + '名称可能已经存在或者您没有更新数据的权限!',
+												msg : '"' + dnfield.getValue() + '|'+magnitude.getValue()+ '" ' + '名称可能已经存在或者您没有更新数据的权限!',
 												buttons : Ext.Msg.OK,
 												fn : function() {
 													dnfield.focus(true);
@@ -414,8 +397,7 @@ Ext.onReady(function(){
 			});
 		}
 		}
-	})
-	**/
+	});
 	
 	app.ds_usgs.load({
 		params : {
@@ -434,32 +416,33 @@ Ext.onReady(function(){
 	});  
 	
 	app.pagesize_combo = new Ext.form.ComboBox({
-				name : 'pagesize',
-				hiddenName : 'pagesize',
-				typeAhead : true,
-				triggerAction : 'all',
-				lazyRender : true,
-				mode : 'local',
-				store : new Ext.data.SimpleStore({
-							fields : ['value', 'text'],
-							data : [[10, '10条/页'],[15, '15条/页'],[20, '20条/页']]
-						}),
-				valueField : 'value',
-				displayField : 'text',
-				value : '20',
-				editable : false,
-				width : 85
+		name : 'pagesize',
+		hiddenName : 'pagesize',
+		typeAhead : true,
+		triggerAction : 'all',
+		lazyRender : true,
+		mode : 'local',
+		store : new Ext.data.SimpleStore({
+					fields : ['value', 'text'],
+					data : [[10, '10条/页'],[15, '15条/页'],[20, '20条/页']]
+				}),
+		valueField : 'value',
+		displayField : 'text',
+		value : '20',
+		editable : false,
+		width : 85
 	});
+	
 	var number = parseInt(app.pagesize_combo.getValue());
 	app.pagesize_combo.on("select", function(comboBox){
-				app.ptb.pageSize = parseInt(comboBox.getValue());
-				number = parseInt(comboBox.getValue());
-				app.ds_usgs.reload({
-							params : {
-								start : 0,
-								limit : app.ptb.pageSize
-							}
-						});
+		app.ptb.pageSize = parseInt(comboBox.getValue());
+		number = parseInt(comboBox.getValue());
+		app.ds_usgs.reload({
+			params : {
+				start : 0,
+				limit : app.ptb.pageSize
+			}
+		});
 	});
 	app.ptb = new Ext.PagingToolbar({
 		pageSize:app.limit,
@@ -489,7 +472,7 @@ Ext.onReady(function(){
 //		autoHeight:true,
 		width:800,
 		sm:app.sm,
-		tbar : ['-',app.update_code_btn,'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
+		tbar : ['-',app.update_usgs_btn,'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
 		bbar : app.ptb
 	});
 	

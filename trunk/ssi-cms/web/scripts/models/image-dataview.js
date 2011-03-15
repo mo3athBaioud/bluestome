@@ -127,7 +127,7 @@
                 var dataAction = [new Ext.Action({
                     id: 'addimage',
                     text: '上传',
-					iconCls : 'icon-search',
+					iconCls : 'upload-icon',
                     handler: function(){
 						Ext.Msg.show({
 							title : '系统提示',
@@ -186,7 +186,7 @@
                     id: 'viewbigimage',
                     text: '查看大图',
                     disabled: true,
-					iconCls : 'icon-search',
+					iconCls : 'icon-picture_link',
                     handler: function(){
                         var obj = dataView;
                         if (obj.isSelected) {

@@ -20,6 +20,11 @@ Ext.onReady(function(){
     app.cm_website = new Ext.grid.ColumnModel([new Ext.grid.RowNumberer(),
     	app.sm, 
         {id:'ID',header: "ID", width: 50, sortable: true, dataIndex: 'd_id'},
+        {header: "类型", width: 50,
+        	renderer : function(value) {
+				return '<img src="'+project+'/images/world_link.png"/>';
+			}
+        },
         {header: "父站点", width: 70, sortable: true, dataIndex: 'd_parent_id'},
         {header: "网站名称", width: 150, sortable: false, dataIndex: 'd_web_name'},
 //        {header: "网站URL", width: 300, sortable: false, dataIndex: 'd_web_url'},
@@ -145,7 +150,7 @@ Ext.onReady(function(){
 	};
 	var btn_disable = new Ext.Button({
 		text : '禁用站点',
-		iconCls : 'icon-edit',
+		iconCls : 'icon-application_delete',
 		disabled: true,
 		handler : function() {
 			var records = app.grid.getSelectionModel().getSelections();
@@ -206,7 +211,7 @@ Ext.onReady(function(){
 	
 	var btn_enable = new Ext.Button({
 		text : '启用站点',
-		iconCls : 'icon-edit',
+		iconCls : 'icon-application_add',
 		disabled: true,
 		handler : function() {
 			var records = app.grid.getSelectionModel().getSelections();
@@ -265,7 +270,7 @@ Ext.onReady(function(){
 
 	app.window_add = new Ext.Window({
 		title : '添加',
-		iconCls : 'icon-add',
+		iconCls : 'icon-world_add',
 		width : 400,
 		resizable : false,
 		autoHeight : true,
@@ -419,7 +424,7 @@ Ext.onReady(function(){
     var dataAction = [new Ext.Action({
         id: 'add_website',
         text: '添加站点',
-		iconCls : 'icon-add',
+		iconCls : 'icon-world_add',
 		disabled:false,
         handler: function(){
             app.window_add.show();
@@ -428,13 +433,13 @@ Ext.onReady(function(){
         id: 'edit_website',
         text: '编辑站点',
         disabled: true,
-		iconCls : 'icon-edit',
+		iconCls : 'icon-world_edit',
         handler: function(){
 			if(app.grid.getSelectionModel().getSelected()){
 				var record = app.grid.getSelectionModel().getSelected();
 				var updateWin = new Ext.Window({ 
 					title : '编辑',
-					iconCls:'icon-edit',
+					iconCls:'icon-world_edit',
 					width : 450,
 					height : 440,
 					resizable : false,
@@ -608,7 +613,7 @@ Ext.onReady(function(){
         id: 'view_website',
         text: '查看站点',
         disabled: true,
-		iconCls : 'icon-view',
+		iconCls : 'icon-world',
         handler: function(){
 			if(app.grid.getSelectionModel().getSelected()){
 				var record = app.grid.getSelectionModel().getSelected();
@@ -622,7 +627,7 @@ Ext.onReady(function(){
     }),new Ext.Action({
         id: 'delimage',
         text: '删除',
-		iconCls : 'icon-del',
+		iconCls : 'icon-world_delete',
         disabled: true,
         handler: function(){
         	Ext.Msg.alert('温馨提示','此功能暂正在开发!');
@@ -696,7 +701,7 @@ Ext.onReady(function(){
 		sm:app.sm,
 		autoHeight : true,
 		width:850,
-		collapsible: true,
+//		collapsible: true,
 		tbar : ['-', dataAction[0],'-',btn_enable,'-',btn_disable,'-', dataAction[1], '-',dataAction[2],'-', dataAction[3],'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
 		bbar : app.ptb
 	});
@@ -704,7 +709,7 @@ Ext.onReady(function(){
 	var update = function(record){
 		var updateWin = new Ext.Window({ 
 			title : '编辑',
-			iconCls:'icon-edit',
+			iconCls:'icon-world_edit',
 			width : 450,
 			height : 440,
 			resizable : false,

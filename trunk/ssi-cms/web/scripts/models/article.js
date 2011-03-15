@@ -210,7 +210,7 @@ Ext.onReady(function(){
 	
 	app.btn_upload = new Ext.Button({
 		text:'上传',
-		iconCls:'icon-add',
+		iconCls:'upload-icon',
 		handler:function(){
 			app.showUploadDialog();
 		},
