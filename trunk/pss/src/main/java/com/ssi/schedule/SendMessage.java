@@ -6,24 +6,26 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.ssi.common.cache.CacheException;
+import com.ssi.common.dal.dao.IArticleDAO;
+import com.ssi.common.dal.dao.IPictureFileDAO;
+import com.ssi.common.dal.dao.IWebsiteDAO;
+import com.ssi.common.dal.domain.Article;
+import com.ssi.common.dal.domain.Count;
+import com.ssi.common.dal.domain.PictureFile;
+import com.ssi.common.dal.domain.Website;
 import com.ssi.common.utils.DateUtils;
-import com.ssi.dal.dao.IArticleDAO;
-import com.ssi.dal.dao.IPictureFileDAO;
-import com.ssi.dal.dao.IWebsiteDAO;
-import com.ssi.dal.domain.Article;
-import com.ssi.dal.domain.Count;
-import com.ssi.dal.domain.PictureFile;
-import com.ssi.dal.domain.Website;
 import com.ssi.htmlparser.cache.PictureFileCache;
 
 public class SendMessage extends BaseSchedule{
 
 	private Integer id;
+	
+	private Integer count = 30;
 
 	public void process() {
 		logger.info(">> process");
 		long start = System.currentTimeMillis();
-		List<PictureFile> list = pictureFileDao.findLastPictureFile(30);
+		List<PictureFile> list = pictureFileDao.findLastPictureFile(count);
 		if (null != list && list.size() > 0) {
 			logger.info("---------------------------" + DateUtils.getNow()
 					+ "---------------------------");
@@ -81,4 +83,12 @@ public class SendMessage extends BaseSchedule{
 		this.id = id;
 	}
 
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+	
 }
