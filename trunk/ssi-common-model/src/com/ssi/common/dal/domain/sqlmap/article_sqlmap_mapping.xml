@@ -84,10 +84,10 @@
 				t.d_web_id = #webId#
 			</isNotEmpty>
 			<isNotEmpty property="title" prepend="and">
-				t.d_title = #title#
+				t.d_title like concat('%',#title#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="articleUrl" prepend="and">
-				t.d_acticle_url = #articleUrl#
+				t.d_acticle_url like concat('%',#articleUrl#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="acticleRealUrl" prepend="and">
 				t.d_article_real_url = #acticleRealUrl#
@@ -96,10 +96,10 @@
 				t.d_article_xml_url = #acticleXmlUrl#
 			</isNotEmpty>
 			<isNotEmpty property="text" prepend="and">
-				t.d_text = #text#
+				t.d_text like concat('%',#text#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="intro" prepend="and">
-				t.d_intro = #intro#
+				t.d_intro like concat('%',#intro#,'%')
 			</isNotEmpty>
 		</dynamic>
 		ORDER BY t.d_id
@@ -128,10 +128,10 @@
 				t.d_web_id = #webId#
 			</isNotEmpty>
 			<isNotEmpty property="title" prepend="and">
-				t.d_title = #title#
+				t.d_title like concat('%',#title#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="articleUrl" prepend="and">
-				t.d_acticle_url = #articleUrl#
+				t.d_acticle_url like concat('%',#articleUrl#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="acticleRealUrl" prepend="and">
 				t.d_article_real_url = #acticleRealUrl#
@@ -143,7 +143,7 @@
 				t.d_text = #text#
 			</isNotEmpty>
 			<isNotEmpty property="intro" prepend="and">
-				t.d_intro = #intro#
+				t.d_intro like concat('%',#intro#,'%')
 			</isNotEmpty>
 		</dynamic>
 		ORDER BY t.d_id
