@@ -2,7 +2,7 @@ package com.ssi.htmlparser.cache;
 
 import com.ssi.common.cache.AbstractCache;
 import com.ssi.common.cache.CacheException;
-import com.ssi.dal.domain.ArticleDoc;
+import com.ssi.common.dal.domain.ArticleDoc;
 
 public class ArticleDocCache extends AbstractCache {
 

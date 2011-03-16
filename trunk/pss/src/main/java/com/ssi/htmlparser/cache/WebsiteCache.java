@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.ssi.common.cache.AbstractCache;
 import com.ssi.common.cache.CacheException;
-import com.ssi.dal.domain.Website;
+import com.ssi.common.dal.domain.Website;
 
 /**
  * 网站记录缓存类
