@@ -1,10 +1,11 @@
 var app = {};
+var mapwin;
 Ext.onReady(function(){
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
     Ext.QuickTips.init();
 	app.limit = 15;
-	app.colName = colName;
-	app.values = values;
+	app.colName = '';
+	app.values = '';
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
 	app.usgs = Ext.data.Record.create([{
@@ -462,26 +463,35 @@ Ext.onReady(function(){
 		},
 	    cm: app.cm_usgs,
 	    ds: app.ds_usgs,
+ 		height:600,
+		width:850,
         autoScroll: true,
         viewConfig: {
             forceFit:true
         },
-//		autoWidth:true,
  		plugins: expander,
- 		height:600,
-//		autoHeight:true,
-		width:800,
 		sm:app.sm,
 		tbar : ['-',app.update_usgs_btn,'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
 		bbar : app.ptb
 	});
 	
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
-				if(grid.getSelectionModel().isSelected(rowIndex)){
-					var record = app.grid.getSelectionModel().getSelected();
-					var url = record.get('d_url');
-					window.location = url;
-				}
+		if(grid.getSelectionModel().isSelected(rowIndex)){
+			var record = app.grid.getSelectionModel().getSelected();
+			/**
+			*/
+			Ext.Msg.show({
+				title : '系统提示',
+				msg : '弹出窗口显示GMAP内容!',
+				buttons : Ext.Msg.OK,
+				icon : Ext.MessageBox.ERROR
+			});
+			/**
+			var record = app.grid.getSelectionModel().getSelected();
+			var url = record.get('d_url');
+			window.location = url;
+			*/
+		}
 	});
 
     app.grid.render('div-usgs');

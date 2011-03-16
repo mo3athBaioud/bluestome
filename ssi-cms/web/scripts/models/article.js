@@ -46,7 +46,15 @@ Ext.onReady(function(){
 		type : 'int'
 	}]);
     
-    app.cm_article = new Ext.grid.ColumnModel([new Ext.grid.RowNumberer(),app.sm,
+    var expander = new Ext.grid.RowExpander({
+        tpl : new Ext.Template(
+            '<p><b>备注:</b><br/>{d_intro}</p>',
+            '<p><b>网址:</b><br/>{d_acticle_url}<a href="{d_acticle_url}" target="_blank"><img src="'+project+'/images/world_go.png" alt="{d_web_name}"/></a></p>'
+        )
+    });
+    
+    app.cm_article = new Ext.grid.ColumnModel([
+	    expander,
 //        {header: "ID", sortable: true, dataIndex: 'd_id'}, //width: 50, 
         {header: "类型", width: 50,
         	renderer : function(value) {
@@ -272,9 +280,22 @@ Ext.onReady(function(){
 //				allowBlank : false,
 				maxLength : 20
 			},{
+				//下拉选择框
+				xtype:'combo',
 				fieldLabel : '状态',
-				name : 'article.text',
-//				allowBlank : false,
+				id : 'add_article_text',
+				hiddenName:'article.text',
+                valueField: 'id',
+                displayField: 'name',
+                triggerAction:'all',
+                mode: 'local',
+                store: new Ext.data.SimpleStore({
+                    fields: ['id','name'],
+                    data: [['FD','可用'], ['NED','停用']]
+                }),
+                emptyText : '请选择记录状态!',
+                editable:false,
+				allowBlank : false,
 				maxLength : 20
 			}],
 			buttonAlign : 'right',
@@ -401,14 +422,29 @@ Ext.onReady(function(){
 							name : 'article.webId',
 							value : webId
 						},{
-							fieldLabel : '状态',
-							name : 'article.text',
-							value : record.get('d_text')
-						},{
 							fieldLabel : '介绍',
 							xtype:'textarea',
 							name : 'article.intro',
 							value:record.get('d_intro')
+						},{
+							//下拉选择框
+							xtype:'combo',
+							fieldLabel : '状态',
+							id : 'update_article_text',
+							hiddenName:'article.text',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [['FD','可用'], ['NED','停用']]
+			                }),
+							emptyText : '当前状态:'+(record.get('d_text') == 'FD'?'启用':'停用'),
+			                editable:false,
+							allowBlank : false,
+							maxLength : 20,
+							value : record.get('d_text')
 						}],
 						buttonAlign : 'right',
 						minButtonWidth : 60,
@@ -537,9 +573,13 @@ Ext.onReady(function(){
 		},
 	    cm: app.cm_article,
 	    ds: app.ds_article,
-		autoHeight:true,
-		autoWidth:true,
-//		width:1200,
+	    width:850,
+	    height:600,
+        autoScroll: true,
+        viewConfig: {
+            forceFit:true
+        },
+ 		plugins: expander,
 		sm:app.sm,
 		tbar : [app.btn_get_img_url,'-',app.btn_add_code,'-',app.update_code_btn,'-',app.btn_upload,'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
 		bbar : app.ptb
@@ -548,10 +588,10 @@ Ext.onReady(function(){
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
 				if(grid.getSelectionModel().isSelected(rowIndex)){
 					var record = app.grid.getSelectionModel().getSelected();
-					app.text_search_code.setValue(record.get('d_title'));
-					Ext.get('op').dom.value += "ID:"+record.get('d_id') +　"\t" + record.get('d_title') + "\t" + record.get('d_acticle_url') 
-							+ '\td_web_id:'+webId
-							+ "\n---------------------------------------------------------------------------------------------------\n";
+//					app.text_search_code.setValue(record.get('d_title'));
+//					Ext.get('op').dom.value += "ID:"+record.get('d_id') +　"\t" + record.get('d_title') + "\t" + record.get('d_acticle_url') 
+//							+ '\td_web_id:'+webId
+//							+ "\n---------------------------------------------------------------------------------------------------\n";
 					var url = String.format(project+"/pages/images/image.jsp?id={0}",record.get('d_id'));
 					window.location = url;
 				}

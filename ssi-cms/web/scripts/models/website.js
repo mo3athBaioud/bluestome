@@ -7,27 +7,44 @@ Ext.onReady(function(){
     
 	var website =Ext.data.Record.create([
 		{name:'id',mapping:'d_id',type:'int'},
-		{name:'parentId',mapping:'d_parent_id',type:'string'},
+		{name:'parentId',mapping:'d_parent_id',type:'int'},
+		{name:'parentName',mapping:'d_parent_name',type:'string'},
 		{name:'type',mapping:'d_web_type',type:'string'},
 		{name:'url',mapping:'d_web_url',type:'string'},
 		{name:'name',mapping:'d_web_name',type:'string'},
+		{name:'remarks',mapping:'d_remarks',type:'string'},
+		{name:'count',mapping:'d_count',type:'int'},
+		{name:'subcount',mapping:'d_sub_count',type:'int'},
 		{name:'status',mapping:'d_status',type:'int'},
-		{name:'modifytime',mapping:'d_modifytime',type:'int'},
+		{name:'modifytime',mapping:'d_modify_time',type:'int'},
 		{name:'createtime',mapping:'d_createtime',type:'string'}
 	]);
 	
+    var expander = new Ext.grid.RowExpander({
+        tpl : new Ext.Template(
+            '<p><b>父站点ID:</b>{d_parent_id}</p>',
+            '<p><b>子站点数量:</b>{d_sub_count}</p>',
+            '<p><b>文章统计:</b>{d_count}</p>',
+            '<p><b>修改时间:</b>{d_modify_time}</p>',
+            '<p><b>备注:</b><br/>{d_remarks}</p>',
+            '<p><b>网址:</b><br/>{d_web_url}<a href="{d_web_url}" target="_blank"><img src="'+project+'/images/world_go.png" alt="{d_web_name}"/></a></p>'
+        )
+    });
+    
 	//new Ext.grid.RowNumberer(),
-    app.cm_website = new Ext.grid.ColumnModel([new Ext.grid.RowNumberer(),
-    	app.sm, 
+	//expander
+	//new Ext.grid.RowNumberer(),
+    //app.sm, 
+    app.cm_website = new Ext.grid.ColumnModel([
+    	expander,
         {id:'ID',header: "ID", width: 50, sortable: true, dataIndex: 'd_id'},
         {header: "类型", width: 50,
         	renderer : function(value) {
-				return '<img src="'+project+'/images/world_link.png"/>';
+				return '<a href="{d_url}"><img src="'+project+'/images/world_link.png"/></a>';
 			}
         },
-        {header: "父站点", width: 70, sortable: true, dataIndex: 'd_parent_id'},
+        {header: "父站点名称", width: 70, sortable: true, dataIndex: 'd_parent_name'},
         {header: "网站名称", width: 150, sortable: false, dataIndex: 'd_web_name'},
-//        {header: "网站URL", width: 300, sortable: false, dataIndex: 'd_web_url'},
         {header: "网站类型", width: 100, sortable: true, dataIndex: 'd_web_type',renderer:function(value){
         	var v = parseInt(value);
         	switch(v){
@@ -40,22 +57,20 @@ Ext.onReady(function(){
         	}
         }},
         {header: "记录状态", width: 100, sortable: true, dataIndex: 'd_status',renderer : function(v){var x = parseInt(v);
-        switch(x) {
-			case 1:
-				return "<span style='color:blue;font-weight:bold;'>启用</span>";
-			case 0:
-				return "<span style='color:red;font-weight:bold;'>停用</span>";
-			default: 
-				return "<span style='color:yellow;font-weight:bold;'>未知</span>";
-		}
+	        switch(x) {
+				case 1:
+					return "<span style='color:blue;font-weight:bold;'>启用</span>";
+				case 0:
+					return "<span style='color:red;font-weight:bold;'>停用</span>";
+				default: 
+					return "<span style='color:yellow;font-weight:bold;'>未知</span>";
+			}
 		},
 		menuDisabled : true},
-        {header: "创建时间", width: 130, sortable: true,dataIndex: 'd_createtime'},
-        {header: "修改时间", width: 130, sortable: true,dataIndex: 'd_modify_time'}
+        {header: "创建时间", width: 130, sortable: true,dataIndex: 'd_createtime'}
     ]);
     
-//    app.cm_website.defaultSortable = false;
-    
+    app.cm_website.defaultSortable = false;
 	app.ds_website = new Ext.data.Store({
 		proxy : new Ext.data.HttpProxy({
 			url : project+'/website/website.cgi'
@@ -65,10 +80,14 @@ Ext.onReady(function(){
 			root : 'website'
 		}, [{name : 'd_id',type : 'int'
 		}, {name : 'd_parent_id',type : 'int'
+		}, {name : 'd_parent_name',type : 'string'
 		}, {name : 'd_web_url',type : 'string'
 		}, {name : 'd_web_name',type : 'string'
 		}, {name : 'd_web_type',type : 'int'
+		}, {name : 'd_count',type : 'int'
+		}, {name : 'd_sub_count',type : 'int'
 		}, {name : 'd_status',type : 'int'
+		}, {name : 'd_remarks',type : 'string'
 		}, {name : 'd_createtime',type : 'string'
 		}, {name : 'd_modify_time',type : 'string'
 		}])
@@ -83,7 +102,8 @@ Ext.onReady(function(){
 				mode:'local',
 				store : new Ext.data.SimpleStore({
 					data : [
-							['parentId','父站点类型'],
+							['id','ID'],
+							['parentId','父站点ID'],
 							['name', '站点名称'],
 							['type','站点类型'],
 							['status','站点状态']
@@ -149,7 +169,7 @@ Ext.onReady(function(){
 		})
 	};
 	var btn_disable = new Ext.Button({
-		text : '禁用站点',
+		text : '禁用',
 		iconCls : 'icon-application_delete',
 		disabled: true,
 		handler : function() {
@@ -210,7 +230,7 @@ Ext.onReady(function(){
 	});
 	
 	var btn_enable = new Ext.Button({
-		text : '启用站点',
+		text : '启用',
 		iconCls : 'icon-application_add',
 		disabled: true,
 		handler : function() {
@@ -225,8 +245,12 @@ Ext.onReady(function(){
 			}else{
 				var ids = [];
 				for(i = 0;i < records.length;i++){
-					ids.push(records[i].get('D_ID'));
+					ids.push(records[i].get('d_id'));
+//					Ext.MessageBox.alert('系统调试信息',' >> 获取的ID为:'+records[i].get('d_id'));
 				}
+//				for(i=0;i<ids.length;i++){
+//					Ext.MessageBox.alert('系统调试信息',' >> 获取注入的ID为:'+records[i].get('d_id'));
+//				}
 				Ext.Msg.confirm('启用站点', '你确定启用所选站点?', function(btn) {
 					if (btn == 'yes') {
 						Ext.Ajax.request({
@@ -263,7 +287,9 @@ Ext.onReady(function(){
 			                }
 						})
 					}
-				})
+				});
+				/**
+				**/
 			}
 		}
 	});
@@ -363,6 +389,12 @@ Ext.onReady(function(){
                 emptyText: '请选择状态',
                 editable:false,
 				allowBlank : false
+			},{
+				xtype: 'textarea',
+				fieldLabel : '备注',
+				name : 'website.remarks',
+				allowBlank : true,
+				maxLength : 512
 			}],
 			buttonAlign : 'right',
 			minButtonWidth : 60,
@@ -377,7 +409,6 @@ Ext.onReady(function(){
 							waitTitle : '请稍候',
 							waitMsg : '正在提交表单数据,请稍候...',
 							success : function(form, action) {
-								var store = app.grid.getStore();
 					 			Ext.Msg.show({
 									title : '系统提示',
 									msg : '添加成功!',
@@ -423,7 +454,7 @@ Ext.onReady(function(){
 	
     var dataAction = [new Ext.Action({
         id: 'add_website',
-        text: '添加站点',
+        text: '添加',
 		iconCls : 'icon-world_add',
 		disabled:false,
         handler: function(){
@@ -431,13 +462,14 @@ Ext.onReady(function(){
         }
     }), new Ext.Action({
         id: 'edit_website',
-        text: '编辑站点',
+        text: '编辑',
         disabled: true,
 		iconCls : 'icon-world_edit',
         handler: function(){
 			if(app.grid.getSelectionModel().getSelected()){
 				var record = app.grid.getSelectionModel().getSelected();
 				var updateWin = new Ext.Window({ 
+					id:'update_website_win',
 					title : '编辑',
 					iconCls:'icon-world_edit',
 					width : 450,
@@ -544,6 +576,13 @@ Ext.onReady(function(){
 							emptyText : '当前状态:'+(record.get('d_status') == 1?'启用':'停用'),
 							allowBlank : false,
 							value : record.get('d_status')
+						},{
+							xtype: 'textarea',
+							fieldLabel : '备注',
+							name : 'website.remarks',
+							allowBlank : true,
+							maxLength : 512,
+							value : record.get('d_remarks')
 						}],
 						buttonAlign : 'right',
 						minButtonWidth : 60,
@@ -562,24 +601,19 @@ Ext.onReady(function(){
 												title : '系统提示',
 												msg : '修改站点1"' + dnfield.getValue() + '"成功!',
 												buttons : Ext.Msg.OK,
-												fn : function() {
-//													dnfield.focus(true);
-//													btn.enable();
-													updateWin.close();
-												},
 												icon : Ext.MessageBox.INFO
 											});
 											app.ds_website.load({params : {start : 0,limit : app.limit}});
+											dnfield.reset();
+											btn.enable();
+											var update_website_win = Ext.getCmp('update_website_win');
+											update_website_win.close();
 										},
 										failure : function() {
 											Ext.Msg.show({
 												title : '错误提示',
 												msg : '"' + dnfield.getValue() + '" ' + '名称可能已经存在或者您没有更新数据的权限!',
 												buttons : Ext.Msg.OK,
-//												fn : function() {
-//													dnfield.focus(true);
-//													btn.enable();
-//												},
 												icon : Ext.Msg.ERROR
 											})
 										}
@@ -611,7 +645,7 @@ Ext.onReady(function(){
         }
     }), new Ext.Action({
         id: 'view_website',
-        text: '查看站点',
+        text: '查看',
         disabled: true,
 		iconCls : 'icon-world',
         handler: function(){
@@ -630,9 +664,63 @@ Ext.onReady(function(){
 		iconCls : 'icon-world_delete',
         disabled: true,
         handler: function(){
-        	Ext.Msg.alert('温馨提示','此功能暂正在开发!');
-//            Ext.Msg.alert('信息', '删除');
-        }
+			var records = app.grid.getSelectionModel().getSelections();
+			if(records.length == 0 ){
+				Ext.Msg.show({
+					title : '提示',
+					msg:'请选择需要删除的记录',
+					buttons : Ext.Msg.OK,
+					icon : Ext.Msg.ERROR
+				});
+			}else{
+				var ids = [];
+				for(i = 0;i < records.length;i++){
+					ids.push(records[i].get('d_id'));
+				}
+				Ext.Msg.confirm('确认删除', '你确定删除所选记录?', function(btn) {
+					if (btn == 'yes') {
+						Ext.Ajax.request({
+							url : project+'/website/delete.cgi',
+							params : {
+								ids : ids
+							},
+							success:function(response,option){
+								var obj = Ext.util.JSON.decode(response.responseText);
+								if(obj.success){
+									Ext.Msg.show({
+										title : '提示',
+										msg:obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.INFO
+									});
+									app.ds_website.load({
+										params:{
+											start:0,
+											limit : app.limit
+										}
+									});
+								}else{
+									Ext.Msg.show({
+										title : '提示',
+										msg : obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.ERROR
+									});
+								}
+							},
+			                failure:function(response,option){
+								Ext.Msg.show({
+									title : '提示',
+									msg : '系统发生错误!',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.ERROR
+								});
+			                }
+						});
+					}
+				});
+			}
+	   }
     })];
                 
 	
@@ -669,6 +757,7 @@ Ext.onReady(function(){
 				editable : false,
 				width : 85
 	});
+	
 	var number = parseInt(app.pagesize_combo.getValue());
 	app.pagesize_combo.on("select", function(comboBox){
 				app.ptb.pageSize = parseInt(comboBox.getValue());
@@ -680,6 +769,7 @@ Ext.onReady(function(){
 							}
 						});
 	});
+	
 	app.ptb = new Ext.PagingToolbar({
 		pageSize:app.limit,
 		store:app.ds_website,
@@ -694,14 +784,18 @@ Ext.onReady(function(){
 		iconCls : 'icon-plugin',
 		region : 'center',
 		loadMask : {
-			msg : '数据加载中...'
+			msg : '正在加载站点数据，请等待...'
 		},
 	    cm: app.cm_website,
 	    ds: app.ds_website,
-		sm:app.sm,
-		autoHeight : true,
 		width:850,
-//		collapsible: true,
+ 		height:600,
+        autoScroll: true,
+        viewConfig: {
+            forceFit:true
+        },
+ 		plugins: expander,
+		sm: app.sm,
 		tbar : ['-', dataAction[0],'-',btn_enable,'-',btn_disable,'-', dataAction[1], '-',dataAction[2],'-', dataAction[3],'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
 		bbar : app.ptb
 	});
@@ -810,6 +904,13 @@ Ext.onReady(function(){
 	                editable:false,
 					allowBlank : false,
 					value : record.get('d_status')
+				},{
+					xtype: 'textarea',
+					fieldLabel : '备注',
+					name : 'website.remarks',
+					allowBlank : true,
+					maxLength : 512,
+					value : record.get('d_remarks')
 				}],
 				buttonAlign : 'right',
 				minButtonWidth : 60,
@@ -822,16 +923,12 @@ Ext.onReady(function(){
 							var dnfield = frm.findField('website.name');
 							frm.submit({
 								waitTitle : '请稍候',
-								waitMsg : '正在提交表单数据,请稍候...',
+								waitMsg : '正在提交更新数据,请稍候...',
 								success : function(form, action) {
 									Ext.Msg.show({
 										title : '系统提示',
 										msg : '修改站点"' + dnfield.getValue() + '"成功!',
 										buttons : Ext.Msg.OK,
-//										fn : function() {
-//											dnfield.focus(true);
-//											btn.enable();
-//										},
 										icon : Ext.MessageBox.INFO
 									});
 									app.ds_website.load({params : {start : 0,limit : app.limit}});
@@ -841,10 +938,6 @@ Ext.onReady(function(){
 										title : '错误提示',
 										msg : '"' + dnfield.getValue() + '" ' + '名称可能已经存在或者您没有更新数据的权限!',
 										buttons : Ext.Msg.OK,
-//										fn : function() {
-//											dnfield.focus(true);
-//											btn.enable();
-//										},
 										icon : Ext.Msg.ERROR
 									})
 								}
@@ -872,7 +965,6 @@ Ext.onReady(function(){
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
 		if(grid.getSelectionModel().isSelected(rowIndex)){
 			var record = app.grid.getSelectionModel().getSelected();
-//			app.text_search_code.setValue(record.get('d_web_name'));
 			update(record);
 			/**
 			var url = record.get('d_web_url');
@@ -885,14 +977,12 @@ Ext.onReady(function(){
 	//点击/选择监听器
 	app.grid.addListener('rowclick',function(grid, rowIndex){
 		if(grid.getSelectionModel().isSelected(rowIndex)){
-//            dataAction[0].enable();
             dataAction[1].enable();
             dataAction[2].enable();
             dataAction[3].enable();
             btn_enable.enable();
             btn_disable.enable();
 		}else{
-//            dataAction[0].disable();
             dataAction[1].disable();
             dataAction[2].disable();
             dataAction[3].disable();
@@ -902,6 +992,5 @@ Ext.onReady(function(){
 	});
                             
     app.grid.render('div-website');
-    
     
 });
