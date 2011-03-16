@@ -227,6 +227,7 @@ public class WebsiteAction extends BaseAction {
 			boolean b = true;
 			sb.append("如下站点ID，未启用成功[");
 			for(Integer id:ids){
+				logger.info("webid:["+id+"]");
 				if(!websiteService.enable(id)){
 					sb.append(id).append(",");
 				}
@@ -241,6 +242,59 @@ public class WebsiteAction extends BaseAction {
 		}catch(Exception e){
 			logger.debug(">> WebsiteAction.enable" + e);
 			response.getWriter().print("{failure:true,msg:'启用站点发生异常'}");
+		}
+	}
+	
+	/**
+	 * 删除记录
+	 * @throws IOException
+	 */
+	public void delete() throws IOException {
+		response.setCharacterEncoding("UTF-8");
+		try{
+			StringBuffer sb = new StringBuffer();
+			boolean b = true;
+			for(Integer id:ids){
+				Website tmp = websiteService.findById(id);
+				//站点下必须没有子站点数量
+				int size = tmp.getChildren().size();
+				if(size > 0){
+					sb.append("站点["+tmp.getId()+"|"+tmp.getName()+"]存在["+size+"]子站点,请确认!");
+					b = false;
+					break;
+				}
+				
+				//站点下的文章数必须为0 ? 是否需要？考虑，预留
+//				if(tmp.getCount() > 0){
+//					sb.append("站点["+tmp.getId()+"|"+tmp.getName()+"]存在["+tmp.getCount()+"]文章,请确认!");
+//					b = false;
+//					break;
+//				}
+				
+				//查找记录是否已被禁用
+				if(tmp.getStatus() != 0){
+					sb.append("站点["+tmp.getId()+"|"+tmp.getName()+"]未被禁用,请确认!");
+					b = false;
+					break;
+				}
+				
+				//删除站点
+				if(!websiteService.delete((id))){
+					sb.append("站点["+tmp.getId()+"|"+tmp.getName()+"]删除失败,可能存在关联关系!");
+					b = false;
+					break;
+				}
+			}
+			if(b){
+				logger.debug(" >> 删除站点成功!");
+				response.getWriter().print("{success:true,msg:'删除站点成功!'}");
+			}else{
+				response.getWriter().print("{failure:true,msg:'删除站点失败，失败原因为:"+sb.toString()+"'}");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.debug(">> WebsiteAction.update:" + e);
+			response.getWriter().print("{failure:true,msg:'删除站点发生异常'}");
 		}
 	}
 	
@@ -300,6 +354,13 @@ public class WebsiteAction extends BaseAction {
 			json.put("d_web_type", bean.getType());
 			json.put("d_web_url", bean.getUrl());
 			json.put("d_status", bean.getStatus());
+			json.put("d_count", bean.getCount());
+			json.put("d_sub_count", bean.getChildren().size());
+			if( null == bean.getRemarks() || "".equals(bean.getRemarks())){
+				json.put("d_remarks", "暂无");
+			}else{
+				json.put("d_remarks", bean.getRemarks());
+			}
 			String str = sdf.format(bean.getCreatetime());
 			json.put("d_createtime", str);
 			if(null !=  bean.getModifytime()){
@@ -308,6 +369,9 @@ public class WebsiteAction extends BaseAction {
 			}else{
 				String modifyTime = sdf.format(new Date());
 				json.put("d_modify_time", modifyTime);
+			}
+			if(null != bean.getFather()){
+				json.put("d_parent_name", bean.getFather().getName());
 			}
 			jsonArr.add(json);
 		}

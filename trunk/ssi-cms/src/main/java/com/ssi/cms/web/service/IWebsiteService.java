@@ -133,4 +133,11 @@ public interface IWebsiteService {
 	 * @return
 	 */
 	boolean enable(Integer id);
+	
+	/**
+	 * 根据ID删除记录
+	 * @param id
+	 * @return
+	 */
+	boolean delete(Integer id);
 }
