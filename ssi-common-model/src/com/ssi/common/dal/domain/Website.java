@@ -31,10 +31,14 @@ public class Website extends AbstractEntity {
 	private Integer status = 1;
 
 	private int count = 0;
+	
+	private String remarks;
 
 	private List<Article> articles = new ArrayList<Article>();
 
 	private List<Website> children = new ArrayList<Website>();
+	
+	private Website father;
 
 	public Website() {
 	}
@@ -125,6 +129,22 @@ public class Website extends AbstractEntity {
 
 	public void setModifytime(Date modifytime) {
 		this.modifytime = modifytime;
+	}
+
+	public Website getFather() {
+		return father;
+	}
+
+	public void setFather(Website father) {
+		this.father = father;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 	
 	
