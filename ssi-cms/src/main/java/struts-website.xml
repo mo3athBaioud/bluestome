@@ -20,6 +20,7 @@
 		
 		<action name="update" class="websiteAction" method="update" />
 		<action name="insert" class="websiteAction" method="insert" />
+		<action name="delete" class="websiteAction" method="delete" />
 		
 		<action name="disable" class="websiteAction" method="disable" />
 		<action name="enable"  class="websiteAction" method="enable" />
