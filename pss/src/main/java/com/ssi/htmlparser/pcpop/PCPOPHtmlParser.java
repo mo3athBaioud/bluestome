@@ -16,8 +16,8 @@ import org.htmlparser.tags.Div;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.NodeList;
 
-import com.ssi.dal.domain.ArticleDoc;
-import com.ssi.dal.domain.Website;
+import com.ssi.common.dal.domain.ArticleDoc;
+import com.ssi.common.dal.domain.Website;
 import com.ssi.htmlparser.BaseHtmlParser;
 import com.ssi.htmlparser.bean.LinkBean;
 
@@ -55,12 +55,12 @@ public class PCPOPHtmlParser extends BaseHtmlParser{
 					filesize += content.length();
 				}
 			} catch (Exception e) {
-				logger.debug("Exception:" + e.getMessage());
+				logger.error("Exception:" + e.getMessage());
 				continue;
 			}
 		}
 		Long end = System.currentTimeMillis();
-		System.out.print("总耗时:" + (end - start));
+		logger.debug("总耗时:" + (end - start));
 	}
 
 	/**
@@ -142,13 +142,13 @@ public class PCPOPHtmlParser extends BaseHtmlParser{
 					LinkBean bean = null;
 					if (link.getLink().toLowerCase().startsWith(pre)
 							&& !link.getLinkText().equalsIgnoreCase("详细内容")) {
-						if (null == client.get(getKey(link.getLink()))) {
+						if (null == articleDocCache.get(getKey(link.getLink()))) {
 							bean = new LinkBean();
 							bean.setLink(link.getLink());
 							bean.setName(link.getLinkText());
 							LINKHASH.put(link.getLink(), bean);
 						} else {
-							logger.debug(">> 已存在 [" + link.getLink()
+							logger.info(">> 已存在 [" + link.getLink()
 									+ "] 地址");
 						}
 					}
@@ -298,7 +298,7 @@ public class PCPOPHtmlParser extends BaseHtmlParser{
 	 * @param content
 	 * @throws Exception
 	 */
-	void processWithDoc(int webid, String content) throws Exception {
+	public void processWithDoc(int webid, String content) throws Exception {
 		docByHTML(content, "http://www.pcpop.com/doc/");
 		Iterator it = LINKHASH.keySet().iterator();
 		ArticleDoc doc = null;
@@ -330,7 +330,7 @@ public class PCPOPHtmlParser extends BaseHtmlParser{
 	 * 获取文章作者，发布时间等数据
 	 * 
 	 */
-	void processAuthor() throws Exception {
+	public void processAuthor() throws Exception {
 		HashMap map = new HashMap();
 		map.put("status",1);
 		List<ArticleDoc> list = articleDocDao.find(map);
@@ -359,18 +359,18 @@ public class PCPOPHtmlParser extends BaseHtmlParser{
 			} catch (java.io.FileNotFoundException e) {
 				bean.setStatus(10);
 				if (articleDocDao.update(bean) == 0) {
-					logger.debug("更新作者失败:" + bean.getUrl());
+					logger.error("更新作者失败:" + bean.getUrl());
 				} else {
-					logger.debug("[" + bean.getId()
+					logger.error("[" + bean.getId()
 							+ "]更新记录状态为10[文件或地址查找找不到]:" + bean.getUrl());
 				}
 				continue;
 			} catch (org.htmlparser.util.ParserException e) {
 				bean.setStatus(10);
 				if (articleDocDao.update(bean) == 0) {
-					logger.debug("更新作者失败:" + bean.getUrl());
+					logger.error("更新作者失败:" + bean.getUrl());
 				} else {
-					logger.debug("[" + bean.getId()
+					logger.error("[" + bean.getId()
 							+ "]更新记录状态为10[URL解析失败]:" + bean.getUrl());
 				}
 				continue;
@@ -378,9 +378,9 @@ public class PCPOPHtmlParser extends BaseHtmlParser{
 				bean.setStatus(11);
 				bean.setContent(e.getMessage());
 				if (articleDocDao.update(bean) == 0) {
-					logger.debug("更新作者和文章发布时间失败:" + bean.getUrl());
+					logger.error("更新作者和文章发布时间失败:" + bean.getUrl());
 				} else {
-					logger.debug("[" + bean.getId()
+					logger.error("[" + bean.getId()
 							+ "]更新记录状态为11[其他异常情况]:" + bean.getUrl());
 				}
 				continue;
@@ -388,7 +388,7 @@ public class PCPOPHtmlParser extends BaseHtmlParser{
 		}
 	}
 
-	void processWithDoc() throws Exception {
+	public void processWithDoc() throws Exception {
 		// Iterator hit = HTMLHASH.keySet().iterator();
 		// while(hit.hasNext()){
 		// String key = (String) hit.next();
@@ -488,7 +488,7 @@ public class PCPOPHtmlParser extends BaseHtmlParser{
 		return filesize;
 	}
 
-	void process() {
+	public void process() {
 		try {
 			// 指定父ID下的网站列表
 			List<Website> weblist = websiteDao.findByFatherId(166);
