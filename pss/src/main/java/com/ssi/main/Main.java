@@ -12,6 +12,6 @@ public class Main {
 		ApplicationContext context = new ClassPathXmlApplicationContext("spring/applicationContext.xml");
 		
 		//加载日志配置文件
-//		PropertyConfigurator.configure(Main.class.getClassLoader().getResource("conf/log4j.properties")); 
+		PropertyConfigurator.configure(Main.class.getClassLoader().getResource("log4j.properties")); 
 	}
 }
