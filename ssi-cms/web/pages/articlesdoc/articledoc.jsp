@@ -23,7 +23,9 @@
 
 	<body>
 		<div id="div-article"></div>
+		<!-- 
 		<div>执行操作</div>
 		<textarea id="op" rows="10" style="width:800px;"></textarea>
+		 -->
 	</body>
 </html>

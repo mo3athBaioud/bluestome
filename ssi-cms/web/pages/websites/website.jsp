@@ -7,10 +7,13 @@
 		<title>站点管理</title>
 		<link rel="stylesheet" type="text/css" media="all" href="${ctx}/resources/css/ext-all.css" />
 		<link rel="stylesheet" type="text/css" media="all" href="${ctx}/styles/index.css" />
-		<link rel="stylesheet" type="text/css" href="${ctx}/styles/UploadDialog.css">
 		<script type="text/javascript" src="${ctx}/adapter/ext/ext-base.js"></script>
 		<script type="text/javascript" src="${ctx}/adapter/ext/ext-all.js"></script>
 		<script type="text/javascript" src="${ctx}/adapter/ext/ext-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="${ctx}/scripts/common/RowExpander.js"></script>
+		<!-- 
+		<script type="text/javascript" src="${ctx}/scripts/common/examples.js"></script>
+		 -->
 		<script type="text/javascript" src="${ctx}/scripts/models/website.js"></script>
 		<script type="text/javascript">
 		    	var project = '${ctx}';
