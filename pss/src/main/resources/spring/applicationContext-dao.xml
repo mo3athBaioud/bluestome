@@ -3,9 +3,15 @@
           "-//SPRING//DTD BEAN//EN"
           "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<bean id="websiteDAO"  parent="baseDAO" class="com.ssi.dal.dao.impl.WebsiteDAOImpl"/>
-	<bean id="articleDAO"  parent="baseDAO" class="com.ssi.dal.dao.impl.ArticleDAOImpl"/>
-	<bean id="articleDocDAO"  parent="baseDAO" class="com.ssi.dal.dao.impl.ArticleDocDAOImpl"/>
-	<bean id="imageDAO"  parent="baseDAO" class="com.ssi.dal.dao.impl.ImageDAOImpl"/>
-	<bean id="pictureFileDAO"  parent="baseDAO" class="com.ssi.dal.dao.impl.PictureFileDAOImpl"/>
+	<bean id="websiteDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.WebsiteDAOImpl"/>
+	<bean id="articleDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.ArticleDAOImpl"/>
+	<bean id="articleDocDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.ArticleDocDAOImpl"/>
+	<bean id="imageDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.ImageDAOImpl"/>
+	<bean id="pictureFileDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.PictureFileDAOImpl"/>
+	<bean id="chartDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.ChartDAOImpl"/>
+
+
+	<bean id="earthRegionDAO"  parent="baseDAO" class="com.ssi.dal.usgs.dao.impl.EarthRegionDAOImpl"/>
+	<bean id="earthQuakeInfoDAO"  parent="baseDAO" class="com.ssi.dal.usgs.dao.impl.EarthQuakeInfoDAOImpl"/>
+	<bean id="earthQuakeDetailDAO"  parent="baseDAO" class="com.ssi.dal.usgs.dao.impl.EarthQuakeDetailDAOImpl"/>
 </beans>

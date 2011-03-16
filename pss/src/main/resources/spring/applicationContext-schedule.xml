@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC
+          "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!--业务对象-->
+	<bean id="sendMessage" class="com.ssi.schedule.SendMessage" parent="baseSchedule">
+		<property name="id">
+			<value>70915</value>
+		</property>
+		<property name="count">
+			<value>300</value>
+		</property>
+	</bean>
+	
+	<!--业务对象-->
+	<bean id="chartDAYSchedule" class="com.ssi.schedule.ChartDaySchedule" parent="baseSchedule">
+	</bean>
+</beans>

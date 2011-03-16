@@ -16,6 +16,18 @@
 		</property>
 	</bean>
 
+	<!--  -->
+	<bean id="militaryParser"  parent="baseHtmlParser" 
+		class="com.ssi.htmlparser.chinamilitary.MilitaryParser">
+		<property name="tmpUrl">
+			<value>F:\\fileserver\\image\\</value>
+		</property>
+		
+		<property name="FILE_SERVER">
+			<value>F:\\fileserver\\image\\</value>
+		</property>
+	</bean>
+	
 	<!--  init-method="init"  -->
 	<bean id="chinaTUKUParser"  parent="baseHtmlParser" 
 		class="com.ssi.htmlparser.chinamilitary.ChinaTUKUParser" >
@@ -24,5 +36,13 @@
 	<!-- init-method="process" -->
 	<bean id="pcpopParser"  parent="baseHtmlParser" 
 		class="com.ssi.htmlparser.pcpop.PCPOPHtmlParser">
+	</bean>
+
+	<bean id="kpbzParser"  parent="baseHtmlParser" 
+		class="com.ssi.htmlparser.kpbz.KPBZParser">
+	</bean>
+	
+	<bean id="zolDeskParser"  parent="baseHtmlParser" 
+		class="com.ssi.htmlparser.zol.ZOLDESKParser">
 	</bean>
 </beans>

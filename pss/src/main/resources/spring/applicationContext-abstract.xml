@@ -44,6 +44,9 @@
 		<property name="htmlParser">
 			<ref bean="htmlParser" />
 		</property>
+		<property name="downloadCount">
+			<value>300</value>
+		</property>
 	</bean>
 	
 	<bean abstract="true"  id="baseSchedule" class="com.ssi.schedule.BaseSchedule">
@@ -76,6 +79,9 @@
 		</property>
 		<property name="websiteDao">
 			<ref bean="websiteDAO" />
+		</property>
+		<property name="chartDao">
+			<ref bean="chartDAO"/>
 		</property>
 	</bean>
 

@@ -11,6 +11,8 @@
 				<value>classpath:conf/jdbc.properties</value>
 				<value>classpath:conf/html.properties</value>
 				<value>classpath:conf/cache.properties</value>
+				<value>classpath:conf/quartz.properties</value>
+				<value>classpath:conf/jms.properties</value>
 			</list>
 		</property>
 	</bean>
