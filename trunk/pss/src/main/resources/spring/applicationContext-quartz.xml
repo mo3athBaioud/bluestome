@@ -6,25 +6,25 @@
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<ref bean="cronReportTrigger" />
-				<!-- 
-				<ref bean="chinaTUKUParserTrigger" />
-				 -->
+				<ref bean="chartDAYTrigger"/>
+				<ref bean="ChinaMilitaryParserTriggerDownload"/>
+				<ref bean="zolDeskHTMLParserTrigger"/>
+				<ref bean="kpbzHTMLParserTrigger"/>
 				<ref bean="pcpopHTMLParserTrigger" />
+				<ref bean="ChinaMilitaryParserTrigger" />
+				<ref bean="chinaTUKUParserTrigger" />
+				<!-- 
+				<ref bean="cronReportTrigger" />
+				<ref bean="ChinaMilitaryParserTriggerENEDDownload"/>
+				 -->
 			</list>
 		</property>
 		<!-- 设置是否Spring容器初始化后马上启动Scheduler，默认为true。如果设置为false则需要手工启动Scheduler -->
 		<property name="autoStartup" value="true" />
 	</bean>
 
-	<!--实际的工作Bean-->
-	<bean id="sendMessage" class="com.ssi.schedule.SendMessage" parent="baseSchedule">
-		<property name="id">
-			<value>70915</value>
-		</property>
-	</bean>
 
-	<!--jobBean用于设定启动时运用的Bean与方法-->
+	<!--业务对象启动模式设置-->
 	<bean id="scheduleSendMessage"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
@@ -36,7 +36,19 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
-	<!--jobBean用于设定启动时运用的Bean与方法-->
+	<!-- 定时生成每日报表数据 -->
+	<bean id="scheduleChartDay"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="chartDAYSchedule" />
+		</property>
+		<property name="targetMethod">
+			<value>process</value>
+		</property>
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<!--中华图库网解析类-->
 	<bean id="scheduleChinaTUKUParser"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
@@ -48,7 +60,42 @@
 		<property name="concurrent" value="false" />
 	</bean>
 
-	<!--jobBean用于设定启动时运用的Bean与方法-->
+	<!--中华军事网解析类-->
+	<bean id="scheduleChinaMilitaryParser"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="militaryParser" />
+		</property>
+		<property name="targetMethod">
+			<value>init</value>
+		</property>
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<bean id="scheduleChinaMilitaryParserDownload"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="militaryParser" />
+		</property>
+		<property name="targetMethod">
+			<value>patchImag</value>
+		</property>
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<!-- 下载异常补丁 -->
+	<bean id="scheduleChinaMilitaryParserENEDDownload"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="militaryParser" />
+		</property>
+		<property name="targetMethod">
+			<value>patchENEDImag</value>
+		</property>
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<!--PCPOP网站解析类-->
 	<bean id="schedulePCPOPHtmlParser"
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<property name="targetObject">
@@ -60,6 +107,29 @@
 		<property name="concurrent" value="false" />
 	</bean>
 	
+	<!--宽屏壁纸网站解析类-->
+	<bean id="scheduleKPBZHtmlParser"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="kpbzParser" />
+		</property>
+		<property name="targetMethod">
+			<value>init</value>
+		</property>
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<!--中关村壁纸网站解析类-->
+	<bean id="scheduleZolDeskHtmlParser"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="zolDeskParser" />
+		</property>
+		<property name="targetMethod">
+			<value>init</value>
+		</property>
+		<property name="concurrent" value="false" />
+	</bean>
 	
 	<!--定时器设定起动频率)-->
 	<bean id="cronReportTrigger"
@@ -68,26 +138,96 @@
 			<ref bean="scheduleSendMessage" />
 		</property>
 		<property name="cronExpression"
-			value="0 0/1 * * * ?" />
+			value="0 0/10 * * * ?" />
 	</bean>
 
 	<!--定时器设定起动频率)-->
+	<bean id="chartDAYTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="scheduleChartDay" />
+		</property>
+		<property name="cronExpression"
+			value="0 0/30 0/6 * * ?" />
+	</bean>
+	
+	<!--中华图库网执行频率设置-->
 	<bean id="chinaTUKUParserTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail">
 			<ref bean="scheduleChinaTUKUParser" />
 		</property>
 		<property name="cronExpression"
-			value="0 40 0/8 * * ?" />
+			value="25 10 0/6 * * ?" />
 	</bean>
 
-	<!--定时器设定起动频率)-->
+	<!--中华图库网执行频率设置-->
+	<bean id="ChinaMilitaryParserTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="scheduleChinaMilitaryParser" />
+		</property>
+		<property name="cronExpression"
+			value="20 0 0/8 * * ?" />
+	</bean>
+	
+	<!--中华图库网下载执行频率设置-->
+	<bean id="ChinaMilitaryParserTriggerDownload"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="scheduleChinaMilitaryParserDownload" />
+		</property>
+		<!-- 
+		<property name="cronExpression"
+			value="* 0/3 * * * ?" />
+		 -->	
+		<property name="cronExpression">
+			<value>${china.military.download}</value>
+		</property>
+	</bean>
+	
+	<!--中华图库网下载执行频率设置-->
+	<bean id="ChinaMilitaryParserTriggerENEDDownload"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="scheduleChinaMilitaryParserENEDDownload" />
+		</property>
+		<!-- 
+		<property name="cronExpression"
+			value="* 0/3 * * * ?" />
+		 -->	
+		<property name="cronExpression">
+			<value>${china.military.download}</value>
+		</property>
+	</bean>
+	
+	<!--PCPOP执行频率设置-->
 	<bean id="pcpopHTMLParserTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail">
 			<ref bean="schedulePCPOPHtmlParser" />
 		</property>
 		<property name="cronExpression"
-			value="0 7 11 * * ?" />
+			value="20 10 0/6 * * ?" />
+	</bean>
+	
+	<!--宽屏壁纸网站执行频率设置-->
+	<bean id="kpbzHTMLParserTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="scheduleKPBZHtmlParser" />
+		</property>
+		<property name="cronExpression"
+			value="0 30 0 2,4,6,8,10,12,14,16,18,20,22,24,26,28 * ?" />
+	</bean>
+	
+	<!--中关村壁纸网站执行频率设置-->
+	<bean id="zolDeskHTMLParserTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="scheduleZolDeskHtmlParser" />
+		</property>
+		<property name="cronExpression"
+			value="0 0 4 2,4,6,8,10,12,14,16,18,20,22,24,26,28 * ?" />
 	</bean>
 </beans>

@@ -10,22 +10,42 @@
            http://www.springframework.org/schema/aop
            http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 	<import resource="classpath:spring/applicationContext-prop.xml" />
+	<!-- 
+	<import resource="classpath:spring/applicationContext-activemq.xml" />
+	 -->
 	<import resource="classpath:spring/applicationContext-persistence.xml" />
 	<import resource="classpath:spring/applicationContext-dao.xml" />
+	<!-- 
 	<import resource="classpath:spring/applicationContext-cache.xml" />
 	<import resource="classpath:spring/applicationContext-abstract.xml" />
+	<import resource="classpath:spring/applicationContext-schedule.xml" />
 	<import resource="classpath:spring/applicationContext-quartz.xml" />
 	<import resource="classpath:spring/applicationContext-htmlparser.xml" />
+	 -->
 	<bean id="exporter" class="org.springframework.jmx.export.MBeanExporter"
 		lazy-init="false">
 		<property name="beans">
 			<map>
+				<!-- 
 				<entry key="bean:name=sendMessage" value-ref="sendMessage" />
 				<entry key="bean:name=chinaTUKUParser" value-ref="chinaTUKUParser" />
+				<entry key="bean:name=chinaMilitaryParser" value-ref="militaryParser" />
 				<entry key="bean:name=pcpopParser" value-ref="pcpopParser" />
-				<!-- 
 				 -->
 			</map>
 		</property>
 	</bean>
+	
+	<!-- 日志配置   -->
+	<!-- 定义切面 -->
+	<bean id="logClass" class="com.ssi.common.log.LogUtilAOP" />
+	<bean id="logInvoke" class="com.ssi.common.log.LogMethodInterceptor" />
+	
+	<!-- AOP配置 -->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.ssi.dal.dao..*.find*(..))" id="htmlProcessCut"/>
+		<aop:advisor advice-ref="logInvoke"  pointcut-ref="htmlProcessCut"/>
+	</aop:config>
+	<!-- 
+	 -->
 </beans>
