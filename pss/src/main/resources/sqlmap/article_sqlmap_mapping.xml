@@ -93,6 +93,43 @@
 		</dynamic>
 		
     </statement>
+
+	<statement id="GET_ARTICLE_COUNT"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
+    	SELECT COUNT(*) FROM TBL_ARTICLE t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="webId" prepend="and">
+				t.d_web_id = #webId#
+			</isNotEmpty>
+			<isNotEmpty property="title" prepend="and">
+				t.d_title = #title#
+			</isNotEmpty>
+			<isNotEmpty property="articleUrl" prepend="and">
+				t.d_acticle_url = #articleUrl#
+			</isNotEmpty>
+			<isNotEmpty property="acticleRealUrl" prepend="and">
+				t.d_article_real_url = #acticleRealUrl#
+			</isNotEmpty>
+			<isNotEmpty property="acticleXmlUrl" prepend="and">
+				t.d_article_xml_url = #acticleXmlUrl#
+			</isNotEmpty>
+			<isNotEmpty property="text" prepend="and">
+				t.d_text = #text#
+			</isNotEmpty>
+			<isNotEmpty property="intro" prepend="and">
+				t.d_intro = #intro#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="limit">
+				limit #limit#
+			</isNotEmpty>
+		</dynamic>
+		
+    </statement>
 	
 </sqlMap>
 

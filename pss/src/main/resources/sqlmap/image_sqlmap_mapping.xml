@@ -115,7 +115,7 @@
 	</statement>
     
 	<statement id="QUERY_IMAGE_BY_MAP"  parameterClass="java.util.Map" resultMap="imageMap">
-		SELECT * FROM TBL_IMAGE T WHERE 1 = 1
+		SELECT DISTINCT T.* FROM TBL_IMAGE T WHERE 1 = 1
 		<dynamic>
 			<isNotEmpty property="id" prepend="and">
 				t.d_id = #id#
@@ -159,11 +159,11 @@
 			<isNotEmpty property="size" prepend="and">
 				t.d_filesize = #size#
 			</isNotEmpty>
-			order by d_id limit 
-			<isNotEmpty property="limit">
-				limit = #limit#
-			</isNotEmpty>
 		</dynamic>
+			order by d_id 
+		<isNotEmpty property="limit">
+			limit #limit#
+		</isNotEmpty>
 	</statement>
 	
  	<statement id="GET_COUNT_IMAGE_BY_WEB_ID" parameterClass="java.util.Map" resultMap="imageMap">

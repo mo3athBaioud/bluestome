@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap>
-	<typeAlias alias="website" type="com.ssi.dal.domain.Website" />
-	<typeAlias alias="count" type="com.ssi.dal.domain.Count" />
-
+	<typeAlias alias="website" type="com.ssi.common.dal.domain.Website" />
+	<typeAlias alias="count" type="com.ssi.common.dal.domain.Count" />
+	<!-- 
+	 -->
+	 
 	<resultMap class="website" id="websiteMap">
 		<result column="d_id" property="id"/>
 		<result column="d_web_type" property="type"/>
@@ -27,7 +29,7 @@
     	SELECT t.* FROM tbl_web_site t WHERE t.d_parent_id = #value# ORDER BY t.d_id
     </statement>
     
-    	<statement id="GET_WEBSITE_COUNT"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
+   	<statement id="GET_WEBSITE_COUNT"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
 		SELECT COUNT(*) FROM tbl_web_site T WHERE 1 = 1
 		<dynamic>
 			<isNotEmpty property="id" prepend="and">
@@ -54,6 +56,37 @@
 		</dynamic>
 	</statement>
 
+   	<statement id="QUERY_WEBSITE_BY_MAP"  parameterClass="java.util.Map" resultMap="websiteMap">
+		SELECT DISTINCT T.* FROM tbl_web_site T WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="parentId" prepend="and">
+				t.d_parent_id = #parentId#
+			</isNotEmpty>
+			<isNotEmpty property="type" prepend="and">
+				t.d_web_type = #type#
+			</isNotEmpty>
+			<isNotEmpty property="url" prepend="and">
+				t.d_web_url = #url#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="and">
+				t.d_web_name = #name#
+			</isNotEmpty>
+			<isNotEmpty property="createtime" prepend="and">
+				t.d_createtime = #createtime#
+			</isNotEmpty>
+			<isNotEmpty property="status" prepend="and">
+				t.d_status = #status#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY D_ID 
+		<isNotEmpty property="limit" prepend="and">
+			limit #limit#
+		</isNotEmpty>
+	</statement>
+	
  	<statement id="GET_COUNT_BY_WEB_ID" parameterClass="java.lang.Integer" resultClass="count">
 		select d_link as name,count(*) AS total from tbl_image where d_article_id in (
 		 select distinct d_id from tbl_article where d_web_id in (select distinct d_id from tbl_web_site where d_parent_id = #webid#)
