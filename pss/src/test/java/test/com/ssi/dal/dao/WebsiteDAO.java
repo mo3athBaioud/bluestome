@@ -7,10 +7,10 @@ import org.junit.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ssi.dal.dao.IWebsiteDAO;
-import com.ssi.dal.domain.Article;
-import com.ssi.dal.domain.Count;
-import com.ssi.dal.domain.Website;
+import com.ssi.common.dal.dao.IWebsiteDAO;
+import com.ssi.common.dal.domain.Article;
+import com.ssi.common.dal.domain.Count;
+import com.ssi.common.dal.domain.Website;
 
 public class WebsiteDAO {
 
@@ -71,6 +71,18 @@ public class WebsiteDAO {
 					}
 					System.out.println("**********************End*****************************");
 				}
+			}
+		}
+	}
+	
+	public void find(){
+		HashMap map = new HashMap();
+		map.put("parentId",166);
+		List<Website> list = websiteDAO.find(map); 
+		if(list.size() > 0){
+			for(Website website:list){
+				System.out.println(">> WebName:"+website.getName());
+				System.out.println(">> WebURL:"+website.getUrl());
 			}
 		}
 	}

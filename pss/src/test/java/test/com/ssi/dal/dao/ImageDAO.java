@@ -9,10 +9,10 @@ import org.junit.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ssi.dal.dao.IArticleDAO;
-import com.ssi.dal.dao.IImageDAO;
-import com.ssi.dal.domain.Article;
-import com.ssi.dal.domain.Image;
+import com.ssi.common.dal.dao.IArticleDAO;
+import com.ssi.common.dal.dao.IImageDAO;
+import com.ssi.common.dal.domain.Article;
+import com.ssi.common.dal.domain.Image;
 
 public class ImageDAO {
 	
