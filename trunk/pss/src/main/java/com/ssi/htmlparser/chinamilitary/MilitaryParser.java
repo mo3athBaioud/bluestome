@@ -17,13 +17,13 @@ import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.NodeList;
 
+import com.ssi.common.dal.domain.Article;
+import com.ssi.common.dal.domain.Image;
+import com.ssi.common.dal.domain.PictureFile;
+import com.ssi.common.dal.domain.Website;
 import com.ssi.common.utils.FileUtils;
 import com.ssi.common.utils.HttpClientUtils;
 import com.ssi.common.utils.StringUtils;
-import com.ssi.dal.domain.Article;
-import com.ssi.dal.domain.Image;
-import com.ssi.dal.domain.PictureFile;
-import com.ssi.dal.domain.Website;
 import com.ssi.htmlparser.BaseHtmlParser;
 import com.ssi.htmlparser.bean.LinkBean;
 import com.ssi.htmlparser.bean.WebsiteBean;
@@ -62,6 +62,14 @@ public class MilitaryParser extends BaseHtmlParser {
 	private List<Article> ARTICLELIST = new ArrayList<Article>();
 
 	private HashMap<String, LinkBean> LINKHASH = new HashMap<String, LinkBean>();
+	
+	public long fileSizeCount = 0;
+	
+	public long pageSizeCount = 0;
+	
+	public int recordCount = 0 ;
+	
+	public int imageCount = 0;
 
 	void getLink() throws Exception {
 		Parser p1 = new Parser();
@@ -259,6 +267,7 @@ public class MilitaryParser extends BaseHtmlParser {
 							}
 							int result = articleDao.insert(acticle);
 							if (result > 0) {
+								recordCount ++;
 								client.put(bean.getLink(), bean.getLink());
 								acticle.setId(result);
 								String aKey = CacheUtils.getArticleKey(result);
@@ -277,6 +286,7 @@ public class MilitaryParser extends BaseHtmlParser {
 					} catch (Exception e) {
 						LINKLIST.add(bean);
 						e.printStackTrace();
+						logger.error(">> init.Exception:"+e.getMessage());
 						// break;
 						continue;
 					}
@@ -431,16 +441,16 @@ public class MilitaryParser extends BaseHtmlParser {
 	}
 
 	void getImage(Integer id) throws Exception {
-		logger.error(" >> IN GetImage Method");
+//		logger.error(" >> IN GetImage Method");
 		Article article = null;
 		String aKey = CacheUtils.getArticleKey(id);
 		try {
 			if (null != articleCache.get(aKey)) {
-				logger.info(">> 从缓存中获取文章对象[" + id + "] ");
+//				logger.info(">> 从缓存中获取文章对象[" + id + "] ");
 				article = (Article) articleCache.get(aKey);
 			}
 			if (null == article) {
-				logger.info(">> 从缓存中未获取文章对象，从数据库中获取文章对象[" + id + "] ");
+//				logger.info(">> 从缓存中未获取文章对象，从数据库中获取文章对象[" + id + "] ");
 				article = articleDao.findById(id);
 				if (null != article)
 					articleCache.put(aKey, article);
@@ -480,10 +490,11 @@ public class MilitaryParser extends BaseHtmlParser {
 								String length = HttpClientUtils
 										.getHttpHeaderResponse(bean
 												.getHttpUrl(), "Content-Length");
-								logger.info(">> Content-Length:" + length);
+//								logger.info(">> Content-Length:" + length);
 								if (null != length) {
 									bean.setSize(Long.valueOf(length));
 									bean.setStatus(1);
+									fileSizeCount += Long.valueOf(length);
 								}
 								if (client.get(bean.getHttpUrl()) == null) {
 									bean.setArticleId(article.getId());
@@ -493,20 +504,18 @@ public class MilitaryParser extends BaseHtmlParser {
 										logger.info("图片标题为：" + bean.getTitle()
 												+ ",未添加到数据库");
 									} else {
+										imageCount ++;
 										bean.setId(result);
 										client.put(bean.getHttpUrl(), bean
 												.getHttpUrl());
 										imageCache.put(CacheUtils
 												.getImageKey(result), bean);
-										// if(imgDownload(bean,
-										// article.getWebId())){
-										// bean.setLink("FD");
-										// if(imageDao.update(bean)){
-										// System.out
-										// .println(">>
-										// 图片下载成功，更新[tbl_image("+bean.getArticleId()+"|"+bean.getId()+")]图片记录");
-										// }
-										// }
+										 if(imgDownload(bean)){
+											 bean.setLink("FD");
+											 if(imageDao.update(bean) > 0){
+												 System.out.println(">>图片下载成功，更新[tbl_image("+bean.getArticleId()+"|"+bean.getId()+")]图片记录");
+											 }
+										 }
 									}
 								}
 							}
@@ -521,138 +530,6 @@ public class MilitaryParser extends BaseHtmlParser {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
-		}
-	}
-
-	boolean imgDownload(Image img, Integer webId) {
-		PictureFile bean = null;
-		bean = new PictureFile();
-		String s_fileName = img.getImgUrl().substring(
-				img.getImgUrl().lastIndexOf("/") + 1, img.getImgUrl().length());
-		String fileName = img.getHttpUrl().substring(
-				img.getHttpUrl().lastIndexOf("/") + 1,
-				img.getHttpUrl().length());
-		String length = "0";
-		try {
-			byte[] big = null;
-			big = HttpClientUtils.getResponseBodyAsByte(
-					img.getCommentshowurl(), null, img.getHttpUrl());
-			if (null == big)
-				return false;
-			length = String.valueOf(big.length);
-			if (length.equalsIgnoreCase("20261")
-					|| length.equalsIgnoreCase("3267")
-					|| length.equalsIgnoreCase("4096")) {
-				logger.info(">>> 尝试使用Referer来获取图片");
-				big = HttpClientUtils.getResponseBodyAsByte(img.getReferer(),
-						null, img.getHttpUrl());
-				length = String.valueOf(big.length);
-				if (length.equalsIgnoreCase("20261")
-						|| length.equalsIgnoreCase("3267")
-						|| length.equalsIgnoreCase("4096")) {
-					logger.error("下载被屏蔽，未突破盗链系统...");
-					return false;
-				}
-			}
-			// 小图
-			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
-					+ StringUtils.gerDir(String.valueOf(img.getArticleId()))
-					+ img.getArticleId() + File.separator + s_fileName)) == null) {
-				IOUtil.createPicFile(img.getImgUrl(), PIC_SAVE_PATH
-						+ StringUtils
-								.gerDir(String.valueOf(img.getArticleId()))
-						+ img.getArticleId() + File.separator + s_fileName);
-			}
-
-			// 大图
-			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
-					+ StringUtils.gerDir(String.valueOf(img.getArticleId()))
-					+ img.getArticleId() + File.separator + fileName)) == null) {
-				IOUtil.createFile(big, PIC_SAVE_PATH
-						+ StringUtils
-								.gerDir(String.valueOf(img.getArticleId()))
-						+ img.getArticleId() + File.separator + fileName);
-			}
-			bean.setArticleId(img.getArticleId());
-			bean.setImageId(img.getId());
-			bean.setTitle(img.getTitle());
-			bean.setSmallName(File.separator
-					+ StringUtils.gerDir(String.valueOf(img.getArticleId()))
-					+ img.getArticleId() + File.separator + s_fileName);
-			bean.setName(File.separator
-					+ StringUtils.gerDir(String.valueOf(img.getArticleId()))
-					+ img.getArticleId() + File.separator + fileName);
-			bean.setUrl(PIC_SAVE_PATH);
-			try {
-				boolean b = pictureFileDao.insert(bean);
-				if (b) {
-					pictureFileCache.put(CacheUtils.getBigPicFileKey(bean
-							.getUrl()
-							+ bean.getName()), bean);
-					pictureFileCache.put(CacheUtils.getSmallPicFileKey(bean
-							.getUrl()
-							+ bean.getSmallName()), bean);
-					return true;
-				} else {
-					return false;
-				}
-			} catch (Exception e) {
-				logger.info("数据库异常");
-				e.printStackTrace();
-				return false;
-			}
-		} catch (IOException e) {
-			logger.info("网络连接，文件IO异常");
-			return false;
-		}
-	}
-
-	void imgDownload() throws Exception {
-		PictureFile bean = null;
-		HashMap map = new HashMap();
-		map.put("link", "NED");
-		map.put("limit", 200);
-		List<Image> list = imageDao.find(map);
-		try {
-			if (list.size() > 0) {
-				logger.info("list.size():" + list.size());
-				for (Image imgBean : list) {
-					bean = new PictureFile();
-					String s_fileName = imgBean.getImgUrl().substring(
-							imgBean.getImgUrl().lastIndexOf("/") + 1,
-							imgBean.getImgUrl().length());
-					String fileName = imgBean.getHttpUrl().substring(
-							imgBean.getHttpUrl().lastIndexOf("/") + 1,
-							imgBean.getHttpUrl().length());
-					s_fileName = s_fileName.replace(".", "_s.");
-					IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
-							+ CommonUtil.getDate("") + File.separator
-							+ imgBean.getArticleId() + File.separator
-							+ fileName.replace(".", "_s."));
-					IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH
-							+ CommonUtil.getDate("") + File.separator
-							+ imgBean.getArticleId() + File.separator
-							+ fileName);
-					bean.setArticleId(imgBean.getArticleId());
-					bean.setImageId(imgBean.getId());
-					bean.setTitle(imgBean.getTitle());
-					bean.setSmallName(CommonUtil.getDate("") + File.separator
-							+ imgBean.getArticleId() + File.separator
-							+ s_fileName);
-					bean.setName(CommonUtil.getDate("") + File.separator
-							+ imgBean.getArticleId() + File.separator
-							+ fileName);
-					bean.setUrl(PIC_SAVE_PATH);
-					boolean b = pictureFileDao.insert(bean);
-					if (b) {
-						logger.info("成功！");
-					} else {
-						logger.info("失败");
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -743,28 +620,7 @@ public class MilitaryParser extends BaseHtmlParser {
 		}
 	}
 
-	void patchImag(WebsiteBean bean) {
-		try {
-			HashMap map = new HashMap();
-			map.put("webId", bean.getId());
-			map.put("text", "FD");
-			List<Article> artList = articleDao.find(map);
-			for (Article article : artList) {
-				HashMap imgMap = new HashMap();
-				imgMap.put("articleId", article.getId());
-				List<Image> imgList = imageDao.find(imgMap);
-				for (Image img : imgList) {
-					imgDownload(img, bean.getId());
-				}
-				imgMap.clear();
-			}
-			map.clear();
-		} catch (Exception e) {
-			logger.error(">> error patch img");
-		}
-	}
-
-	void movefile(int parentId) throws Exception {
+	public void movefile(int parentId) throws Exception {
 		List<Website> webList = websiteDao.findByFatherId(parentId);
 		PictureFile bean = null;
 		for (Website website : webList) {
@@ -885,15 +741,58 @@ public class MilitaryParser extends BaseHtmlParser {
 		FILE_SERVER = file_server;
 	}
 
+	
+	public long getFileSizeCount() {
+		return fileSizeCount;
+	}
+
+	public void setFileSizeCount(long fileSizeCount) {
+		this.fileSizeCount = fileSizeCount;
+	}
+
+	public int getImageCount() {
+		return imageCount;
+	}
+
+	public void setImageCount(int imageCount) {
+		this.imageCount = imageCount;
+	}
+
+	public long getPageSizeCount() {
+		return pageSizeCount;
+	}
+
+	public void setPageSizeCount(long pageSizeCount) {
+		this.pageSizeCount = pageSizeCount;
+	}
+
+	public int getRecordCount() {
+		return recordCount;
+	}
+
+	public void setRecordCount(int recordCount) {
+		this.recordCount = recordCount;
+	}
+
+	
 	@Override
 	public void init() {
 		try{
 			getActicle(5);
-			getActicle(5);
+			getActicle(143);
 		}catch(Exception e){
 			logger.error(e.getMessage());
 		}
-		
+		recordCount = 0;
+		imageCount = 0;
 	}
 
+	/**
+	 * 下载图片
+	 *
+	 */
+	public void downloadImage(){
+		//TODO 需要对图片下载逻辑和记录更新逻辑区分开，并且达到效率最高化
+		patchImag();
+	}
 }

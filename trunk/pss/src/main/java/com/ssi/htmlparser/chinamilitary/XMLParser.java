@@ -10,9 +10,9 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import com.ssi.common.dal.dao.IImageDAO;
+import com.ssi.common.dal.domain.Image;
 import com.ssi.common.utils.HttpClientUtils;
-import com.ssi.dal.dao.IImageDAO;
-import com.ssi.dal.domain.Image;
 import com.ssi.htmlparser.utils.IOUtil;
 
 public class XMLParser {

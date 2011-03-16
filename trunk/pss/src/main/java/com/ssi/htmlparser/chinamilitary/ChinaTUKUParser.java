@@ -15,16 +15,16 @@ import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.NodeList;
 
+import com.ssi.common.dal.dao.IArticleDAO;
+import com.ssi.common.dal.dao.IImageDAO;
+import com.ssi.common.dal.dao.IPictureFileDAO;
+import com.ssi.common.dal.dao.IWebsiteDAO;
+import com.ssi.common.dal.domain.Article;
+import com.ssi.common.dal.domain.Image;
+import com.ssi.common.dal.domain.PictureFile;
 import com.ssi.common.memcache.MemcacheClient;
 import com.ssi.common.utils.HttpClientUtils;
 import com.ssi.common.utils.StringUtils;
-import com.ssi.dal.dao.IArticleDAO;
-import com.ssi.dal.dao.IImageDAO;
-import com.ssi.dal.dao.IPictureFileDAO;
-import com.ssi.dal.dao.IWebsiteDAO;
-import com.ssi.dal.domain.Article;
-import com.ssi.dal.domain.Image;
-import com.ssi.dal.domain.PictureFile;
 import com.ssi.htmlparser.BaseHtmlParser;
 import com.ssi.htmlparser.bean.LinkBean;
 import com.ssi.htmlparser.cache.ArticleCache;
@@ -269,8 +269,8 @@ public class ChinaTUKUParser extends BaseHtmlParser{
 					+ fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
-				boolean b = pictureFileDao.insert(bean);
-				if (b) {
+				Integer b = pictureFileDao.insert(bean);
+				if (b > 0) {
 					pictureFileCache.put(CacheUtils.getBigPicFileKey(bean.getUrl()
 							+ bean.getName()), bean);
 					pictureFileCache.put(CacheUtils.getSmallPicFileKey(bean.getUrl()
@@ -398,6 +398,7 @@ public class ChinaTUKUParser extends BaseHtmlParser{
 						// LINKLIST.add(bean);
 						// break;
 						esb.append("URL["+key+"]:\n"+e.getMessage()+"\n");
+						logger.error("URL["+key+"]:\n"+e.getMessage()+"\n");
 						continue;
 					}
 				}
@@ -406,6 +407,7 @@ public class ChinaTUKUParser extends BaseHtmlParser{
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error("ChinaTUKUParser.Exception:"+e.getMessage()+"\n");
 		}
 		logger.debug("ERROR:\n"+esb.toString());
 		}
