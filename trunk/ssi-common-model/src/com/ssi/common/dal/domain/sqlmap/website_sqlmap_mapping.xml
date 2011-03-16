@@ -13,6 +13,7 @@
 		<result column="d_createtime" property="createtime" />
 		<result column="d_modifytime" property="modifytime" />
 		<result column="d_status" property="status" />
+		<result column="d_remarks" property="remarks" />
 		<result property="children" column="d_id"
 			select="GET_CHILD_WEBSITE_BY_FATHER_ID" />
 		<!-- 
@@ -20,25 +21,36 @@
 		-->
 		<result property="count" column="d_id"
 			select="GET_ARTICLE_COUNT_BY_WEB_ID" />
+			
+		<result property="father" column="d_parent_id"
+			select="GET_WEBSITE_BY_ID" />
+			
 	</resultMap>
 
      <insert id="website.insert" parameterClass="website"> 
  		INSERT INTO tbl_web_site 
- 		(d_web_type,d_parent_id,d_web_url,d_web_name,d_status,d_createtime,d_modifytime) 
- 		VALUES (#type#,#parentId#,#url#,#name#,#status#,#createtime#,now())
+ 		(d_web_type,d_parent_id,d_web_url,d_web_name,d_status,d_remarks,d_createtime,d_modifytime) 
+ 		VALUES (#type#,#parentId#,#url#,#name#,#status#,#remarks#,#createtime#,now())
  		<selectKey resultClass="int" type="post" keyProperty="id">
  			select LAST_INSERT_ID() as value
  		</selectKey>
 	</insert>
+	
+	<delete id="website.deletebyprimarykey" parameterClass="java.lang.Integer">
+		delete from tbl_web_site where d_id = #value#
+	</delete>
 
-    <update id="website.update" parameterClass="website"> 
- 		UPDATE tbl_web_site set 
- 		d_web_type=#type#,
- 		d_web_url = #url#,
- 		d_parent_id = #parentId#,
- 		d_web_name=#name#,
- 		d_status=#status#,
- 		d_modifytime = now()
+    <update id="website.update" parameterClass="website">
+ 		UPDATE 
+ 			tbl_web_site 
+ 		set 
+	 		d_web_type=#type#,
+	 		d_web_url = #url#,
+	 		d_parent_id = #parentId#,
+	 		d_web_name=#name#,
+	 		d_status=#status#,
+	 		d_remarks=#remarks#,
+	 		d_modifytime = now()
  		where d_id = #id#
 	</update>
 	
@@ -68,13 +80,16 @@
 				t.d_web_type = #type#
 			</isNotEmpty>
 			<isNotEmpty property="url" prepend="and">
-				t.d_web_url = #url#
+				t.d_web_url like concat('%',#url#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="name" prepend="and">
-				t.d_web_name = #name#
+				t.d_web_name like concat('%',#name#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="createtime" prepend="and">
 				t.d_createtime = #createtime#
+			</isNotEmpty>
+			<isNotEmpty property="remarks" prepend="and">
+				t.d_remarks like concat('%',#remarks#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="status" prepend="and">
 				t.d_status = #status#
@@ -96,13 +111,16 @@
 				t.d_web_type = #type#
 			</isNotEmpty>
 			<isNotEmpty property="url" prepend="and">
-				t.d_web_url = #url#
+				t.d_web_url like concat('%',#url#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="name" prepend="and">
-				t.d_web_name = #name#
+				t.d_web_name like concat('%',#name#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="createtime" prepend="and">
 				t.d_createtime = #createtime#
+			</isNotEmpty>
+			<isNotEmpty property="remarks" prepend="and">
+				t.d_remarks like concat('%',#remarks#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="status" prepend="and">
 				t.d_status = #status#
