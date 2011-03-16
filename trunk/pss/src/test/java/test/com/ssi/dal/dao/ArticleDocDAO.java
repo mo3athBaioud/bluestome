@@ -7,8 +7,8 @@ import org.junit.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ssi.dal.dao.IArticleDocDAO;
-import com.ssi.dal.domain.ArticleDoc;
+import com.ssi.common.dal.dao.IArticleDocDAO;
+import com.ssi.common.dal.domain.ArticleDoc;
 
 public class ArticleDocDAO {
 	

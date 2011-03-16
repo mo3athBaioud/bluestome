@@ -7,12 +7,12 @@ import org.junit.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ssi.dal.dao.IArticleDAO;
-import com.ssi.dal.dao.IImageDAO;
-import com.ssi.dal.dao.IPictureFileDAO;
-import com.ssi.dal.domain.Article;
-import com.ssi.dal.domain.Image;
-import com.ssi.dal.domain.PictureFile;
+import com.ssi.common.dal.dao.IArticleDAO;
+import com.ssi.common.dal.dao.IImageDAO;
+import com.ssi.common.dal.dao.IPictureFileDAO;
+import com.ssi.common.dal.domain.Article;
+import com.ssi.common.dal.domain.Image;
+import com.ssi.common.dal.domain.PictureFile;
 
 public class PictureFileDAO {
 	
@@ -56,11 +56,11 @@ public class PictureFileDAO {
 		picturefile.setArticleId(25818);
 		picturefile.setImageId(410438);
 		picturefile.setTitle("测试添加图片文件");
-		if(pictureFileDAO.insert(picturefile)){
-			System.out.println(">> 结果:添加成功");
-		}else{
-			System.out.println(">> 结果:添加失败");
-		}
+//		if(pictureFileDAO.insert(picturefile)){
+//			System.out.println(">> 结果:添加成功");
+//		}else{
+//			System.out.println(">> 结果:添加失败");
+//		}
 	}
 	
 	public void update(){
