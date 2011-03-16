@@ -261,4 +261,17 @@ public class WebsiteServiceImpl implements IWebsiteService {
 		return false;
 	}
 
+	/**
+	 * 根据ID删除记录
+	 * @param id 主键ID
+	 * @return boolean true:成功,false:失败
+	 */
+	public boolean delete(Integer id) {
+		Integer result = websiteDao.deleteByPrimarykey(id);
+		if(result > 0){
+			return true;
+		}
+		return false;
+	}
+
 }
