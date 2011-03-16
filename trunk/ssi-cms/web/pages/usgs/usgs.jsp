@@ -15,22 +15,24 @@
 		<script type="text/javascript" src="${ctx}/scripts/models/usgs.js"></script>
 		<script type="text/javascript">
 		    	var project = '${ctx}';
-				var webId = '${param.id}';
-				var colName = '${colName}';
-				var values = '${value}';
 		</script>
-    <style type="text/css">
-        body .x-panel {
-            margin-bottom:20px;
-        }
-        #button-grid .x-panel-body {
-            border:1px solid #99bbe8;
-            border-top:0 none;
-        }
-        p {
-			margin-bottom:15px;
-		}
-    </style>
+		<!-- 
+		<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true_or_false&amp;key=ABQIAAAAaDOzVTTlXR2YxtC8KS6VhhT2yXp_ZAY8_ufC3CFXhHIE1NvwkxSCvk-K1OWdOWGWgYXnuQJhZCM-Yg" type="text/javascript">
+		</script>
+	    <script type="text/javascript" src="${ctx}/scripts/common/Ext.ux.GMapPanel.js"></script>
+	     -->
+	    <style type="text/css">
+	        body .x-panel {
+	            margin-bottom:20px;
+	        }
+	        #button-grid .x-panel-body {
+	            border:1px solid #99bbe8;
+	            border-top:0 none;
+	        }
+	        p {
+				margin-bottom:15px;
+			}
+	    </style>
 	</head>
 
 	<body>
