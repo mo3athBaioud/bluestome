@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="image" type="com.ssi.common.dal.domain.Image" />
+
+	<resultMap class="image" id="imageMap">
+		<result column="d_id" property="id"/>
+		<result column="d_article_id" property="articleId"/>
+		<result column="d_title" property="title"/>
+		<result column="d_name" property="name"/>
+		<result column="d_imgurl" property="imgUrl"/>
+		<result column="d_httpurl" property="httpUrl"/>							
+		<result column="d_orderid" property="orderId"/>	
+		<result column="d_time" property="time"/>						
+		<result column="d_intro" property="intro"/>						
+		<result column="d_commentsuburl" property="commentsuburl"/>						
+		<result column="d_commentshowurl" property="commentshowurl"/>						
+		<result column="d_link" property="link"/>						
+		<result column="d_createtime" property="createtime"/>						
+		<result column="d_status" property="status"/>						
+		<result column="d_filesize" property="size"/>		
+		<result property="article" column="d_article_id" select="GET_ARTICLE_BY_ID" />					
+		<!-- 
+		<result property="pictureFile" column="d_id" select="GET_PICTUREFILE_BY_IMAGE_ID" />					
+		 -->
+	</resultMap>
+
+	<statement id="GET_IMAGE_BY_MAP"  parameterClass="java.util.Map" resultMap="imageMap">
+    	SELECT DISTINCT t.* FROM TBL_IMAGE t WHERE 1 = 1 and t.d_id = #id# and t.D_LINK = #link#  ORDER BY t.d_id
+    </statement>
+
+	<statement id="GET_IMAGE_BY_ID"  parameterClass="java.lang.Integer" resultMap="imageMap">
+    	SELECT DISTINCT t.* FROM TBL_IMAGE t WHERE t.d_id = #value# ORDER BY t.d_id limit 1
+    </statement>
+
+
+	    
+    <update id="UPDATE_IMAGE" parameterClass="image">
+    	UPDATE TBL_IMAGE SET
+    	d_article_id = #articleId#,
+    	d_title=#title#,
+    	d_name=#name#,
+    	d_imgurl=#imgUrl#,
+    	d_httpurl=#httpUrl#,
+    	d_orderid=#orderId#,
+    	d_time=#time#,
+    	d_intro=#intro#,
+    	d_commentsuburl=#commentsuburl#,
+    	d_commentshowurl=#commentshowurl#,
+    	d_link=#link#,
+    	d_createtime=#createtime#,
+    	d_status=#status#,
+    	d_filesize=#size#
+    	WHERE d_id = #id#
+    </update>
+    
+    <insert id="INSERT_IMAGE" parameterClass="image">
+    	INSERT INTO TBL_IMAGE (d_article_id,d_title,d_name,d_imgurl,d_httpurl,d_orderid,d_time,d_intro,d_commentsuburl,d_commentshowurl,d_link,d_createtime,d_status,d_filesize) 
+    	VALUES (#articleId#,#title#,#name#,#imgUrl#,#httpUrl#,#orderId#,#time#,#intro#,#commentsuburl#,#commentshowurl#,#link#,now(),#status#,#size#)
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+    </insert>
+    
+	<statement id="GET_IMAGE_COUNT"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
+		SELECT COUNT(*) FROM TBL_IMAGE T WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="articleId" prepend="and">
+				t.d_article_id = #articleId#
+			</isNotEmpty>
+			<isNotEmpty property="title" prepend="and">
+				t.d_title = #title#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="and">
+				t.d_name = #name#
+			</isNotEmpty>
+			<isNotEmpty property="imgUrl" prepend="and">
+				t.d_imgurl = #imgUrl#
+			</isNotEmpty>
+			<isNotEmpty property="httpUrl" prepend="and">
+				t.d_httpurl = #httpUrl#
+			</isNotEmpty>
+			<isNotEmpty property="orderId" prepend="and">
+				t.d_orderid = #orderId#
+			</isNotEmpty>
+			<isNotEmpty property="time" prepend="and">
+				t.d_time = #time#
+			</isNotEmpty>
+			<isNotEmpty property="intro" prepend="and">
+				t.d_intro = #intro#
+			</isNotEmpty>
+			<isNotEmpty property="commentsuburl" prepend="and">
+				t.d_commentsuburl = #commentsuburl#
+			</isNotEmpty>
+			<isNotEmpty property="link" prepend="and">
+				t.d_link = #link#
+			</isNotEmpty>
+			<isNotEmpty property="createTime" prepend="and">
+				t.d_createtime = #createTime#
+			</isNotEmpty>
+			<isNotEmpty property="status" prepend="and">
+				t.d_status = #status#
+			</isNotEmpty>
+			<isNotEmpty property="size" prepend="and">
+				t.d_filesize = #size#
+			</isNotEmpty>
+		</dynamic>
+	</statement>
+    
+	<statement id="QUERY_IMAGE_BY_MAP"  parameterClass="java.util.Map" resultMap="imageMap">
+		SELECT DISTINCT T.* FROM TBL_IMAGE T WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="articleId" prepend="and">
+				t.d_article_id = #articleId#
+			</isNotEmpty>
+			<isNotEmpty property="title" prepend="and">
+				t.d_title = #title#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="and">
+				t.d_name = #name#
+			</isNotEmpty>
+			<isNotEmpty property="imgUrl" prepend="and">
+				t.d_imgurl = #imgUrl#
+			</isNotEmpty>
+			<isNotEmpty property="httpUrl" prepend="and">
+				t.d_httpurl = #httpUrl#
+			</isNotEmpty>
+			<isNotEmpty property="orderId" prepend="and">
+				t.d_orderid = #orderId#
+			</isNotEmpty>
+			<isNotEmpty property="time" prepend="and">
+				t.d_time = #time#
+			</isNotEmpty>
+			<isNotEmpty property="intro" prepend="and">
+				t.d_intro = #intro#
+			</isNotEmpty>
+			<isNotEmpty property="commentsuburl" prepend="and">
+				t.d_commentsuburl = #commentsuburl#
+			</isNotEmpty>
+			<isNotEmpty property="link" prepend="and">
+				t.d_link = #link#
+			</isNotEmpty>
+			<isNotEmpty property="createTime" prepend="and">
+				t.d_createtime = #createTime#
+			</isNotEmpty>
+			<isNotEmpty property="status" prepend="and">
+				t.d_status = #status#
+			</isNotEmpty>
+			<isNotEmpty property="size" prepend="and">
+				t.d_filesize = #size#
+			</isNotEmpty>
+		</dynamic>
+			order by d_id 
+		<isNotEmpty property="limit">
+			limit #limit#
+		</isNotEmpty>
+	</statement>
+	
+ 	<statement id="GET_COUNT_IMAGE_BY_WEB_ID" parameterClass="java.util.Map" resultMap="imageMap">
+		select d_link,count(*) AS total from tbl_image where d_article_id in (
+		 select distinct d_id from tbl_article where d_web_id in (select distinct d_id from tbl_web_site where d_parent_id = #webid#)
+		)  group by d_link
+    </statement>
+    
+</sqlMap>
+
+
+
