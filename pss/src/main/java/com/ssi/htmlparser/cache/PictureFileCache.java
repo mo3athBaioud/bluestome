@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.ssi.common.cache.AbstractCache;
 import com.ssi.common.cache.CacheException;
-import com.ssi.dal.domain.PictureFile;
+import com.ssi.common.dal.domain.PictureFile;
 
 public class PictureFileCache extends AbstractCache {
 
