@@ -3,11 +3,12 @@ package com.ssi.schedule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ssi.dal.dao.IArticleDAO;
-import com.ssi.dal.dao.IArticleDocDAO;
-import com.ssi.dal.dao.IImageDAO;
-import com.ssi.dal.dao.IPictureFileDAO;
-import com.ssi.dal.dao.IWebsiteDAO;
+import com.ssi.common.dal.dao.IArticleDAO;
+import com.ssi.common.dal.dao.IArticleDocDAO;
+import com.ssi.common.dal.dao.IChartDAO;
+import com.ssi.common.dal.dao.IImageDAO;
+import com.ssi.common.dal.dao.IPictureFileDAO;
+import com.ssi.common.dal.dao.IWebsiteDAO;
 import com.ssi.htmlparser.cache.ArticleCache;
 import com.ssi.htmlparser.cache.ArticleDocCache;
 import com.ssi.htmlparser.cache.CommonCache;
@@ -46,6 +47,9 @@ public abstract class BaseSchedule {
 	
 	//TODO Configure in spring.xml
 	protected IWebsiteDAO websiteDao;
+	
+	//TODO Configure in spring.xml
+	protected IChartDAO chartDao;
 	
 	//TODO
 	public abstract void process();
@@ -128,6 +132,14 @@ public abstract class BaseSchedule {
 
 	public void setWebsiteDao(IWebsiteDAO websiteDao) {
 		this.websiteDao = websiteDao;
+	}
+
+	public IChartDAO getChartDao() {
+		return chartDao;
+	}
+
+	public void setChartDao(IChartDAO chartDao) {
+		this.chartDao = chartDao;
 	}
 	
 	
