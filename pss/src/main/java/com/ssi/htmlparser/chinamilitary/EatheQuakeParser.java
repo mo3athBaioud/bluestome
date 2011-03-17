@@ -385,6 +385,7 @@ public class EatheQuakeParser {
 		StringBuffer buffer = null;
 		String name = null;
 		EarthQuakeDetail detail = null;
+		Node node = null;
 		try {
 			detail = new EarthQuakeDetail();
 			buffer = new StringBuffer(url).append("\r\n");
@@ -402,7 +403,12 @@ public class EatheQuakeParser {
 						TableRow row = table.getRow(i);
 						if (null != row) {
 							TableColumn[] cols = row.getColumns();
-							Node node = row.getChild(1);
+							node = row.getChild(0);
+							String nt = node.toHtml();
+							if(nt.startsWith("<td><strong>")){
+								node = row.getChild(1);
+							}
+							System.out.println(" >> node:"+node.toHtml());
 							if (null != node) {
 								String key = null;
 								Integer id = -1;
