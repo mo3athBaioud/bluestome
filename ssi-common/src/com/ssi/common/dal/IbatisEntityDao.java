@@ -65,8 +65,8 @@ public class IbatisEntityDao<T> extends IbatisGenericDao implements
 	/**
 	 * 根据ID移除对象.
 	 */
-	public void deleteByPrimarykey(Serializable id) {
-		removeById(getEntityClass(), id);
+	public Integer deleteByPrimarykey(Serializable id) {
+		return removeById(getEntityClass(), id);
 	}
 
 	/**
@@ -107,4 +107,13 @@ public class IbatisEntityDao<T> extends IbatisGenericDao implements
 		return _getCount(entityClass, map);
 	}
 	
+	/**
+	 * 根据参数MAP查找列表
+	 * @param map
+	 * @return
+	 */
+	public List<T> find(Map map){
+		return queryForList(entityClass,POSTFIX_SELECTMAP, map);
+	}
+
 }
