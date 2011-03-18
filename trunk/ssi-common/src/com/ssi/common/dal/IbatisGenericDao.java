@@ -80,10 +80,11 @@ public class IbatisGenericDao extends BaseDAOImpl {
 	/**
 	 * 根据ID删除对象
 	 */
-	public <T> void removeById(Class<T> entityClass, Serializable id) {
-		getEntityDelegate().delete(
+	public <T> Integer removeById(Class<T> entityClass, Serializable id) {
+		Integer result = getEntityDelegate().delete(
 				getStatementId(entityClass,
 						IbatisGenericDao.POSTFIX_DELETE_PRIAMARYKEY), id,getRoute());
+		return result;
 	}
 
 	/**
@@ -225,7 +226,7 @@ public class IbatisGenericDao extends BaseDAOImpl {
 		String className = entityClass.getName();
 		String shortName = className.replace(entityClass.getPackage().getName()
 				+ ".", "");
-		return (shortName + suffix).toLowerCase();
+		return shortName.toLowerCase() + suffix;
 	}
 
 	public <T> List<T> queryForList(Class<T> entityClass, String statementId,
