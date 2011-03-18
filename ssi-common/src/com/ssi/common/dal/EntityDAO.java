@@ -3,6 +3,7 @@ package com.ssi.common.dal;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 实体DAO
@@ -43,7 +44,7 @@ public interface EntityDAO<T> {
 	 * @param id
 	 *            主键值
 	 */
-	void deleteByPrimarykey(Serializable id);
+	Integer deleteByPrimarykey(Serializable id);
 
 	/**
 	 * 更新对象信息
@@ -83,4 +84,11 @@ public interface EntityDAO<T> {
 	 * @return
 	 */
 	int getCount(HashMap map);
+	
+	/**
+	 * 根据参数MAP查找列表
+	 * @param map
+	 * @return
+	 */
+	List<T> find(Map map);
 }
