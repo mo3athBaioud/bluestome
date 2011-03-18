@@ -105,7 +105,17 @@ Ext.onReady(function(){
         		}else{
         			return value;
         		}
-			}},
+			}
+		},
+		{header:"深度",width:100,dataIndex:'d_depth',
+		   renderer:function(value){ 
+        		if(value < 30){
+        			return "<font color=red><b>"+value+"</b></font>km";
+        		}else{
+        			return value+"km";
+        		}
+			}
+		},
         {header: "纬度", width: 100, sortable: true, dataIndex: 'd_latitude'},
         {header: "经度", width: 100, sortable: true, dataIndex: 'd_longitude'},
         {header: "记录时间", width: 100, sortable: true, dataIndex: 'd_createtime'}
