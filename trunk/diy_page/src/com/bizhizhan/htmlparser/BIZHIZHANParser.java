@@ -26,6 +26,7 @@ import org.htmlparser.tags.OptionTag;
 import org.htmlparser.tags.SelectTag;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.tags.Span;
+import org.htmlparser.tags.TitleTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.SimpleNodeIterator;
 
@@ -229,9 +230,10 @@ public class BIZHIZHANParser {
 						article.setText("NED"); // No Execute Download
 						int key = articleDao.insert(article);
 						if (key > 0) {
-							client.add(url, url);
+//							client.add(url, url);
 							System.out.println("添加" + link.getLinkText()
 									+ ",成功");
+							patchTitle(key);
 						} else {
 							System.out.println("添加" + link.getLinkText()
 									+ "失败,已存在相同标题的内容");
@@ -412,14 +414,91 @@ public class BIZHIZHANParser {
 			
 			update();
 			
-			image();
+//			image();
 			
-			downloadImg();
+//			downloadImg();
 			
 //			movefile();
+			
+			patchTitle();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	static void patchTitle(int artid) throws Exception{
+		Parser p1 = null;
+		try{
+			Article art = articleDao.findById(artid);
+				if(null == art.getTitle() || "".equals(art.getTitle())){
+					p1 = new Parser();
+					p1.setURL(art.getArticleUrl());
+					NodeFilter filter = new NodeClassFilter(TitleTag.class);
+					NodeList nlist = p1.extractAllNodesThatMatch(filter);
+					if(null != nlist && nlist.size() > 0){
+						TitleTag title = (TitleTag)nlist.elementAt(0);
+						String text = title.getTitle();
+						//大维的北海道lomo非主流手机壁纸240x320,240x400,320x480,360x640-手机壁纸站
+						int start = text.lastIndexOf("-");
+						String t = text.substring(0,start);
+						art.setTitle(t);
+						if(!articleDao.update(art)){
+							System.out.println(" >> update article title failure!");
+						}
+					}
+					if(null != p1 )
+						p1 = null;
+				}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null != p1 )
+				p1 = null;
+		}
+		
+	}
+	
+	
+	static void patchTitle() throws Exception{
+		List<WebsiteBean> list = webSiteDao.findByParentId(600);
+		Parser p1 = null;
+		try{
+			for (WebsiteBean bean : list) {
+				List<Article> alist = articleDao.findByWebId(bean.getId());
+				for(Article art:alist){
+					if(null == art.getTitle() || "".equals(art.getTitle())){
+						p1 = new Parser();
+						p1.setURL(art.getArticleUrl());
+						NodeFilter filter = new NodeClassFilter(TitleTag.class);
+						NodeList nlist = p1.extractAllNodesThatMatch(filter);
+						if(null != nlist && nlist.size() > 0){
+							TitleTag title = (TitleTag)nlist.elementAt(0);
+							String text = title.getTitle();
+							//大维的北海道lomo非主流手机壁纸240x320,240x400,320x480,360x640-手机壁纸站
+							int start = text.lastIndexOf("-");
+							System.out.println(" >> article.id["+art.getId()+"],title:"+text.substring(0,start));
+							String t = text.substring(0,start);
+							art.setTitle(t);
+							if(!articleDao.update(art)){
+								System.out.println(" >> update article title failure!");
+							}
+						}
+						if(null != p1 )
+							p1 = null;
+					}
+				}
+			}
+		}catch(Exception e){
+			
+		}finally{
+			if(null != list){
+				list.clear();
+				list = null;
+			}
+			if(null != p1 )
+				p1 = null;
+		}
+		
 	}
 	
 	static void index() throws Exception{
@@ -444,9 +523,12 @@ public class BIZHIZHANParser {
 						article.setText("NED"); // No Execute Download
 						int key = articleDao.insert(article);
 						if (key > 0) {
-							client.add(url2, url2);
+//							client.add(url2, url2);
 							System.out.println("添加" + link.getLinkText()
 									+ ",成功");
+							if(null == article.getTitle() || "".equals(article.getTitle())){
+								patchTitle(key);
+							}
 						} else {
 							System.out.println("添加" + link.getLinkText()
 									+ "失败,已存在相同标题的内容");

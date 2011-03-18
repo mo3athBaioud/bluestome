@@ -814,9 +814,9 @@ public class MilitaryParser {
 
 //			 index();
 
-			getActicle(5); // 5 , 143
+			getActicle(1632); // 5 , 143
 
-			getActicle(143); // 5 , 143
+//			getActicle(143); // 5 , 143
 			
 //			movefile(5);
 			
@@ -826,7 +826,7 @@ public class MilitaryParser {
 			
 //			patchImag(bean);
 
-			 patch();
+//			 patch();
 
 			// listUnHandleData();
 
@@ -847,7 +847,7 @@ public class MilitaryParser {
 
 		getActicle(143); // 5 , 143
 		
-		patch();
+//		patch();
 		
 	}
 

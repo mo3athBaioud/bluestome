@@ -51,7 +51,7 @@ import com.utils.FileUtils;
 
 public class The51PPParser {
 
-	static String URL_ = "http://pp.the51.com/";
+	static String URL_ = "http://pp.the51.com";
 
 	static String URL = "http://pp.the51.com/";
 
@@ -78,6 +78,10 @@ public class The51PPParser {
 	static ImageDao imageDao = DAOFactory.getInstance().getImageDao();
 
 	static PicFileDao picFiledao = DAOFactory.getInstance().getPicFileDao();
+	
+	static boolean isUpdate = true;
+	
+	static int RECORD_COUNT = 0;
 
 	/**
 	 * 获取分类链接
@@ -242,6 +246,8 @@ public class The51PPParser {
 	 */
 	static ResultBean hasPaging2(String url) throws Exception {
 		boolean b = false;
+		StringBuffer buffer = new StringBuffer();
+		System.out.println("url:"+url);
 		ResultBean result = new ResultBean();
 		Parser parser = new Parser();
 		parser.setURL(url);
@@ -251,59 +257,65 @@ public class The51PPParser {
 		}
 		// 获取指定ID的DIV内容
 		NodeFilter filter = new NodeClassFilter(TableTag.class);
-		NodeList list = parser.extractAllNodesThatMatch(filter);
+		NodeList list = parser.extractAllNodesThatMatch(filter).extractAllNodesThatMatch(new HasAttributeFilter("cellspacing","0")).extractAllNodesThatMatch(new HasAttributeFilter("width","100%"));
 		String temp = null;
 		if (list != null && list.size() > 0) {
-			if(list.size() == 31){
-				TableTag table = (TableTag)list.elementAt(26);
-				temp = table.toHtml();
-//				System.out.println(" 第["+26+"]个:"+table.toHtml()+"\r\n");
-			}else if(list.size() == 30){
-				TableTag table = (TableTag)list.elementAt(25);
-				temp = table.toHtml();
-//				System.out.println(" >> 第["+25+"]个subsublist:"+table.toHtml()+"\r\n");
-			}else if(list.size() == 28){
-				TableTag table = (TableTag)list.elementAt(23);
-				temp = table.toHtml();
-//				System.out.println(" >> 第["+23+"]个subsublist:"+table.toHtml()+"\r\n");
-			}
-			Parser p2 = new Parser();
-			p2.setInputHTML(temp);
-
-			NodeFilter filter2 = new NodeClassFilter(LinkTag.class);
-			NodeList list2 = p2.extractAllNodesThatMatch(filter2);
-			if (null != list && list2.size() > 0) {
-				String tmp = null;
-				LinkBean l1 = null;
-				for (int i = 0; i < list2.size(); i++) {
-					l1 = new LinkBean();
-					LinkTag link2 = (LinkTag) list2.elementAt(i);
-					if (!link2.getLink().equalsIgnoreCase("#")) {
-						if (!link2.getLink().startsWith("http://")) {
-							tmp = prex + link2.getLink();
-						} else {
-							tmp = link2.getLink();
+//			for(int k=0;k<list.size();k++){
+//				TableTag table = (TableTag)list.elementAt(k);
+//				buffer.append("k:"+k).append("\r\n").append(table.toHtml()).append("\r\n");
+//			}
+//			if(list.size() == 31){
+//				TableTag table = (TableTag)list.elementAt(26);
+//				temp = table.toHtml();
+//			}else if(list.size() == 30){
+//				TableTag table = (TableTag)list.elementAt(25);
+//				temp = table.toHtml();
+//			}else if(list.size() == 28){
+//				TableTag table = (TableTag)list.elementAt(23);
+//				temp = table.toHtml();
+//			}
+			TableTag table = (TableTag)list.elementAt(0);
+			temp = table.toHtml();
+			if(null != temp){
+				Parser p2 = new Parser();
+				p2.setInputHTML(temp);
+	
+				NodeFilter filter2 = new NodeClassFilter(LinkTag.class);
+				NodeList list2 = p2.extractAllNodesThatMatch(filter2);
+				if (null != list && list2.size() > 0) {
+					String tmp = null;
+					LinkBean l1 = null;
+					for (int i = 0; i < list2.size(); i++) {
+						l1 = new LinkBean();
+						LinkTag link2 = (LinkTag) list2.elementAt(i);
+						if (!link2.getLink().equalsIgnoreCase("#")) {
+							if (!link2.getLink().startsWith("http://")) {
+								tmp = prex + link2.getLink();
+							} else {
+								tmp = link2.getLink();
+							}
+							l1.setLink(tmp);
+							l1.setTitle(link2.getLinkText());
+							result.put(tmp, l1);
 						}
-						l1.setLink(tmp);
-						l1.setTitle(link2.getLinkText());
-						result.put(tmp, l1);
 					}
 				}
+				if (null != p2)
+					p2 = null;
+				LinkBean l1 = new LinkBean();
+				l1.setLink(url);
+				l1.setTitle(url);
+				result.put(url, l1);
+				result.setBool(true);
+			} else {
+				LinkBean l1 = new LinkBean();
+				l1.setLink(url);
+				l1.setTitle(url);
+				result.put(url, l1);
+				result.setBool(true);
 			}
-			if (null != p2)
-				p2 = null;
-			LinkBean l1 = new LinkBean();
-			l1.setLink(url);
-			l1.setTitle(url);
-			result.put(url, l1);
-			result.setBool(true);
-		} else {
-			LinkBean l1 = new LinkBean();
-			l1.setLink(url);
-			l1.setTitle(url);
-			result.put(url, l1);
-			result.setBool(true);
 		}
+//		IOUtil.createFile(buffer.toString());
 		return result;
 	}
 
@@ -389,32 +401,35 @@ public class The51PPParser {
 						} else {
 							url = tmp.getLink();
 						}
-						if (null == client.get(url)) {
-							System.out.println("url:"+url);
-							article = new Article();
-							article.setWebId(webId);
-							article.setArticleUrl(url);
-							article.setText("NED"); // NED_WALLCOO
-							article.setIntro("");
-							article.setTitle(tmp.getAttribute("title"));
-							NodeList tmpNode = tmp.getChildren();
-							if (null != tmpNode && tmpNode.size() > 0) {
-								if(tmpNode.elementAt(0) instanceof ImageTag){
-									ImageTag imageTag = (ImageTag) tmpNode.elementAt(0);
-									article.setActicleXmlUrl(URL
-											+ imageTag.getImageURL());
+						RECORD_COUNT ++;
+						if(isUpdate){
+							if (null == client.get(url)) {
+								System.out.println("url:"+url);
+								article = new Article();
+								article.setWebId(webId);
+								article.setArticleUrl(url);
+								article.setText("NED"); // NED_WALLCOO
+								article.setIntro("");
+								article.setTitle(tmp.getAttribute("title"));
+								NodeList tmpNode = tmp.getChildren();
+								if (null != tmpNode && tmpNode.size() > 0) {
+									if(tmpNode.elementAt(0) instanceof ImageTag){
+										ImageTag imageTag = (ImageTag) tmpNode.elementAt(0);
+										article.setActicleXmlUrl(URL
+												+ imageTag.getImageURL());
+									}
 								}
+								System.out.println(" >> title:"+tmp.getAttribute("title"));
+								int key = articleDao.insert(article);
+								if (key > 0) {
+									System.out.print(article.getTitle() + "\t|"
+											+ url);
+//									client.add(url, url);
+								}
+							} else {
+								System.err.println(">> 已存在相同的内容 ["
+										+ tmp.getAttribute("title") + "|"+tmp.getLink()+"]");
 							}
-							System.out.println(" >> title:"+tmp.getAttribute("title"));
-							int key = articleDao.insert(article);
-							if (key > 0) {
-								System.out.print(article.getTitle() + "\t|"
-										+ url);
-								client.add(url, url);
-							}
-						} else {
-							System.err.println(">> 已存在相同的内容 ["
-									+ tmp.getAttribute("title") + "|"+tmp.getLink()+"]");
 						}
 				}
 			}
@@ -439,15 +454,29 @@ public class The51PPParser {
 		boolean b = true;
 		ResultBean result = hasPaging2(article.getArticleUrl());
 		if (result.isBool()) {
+			int size = imageDao.getCount("select count(*) from tbl_image where d_article_id = "+article.getId());
+			System.out.println(" >> size:"+size);
+			int msize = result.getMap().size();
+			if(size < 20 ){
+				System.out.println("不需要更新,数据库中的记录数不满足分页条件!");
+				return false;
+			}
+			if((size/20) == msize){
+				System.out.println("不需要更新,只有一页的数据!");
+				return false;
+			}
 			Iterator it = result.getMap().keySet().iterator();
 			while (it.hasNext()) {
 				String key = (String) it.next();
-				System.out.println("URL:" + key);
 				LinkBean link = result.getMap().get(key);
-				b = getImage(link, article.getId());
+				boolean s = getImage(link, article.getId(),article.getTitle());
+				System.out.println(" >> getImage:"+s+"\t by article.id:"+article.getId());
+				if(!s){
+					b = false;
+					break;
+				}
 			}
 		}
-
 		return b;
 	}
 
@@ -458,7 +487,7 @@ public class The51PPParser {
 	 * @param webId
 	 * @throws Exception
 	 */
-	public static boolean getImage(LinkBean link, int artId) throws Exception {
+	public static boolean getImage(LinkBean link, int artId,String title) throws Exception {
 		Parser p2 = new Parser();
 		p2.setURL(link.getLink());
 		int size = 0;
@@ -467,7 +496,7 @@ public class The51PPParser {
 		NodeFilter filter = new NodeClassFilter(CompositeTag.class);
 		NodeList list = p2.extractAllNodesThatMatch(filter)
 				.extractAllNodesThatMatch(
-						new HasAttributeFilter("id", "listimg"));
+						new HasAttributeFilter("class", "softlistrow"));
 
 		if (null != list && list.size() > 0) {
 			Parser p3 = new Parser();
@@ -481,7 +510,6 @@ public class The51PPParser {
 			if (null != list2 && list2.size() > 0) {
 				ImageBean imgBean = null;
 				String url = null;
-				System.out.println(">> 列表数量:" + list2.size());
 				for (int i = 0; i < list2.size(); i++) {
 					LinkTag linkTag = (LinkTag) list2.elementAt(i);
 
@@ -492,7 +520,7 @@ public class The51PPParser {
 					}
 
 					imgSrc = getImageURL(url);
-					System.out.println("imgSrc:" + imgSrc);
+//					System.out.println("imgSrc:" + imgSrc);
 					if (null != imgSrc) {
 						if (null == client.get(imgSrc)) {
 							imgBean = new ImageBean();
@@ -506,13 +534,7 @@ public class The51PPParser {
 									if (null != imgTag.getImageURL())
 										imgBean.setImgUrl(URL_
 												+ imgTag.getImageURL());
-									if (null != imgTag.getAttribute("alt"))
-										imgBean.setTitle(imgTag
-												.getAttribute("alt"));
-									else
-										imgBean.setTitle("NT:"
-												+ CommonUtil
-														.getDateTimeString());
+									imgBean.setTitle(title+"("+i+")");
 								}
 							}
 							imgBean.setLink("NED");
@@ -531,10 +553,10 @@ public class The51PPParser {
 							try {
 								int key = imageDao.insert(imgBean);
 								if (key > 0) {
-									System.out.println(imgBean.getTitle()
-											+ "\t|" + imgBean.getHttpUrl());
-									client.add(imgBean.getHttpUrl(), imgBean
-											.getHttpUrl());
+//									System.out.println(imgBean.getTitle()
+//											+ "\t|" + imgBean.getHttpUrl());
+//									client.add(imgBean.getHttpUrl(), imgBean
+//											.getHttpUrl());
 								}
 							} catch (Exception e) {
 								b = false;
@@ -557,13 +579,7 @@ public class The51PPParser {
 									imgBean.setHttpUrl(URL_
 											+ imgTag.getImageURL());
 								}
-								if (null != imgTag.getAttribute("alt"))
-									imgBean.setTitle(imgTag
-											.getAttribute("alt"));
-								else
-									imgBean.setTitle("NT:"
-											+ CommonUtil
-													.getDateTimeString());
+								imgBean.setTitle(title+"("+i+")");
 							}
 						}
 						imgBean.setLink("NED");
@@ -582,8 +598,8 @@ public class The51PPParser {
 						try {
 							int key = imageDao.insert(imgBean);
 							if (key > 0) {
-								System.out.println(imgBean.getTitle()
-										+ "\t|" + imgBean.getHttpUrl());
+//								System.out.println(imgBean.getTitle()
+//										+ "\t|" + imgBean.getHttpUrl());
 //								client.add(imgBean.getHttpUrl(), imgBean
 //										.getHttpUrl());
 							}
@@ -591,7 +607,8 @@ public class The51PPParser {
 							b = false;
 							break;
 						}
-										}
+					}
+//					break;
 				}
 			}
 
@@ -613,20 +630,46 @@ public class The51PPParser {
 	 */
 	static String getImageURL(String url) {
 		String result = null;
+		Parser p1 = null;
+		Parser p2 = null;
+		Parser p3 = null;
 		try {
-			Parser p1 = new Parser();
+			p1 = new Parser();
 			p1.setURL(url);
 
-			NodeFilter filter = new NodeClassFilter(ImageTag.class);
-			NodeList list = p1.extractAllNodesThatMatch(filter);
-
-			if (null != list && list.size() == 1) {
-				ImageTag link = (ImageTag) list.elementAt(0);
-				result = link.getImageURL();
+			NodeFilter filter = new NodeClassFilter(CompositeTag.class);
+			NodeList list = p1.extractAllNodesThatMatch(filter).extractAllNodesThatMatch(new HasAttributeFilter("class","tdborder1"));
+			if(1 == list.size()){
+				CompositeTag  tab = (CompositeTag)list.elementAt(0);
+				p2 = new Parser();
+				p2.setInputHTML(tab.toHtml());
+				
+				NodeFilter filter2 = new NodeClassFilter(TableTag.class);
+				NodeList list2 = p2.extractAllNodesThatMatch(filter2);
+				
+				TableTag  table = (TableTag)list2.elementAt(0);
+				p3 = new Parser();
+				p3.setInputHTML(table.toHtml());
+				
+				NodeFilter filter3 = new NodeClassFilter(LinkTag.class);
+				NodeList list3 = p3.extractAllNodesThatMatch(filter3);
+				
+				LinkTag link = (LinkTag)list3.elementAt(0);
+				if(!link.getLink().startsWith("http://")){
+					result = URL_+link.getLink();
+				}else{
+					result = link.getLink();
+				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally{
+			if(null != p1)
+				p1 = null;
+			if(null != p2)
+				p2 = null;
+			if(null != p3)
+				p3 = null;
 		}
 		return result;
 	}
@@ -788,13 +831,41 @@ public class The51PPParser {
 		try {
 //			 catalog2(URL);
 			 update();
-//			 loadImg();
-//			 imgDownload();
+//			 System.out.println("记录数:"+RECORD_COUNT);
+//			 if(RECORD_COUNT > 0){
+//				 RECORD_COUNT = 0;
+//			 }
+			 loadImg();
+			 imgDownload();
 //			threadParser();
 //			movefile();
+			
+//			testHasPage();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	static void testHasPage() throws Exception{
+//		StringBuffer buffer = new StringBuffer();
+		
+		//http://pp.the51.com//photo/bizhi/gfbl/1825/index.html NOPAGE
+		//http://pp.the51.com//photo/wangye/216/index.html
+		ResultBean result = hasPaging2("http://pp.the51.com//photo/bizhi/gfbl/1825/index.html");
+		HashMap<String, LinkBean> map = result.getMap();
+		Iterator it = map.keySet().iterator();
+		int size = 20;
+		int msize = map.size();
+		if((size/20) == msize){
+			System.out.println("不需要更新");
+			return;
+		}
+		System.out.println(" >> msize:"+msize);
+		while(it.hasNext()){
+			String url = (String)it.next();
+			System.out.println(" >> url:"+url);
+		}
+//		IOUtil.createFile(buffer.toString());
 	}
 
 	static void loadImg() throws Exception {
@@ -802,27 +873,22 @@ public class The51PPParser {
 		for (WebsiteBean bean : webList) {
 			List<Article> list = articleDao.findByWebId(bean.getId(), "NED");
 			for (Article art : list) {
-//				 List<ImageBean> imgList = imageDao.findImage(art.getId());
-//				 if(imgList.size() == 0){
 				if (getImage(art)) {
 					art.setText("FD");
 					if (articleDao.update(art)) {
 						System.out.println("更新记录[" + art.getTitle() + "]成功");
 					}
+					/**
+					**/
+					System.out.println("新增记录数[" + art.getTitle() + "]成功");
 				}
-//				 }
-				// break;
 			}
-			// break;
 		}
 	}
 
 	static void loadImg(int webid) throws Exception {
-//			WebsiteBean bean = webSiteDao.findById(webid);
-//			System.out.println(bean.getName()+"|"+bean.getUrl());
 			List<Article> list = articleDao.findByWebId(webid, "FD");
 			for (Article art : list) {
-//				 List<ImageBean> imgList = imageDao.findImage(art.getId());
 				 if (getImage(art)) {
 					 art.setText("FD");
 					 	if (articleDao.update(art)) {
@@ -900,7 +966,7 @@ public class The51PPParser {
 			}
 			bean.setArticleId(imgBean.getArticleId());
 			bean.setImageId(imgBean.getId());
-			bean.setTitle(imgBean.getTitle() == null ? "无标题" : bean.getTitle());
+			bean.setTitle(imgBean.getTitle() == null ? "无标题" : imgBean.getTitle());
 			bean.setSmallName(File.separator + StringUtils.gerDir(String.valueOf(imgBean.getArticleId())) + File.separator + imgBean.getArticleId()
 					+ File.separator + s_fileName);
 			bean.setName(File.separator + StringUtils.gerDir(String.valueOf(imgBean.getArticleId())) + File.separator + imgBean.getArticleId()

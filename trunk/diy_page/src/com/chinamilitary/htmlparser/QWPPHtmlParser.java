@@ -491,10 +491,10 @@ public class QWPPHtmlParser {
 			for(WebsiteBean bean:rootURL){
 				System.out.println(">> 解析地址:["+bean.getUrl()+"]");
 				
-				if(!HttpClientUtils.validationURL(bean.getUrl())){
-					System.out.println(">> QWPP Catalog URL["+bean.getUrl()+"] NOT OK");
-					continue;
-				}
+//				if(!HttpClientUtils.validationURL(bean.getUrl())){
+//					System.out.println(">> QWPP Catalog URL["+bean.getUrl()+"] NOT OK");
+//					continue;
+//				}
 				
 				ResultBean  result = hasPaging(bean.getUrl(),"class","show_page");
 				for(LinkBean ll : result.getList()){

@@ -49,9 +49,13 @@ public class PicFileDaoImpl extends CommonDB implements PicFileDao {
 	 */
 	public boolean insert(PicfileBean bean) throws Exception{
 		boolean b = false;
-		if(null == bean.getName() || bean.getName().equalsIgnoreCase("")){
+		if(null == bean.getName() || bean.getName().equals("")){
 			return b;
 		}
+		if(null == bean.getTitle() || bean.getTitle().equals("")){
+			return b;
+		}
+		
 //		if(checkExists(bean.getName())){
 //			return b;
 //		}

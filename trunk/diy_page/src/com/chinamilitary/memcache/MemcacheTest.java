@@ -18,13 +18,17 @@ public class MemcacheTest extends Thread{
 	public void run(){
 		try{
 			while(true){
-				Object obj = client.get("drulechao:460_1_skytest_m900_240x320_1000:1");
+				String key = String.valueOf(System.currentTimeMillis());
+				
+				Object obj = client.get(key);
+//				Object obj = client.get("drulechao:460_1_skytest_m900_240x320_1000:1");
 				if(null != obj){
 					System.out.println("缓存不为空");
 				}else{
 					System.out.println("缓存为空");
+					client.add(key, "http://tuku.military.china.com/military/html/2009-12-17/134438.htm");
 				}
-				Thread.sleep(5000);
+				Thread.sleep(10);
 				
 //				if(client.get("abc") == null){
 //					client.add("abc", "cde");

@@ -25,6 +25,7 @@ import org.htmlparser.tags.CompositeTag;
 import org.htmlparser.tags.Div;
 import org.htmlparser.tags.ImageTag;
 import org.htmlparser.tags.LinkTag;
+import org.htmlparser.tags.SelectTag;
 import org.htmlparser.tags.TableTag;
 import org.htmlparser.tags.Span;
 import org.htmlparser.util.NodeList;
@@ -158,6 +159,23 @@ public class IndexParser {
 			parser = null;
 	}
 	
+	static void catfactory() throws Exception{
+		Parser parser = new Parser();
+		parser.setURL(URL);
+		parser.setEncoding("gb2312");
+		NodeFilter fileter = new NodeClassFilter(SelectTag.class);
+		NodeList list = parser.extractAllNodesThatMatch(fileter)
+		.extractAllNodesThatMatch(
+				new HasAttributeFilter("id", "fctbox"));
+		if(null != list){
+			System.out.println(" >> list:"+list.toHtml());
+		}
+		
+		if(null != parser)
+			parser = null;
+
+	}
+	
 	/**
 	 * 获取汽车按名字分类
 	 * @param url
@@ -196,7 +214,7 @@ public class IndexParser {
 								String num = txt.substring(start+1,end);
 								URLHASH.put(brand.trim()+":"+num,lt.getLink());
 							}
-//							StringTokenizer st = new StringTokenizer(lt.getLinkText());
+							StringTokenizer st = new StringTokenizer(lt.getLinkText());
 //							while (st.hasMoreTokens()) {
 //						         System.out.println(st.nextToken() + "|"+lt.getLink());
 //						         HttpClientUtils.getResponseBody(CAR_HOME_URL+lt.getLink());
@@ -739,41 +757,42 @@ public class IndexParser {
 
 	public static void main(String[] args) {
 		try {
+			catfactory();
+			
 //			PRICE_URL_TMP,IMAGE_URL_TMP,VIDEO_URL_TMP
-			catCatalogList(PRICE_URL_TMP);
+//			catCatalogList(PRICE_URL_TMP);
 //			catCatalogList(IMAGE_URL_TMP);
 //			catCatalogList(VIDEO_URL_TMP);
+//			Iterator it = URLHASH.keySet().iterator();
+//			String[] hsname = new String[URLHASH.size()];
+//			List<String> ids = new ArrayList<String>();
+//			int i = 0;
+//			while(it.hasNext()){
+//				String key = (String)it.next();
+//				hsname[i] = key;
+//				i++;
+//			}
 			
-			Iterator it = URLHASH.keySet().iterator();
-			String[] hsname = new String[URLHASH.size()];
-			List<String> ids = new ArrayList<String>();
-			int i = 0;
-			while(it.hasNext()){
-				String key = (String)it.next();
-				hsname[i] = key;
-				i++;
-			}
+//			System.out.println(" >> 数量:"+URLHASH.size());
+//			Arrays.sort(hsname);
 			
-			System.out.println(" >> 数量:"+URLHASH.size());
-			Arrays.sort(hsname);
-			
-			for(String hsnam:hsname){
-				String id = getIdFromURL(URLHASH.get(hsnam));
-				System.out.println(">>"+id);
-				findTree(id);
+//			for(String hsnam:hsname){
+//				String id = getIdFromURL(URLHASH.get(hsnam));
+//				System.out.println(">>"+id);
+//				findTree(id);
 //				System.out.println(" ["+hsnam.split(":")[0]+"]\tIMAGE >> "+SHORT_IMAGE_URL.replace("{id}", id));
 //				System.out.println(" ["+hsnam.split(":")[0]+"]\tPRICE >> "+SHORT_PRICE_URL.replace("{id}", id));
 //				System.out.println(" ["+hsnam.split(":")[0]+"]\tVIDEO >> "+SHORT_VIDEO_URL.replace("{id}", id));
-				System.out.println("\r\n");
-			}
+//				System.out.println("\r\n");
+//			}
 			
 //			findTree("112");
 //			findTree("58");
 //			findTree("71");
 //			findTree("35");
 			
-			URLHASH.clear();
-			ids.clear();
+//			URLHASH.clear();
+//			ids.clear();
 			System.exit(0);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -790,7 +809,7 @@ public class IndexParser {
 	
 	static void findTree(String id) throws Exception { // WebsiteBean bean
 		HashMap<String,List<LinkTag>> tree = new HashMap<String,List<LinkTag>>();
-		String body = HttpClientUtils.getResponseBody(COMMON_DETAIL_URL.replace("{type}", "1").replace("{id}", id));
+		String body = HttpClientUtils.getResponseBody(COMMON_DETAIL_URL.replace("{type}", "3").replace("{id}", id));
 		if (null != body && !"".equalsIgnoreCase(body)) {
 			//对正文的内容进行切分
 			String[] bodys = body.split("\r\n");

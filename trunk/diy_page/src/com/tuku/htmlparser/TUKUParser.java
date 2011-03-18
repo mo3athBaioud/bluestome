@@ -41,6 +41,7 @@ import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
+import com.common.Constants;
 import com.utils.FileUtils;
 
 public class TUKUParser {
@@ -51,7 +52,7 @@ public class TUKUParser {
 	
 	static Integer D_PARENT_ID = 400;
 	
-	final static String FILE_SERVER = "O:\\fileserver\\image\\";
+	final static String FILE_SERVER = Constants.FILE_SERVER;
 	
 	static List<LinkBean> LINKLIST = new ArrayList<LinkBean>();
 
@@ -547,25 +548,24 @@ public class TUKUParser {
 		try{
 //			catalog(URL);
 			List<WebsiteBean>  webList = webSiteDao.findByParentId(D_PARENT_ID);
-			for(WebsiteBean bean:webList){
-//				WebsiteBean bean = webSiteDao.findById(D_PARENT_ID);
-				ResultBean result = hasPaging(bean.getUrl(), "id", "lblPageCount");
-				if(result.isBool()){
-					Iterator it = result.getMap().keySet().iterator();
-					while(it.hasNext()){
-						String key = (String)it.next();
-						LinkBean link = result.getMap().get(key);
-//						sb.append(link.getLink()+"\n");
-						try{
-							secondURL(link,bean.getId());
-						}catch(Exception e){
-							e.printStackTrace();
-							System.out.println("key:"+key);
-							continue;
-						}
-					}
-				}
-			}
+//			for(WebsiteBean bean:webList){
+//				ResultBean result = hasPaging(bean.getUrl(), "id", "lblPageCount");
+//				if(result.isBool()){
+//					Iterator it = result.getMap().keySet().iterator();
+//					while(it.hasNext()){
+//						String key = (String)it.next();
+//						LinkBean link = result.getMap().get(key);
+//						try{
+//							secondURL(link,bean.getId());
+//						}catch(Exception e){
+//							e.printStackTrace();
+//							System.out.println("key:"+key);
+//							continue;
+//						}
+//					}
+//				}
+//			}
+			
 //			TUKUThread[] thread = new TUKUThread[webList.size()];
 //			for(int i=0;i<webList.size();i++){
 //				WebsiteBean bean = (WebsiteBean)webList.get(i);

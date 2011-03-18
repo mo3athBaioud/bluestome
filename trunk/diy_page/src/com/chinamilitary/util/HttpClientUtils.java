@@ -342,7 +342,6 @@ public class HttpClientUtils {
 			String length = getHttpHeaderResponse(
 					"http://www.china.com/zh_cn/", "Content-Length");
 			System.out.println("网页长度：" + length);
-
 			// System.out.println("isTRUE:"+urlValidation("http://www.bizhi.com/wallpaper/1150_2.html"));
 		} catch (Exception e) {
 			System.err.println(e);

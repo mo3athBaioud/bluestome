@@ -54,9 +54,13 @@ public class WallcooParser {
 	static final String PIC_SAVE_PATH = Constants.FILE_SERVER;
 	
 	static Integer D_PARENT_ID = 125;
+	
+	static Integer D_ENG_PARENT_ID = 1600;
 
 	private static final String URL = "http://www.wallcoo.com/";
 
+	private static final String URL_ENG = "http://www.wallcoo.net/";
+	
 	private static final String URL_ = "http://www.wallcoo.com";
 
 	private static HashMap<String, LinkBean> LINKHASH = new HashMap<String, LinkBean>();
@@ -87,6 +91,47 @@ public class WallcooParser {
 	 * 
 	 * @throws Exception
 	 */
+	public static void catelogy(String url) throws Exception {
+		WebSiteDao dao = DAOFactory.getInstance().getWebSiteDao();
+		Parser parser = new Parser();
+		parser.setURL(url);
+		parser.setEncoding("GB2312");
+		NodeFilter fileter = new NodeClassFilter(Div.class);
+		NodeList list = parser.extractAllNodesThatMatch(fileter)
+				.extractAllNodesThatMatch(
+						new HasAttributeFilter("class", "sort2")); // id
+		if (list != null && list.size() > 0) {
+			Parser p1 = new Parser();
+			p1.setInputHTML(list.toHtml());
+			p1.setEncoding("GB2312");
+			NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
+			NodeList linkList = p1.extractAllNodesThatMatch(linkFilter);
+			if (linkList != null && linkList.size() > 0) {
+				WebsiteBean tmp = null;
+				for (int i = 0; i < linkList.size(); i++) {
+					LinkTag link = (LinkTag) linkList.elementAt(i);
+					System.out.println(link.getLinkText());
+					System.out.println(URL_ENG + link.getLink() + "\n");
+//					tmp = new WebsiteBean();
+//					tmp.setName(link.getLinkText());
+//					tmp.setUrl(URL_ENG + link.getLink());
+//					tmp.setParentId(D_ENG_PARENT_ID);
+//					boolean b = dao.insert(tmp);
+//					if (b) {
+//						System.out.println("成功");
+//					} else {
+//						System.out.println("失败");
+//					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 首页分类
+	 * 
+	 * @throws Exception
+	 */
 	public static void catelogy(WebsiteBean bean) throws Exception {
 		WebSiteDao dao = DAOFactory.getInstance().getWebSiteDao();
 		Parser parser = new Parser();
@@ -112,16 +157,16 @@ public class WallcooParser {
 					LinkTag link = (LinkTag) linkList.elementAt(i);
 					System.out.println(link.getLinkText());
 					System.out.println(URL_ + link.getLink() + "\n");
-					tmp = new WebsiteBean();
-					tmp.setName(link.getLinkText());
-					tmp.setUrl(link.getLink());
-					tmp.setParentId(bean.getId());
-					boolean b = dao.insert(tmp);
-					if (b) {
-						System.out.println("成功");
-					} else {
-						System.out.println("失败");
-					}
+//					tmp = new WebsiteBean();
+//					tmp.setName(link.getLinkText());
+//					tmp.setUrl(link.getLink());
+//					tmp.setParentId(bean.getId());
+//					boolean b = dao.insert(tmp);
+//					if (b) {
+//						System.out.println("成功");
+//					} else {
+//						System.out.println("失败");
+//					}
 				}
 			}
 		}
@@ -150,10 +195,12 @@ public class WallcooParser {
 						new HasAttributeFilter(attribute, value));
 		if (list != null && list.size() > 0) {
 			Div div = (Div) list.elementAt(0);
-			String tmp = div.getStringText().substring(0,
-					div.getStringText().indexOf("页"));
+			String tmp = div.getStringText().substring(0,div.getStringText().length());
+//			String tmp = div.getStringText().substring(0,
+//					div.getStringText().indexOf("页"));
 			int pageSize = Integer.valueOf(tmp.substring(tmp.indexOf("/") + 1,
 					tmp.indexOf("]")));
+			System.out.println(" >> pageSize:"+pageSize);
 			LinkBean l1 = null;
 			for (int i = 1; i < pageSize + 1; i++) {
 				l1 = new LinkBean();
@@ -200,8 +247,6 @@ public class WallcooParser {
 			p2.setEncoding("GB2312");
 			NodeList list4 = p2.parse(lastFilter);
 			if (list4 != null || list4.size() > 0) {
-				System.out.println(">> URL["+link.getLink()+"]的记录数量:"+list4.size());
-				// System.out.println(list4.size());
 				for (int i = 0; i < list4.size(); i++) {
 					// 地址
 					if (list4.elementAt(i) instanceof LinkTag) {
@@ -212,7 +257,7 @@ public class WallcooParser {
 							Article article = null;
 							if (cnl.elementAt(1) instanceof ImageTag) {
 								String url = URL_ + nl.getLink();
-								if(null == client.get(url)){
+//								if(null == client.get(url)){
 									article = new Article();
 									article.setWebId(webId);
 									article.setArticleUrl(url);
@@ -222,13 +267,15 @@ public class WallcooParser {
 									article.setIntro(getArticleText(url));
 									int key = articleDao.insert(article);
 									if (key > 0) {
-										client.add(url, url);
+										System.out.println(" >> add Wallcoo record ["+url+"] success !");
+//										client.add(url, url);
 									} else {
-										LINKHASH.put(link.getLink(), link);
+										System.out.println(" >> add Wallcoo record ["+url+"] failure !");
+//										LINKHASH.put(link.getLink(), link);
 									}
-								}else{
-									System.out.println(">> 已存在相同的内容 ["+nl.getLinkText()+"]");
-								}
+//								}else{
+//									System.out.println(">> 已存在相同的内容 ["+nl.getLinkText()+"]");
+//								}
 							}
 						}
 					}
@@ -610,7 +657,7 @@ public class WallcooParser {
 									: nl.getAttribute("height"));
 					image.setHttpUrl(nl.getImageURL());
 					image.setLink("NED");
-					if(null == client.get(nl.getImageURL())){
+//					if(null == client.get(nl.getImageURL())){
 						System.out.println("图片地址：" + nl.getImageURL());
 						int key = imageDao.insert(image);
 						if (key > 0) {
@@ -621,7 +668,7 @@ public class WallcooParser {
 							System.out.println("添加失败!!!");
 							b = false;
 						}
-					}
+//					}
 				} else {
 					b = false;
 				}
@@ -643,7 +690,7 @@ public class WallcooParser {
 					Div div = (Div) list.elementAt(0);
 					if (null != div) {
 						ImageTag nl = (ImageTag) div.getChild(0);
-						if(null == client.get(nl.getImageURL())){
+//						if(null == client.get(nl.getImageURL())){
 							image
 									.setCommentshowurl(nl.getAttribute("width") == null ? ""
 											: nl.getAttribute("width"));
@@ -659,9 +706,9 @@ public class WallcooParser {
 							} else {
 								b = false;
 							}
-						}else{
-							
-						}
+//						}else{
+//							
+//						}
 						
 					} else {
 						b = false;
@@ -751,7 +798,7 @@ public class WallcooParser {
 			}
 			parser = null;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println( "getArticleText.exception:" +e.getMessage() );
 		}
 		return intro;
 	}
@@ -807,6 +854,7 @@ public class WallcooParser {
 			ResultBean result = null;
 			int i = 0;
 			for (WebsiteBean bean : list) {
+				System.out.println("\t"+bean.getUrl()+"\t"+bean.getName());
 				try{
 					result = hasPaging(bean, "id", "linkid");
 					if (result.isBool()) {
@@ -816,9 +864,12 @@ public class WallcooParser {
 								try {
 									System.out.println(" >> link:"+link.getLink());
 									secondURL(link, bean.getId());
-								} catch (org.htmlparser.util.EncodingChangeException e) {
-									e.printStackTrace();
-									LINKHASH.put(link.getLink(), link);
+//									break;
+//								} catch (org.htmlparser.util.EncodingChangeException e) {
+//									e.printStackTrace();
+//									LINKHASH.put(link.getLink(), link);
+//									continue;
+								} catch(Exception e){
 									continue;
 								}
 							}
@@ -826,7 +877,7 @@ public class WallcooParser {
 					}
 					i++;
 					// 更新菜单列表排序
-					wesiteDao.update(bean);
+//					wesiteDao.update(bean);
 				}catch(Exception e){
 					System.out.println(">> Exception :"+e.getMessage());
 				}
@@ -836,14 +887,17 @@ public class WallcooParser {
 	
 	public static void main(String args[]) {
 		try {
+			
+//			catelogy("http://www.wallcoo.net/");
+			
 			//初始化数据到缓存中
 //			init2cache();
 			
-			update();
+//			update();
 			
 			loadImg();
 			
-			imgDownload();
+//			imgDownload();
 			
 			
 			//测试分页
@@ -862,9 +916,9 @@ public class WallcooParser {
 	static void loadImg() throws Exception{
 		List<WebsiteBean> webList = wesiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : webList) {
-			List<Article> list = articleDao.findByWebId(bean.getId(), "NED");
+			List<Article> list = articleDao.findByWebId(bean.getId(), "0");
 			System.out.println(">> 网站["+bean.getName()+"]|"+bean.getUrl()+"还有"+list.size()+"条记录未解析");
-			if(list.size() > 0){
+//			if(list.size() > 0){
 				for(Article article:list){
 					try{
 						ResultBean result = hasPagingWithArticleSelectTag(article.getArticleUrl());
@@ -878,12 +932,15 @@ public class WallcooParser {
 					}catch(Exception e){
 						article.setText("ENED");
 					}finally{
-						if(articleDao.update(article)){
-							System.out.println(">> 更新记录状态为["+article.getText()+"] 成功!");
-						}
+//						if(articleDao.update(article)){
+//							System.out.println(">> 更新记录状态为["+article.getText()+"] 成功!");
+//						}
+					}
+					if(!articleDao.update(article)){
+						System.err.println(" >> 站点:["+article.getWebId()+"],更新记录"+article.getTitle()+"失败");
 					}
 				}
-			}
+//			}
 		}
 	}
 	static void imgDownload() throws Exception {
