@@ -197,14 +197,23 @@ public static String getHttpHeaderResponse(String url,String headerName){
 //		System.out.println("value:"+value);
 		String value = "";
 		try{
-			httpclient = new HttpClient();
-			getMethod = new GetMethod("http://tuku.game.china.com/game/html/2010-08-19/149536.xml");
 			
-			int statusCode = httpclient.executeMethod(getMethod);
-			if(statusCode == HttpStatus.SC_OK){
-				value = new String(getMethod.getResponseBody(),"UTF-8");
-//				result = getMethod.getResponseHeader(headerName).getValue();
+//			httpclient = new HttpClient();
+//			getMethod = new GetMethod("http://car.autohome.com.cn/LeftMenu/List.aspx?typeId=3&isSubPage=0&brandId=0&fctId=0&seriesId=0");
+//			
+//			int statusCode = httpclient.executeMethod(getMethod);
+//			System.out.println("statusCode:\r"+statusCode);
+//			if(statusCode == HttpStatus.SC_OK){
+//				value = new String(getMethod.getResponseBody(),"gb2312");
+//			}
+			
+			value = getResponseBody("http://car.autohome.com.cn/LeftMenu/List.aspx?typeId=3&isSubPage=0&brandId=0&fctId=0&seriesId=0");
+			if(null != value && !"".equalsIgnoreCase(value)){
+//				System.out.println("body:\r"+value);
 			}
+			
+			value = value.replace("document.writeln(\"", "").replace("\");", "");
+			System.out.println(" >> value:"+value);
 		}catch(Exception e){
 			System.err.println(e);
 		}finally{
@@ -213,13 +222,13 @@ public static String getHttpHeaderResponse(String url,String headerName){
 			if(null != httpclient)
 				httpclient = null;
 		}
-		if(!"".equalsIgnoreCase(value)){
-//			System.out.println("value:"+value);
-			int start = value.indexOf("intro=")+6;
-			int end = value.indexOf("comment");
-			String tmp = value.substring(start,end);
-			System.out.println("value:"+value.replace(tmp, "\"\" "));
-		}
+//		if(!"".equalsIgnoreCase(value)){
+//			int start = value.indexOf("intro=")+6;
+//			int end = value.indexOf("comment");
+//			String tmp = value.substring(start,end);
+//			System.out.println("value:"+value.replace(tmp, "\"\" "));
+//		}
 	}
+	
 
 }

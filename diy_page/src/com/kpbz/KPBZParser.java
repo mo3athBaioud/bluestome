@@ -338,13 +338,13 @@ public class KPBZParser {
 																			// Title
 						}
 						
-						System.out.println("*****************Start***************");
-						System.out.println("ArticleUrl:"+article.getArticleUrl());
-						System.out.println("ActicleXmlUrl:"+article.getActicleXmlUrl());
-						System.out.println("Title:"+article.getTitle());
-						System.out.println("Webid:"+article.getWebId());
-						System.out.println("Text:"+article.getText());
-						System.out.println("*****************End***************\n");
+//						System.out.println("*****************Start***************");
+//						System.out.println("ArticleUrl:"+article.getArticleUrl());
+//						System.out.println("ActicleXmlUrl:"+article.getActicleXmlUrl());
+//						System.out.println("Title:"+article.getTitle());
+//						System.out.println("Webid:"+article.getWebId());
+//						System.out.println("Text:"+article.getText());
+//						System.out.println("*****************End***************\n");
 						
 						int key = articleDao.insert(article);
 						if (key > 0) {

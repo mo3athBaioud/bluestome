@@ -42,18 +42,17 @@ public class ChinaTUKUParser {
 	
 	final static String FILE_SERVER = "D:\\fileserver\\image\\";
 	
-	static int D_PARENT_ID = 301;
+	static int D_PARENT_ID = 300;
 
 	// "http://tuku.tech.china.com/tech",
 	static final String[] CATALOG_URL = {
+			"http://pic.news.china.com/news/",
 			"http://tuku.kaiyun.china.com/kaiyun/",
 			"http://tuku.ent.china.com/fun/",
 			"http://tuku.military.china.com/military/",
 			"http://tuku.game.china.com/game/",
 			"http://tuku.fun.china.com/fun/",
-			"http://tuku.news.china.com/history/",
 			"http://pic.news.china.com/social/",
-			"http://pic.news.china.com/news/",
 			"http://pic.sports.china.com/sports/",
 			"http://tuku.travel.china.com/travel/",
 			"http://tuku.auto.china.com/auto/",
@@ -94,9 +93,6 @@ public class ChinaTUKUParser {
 	}
 
 	static void getLink(String url) throws Exception {
-		System.out.println("*******************************************");
-		System.out.println(url);
-		System.out.println("*******************************************");
 		Parser p1 = new Parser();
 		p1.setURL(url);
 		p1.setEncoding("UTF-8");
@@ -107,7 +103,6 @@ public class ChinaTUKUParser {
 		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
 				LinkTag link = (LinkTag) list.elementAt(i);
-				System.out.println("Link:"+link.getLink());
 				if (validationURL(link.getLink())) {
 					if (HttpClientUtils.validationURL(link.getLink())) {
 						if (null == client.get(link.getLink())) {
@@ -144,7 +139,7 @@ public class ChinaTUKUParser {
 		p1 = null;
 	}
 
-	static void getImage(Integer id) throws Exception {
+	static void getImage(Integer id,String url) throws Exception {
 		System.err.println(" >> IN GetImage Method");
 		Article article = null;
 		boolean isDownload = false;
@@ -167,24 +162,7 @@ public class ChinaTUKUParser {
 					return;
 				}
 				//http://tuku.kaiyun.china.com/kaiyun/
-				if ((article.getArticleUrl().startsWith(
-						"http://tuku.kaiyun.china.com/kaiyun/")
-						||article.getArticleUrl().startsWith(
-						"http://tuku.news.china.com/")
-						|| article.getArticleUrl().startsWith(
-								"http://tuku.military.china.com/")
-						|| article.getArticleUrl().startsWith(
-								"http://tuku.fun.china.com/")
-						|| article.getArticleUrl().startsWith(
-								"http://tuku.game.china.com/")
-						|| article.getArticleUrl().startsWith(
-								"http://pic.news.china.com/")
-						|| article.getArticleUrl().startsWith(
-								"http://tuku.tech.china.com/")
-						|| article.getArticleUrl().startsWith("http://pic.sports.china.com/")
-						|| article.getArticleUrl().startsWith("http://tuku.travel.china.com/")
-						|| article.getArticleUrl().startsWith("http://tuku.auto.china.com/")
-						|| article.getArticleUrl().startsWith("http://tuku.culture.china.com/"))) {
+				if ((article.getArticleUrl().startsWith(url))) {
 					if (article.getActicleXmlUrl() != null
 							|| !article.getActicleXmlUrl().equalsIgnoreCase("")) {
 						List<ImageBean> imgList = XMLParser
@@ -333,7 +311,7 @@ public class ChinaTUKUParser {
 	public static void main(String args[]) {
 		try {
 			patch();
-			update();
+			update2();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -342,6 +320,92 @@ public class ChinaTUKUParser {
 	public static void processC() throws Exception{
 		patch();
 		update();
+	}
+	
+	public static void update2() throws Exception{
+		StringBuffer esb  = new StringBuffer("Exception:\n");
+		List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
+		for (WebsiteBean bean : list) {
+			System.out.println(" >> url.id["+bean.getId()+"] url.url["+bean.getUrl()+"]");
+			try{
+				getLink(bean.getUrl());
+			}catch(Exception e){
+				esb.append("URL["+bean.getUrl()+"]:\n"+e.getMessage()+"\n");
+				continue;
+			}
+			Iterator it = LINKHASH.keySet().iterator();
+			while (it.hasNext()) {
+				String key = (String) it.next();
+				try {
+					LinkBean link = (LinkBean) LINKHASH.get(key);
+					Article acticle = null;
+					if (null != client.get(link.getLink())) {
+						System.err.println("缓存中已存在相同地址[" + link.getLink()
+								+ "]");
+						continue;
+					}
+					if (HttpClientUtils.validationURL(link.getLink())) {
+						acticle = new Article();
+						acticle.setArticleUrl(link.getLink());
+						acticle.setTitle(link.getName());
+						acticle.setWebId(bean.getId());
+						acticle.setText("NED");
+						if (link.getLink().startsWith(bean.getUrl())) {
+							if (link.getLink().indexOf("_") == -1) {
+							// 老版本图片播放器解析方式
+								String realUrl = HTMLParser.getRealUrl(link
+										.getLink());
+								System.out.println("老版本图片播放器解析：" + realUrl);
+								String xmlUrl = HTMLParser
+										.getXmlUrl(realUrl);
+								if (xmlUrl != null) {
+									acticle.setActicleXmlUrl(xmlUrl);
+									acticle.setActicleRealUrl(realUrl);
+								} else {
+									acticle.setActicleXmlUrl(null);
+									acticle.setActicleRealUrl(null);
+								}
+							} else {
+								// 新版本图片播放器解析方式，不需要在解析真实的URL地址，直接将地址中的XML文件解析并且从中获取必要的数据即可，
+								String xmlUrl = HTMLParser.getXmlUrl2(link
+										.getLink());
+								if (xmlUrl != null) {
+									acticle.setActicleXmlUrl(xmlUrl);
+									acticle.setActicleRealUrl("2");
+								} else {
+									acticle.setActicleXmlUrl(null);
+									acticle.setActicleRealUrl(null);
+								}
+							}
+
+						} else {
+							acticle.setActicleXmlUrl(null);
+							acticle.setActicleRealUrl(null);
+						}
+						int result = articleDao.insert(acticle);
+						if (result > 0) {
+							client.add(link.getLink(), link.getLink());
+							acticle.setId(result);
+							String aKey = CacheUtils.getArticleKey(result);
+							if (null == client.get(aKey)) {
+								client.add(aKey, acticle);
+							}
+							getImage(result,bean.getUrl());
+						}
+					} else {
+						System.err.println(">> getActicle 地址暂不可用 ["
+								+ link.getLink() + "]");
+						continue;
+					}
+				} catch (Exception e) {
+					esb.append("URL["+key+"]:\n"+e.getMessage()+"\n");
+					continue;
+				}
+			}
+
+			LINKHASH.clear();
+		}
+			
 	}
 	
 	public static void update() throws Exception{
@@ -437,7 +501,7 @@ public class ChinaTUKUParser {
 							if (null == client.get(aKey)) {
 								client.add(aKey, acticle);
 							}
-							getImage(result);
+							getImage(result,url);
 						}
 					} else {
 						System.err.println(">> getActicle 地址暂不可用 ["
@@ -461,22 +525,25 @@ public class ChinaTUKUParser {
 	 * 更新记录
 	 */
 	public static void patch() throws Exception{
-		List<Article> list = articleDao.findByWebId(301,"NED");
-		if(null != list || list.size() > 0){
-			for(Article article:list){
-				try{
-					getImage(article.getId());
-					article.setText("FD");
-					if(articleDao.update(article)){
-						System.out.println(">> 更新文章成功["+article.getId()+"]");
-						String aKey = CacheUtils.getArticleKey(article.getId());
-						if (null == client.get(aKey)) {
-							client.add(aKey, article);
-						}
+		List<WebsiteBean> wlist = webSiteDao.findByParentId(D_PARENT_ID);
+		for (WebsiteBean bean : wlist) {
+			List<Article> list = articleDao.findByWebId(bean.getId(),"NED");
+			if(null != list || list.size() > 0){
+				for(Article article:list){
+					try{
+						getImage(article.getId(),bean.getUrl());
+//						article.setText("FD");
+//						if(articleDao.update(article)){
+//							System.out.println(">> 更新文章成功["+article.getId()+"]");
+//							String aKey = CacheUtils.getArticleKey(article.getId());
+//							if (null == client.get(aKey)) {
+//								client.add(aKey, article);
+//							}
+//						}
+					}catch(Exception e){
+						e.printStackTrace();
+						break;
 					}
-				}catch(Exception e){
-					e.printStackTrace();
-					break;
 				}
 			}
 		}

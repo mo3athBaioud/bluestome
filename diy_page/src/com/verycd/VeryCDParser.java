@@ -148,6 +148,8 @@ public class VeryCDParser {
 		Parser parser = new Parser();
 		parser.setURL(url);
 		parser.setEncoding("GB2312");
+		System.out.println("Version:"+parser.getVersion());
+		System.out.println("VersionNumber:"+parser.getVersionNumber());
 		NodeFilter fileter = new NodeClassFilter(Div.class);
 		NodeList list = parser.extractAllNodesThatMatch(fileter)
 				.extractAllNodesThatMatch(
@@ -238,7 +240,7 @@ public class VeryCDParser {
 		NodeList list = parser.extractAllNodesThatMatch(filter)
 				.extractAllNodesThatMatch(
 						new HasAttributeFilter(attribute, value));
-		if (list != null && list.size() == 1) {
+		if (list != null && list.size() > 0) {
 			Parser p1 = new Parser();
 			p1.setInputHTML(list.toHtml());
 			NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
@@ -257,10 +259,11 @@ public class VeryCDParser {
 						tmp.setName(link.getLinkText());
 						result.getMap().put(tmp.getLink(), tmp);
 					}
+					Thread.sleep(10);
 				}
-				result.setBool(true);
 			}
 		}
+		result.setBool(true);
 		return result;
 	}
 	
@@ -329,6 +332,7 @@ public class VeryCDParser {
 		Parser parser = new Parser();
 		parser.setURL(link.getLink());
 		parser.setEncoding("GB2312");
+//		System.out.println("版本号:"+parser.getVersion());
 
 		// 获取指定ID的DIV内容
 		NodeFilter filter = new NodeClassFilter(CompositeTag.class);
@@ -341,33 +345,36 @@ public class VeryCDParser {
 			p2.setEncoding("GB2312");
 			NodeList list4 = p2.parse(linkFilter);
 			if (list4 != null || list4.size() > 0) {
-//				log.info(">> URL["+link.getLink()+"]的记录数量:"+list4.size());
+				ArticleDoc doc = null;
 				for (int i = 0; i < list4.size(); i++) {
 						LinkTag nl = (LinkTag) list4.elementAt(i);
-						ArticleDoc doc = null;
 						doc = new ArticleDoc();
-						doc.setTitle(nl.getLinkText());
+						System.out.println(" >> doc.title:"+nl.getLinkText()+"\tdoc.link:"+nl.getLink());
+						if(null == nl.getLinkText() || "".equalsIgnoreCase(nl.getLinkText())){
+							doc.setTitle("NULL");
+						}else{
+							doc.setTitle(nl.getLinkText());
+						}
 						if(nl.getLink().startsWith("http://")){
 							doc.setUrl(nl.getLink());
 						}else{
 							doc.setUrl(URL+nl.getLink());
 						}
+						if(null == doc.getTitle() || "".equalsIgnoreCase(doc.getTitle())){
+							continue;
+						}
+						
+						if(null == doc.getUrl() || "".equalsIgnoreCase(doc.getUrl())){
+							continue;
+						}
 						doc.setWebId(webId);
 						if(null == client.get(getKey(doc.getUrl()))){
-							int id = articleDocDao.insert(doc);
-							if(!(id>0)){
-								log.info("失败，\t链接名称：" + doc.getTitle() + "\n链接地址："+ doc.getUrl());
-							}else{
-								log.info("\t>> Title:"+doc.getTitle());
-								log.info("\t>> Url:"+doc.getUrl());
-								doc.setId(id);
-								doc.setStatus(1);
-								client.add(getKey(doc.getUrl()), doc);
-								log.info("Memcached now store this object");
-							}
+							System.out.println(""+doc.getUrl());
+//							ResourceQueneInsert.getInstance().setElement(doc);
 						}else{
 							log.info(">> 已存在相同的内容 ["+nl.getLinkText()+"]");
 						}
+						Thread.sleep(10);
 				}
 			}
 		}
@@ -545,7 +552,7 @@ public class VeryCDParser {
 	 * @throws Exception
 	 */
 	static void updateArchives() throws Exception{
-		List<WebsiteBean> list = wesiteDao.findByParentId(_D_PARENT_ID);
+		List<WebsiteBean> list = wesiteDao.findByParentId(D_PARENT_ID);
 		if (list != null && list.size() > 0) {
 			ResultBean result = null;
 			for (WebsiteBean bean : list) {
@@ -563,6 +570,7 @@ public class VeryCDParser {
 						log.debug(">> ["+bean.getUrl()+"]数据相同，表明记录没有增加，不需要更新!");
 						continue;
 					}
+					System.out.println("\t"+bean.getName()+"|"+bean.getUrl());
 					result = hasPagingByCount(bean, "id", "archivePageList");
 					if (result.isBool()) {
 						Iterator it = result.getMap().keySet().iterator();
@@ -581,6 +589,7 @@ public class VeryCDParser {
 					}
 				}catch(Exception e){
 					log.info(">> Exception :"+e);
+					break;
 				}
 			}
 		}
@@ -640,8 +649,11 @@ public class VeryCDParser {
 			//初始化Archives文章目录
 //			catelogyArchives(URL_ARCHIVES);
 			
+			Thread th = new Thread(new RequestRecordThread(),"verycdRecordUpdate");
+			th.start();
+			
 			//获取一级目录
-			catelogy("http://www.verycd.com/");
+//			catelogy("http://www.verycd.com/");
 			
 			updateArchives();
 			
@@ -701,7 +713,7 @@ public class VeryCDParser {
 	}
 
 	//制造缓存KEY
-	static String getKey(String url){
+	public static String getKey(String url){
 		return VERYCD+":"+url;
 	}
 

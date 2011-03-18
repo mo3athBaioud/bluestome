@@ -22,6 +22,32 @@ public class IOUtil {
 	}
 
 	/**
+	 * 创建文件
+	 * @param content 需要创建文件的内容
+	 * @param ext   创建文件的扩展名
+	 */
+	public static void createFileWithExt(String content,String ext){
+		File file = null;
+		OutputStream out = null;
+		try{
+			if(null == ext || ext.equals("")){
+				createFile(content);	
+			}
+			try{
+				file = new File(System.getProperty("user.dir")+"/"+CommonUtil.GenerateSequence(0)+"."+ext);
+				out = new BufferedOutputStream(new FileOutputStream(file),1024);
+				out.write(content.getBytes(), 0, content.getBytes().length);
+				out.close();
+			}finally{
+				if(out != null)
+					out.close();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+	}
+	/**
 	 * 复制文件到指定目录
 	 * 
 	 * @param src
