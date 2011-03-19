@@ -8,7 +8,7 @@ import com.ssi.common.dal.EntityDAO;
 
 public class EntityServiceImpl<T> implements IEntityService<T> {
 	
-	private EntityDAO entityDAO;
+	protected EntityDAO entityDAO;
 
 	public EntityDAO getEntityDAO() {
 		return entityDAO;
