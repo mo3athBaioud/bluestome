@@ -41,8 +41,12 @@ public class ImageServiceImpl implements ImageIService {
 	 */
 	public int getCount(String colName, String value,Integer articleId) {
 		HashMap map = new HashMap();
-		if(null != colName || !"".equals("")){
-			map.put(colName, value);
+		if(null != colName && !"".equals(colName)){
+			if(null != value && !"".equals(value)){
+				map.put(colName, value);
+			}
+		}else{
+			map.put("title", value);	
 		}
 		map.put("title", value);
 		map.put("articleId", articleId);
@@ -63,8 +67,12 @@ public class ImageServiceImpl implements ImageIService {
 	@SuppressWarnings("unchecked")
 	public List<Image> getPageList(String colName, String value, Integer startIndex, Integer pageSize,Integer articleId,boolean asc) throws Exception {
 		HashMap map = new HashMap();
-		if(null == colName || colName.equalsIgnoreCase("")){
-			map.put("title", value);
+		if(null != colName && !"".equals(colName)){
+			if(null != value && !"".equals(value)){
+				map.put(colName, value);
+			}
+		}else{
+			map.put("title", value);	
 		}
 		if(null == startIndex){
 			startIndex = 0;
@@ -77,7 +85,6 @@ public class ImageServiceImpl implements ImageIService {
 		}else{
 			map.put("asc", "desc");
 		}
-		map.put(colName, value);
 		map.put("limit", pageSize);
 		map.put("offset", startIndex);
 		map.put("articleId", articleId);

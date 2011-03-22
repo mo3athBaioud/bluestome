@@ -44,18 +44,26 @@ public class ArticleServiceImpl implements IArticleService {
 
 	public int getCount(String colName, String value, Integer webId) {
 		HashMap map = new HashMap();
-		if(null != colName || !"".equals("")){
-			map.put(colName, value);
+		if(null != colName && !"".equals(colName)){
+			if(null != value && !"".equals(value)){
+				map.put(colName, value);
+			}
 		}else{
 			map.put("title", value);
 		}
-		map.put("webId", webId);
+		if(null != webId){
+			map.put("webId", webId);
+		}
 		return articleDAO.getCount(map);
 	}
 
 	public List<Article> getPageList(String colName, String value, Integer startIndex, Integer pageSize, boolean asc, Integer webId) throws Exception {
 		HashMap map = new HashMap();
-		if(null == colName || colName.equalsIgnoreCase("")){
+		if(null != colName && !"".equals(colName)){
+			if(null != value && !"".equals(value)){
+				map.put(colName, value);
+			}
+		}else{
 			map.put("title", value);
 		}
 		if(null == startIndex){
@@ -64,7 +72,6 @@ public class ArticleServiceImpl implements IArticleService {
 		if(null == pageSize){
 			pageSize = 20;
 		}
-		map.put(colName, value);
 		map.put("limit", pageSize);
 		map.put("offset", startIndex);
 		if(asc){
@@ -72,7 +79,9 @@ public class ArticleServiceImpl implements IArticleService {
 		}else{
 			map.put("asc", "desc");
 		}
-		map.put("webId", webId);
+		if(null != webId){
+			map.put("webId", webId);
+		}
 		List<Article>  list = articleDAO.find(map);
 		return list;
 	}

@@ -56,8 +56,12 @@ public class ArticleDocServiceImpl implements ArticleDocIService {
 	@SuppressWarnings("unchecked")
 	public List<ArticleDoc> getPageList(String colName, String value, Integer startIndex, Integer pageSize, boolean asc,Integer webId) throws Exception {
 		HashMap map = new HashMap();
-		if(null == colName || colName.equalsIgnoreCase("")){
-			map.put("title", value);
+		if(null != colName && !"".equals(colName)){
+			if(null != value && !"".equals(value)){
+				map.put(colName, value);
+			}
+		}else{
+			map.put("title", value);	
 		}
 		if(null == startIndex){
 			startIndex = 0;
@@ -70,7 +74,6 @@ public class ArticleDocServiceImpl implements ArticleDocIService {
 		}else{
 			map.put("asc", "desc");
 		}
-		map.put(colName, value);
 		map.put("limit", pageSize);
 		map.put("offset", startIndex);
 		map.put("webId", webId);
@@ -86,8 +89,12 @@ public class ArticleDocServiceImpl implements ArticleDocIService {
 	 */
 	public int getCount(String colName,String value,Integer webId){
 		HashMap map = new HashMap();
-		if(null != colName || !"".equals("")){
-			map.put(colName, value);
+		if(null != colName && !"".equals(colName)){
+			if(null != value && !"".equals(value)){
+				map.put(colName, value);
+			}
+		}else{
+			map.put("title", value);	
 		}
 		map.put("webId", webId);
 		return articleDocDAO.getCount(map);

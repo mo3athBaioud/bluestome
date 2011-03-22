@@ -58,17 +58,23 @@ public class WebsiteServiceImpl implements IWebsiteService {
 	public int getCount(String colName, String value) {
 		HashMap map = new HashMap();
 		if(null != colName && !"".equals(colName)){
-			map.put(colName, value);
+			if(null != value && !"".equals(value)){
+				map.put(colName, value);
+			}
 		}else{
-			map.put("name", value);
+			map.put("name", value);	
 		}
 		return websiteDao.getCount(map);
 	}
 
 	public List<Website> getPageList(String colName, String value, Integer startIndex, Integer pageSize, boolean asc) throws Exception {
 		HashMap map = new HashMap();
-		if(null == colName || colName.equalsIgnoreCase("")){
-			map.put("name", value);
+		if(null != colName && !"".equals(colName)){
+			if(null != value && !"".equals(value)){
+				map.put(colName, value);
+			}
+		}else{
+			map.put("name", value);	
 		}
 		if(null == startIndex){
 			startIndex = 0;
@@ -76,7 +82,6 @@ public class WebsiteServiceImpl implements IWebsiteService {
 		if(null == pageSize){
 			pageSize = 20;
 		}
-		map.put(colName, value);
 		map.put("limit", pageSize);
 		map.put("offset", startIndex);
 		if(asc){
