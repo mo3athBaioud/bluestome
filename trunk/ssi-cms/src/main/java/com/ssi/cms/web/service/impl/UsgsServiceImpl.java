@@ -51,8 +51,12 @@ public class UsgsServiceImpl implements IUsgsService {
 
 	public List<EarthQuakeInfo> getPageList(String colName, String value, Integer startIndex, Integer pageSize, boolean asc) throws Exception {
 		HashMap map = new HashMap();
-		if(null == colName || colName.equalsIgnoreCase("")){
-			map.put("magnitude", value);
+		if(null != colName && !"".equals(colName)){
+			if(null != value && !"".equals(value)){
+				map.put(colName, value);
+			}
+		}else{
+			map.put("magnitude", value);	
 		}
 		if(null == startIndex){
 			startIndex = 0;
@@ -60,7 +64,6 @@ public class UsgsServiceImpl implements IUsgsService {
 		if(null == pageSize){
 			pageSize = 20;
 		}
-		map.put(colName, value);
 		map.put("limit", pageSize);
 		map.put("offset", startIndex);
 		if(asc){
@@ -75,9 +78,11 @@ public class UsgsServiceImpl implements IUsgsService {
 	public int getCount(String colName, String value) {
 		HashMap map = new HashMap();
 		if(null != colName && !"".equals(colName)){
-			map.put(colName, value);
+			if(null != value && !"".equals(value)){
+				map.put(colName, value);
+			}
 		}else{
-			map.put("magnitude", value);
+			map.put("magnitude", value);	
 		}
 		return earthQuakeInfoDAO.getCount(map);
 	}
