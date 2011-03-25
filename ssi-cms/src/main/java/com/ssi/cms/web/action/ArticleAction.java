@@ -1,5 +1,6 @@
 package com.ssi.cms.web.action;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -34,6 +35,8 @@ public class ArticleAction extends BaseAction {
 	private Article article;
 
 	private Integer id;
+	
+	private Integer[]  ids;
 
 	public String showArticle() {
 		try {
@@ -57,7 +60,7 @@ public class ArticleAction extends BaseAction {
 				articleList = articleService.getPageList(colName, value, start,
 						limit, false, null);
 				if (null != articleList && articleList.size() > 0) {
-					int count = articleService.getCount(colName, value, id);
+					int count = articleService.getCount(colName, value, null);
 					logger.debug(">> ArticleAction.article 查询数据成功");
 					toJson(response, articleList, count);
 				} else {
@@ -159,6 +162,89 @@ public class ArticleAction extends BaseAction {
 			logger.warn(">> ArticleAction.update.Exception:" + e);
 			response.getWriter().print("{failure:true,msg:'更新数据失败'}");
 		}
+	}
+	
+	/**
+	 * 启用数据
+	 * 
+	 * @throws IOException
+	 */
+	public void enable() throws IOException {
+		response.setCharacterEncoding("UTF-8");
+		boolean b = true;
+		try {
+			for(Integer id:ids){
+				b = articleService.enable(id);
+				if(!b){
+					break;
+				}
+			}
+			if (b) {
+				response.getWriter().print("{success:true,msg:'启用记录成功!'}");
+			} else {
+				response.getWriter().print("{failure:true,msg:'启用字典数据失败!'}");
+			}
+		} catch (Exception e) {
+			logger.debug(">> RuleAction.enable" + e);
+			response.getWriter().print("{failure:true,msg:'启用字典数据发生异常'}");
+		}
+
+	}
+
+	/**
+	 * 禁用数据
+	 * 
+	 * @throws IOException
+	 */
+	public void disable() throws IOException {
+		response.setCharacterEncoding("UTF-8");
+		boolean b = true;
+		try {
+			for(Integer id:ids){
+				b = articleService.disable(id);
+				if(!b){
+					break;
+				}
+			}
+			if (b) {
+				response.getWriter().print("{success:true,msg:'禁用记录成功!'}");
+			} else {
+				response.getWriter().print(
+						"{failure:true,msg:'禁用字典数据失败,请检查该地址是否已经被禁用！'}");
+			}
+		} catch (Exception e) {
+			logger.debug(">> RuleAction.disable" + e);
+			response.getWriter().print("{failure:true,msg:'禁用字典数据发生异常'}");
+		}
+
+	}
+	/**
+	 * 删除记录
+	 */
+	public void delete() throws Exception {
+		response.setCharacterEncoding("UTF-8");
+		boolean b = true;
+		try {
+			for(Integer id:ids){
+				b = articleService.delete(id);
+				if(!b){
+					logger.debug(" >> 删除文章失败!");
+					break;
+				}
+			}
+			if(b){
+				response.getWriter().print(
+						"{success:true,msg:'删除数据成功!'}");
+			}else{
+				response.getWriter().print(
+						"{failure:true,msg:'删除数据失败!'}");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.warn(">> ArticleAction.update.Exception:" + e);
+			response.getWriter().print("{failure:true,msg:'更新数据失败'}");
+		}
+		
 	}
 
 	public Article getArticle() {
@@ -272,4 +358,13 @@ public class ArticleAction extends BaseAction {
 		this.articleService = articleService;
 	}
 
+	public Integer[] getIds() {
+		return ids;
+	}
+
+	public void setIds(Integer[] ids) {
+		this.ids = ids;
+	}
+
+	
 }
