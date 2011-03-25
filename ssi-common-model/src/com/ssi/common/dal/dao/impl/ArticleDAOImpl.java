@@ -16,7 +16,7 @@ public class ArticleDAOImpl extends IbatisEntityDao<Article> implements IArticle
 	 * @param id 记录ID
 	 */
 	public Article findById(Integer id) {
-		return find(id,"FD");
+		return find(id,null);
 	}
 	
 	/**
@@ -68,7 +68,9 @@ public class ArticleDAOImpl extends IbatisEntityDao<Article> implements IArticle
 	private Article find(Integer id,String text){
 		HashMap map = new HashMap();
 		map.put("id", id);
+		if(null != text){
 		map.put("text", text);
+		}
 		Article article = null;
 		Object obj = getQueryDelegate().queryForObject("GET_ARTICLE_BY_MAP",map,getRoute());
 		if(null != obj)
