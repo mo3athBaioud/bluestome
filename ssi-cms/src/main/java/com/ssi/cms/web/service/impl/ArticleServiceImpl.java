@@ -95,6 +95,77 @@ public class ArticleServiceImpl implements IArticleService {
 		}
 	}
 
+	/**
+	 * 删除记录
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean delete(Integer id) throws Exception{
+		boolean b = false;
+		Article article = null;
+		Integer result = -1;
+		try{
+			article = articleDAO.findById(id);
+			if(null != article){
+				if(article.getText().equals("NED")){
+					result = articleDAO.deleteByPrimarykey(id);
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null != article)
+				article = null;
+		}
+		if(result > 0){
+			b = true;
+		}
+		return b;
+	}
+
+	/**
+	 * 禁用
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean enable(Integer id) throws Exception{
+		int result = -1;
+		Article article = findById(id);
+		if(null != article){
+			if(!article.getText().equals("FD")){
+				article.setText("FD");
+				result = articleDAO.update(article);
+			}
+		}
+		if(result > 0){
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 启用
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean disable(Integer id) throws Exception{
+		int result = -1;
+		Article article = findById(id);
+		if(null != article){
+			if(!article.getText().equals("NED")){
+				article.setText("NED");
+				result = articleDAO.update(article);
+			}
+		}
+		if(result > 0){
+			return true;
+		}
+		return false;
+	}
+	
 	public IArticleDAO getArticleDAO() {
 		return articleDAO;
 	}
