@@ -175,9 +175,6 @@ Ext.onReady(function(){
 	};
 		
 	app.ds_article = new Ext.data.Store({
-//		proxy : new Ext.data.HttpProxy({
-//			url : project+'/article/article.cgi?id='+webId
-//		}),
 		url : project+'/article/article.cgi?id='+webId,
 		baseParams:{},
 		reader : new Ext.data.JsonReader({
@@ -225,6 +222,127 @@ Ext.onReady(function(){
 		scope:this
 	});
 	
+	var btn_disable = new Ext.Button({
+		text : '禁用',
+		iconCls : 'icon-application_delete',
+//		disabled: true,
+		handler : function() {
+			var records = app.grid.getSelectionModel().getSelections();
+			if(records.length == 0 ){
+				Ext.Msg.show({
+					title : '提示',
+					msg:'请选择需要禁用的站点',
+					buttons : Ext.Msg.OK,
+					icon : Ext.Msg.ERROR
+				});
+			}else{
+				var ids = [];
+				for(i = 0;i < records.length;i++){
+					var tmp = records[i].get('d_id');
+					ids.push(tmp);
+				}
+				Ext.Msg.confirm('禁用文章', '你确定需要禁用所选文章?', function(btn) {
+					if (btn == 'yes') {
+						Ext.Ajax.request({
+							url : project+'/article/disable.cgi',
+							params : {
+								ids : ids
+							},
+							success:function(response,option){
+								var obj = Ext.util.JSON.decode(response.responseText);
+								if(obj.success){
+									Ext.MessageBox.alert("提示", obj.msg);
+									app.ds_article.load({
+										params:{
+											start: 0,
+											limit :app.limit
+										}
+									});
+								}else{
+									Ext.Msg.show({
+										title : '提示',
+										msg : obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.ERROR
+									});
+								}
+							},
+			                failure:function(response,option){
+								Ext.Msg.show({
+									title : '提示',
+									msg : '系统发生错误!',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.ERROR
+								});
+			                }
+						})
+					}
+				})
+			}
+		}
+	});
+	
+	var btn_enable = new Ext.Button({
+		text : '启用',
+		iconCls : 'icon-application_add',
+//		disabled: true,
+		handler : function() {
+			var records = app.grid.getSelectionModel().getSelections();
+			if(records.length == 0 ){
+				Ext.Msg.show({
+					title : '提示',
+					msg:'请选择需要启用的文章',
+					buttons : Ext.Msg.OK,
+					icon : Ext.Msg.ERROR
+				});
+			}else{
+				var ids = [];
+				for(i = 0;i < records.length;i++){
+					ids.push(records[i].get('d_id'));
+				}
+				Ext.Msg.confirm('启用文章', '你确定启用所选文章?', function(btn) {
+					if (btn == 'yes') {
+						Ext.Ajax.request({
+							url : project+'/rule/enable.cgi',
+							params : {
+								ids : ids
+							},
+							success:function(response,option){
+								var obj = Ext.util.JSON.decode(response.responseText);
+								if(obj.success){
+									app.ds_article.load({
+										params:{
+											start: 0,
+											limit :app.limit
+										}
+									});
+									Ext.MessageBox.alert("提示", obj.msg);
+								}else{
+									Ext.Msg.show({
+										title : '提示',
+										msg : obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.ERROR
+									});
+								}
+							},
+			                failure:function(response,option){
+								Ext.Msg.show({
+									title : '提示',
+									msg : '系统发生错误!',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.ERROR
+								})
+			                }
+						})
+					}
+				});
+				/**
+				**/
+			}
+		}
+	});
+	
 	app.window_add = new Ext.Window({
 		title : '添加',
 		iconCls : 'icon-add',
@@ -253,7 +371,6 @@ Ext.onReady(function(){
 			defaultType : 'textfield',
 			items : [{
 				fieldLabel : '标题',
-				id : 'article.title',
 				name : 'article.title',
 				maxLength : 50
 			}, {
@@ -277,13 +394,11 @@ Ext.onReady(function(){
 				fieldLabel : '介绍',
 				xtype:'textarea',
 				name : 'article.text',
-//				allowBlank : false,
 				maxLength : 20
 			},{
 				//下拉选择框
 				xtype:'combo',
 				fieldLabel : '状态',
-				id : 'add_article_text',
 				hiddenName:'article.text',
                 valueField: 'id',
                 displayField: 'name',
@@ -359,6 +474,71 @@ Ext.onReady(function(){
 				}
 			}]
 		})]
+	});
+	
+	app.delete_btn = new Ext.Button({
+		text:'删除',
+		iconCls:'icon-delete',
+		handler:function(){
+			var records = app.grid.getSelectionModel().getSelections();
+			if(records.length == 0 ){
+				Ext.Msg.show({
+					title : '提示',
+					msg:'请选择需要删除的记录',
+					buttons : Ext.Msg.OK,
+					icon : Ext.Msg.ERROR
+				});
+			}else{
+				var ids = [];
+				for(i = 0;i < records.length;i++){
+					ids.push(records[i].get('d_id'));
+				}
+				Ext.Msg.confirm('确认删除', '你确定删除所选记录?', function(btn) {
+					if (btn == 'yes') {
+						Ext.Ajax.request({
+							url : project+'/article/delete.cgi',
+							params : {
+								ids : ids
+							},
+							success:function(response,option){
+								var obj = Ext.util.JSON.decode(response.responseText);
+								if(obj.success){
+									Ext.Msg.show({
+										title : '提示',
+										msg:obj.msg,
+										buttons : Ext.Msg.OK,
+										fn : function() {
+											app.ds_article.load({
+												params:{
+													start:0,
+													limit : app.limit
+												}
+											});
+										},
+										icon : Ext.Msg.INFO
+									});
+								}else{
+									Ext.Msg.show({
+										title : '提示',
+										msg : obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.ERROR
+									});
+								}
+							},
+			                failure:function(response,option){
+								Ext.Msg.show({
+									title : '提示',
+									msg : '系统发生错误!',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.ERROR
+								});
+			                }
+						});
+					}
+				});
+			}
+		}
 	});
 	
 	app.update_code_btn = new Ext.Button({ 
@@ -581,7 +761,7 @@ Ext.onReady(function(){
         },
  		plugins: expander,
 		sm:app.sm,
-		tbar : [app.btn_get_img_url,'-',app.btn_add_code,'-',app.update_code_btn,'-',app.btn_upload,'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
+		tbar : [app.btn_get_img_url,'-',app.btn_add_code,'-',app.update_code_btn,'-',btn_enable,'-',btn_disable,'-',app.delete_btn,'-',app.btn_upload,'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
 		bbar : app.ptb
 	});
 	
