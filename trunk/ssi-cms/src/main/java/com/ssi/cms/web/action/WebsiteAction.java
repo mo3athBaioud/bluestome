@@ -140,9 +140,9 @@ public class WebsiteAction extends BaseAction {
 			website.setParentId(0);
 			website.setStatus(1);
 			website.setType(1);
-			websiteList = websiteService.getRootWebSite();
+			websiteList = websiteService.findAll();
 			websiteList.add(website);
-			toJson(response, websiteList, websiteList.size());
+			toTreeJson(response, websiteList, websiteList.size());
 		}catch(Exception e){
 			logger.debug(">> WebsiteAction.update" + e);
 			response.getWriter().print("{failure:true,msg:'更新站点发生异常'}");
@@ -330,6 +330,60 @@ public class WebsiteAction extends BaseAction {
 		this.websiteList = websiteList;
 	}
 
+	/**
+	 * 转换成JSON格式的数据
+	 * @param response
+	 * @param list
+	 * @param count
+	 * @throws Exception
+	 */
+	public void toTreeJson(HttpServletResponse response, List list,int count) throws Exception {
+		PrintWriter out = response.getWriter();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		response.setCharacterEncoding("UTF-8");
+		JSONArray jsonArr = new JSONArray();
+		StringBuffer buffer =new StringBuffer();
+		Iterator it=list.iterator();
+		buffer.append("{count:").append(count).append(",success:true,website:");
+		while(it.hasNext()){
+			JSONObject  json=new JSONObject();
+			Website bean= (Website)it.next();
+			json.put("d_id", bean.getId());
+			json.put("d_parent_id", bean.getParentId());
+			if(bean.getParentId() == 0){
+				json.put("d_web_name", bean.getName());
+			}else{
+				json.put("d_web_name", "\t|--"+bean.getName());
+			}
+			json.put("d_web_type", bean.getType());
+			json.put("d_web_url", bean.getUrl());
+			json.put("d_status", bean.getStatus());
+			json.put("d_count", bean.getCount());
+			json.put("d_sub_count", bean.getChildren().size());
+			if( null == bean.getRemarks() || "".equals(bean.getRemarks())){
+				json.put("d_remarks", "暂无");
+			}else{
+				json.put("d_remarks", bean.getRemarks());
+			}
+			String str = sdf.format(bean.getCreatetime());
+			json.put("d_createtime", str);
+			if(null !=  bean.getModifytime()){
+				String modifyTime = sdf.format(bean.getModifytime());
+				json.put("d_modify_time", modifyTime);
+			}else{
+				String modifyTime = sdf.format(new Date());
+				json.put("d_modify_time", modifyTime);
+			}
+			if(null != bean.getFather()){
+				json.put("d_parent_name", bean.getFather().getName());
+			}
+			jsonArr.add(json);
+		}
+    	buffer.append(jsonArr.toString()).append("}");
+		out.print(buffer.toString());
+		out.close();
+	}
+	
 	/**
 	 * 转换成JSON格式的数据
 	 * @param response
