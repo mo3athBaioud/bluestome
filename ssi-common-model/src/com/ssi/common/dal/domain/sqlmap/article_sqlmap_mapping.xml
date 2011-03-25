@@ -18,9 +18,21 @@
 		<result property="images" column="d_id" select="GET_IMAGE_BY_ARTICLE_ID" />						
 		 -->
 	</resultMap>
-
+	
+	<delete id="article.deleteByPrimaryKey" parameterClass="java.lang.Integer">
+		delete from TBL_ARTICLE where d_id = #value#
+	</delete>
+	
 	<statement id="GET_ARTICLE_BY_MAP"  parameterClass="java.util.Map" resultMap="articleMap">
-    	SELECT DISTINCT t.* FROM TBL_ARTICLE t WHERE 1 = 1 and t.d_id = #id# and t.d_text = #text#  
+    	SELECT DISTINCT t.* FROM TBL_ARTICLE t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="text" prepend="and">
+				t.d_text = #id#
+			</isNotEmpty>
+		</dynamic>
     	ORDER BY t.d_id asc
 		<dynamic>
 			<isNotEmpty property="offset" prepend="limit">
