@@ -323,6 +323,28 @@ public class HttpClientUtils {
 		value = getResponseBodyAsByte(null, cookie, url);
 		return value;
 	}
+	
+	/**
+	 * 获取网站的响应代码
+	 * @param url
+	 * @return
+	 */
+	public static int getResponseCode(String url){
+		int statusCode = -200;
+		try{
+			httpclient = new HttpClient();
+			getMethod = new GetMethod(encodeURL(url,"UTF-8"));
+			statusCode = httpclient.executeMethod(getMethod);
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if (null != getMethod)
+				getMethod.releaseConnection();
+			if (null != httpclient)
+				httpclient = null;
+		}
+		return statusCode;
+	}
 
 	/**
 	 * 获取响应体
@@ -432,10 +454,11 @@ public class HttpClientUtils {
 			// System.out.println("isTRUE:"+urlValidation("http://www.bizhi.com/wallpaper/1150_2.html"));
 			
 			
-			String url = "http://www.showimg.com/nature/nature20100914/big/02833_034_ZOabx1li[1].jpg";
-			byte[] big = getResponseBodyAsByte(null,null,url);
-			
-			System.out.println("长度:"+big.length);
+//			String url = "http://www.showimg.com/nature/nature20100914/big/02833_034_ZOabx1li[1].jpg";
+//			byte[] big = getResponseBodyAsByte(null,null,url);
+//			System.out.println("长度:"+big.length);
+			int statusCode = getResponseCode("http://www.163.com/");
+			System.out.println(" >> 站点状态："+statusCode);
 		} catch (Exception e) {
 			System.err.println(e);
 		} finally {
