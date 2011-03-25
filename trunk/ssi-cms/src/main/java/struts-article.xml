@@ -15,5 +15,9 @@
 		<action name="articledoc" class="articleAction" method="articledoc" />
 		
 		<action name="update" class="articleAction" method="update" />
+		
+		<action name="delete" class="articleAction" method="delete" />
+		<action name="disable" class="articleAction" method="disable" />
+		<action name="enable" class="articleAction" method="enable" />
 	</package>
 </struts>
