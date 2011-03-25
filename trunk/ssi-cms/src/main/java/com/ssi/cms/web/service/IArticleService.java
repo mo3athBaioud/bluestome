@@ -76,4 +76,29 @@ public interface IArticleService {
 	 * @throws Exception
 	 */
 	boolean update(Article article) throws Exception;	
+	
+	/**
+	 * 删除记录
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	boolean delete(Integer id) throws Exception;
+	
+	
+	/**
+	 * 禁用
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	boolean enable(Integer id) throws Exception;
+	
+	/**
+	 * 启用
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	boolean disable(Integer id) throws Exception;
 }
