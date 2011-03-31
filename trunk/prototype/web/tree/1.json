@@ -120,34 +120,11 @@
 		"id":"03",
 		"children":[
 			{
-				"text":"扩展IMEI维护",
+				"text":"扩展IMEI管理",
 				"id":"0301",
 				"leaf":true,
-				"href":"modules/sp/spType.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-                     {"js":"modules/sp/spType.js"}
-				]
-			},
-			{
-				"text":"其他IMEI维护",
-				"id":"0302",
-				"leaf":true,
-				"href":"modules/sp/spType.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-					{"js":"modules/sp/spType.js"}
-				]
-			},
-			{
-				"text":"扩展IMEI查询",
-				"id":"0303",
-				"leaf":true,
-				"href":"modules/test/miliAddr.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-					{"js":"modules/test/miliAddr.js"}
-				]			
+				"href":"pages/imeiextends/imei_extends.html",
+				"hrefTarget":"mainFrame"
 			}
 		]
 	},{
@@ -155,34 +132,11 @@
 		"id":"04",
 		"children":[
 			{
-				"text":"外呼数据导入",
+				"text":"外呼数据管理",
 				"id":"0401",
 				"leaf":true,
-				"href":"modules/sp/spType.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-                     {"js":"modules/sp/spType.js"}
-				]
-			},
-			{
-				"text":"外呼数据导出",
-				"id":"0402",
-				"leaf":true,
-				"href":"modules/sp/spType.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-					{"js":"modules/sp/spType.js"}
-				]
-			},
-			{
-				"text":"外呼数据管理",
-				"id":"0403",
-				"leaf":true,
-				"href":"modules/test/miliAddr.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-					{"js":"modules/test/miliAddr.js"}
-				]			
+				"href":"pages/customimei/imei_custom.html",
+				"hrefTarget":"mainFrame"
 			}
 		]
 	},{
@@ -190,44 +144,32 @@
 		"id":"05",
 		"children":[
 			{
-				"text":"终端属性维护",
+				"text":"终端一级数据维护",
 				"id":"0501",
 				"leaf":true,
-				"href":"modules/sp/spType.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-                     {"js":"modules/sp/spType.js"}
-				]
+				"href":"pages/terminal/terminal_1.html",
+				"hrefTarget":"mainFrame"
 			},
 			{
-				"text":"终端属性维护",
-				"id":"0501",
+				"text":"终端二级数据维护",
+				"id":"0502",
 				"leaf":true,
-				"href":"modules/sp/spType.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-                     {"js":"modules/sp/spType.js"}
-				]
+				"href":"pages/terminal/terminal_2.html",
+				"hrefTarget":"mainFrame"
+			},
+			{
+				"text":"正式终端数据维护",
+				"id":"0503",
+				"leaf":true,
+				"href":"pages/terminal/terminal.html",
+				"hrefTarget":"mainFrame"
 			},
 			{
 				"text":"终端业务维护",
-				"id":"0502",
+				"id":"0504",
 				"leaf":true,
-				"href":"modules/sp/spType.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-					{"js":"modules/sp/spType.js"}
-				]
-			},
-			{
-				"text":"终端数据筛选",
-				"id":"0503",
-				"leaf":true,
-				"href":"modules/test/miliAddr.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-					{"js":"modules/test/miliAddr.js"}
-				]			
+				"href":"pages/terminal/terminal_business.html",
+				"hrefTarget":"mainFrame"
 			}
 		]
 	},{
