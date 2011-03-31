@@ -256,6 +256,10 @@ a:hover {
 	background-image: url(../images/arrow_down.png) !important;
 }
 
+.icon-download {
+	background-image: url(../images/download.gif) !important;
+}
+
 .icon-arrow_in {
 	background-image: url(../images/arrow_in.png) !important;
 }
