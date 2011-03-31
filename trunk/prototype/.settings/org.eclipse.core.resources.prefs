@@ -1,0 +1,23 @@
+#Wed Mar 30 22:59:38 CST 2011
+eclipse.preferences.version=1
+encoding//web/scripts/common/RowExpander.js=UTF-8
+encoding//web/scripts/common/UploadDialog.js=UTF-8
+encoding//web/scripts/imeimanager/imei_exception_deal.js=UTF-8
+encoding//web/scripts/imeimanager/imei_export.js=UTF-8
+encoding//web/scripts/imeimanager/imei_import.js=UTF-8
+encoding//web/scripts/imeimanager/imei_query.js=UTF-8
+encoding//web/scripts/iquery/bat_db.js=UTF-8
+encoding//web/scripts/iquery/bat_rb.js=UTF-8
+encoding//web/scripts/iquery/bat_utp.js=UTF-8
+encoding//web/scripts/iquery/db.js=UTF-8
+encoding//web/scripts/iquery/rb.js=UTF-8
+encoding//web/scripts/iquery/utp.js=UTF-8
+encoding//web/scripts/login.js=UTF-8
+encoding//web/scripts/main.js=UTF-8
+encoding//web/scripts/main_2011-03-25.js=UTF-8
+encoding//web/scripts/main_bk.js=UTF-8
+encoding//web/scripts/upload/Application.js=UTF-8
+encoding//web/scripts/upload/FileGridPanel.js=UTF-8
+encoding//web/scripts/upload/FileTreePanel.js=UTF-8
+encoding//web/scripts/upload/ThemePicker.js=UTF-8
+encoding//web/scripts/upload/UploadDialog.js=UTF-8
