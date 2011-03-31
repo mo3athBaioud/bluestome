@@ -165,7 +165,7 @@
 				"hrefTarget":"mainFrame"
 			},
 			{
-				"text":"终端业务维护",
+				"text":"业务终端关联维护",
 				"id":"0504",
 				"leaf":true,
 				"href":"pages/terminal/terminal_business.html",
@@ -236,6 +236,15 @@
 				]
 			},
 			{
+				"text":"角色管理",
+				"id":"0707",
+				"leaf":true,
+				"href":"modules/sp/spType.html",
+				"hrefTarget":"mainFrame",
+				"jsArray":[
+					{"js":"modules/sp/spType.js"}
+				]
+			},{
 				"text":"菜单管理",
 				"id":"0703",
 				"leaf":true,
