@@ -1,0 +1,13 @@
+[{
+		"text":"个人信息管理",
+		"id":"01",
+		"href":"info.html",
+		"leaf":true,
+		"hrefTarget":"mainFrame"
+},{
+		"text":"个人消息管理",
+		"id":"02",
+		"href":"info.html",
+		"leaf":true,
+		"hrefTarget":"mainFrame"
+}]
