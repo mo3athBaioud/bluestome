@@ -232,12 +232,12 @@ Ext.onReady(function(){
 					title : '编辑',
 					iconCls:'icon-edit',
 					width : 450,
-//					height : 440,
 					resizable : false,
 					autoHeight : true,
 					modal : true,
 					closeAction : 'close',
-					items : [new Ext.FormPanel({
+					items : [
+					new Ext.FormPanel({
 						id:'updateForm',
 						labelWidth : 80,
 						labelAlign : 'right',
@@ -307,36 +307,17 @@ Ext.onReady(function(){
 							text : '更新',
 							handler : function(btn) {
 								var frm = this.ownerCt.form;
-								if (frm.isValid()) {
-//									btn.disable();
-//									var dnfield = frm.findField('imeiException.title');
-									Ext.Msg.show({
-										title : '系统提示',
-										msg : '修改IMEI异常信息成功!',
-										buttons : Ext.Msg.OK,
-										icon : Ext.MessageBox.INFO
-									});
-//									frm.submit({
-//										waitTitle : '请稍候',
-//										waitMsg : '正在提交表单数据,请稍候...',
-//										success : function(form, action) {
-//											Ext.Msg.show({
-//												title : '系统提示',
-//												msg : '修改文章"' + dnfield.getValue() + '"成功!',
-//												buttons : Ext.Msg.OK,
-//												icon : Ext.MessageBox.INFO
-//											});
-//										},
-//										failure : function() {
-//											Ext.Msg.show({
-//												title : '错误提示',
-//												msg : '"' + dnfield.getValue() + '" ' + '名称可能已经存在或者您没有更新数据的权限!',
-//												buttons : Ext.Msg.OK,
-//												icon : Ext.Msg.ERROR
-//											});
-//										}
-//									})
-								}
+								Ext.Msg.show({
+									title : '系统提示',
+									msg : '修改IMEI异常信息成功!',
+									buttons : Ext.Msg.OK,
+									fn:function(){
+										frm.reset();
+										var win = Ext.getCmp('updateWin');
+										win.close();
+									},
+									icon : Ext.MessageBox.INFO
+								});
 							}
 						}, {
 							text : '重置',

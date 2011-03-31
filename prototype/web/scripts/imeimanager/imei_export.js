@@ -84,6 +84,29 @@ Ext.onReady(function(){
 		}
 	});
 	
+	app.btn_export = new Ext.Button({
+		text : '导出',
+		iconCls : 'icon-download',
+		handler : function(){
+			if(!app.grid.getSelectionModel().getSelected()){
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '请选择要导出的记录!',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.ERROR
+				});
+			}else{
+				Ext.Msg.show({
+					title : '系统提示',
+					width:300,
+					msg : '正在导出文件!',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.INFO
+				});
+			}
+		}
+	});
+	
 	app.text_search_code = new Ext.form.TextField({
 		name : 'textSearchcode',
 		width : 150,
@@ -158,6 +181,8 @@ Ext.onReady(function(){
         ]
     });
 	
+	app.ds_utp.loadData(app.data);
+	
 	app.ptb = new Ext.PagingToolbar({
 		pageSize:app.limit,
 		store:app.ds_utp,
@@ -179,7 +204,7 @@ Ext.onReady(function(){
 	    height:550,
         autoScroll: true,
 		sm:app.sm,
-		tbar : ['请输入手机号码:',app.text_search_code,'-','请输入IMEI:',app.text_imei_code,'请输入TAC码:',app.text_tac_code,app.btn_search_code]
+		tbar : [app.btn_export,'-','请输入手机号码:',app.text_search_code,'-','请输入IMEI:',app.text_imei_code,'请输入TAC码:',app.text_tac_code,app.btn_search_code]
 //		bbar : app.ptb
 	});
 	

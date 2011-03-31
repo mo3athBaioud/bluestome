@@ -1,5 +1,5 @@
 /**
- * IMEI
+ * IMEI查询
  */
 var app = {};
 Ext.onReady(function(){
@@ -62,6 +62,45 @@ Ext.onReady(function(){
         ['2010/6/27','1610041222370609','18729637528','873319122824500','FD69','4','14','735','87331912'],
         ['2010/6/27','1610041222370609','18729637529','813247092824500','F0F9','4','14','735','81324709']
 	];
+	/**
+	app.utp = Ext.data.Record.create([{
+		name : 'id',
+		mapping : 'd_id',
+		type : 'int'
+	}, {
+		name : 'acticleRealUrl',
+		mapping : 'd_article_real_url',
+		type : 'string'
+	}, {
+		name : 'acticleXmlUrl',
+		mapping : 'd_article_xml_url',
+		type : 'string'
+	}, {
+		name : 'articleUrl',
+		mapping : 'd_acticle_url',
+		type : 'string'
+	}, {
+		name : 'createTime',
+		mapping : 'd_createtime',
+		type : 'string'
+	}, {
+		name : 'intro',
+		mapping : 'd_intro',
+		type : 'string'
+	}, {
+		name : 'text',
+		mapping : 'd_text',
+		type : 'string'
+	}, {
+		name : 'title',
+		mapping : 'd_title',
+		type : 'string'
+	}, {
+		name : 'webId',
+		mapping : 'd_web_id',
+		type : 'int'
+	}]);
+    **/
     
     app.cm_utp = new Ext.grid.ColumnModel([
 	    new Ext.grid.RowNumberer(),app.sm,
@@ -70,9 +109,9 @@ Ext.onReady(function(){
         {header: "手机号码", width: 100, sortable: true, dataIndex: 'sn'},
         {header: "imei号码", width: 150, sortable: true, dataIndex: 'imei'},
         {header: "业务区编码", width: 100, sortable: true, dataIndex: 'ywqbm'},
-        {header: "通话次数", width: 80, sortable: true, dataIndex: 'thcs'},
-        {header: "基本计费跳", width: 100, sortable: true, dataIndex: 'jbjft'},
-        {header: "通话时长", width: 80, sortable: true, dataIndex: 'thsc'},
+//        {header: "通话次数", width: 80, sortable: true, dataIndex: 'thcs'},
+//        {header: "基本计费跳", width: 100, sortable: true, dataIndex: 'jbjft'},
+//        {header: "通话时长", width: 80, sortable: true, dataIndex: 'thsc'},
         {header: "tac码", width: 80, sortable: true, dataIndex: 'tac'}
     ]);
     
@@ -84,21 +123,223 @@ Ext.onReady(function(){
 		}
 	});
 	
-	app.btn_upload = new Ext.Button({ 
-		text:'上传',
-		iconCls:'upload-icon',
-		handler:function(){
-			win.show();
-			/**
-			Ext.Msg.show({
-				title : '系统提示',
-				width:300,
-				msg : '显示上传界面!',
-				buttons : Ext.Msg.OK,
-				icon : Ext.MessageBox.INFO
-			});
-			**/ 
+	app.btn_add = new Ext.Button({
+		text : '添加',
+		iconCls : 'icon-add',
+		handler : function(){
+				var updateWin = new Ext.Window({
+					id:'add_win',
+					title : '添加扩展IMEI',
+					iconCls:'icon-add',
+					width : 450,
+					resizable : false,
+					autoHeight : true,
+					modal : true,
+					closeAction : 'close',
+					items : [
+						new Ext.FormPanel({
+							id:'add_form',
+							labelWidth : 80,
+							labelAlign : 'right',
+							url : '/article/update.cgi',
+							border : false,
+							baseCls : 'x-plain',
+							bodyStyle : 'padding:5px 5px 0',
+							anchor : '100%',
+							defaults : {
+								width : 300,
+								msgTarget : 'side'
+							},
+							defaultType : 'textfield',
+							items : [
+							{ 
+								fieldLabel : '统计日期',
+								name : 'article.time',
+								allowBlank : false
+							},{
+								fieldLabel : '用户标示',
+								name : 'article.uid',
+								allowBlank : false
+							},{
+								fieldLabel : '手机号码',
+								name : 'article.sn',
+								allowBlank : false
+							},{
+								fieldLabel : 'IMEI号码',
+								name : 'article.imei',
+								allowBlank : false
+							},{
+								fieldLabel : '业务区编码',
+								name : 'article.ywqbm',
+								allowBlank : false
+							},{
+								fieldLabel : 'TAC码',
+								name : 'article.tac',
+								allowBlank : false
+							}],
+							buttonAlign : 'right',
+							minButtonWidth : 60,
+							buttons : [{
+								text : '添加',
+								handler : function(btn) {
+									var frm = Ext.getCmp('add_form').form;
+									if (frm.isValid()) {
+										var win = Ext.getCmp('add_win');
+										win.close();
+										Ext.Msg.show({
+											title : '系统提示',
+											msg : '添加成功!',
+											buttons : Ext.Msg.OK,
+											fn:function(){
+												app.ds_utp.loadData(app.data);
+											},
+											icon : Ext.MessageBox.INFO
+										});
+									}
+								}
+							}, {
+								text : '重置',
+								handler : function() {
+									Ext.getCmp('add_form').form.reset();
+								}
+							}, {
+								text : '取消',
+								handler : function() {
+									var win = Ext.getCmp('add_win');
+									win.close();
+								}
+							}]
+						})
+				]
+			}).show();
+		}
+	});
+	
+	app.btn_edit = new Ext.Button({
+		text : '修改',
+		iconCls : 'icon-edit',
+		handler : function(){
+			if(app.grid.getSelectionModel().getSelected()){
+				var record = app.grid.getSelectionModel().getSelected();
+				var updateWin = new Ext.Window({
+					id:'update_win',
+					title : '编辑',
+					iconCls:'icon-edit',
+					width : 450,
+					resizable : false,
+					autoHeight : true,
+					modal : true,
+					closeAction : 'close',
+					items : [new Ext.FormPanel({
+						labelWidth : 80,
+						labelAlign : 'right',
+						url : '/article/update.cgi',
+						border : false,
+						baseCls : 'x-plain',
+						bodyStyle : 'padding:5px 5px 0',
+						anchor : '100%',
+						defaults : {
+							width : 300,
+							msgTarget : 'side'
+						},
+						defaultType : 'textfield',
+						items : [
+						{ 
+							fieldLabel : '统计日期',
+							name : 'article.time',
+							readOnly:true,
+							value : record.get('time')
+						},{
+							fieldLabel : '用户标示',
+							name : 'article.uid',
+							value : record.get('uid')
+						},{
+							fieldLabel : '手机号码',
+							name : 'article.sn',
+							value : record.get('sn')
+						},{
+							fieldLabel : 'IMEI号码',
+							name : 'article.imei',
+							value : record.get('imei')
+						},{
+							fieldLabel : '业务区编码',
+							name : 'article.ywqbm',
+							value : record.get('ywqbm')
+						},{
+							fieldLabel : 'TAC码',
+							name : 'article.tac',
+							value:record.get('tac')
+						}],
+						buttonAlign : 'right',
+						minButtonWidth : 60,
+						buttons : [{
+							text : '更新',
+							handler : function(btn) {
+								var win = Ext.getCmp('update_win');
+								win.close();
+								Ext.Msg.show({
+									title : '系统提示',
+									msg : '修改成功!',
+									buttons : Ext.Msg.OK,
+									fn:function(){
+										app.ds_utp.loadData(app.data);
+									},
+									icon : Ext.MessageBox.INFO
+								});
+							}
+						}, {
+							text : '重置',
+							handler : function() {
+								this.ownerCt.form.reset();
+							}
+						}, {
+							text : '取消',
+							handler : function() {
+								var win = Ext.getCmp('update_win');
+								win.close();
+							}
+						}]
+					})]
+			}).show();
+			}else{
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '请选择要修改的记录!',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.ERROR
+				});
+			}
+		}
+	});
+	
+	app.btn_del = new Ext.Button({
+		text : '删除',
+		iconCls : 'icon-del',
+		handler : function(){
+			var records = app.grid.getSelectionModel().getSelections();
 			
+			if(records.length == 0 ){
+				Ext.Msg.show({
+					title : '提示',
+					msg:'请选择需要删除的记录',
+					buttons : Ext.Msg.OK,
+					icon : Ext.Msg.ERROR
+				});
+			}else{
+				Ext.Msg.confirm('确认删除', '你确定删除所选记录?', function(btn) {
+					if (btn == 'yes') {
+						Ext.Msg.show({
+							title : '提示',
+							msg:'删除记录成功!',
+							buttons : Ext.Msg.OK,
+							fn : function() {
+								app.ds_utp.loadData(app.data);
+							},
+							icon : Ext.Msg.INFO
+						});
+					}
+				});
+			}
 		}
 	});
 	
@@ -126,88 +367,6 @@ Ext.onReady(function(){
 		}
 	});
 	
-	var uploadForm = new Ext.form.FormPanel({
-	     baseCls : 'x-plain',
-	     labelWidth : 70,
-	     fileUpload : true,
-	     defaultType : 'textfield',
-	     items : [{
-	        xtype : 'textfield',
-	        fieldLabel : '上传文件名',
-	        name : 'userfile',
-	        id : 'userfile',
-	        inputType : 'file',
-	        blankText : 'File can\'t not empty.',
-	        anchor : '100%' // anchor width by percentage
-	      }]
-    });
-  
- 	 var pbar4 = new Ext.ProgressBar({
-	        text:'请等待',
-	        id:'pbar4',
-	        textEl:'p4text',
-	        cls:'custom'
-    });
-    
-	var win = new Ext.Window({
-	     title : 'IMEI文件上传',
-	     width : 400,
-	     autoHeight : true,
-	     layout : 'fit',
-	     plain : true,
-	     bodyStyle : 'padding:5px;',
-	     buttonAlign : 'center',
-	     items : [
-	     uploadForm,
-	     pbar4,
- 		{
- 			id:'p4',
- 			xtype:'label',
- 			width:400, 
-            border:0
-        },{
-        	xtype:'label',
- 			id:'p4text', 
-            border:0
-        },
-	    ],
-	     buttons : [
-		     {
-			      text : '上传',
-			      handler : function() {
-				       if (uploadForm.form.isValid()) {
-					        if(Ext.getCmp('userfile').getValue() == ''){
-						         Ext.Msg.alert('错误','请选择你要上传的文件');
-						         return;
-					        }else{
-						        Runner.run(pbar4, this, 19, function(){
-						            pbar4.updateText('上传完成!');
-									Ext.Msg.show({
-										title : '系统提示',
-										width:300,
-										msg : '上传成功!',
-										buttons : Ext.Msg.OK,
-										fn : function() {
-											uploadForm.form.reset();
-											win.close();
-											app.ds_utp.loadData(app.data);
-										},
-										icon : Ext.MessageBox.INFO
-									});
-						        });
-					        }
-				       }
-		      	 }
-		     }, {
-			      text : '关闭',
-			      handler : function() {
-			      	uploadForm.form.reset();
-			       	win.hide();
-			      }
-		     }
- 		]
-    });
-
 	app.text_tac_code = new Ext.form.TextField({
 		name : 'text_tac',
 		width : 150,
@@ -221,6 +380,38 @@ Ext.onReady(function(){
 	});
 	
 	app.searchcode = function() {
+		/**
+		app.colName = app.search_comb_queyrCol_code.getValue();
+		app.values =app.text_search_code.getValue();
+		Ext.Ajax.request({
+			url : '/utp/utp.cgi',
+			params : {
+				colName : app.colName,
+				value : app.values
+			},
+			success:function(response,option){
+				var obj = Ext.util.JSON.decode(response.responseText);
+				if(obj.success){
+					app.ds_utp.load({params : {start:0,limit:app.limit}}); //,colName:app.colName,value:app.values
+				}else{
+					Ext.Msg.show({
+						title : '系统提示',
+						msg : obj.msg,
+						buttons : Ext.Msg.OK,
+						icon : Ext.MessageBox.ERROR
+					});
+				}
+			},
+            failure:function(){
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '服务器内部错误',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.ERROR
+				});
+            }
+		});
+		**/
 		app.ds_utp.loadData(app.data);
 	};
 	
@@ -258,6 +449,8 @@ Ext.onReady(function(){
         ]
     });
 	
+	app.ds_utp.loadData(app.data);
+	
 	app.ptb = new Ext.PagingToolbar({
 		pageSize:app.limit,
 		store:app.ds_utp,
@@ -267,7 +460,7 @@ Ext.onReady(function(){
 	});
 		
 	app.grid = new Ext.grid.GridPanel({
-		title : '通话IMEI导入',
+		title : '扩展IMEI管理',
 		iconCls : 'icon-plugin',
 		region : 'center',
 		loadMask : {
@@ -279,8 +472,8 @@ Ext.onReady(function(){
 	    height:550,
         autoScroll: true,
 		sm:app.sm,
-		tbar : [app.btn_upload,'-','请输入手机号码:',app.text_search_code,'-','请输入IMEI:',app.text_imei_code,'请输入TAC码:',app.text_tac_code,app.btn_search_code]
-//		bbar : app.ptb
+		tbar : [app.btn_add,'-',app.btn_edit,'-',app.btn_del,'-','请输入手机号码:',app.text_search_code,'-','请输入IMEI:',app.text_imei_code,'请输入TAC码:',app.text_tac_code,app.btn_search_code],
+		bbar : app.ptb
 	});
 	
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
@@ -295,33 +488,5 @@ Ext.onReady(function(){
 				}
 	});
 
-    app.grid.render('imei_import');
-});
-
-var Runner = function(){
-    var f = function(v, pbar, btn, count, cb){
-        return function(){
-            if(v > count){
-//                btn.dom.disabled = false;
-                cb();
-            }else{
-                if(pbar.id=='pbar4'){
-                    //give this one a different count style for fun
-                    var i = v/count;
-                    pbar.updateProgress(i, '已上传['+Math.round(100*i)+'%]');
-                }else{
-                    pbar.updateProgress(v/count, 'Loading item ' + v + ' of '+count+'...');
-                }
-            }
-       };
-    };
-    return {
-        run : function(pbar, btn, count, cb){
-//            btn.dom.disabled = true;
-            var ms = 5000/count;
-            for(var i = 1; i < (count+2); i++){
-               setTimeout(f(i, pbar, btn, count, cb), i*ms);
-            }
-        }
-    }
-}();
+    app.grid.render('imei_extends');
+}); 
