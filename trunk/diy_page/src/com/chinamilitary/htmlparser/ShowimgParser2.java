@@ -2,6 +2,7 @@ package com.chinamilitary.htmlparser;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -1025,7 +1026,7 @@ public class ShowimgParser2 {
 					}
 				}
 			}catch(Exception e){
-				
+				e.printStackTrace();
 			}
 
 			imgDownload();
@@ -1208,9 +1209,14 @@ public class ShowimgParser2 {
 				imgBean.getHttpUrl().length());
 		s_fileName = s_fileName.replace(".", "_s.");
 		String length = "0";
+		String bigUrl = null;
 		try {
 			byte[] big = null;
-			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, imgBean.getHttpUrl());
+			bigUrl = imgBean.getHttpUrl().replace("[", URLEncoder.encode("[", "utf-8")).replace("]", URLEncoder.encode("]", "utf-8"));
+//			.replace(" (", URLEncoder.encode(" (", "utf-8"))
+//										 .replace(" )", URLEncoder.encode(" )", "utf-8"));
+			System.out.println(" >> "+bigUrl);
+			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, bigUrl);
 			if(null == big)
 				return false;
 			length = String.valueOf(big.length);

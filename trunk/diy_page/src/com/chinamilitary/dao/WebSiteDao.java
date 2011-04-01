@@ -45,4 +45,12 @@ public interface WebSiteDao extends ICommonDao{
 	 * @throws Exception
 	 */
 	public List<WebsiteBean> findByParentId(Integer id) throws Exception;
+	
+	/**
+	 * 根据站点URL查找web对象
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 */
+	WebsiteBean findByUrl(String url) throws Exception;
 }

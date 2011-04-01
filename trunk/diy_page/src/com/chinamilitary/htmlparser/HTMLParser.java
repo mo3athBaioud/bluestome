@@ -147,6 +147,7 @@ public class HTMLParser {
 	 */
 	public static String getXmlUrl2(String link) throws Exception{
         Parser parser=new Parser(link); 
+//        parser.setEncoding("GB2312"); 
         parser.setEncoding("utf-8"); 
         NodeList nodelist=parser.extractAllNodesThatMatch(new NodeFilter(){
 			public boolean accept(Node arg0) {

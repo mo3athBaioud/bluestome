@@ -414,9 +414,9 @@ public class BIZHIZHANParser {
 			
 			update();
 			
-//			image();
+			image();
 			
-//			downloadImg();
+			downloadImg();
 			
 //			movefile();
 			
