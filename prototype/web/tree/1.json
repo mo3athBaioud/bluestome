@@ -219,27 +219,21 @@
 				"text":"用户管理",
 				"id":"0301",
 				"leaf":true,
-				"href":"modules/sp/spType.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-                     {"js":"modules/sp/spType.js"}
-				]
+				"href":"pages/system/sysOperator.html",
+				"hrefTarget":"mainFrame"
 			},
 			{
 				"text":"权限类型",
 				"id":"0702",
 				"leaf":true,
-				"href":"modules/sp/spType.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-					{"js":"modules/sp/spType.js"}
-				]
+				"href":"pages/system/sysRole.html",
+				"hrefTarget":"mainFrame"
 			},
 			{
 				"text":"角色管理",
 				"id":"0707",
 				"leaf":true,
-				"href":"modules/sp/spType.html",
+				"href":"pages/system/sysRole.html",
 				"hrefTarget":"mainFrame",
 				"jsArray":[
 					{"js":"modules/sp/spType.js"}
@@ -248,11 +242,8 @@
 				"text":"菜单管理",
 				"id":"0703",
 				"leaf":true,
-				"href":"modules/test/miliAddr.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-					{"js":"modules/test/miliAddr.js"}
-				]			
+				"href":"pages/system/sysMenu.html",
+				"hrefTarget":"mainFrame"
 			},
 			{
 				"text":"日志管理",
