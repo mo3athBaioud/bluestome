@@ -353,7 +353,7 @@ public class WebsiteAction extends BaseAction {
 			if(bean.getParentId() == 0){
 				json.put("d_web_name", bean.getName());
 			}else{
-				json.put("d_web_name", "\t|--"+bean.getName());
+				json.put("d_web_name", "\t|--"+bean.getId()+"|"+bean.getName());
 			}
 			json.put("d_web_type", bean.getType());
 			json.put("d_web_url", bean.getUrl());
