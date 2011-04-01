@@ -1,7 +1,9 @@
 package com.chinamilitary.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class WebsiteBean implements Serializable {
 
@@ -16,6 +18,7 @@ public class WebsiteBean implements Serializable {
 	private Date createtme;
 	private Date modifytime;
 	private Integer status;
+	private List<WebsiteBean> child = new ArrayList<WebsiteBean>();
 	
 	public WebsiteBean(){
 	}
@@ -74,6 +77,14 @@ public class WebsiteBean implements Serializable {
 
 	public void setModifytime(Date modifytime) {
 		this.modifytime = modifytime;
+	}
+
+	public List<WebsiteBean> getChild() {
+		return child;
+	}
+
+	public void setChild(List<WebsiteBean> child) {
+		this.child = child;
 	}
 	
 	

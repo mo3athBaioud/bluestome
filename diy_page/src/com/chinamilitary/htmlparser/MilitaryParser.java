@@ -47,7 +47,7 @@ public class MilitaryParser {
 	private ExecutorService responseExecutor = Executors.newFixedThreadPool(2);
 
 	// http://tuku.military.china.com/military/
-
+	
 	private static final String TUKU_URL = "http://tuku.military.china.com/military/html/20"; // military.china.com
 
 	private static final String HISTORY_TUKU_URL = "http://tuku.news.china.com/history/html/20";
@@ -71,7 +71,7 @@ public class MilitaryParser {
 
 	static String PIC_SAVE_PATH = Constants.FILE_SERVER;
 	
-	static int D_PARENT_ID = 301;
+	static int D_PARENT_ID = 1632;
 	
 //	final static String FILE_SERVER = Constants.FILE_SERVER;
 	
@@ -814,7 +814,7 @@ public class MilitaryParser {
 
 //			 index();
 
-			getActicle(1632); // 5 , 143
+			getActicle(D_PARENT_ID); // 5 , 143
 
 //			getActicle(143); // 5 , 143
 			

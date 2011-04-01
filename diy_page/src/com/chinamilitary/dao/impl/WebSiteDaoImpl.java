@@ -168,11 +168,62 @@ public class WebSiteDaoImpl extends CommonDB implements WebSiteDao {
 			bean.setCreatetme(rs.getDate("d_createtime"));
 			bean.setStatus(rs.getInt("d_status"));
 			bean.setModifytime(rs.getDate("d_modifytime"));
+//			bean.setChild(findByParentId(bean.getId()));
 			list.add(bean);
 		}
 		releaseLink();
 		return list;
 	}
+	
+	/**
+	 * 根据站点URL查找web对象
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 */
+	public WebsiteBean findByUrl(String url) throws Exception{
+		WebsiteBean bean = null;
+		List<WebsiteBean>  list = null;
+		try{
+			list = findAll();
+			for(WebsiteBean tmp:list){
+				if(url.startsWith(tmp.getUrl())){
+					bean = tmp;
+					break;
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			rs.close();
+			pstmt.close();
+		}
+		return bean;
+	}
+//	public WebsiteBean findByUrl(String url) throws Exception{
+//		WebsiteBean bean = null;
+//		try{
+//			pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_url = ? order by d_id");
+//			pstmt.setString(1, url);
+//			rs = pstmt.executeQuery();
+//			while(rs.next()){
+//				bean = new WebsiteBean();
+//				bean.setId(rs.getInt("d_id"));
+//				bean.setParentId(rs.getInt("d_parent_id"));
+//				bean.setName(rs.getString("d_web_name"));
+//				bean.setUrl(rs.getString("d_web_url"));
+//				bean.setCreatetme(rs.getDate("d_createtime"));
+//				bean.setStatus(rs.getInt("d_status"));
+//				bean.setModifytime(rs.getDate("d_modifytime"));
+//			}
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}finally{
+//			rs.close();
+//			pstmt.close();
+//		}
+//		return bean;
+//	}
 	
 	public static void main(String args[]){
 		WebSiteDao dao=null;
@@ -180,23 +231,28 @@ public class WebSiteDaoImpl extends CommonDB implements WebSiteDao {
 			dao = new WebSiteDaoImpl();
 //			System.out.println("dao.getCount():"+dao.getCount());
 //			System.out.println("dao.findAll().size():"+dao.findAll().size());
-			List<WebsiteBean> list = dao.findByParentId(36);
-			for(WebsiteBean bean:list){
-//				System.out.println("WEB_ID:"+bean.getId());
-				System.out.println("WEB_名称:"+bean.getName());
-				String url = bean.getUrl();
-				Pattern p = Pattern.compile("[^0-9]."); 
-				Matcher m = p.matcher(url.substring(url.lastIndexOf("/")+1, url.lastIndexOf("."))); 
-				boolean b = m.matches(); 
-				if(b){
-					System.out.println("WEB_链接:"+url);
-				}
-				System.out.println("\n");
+			WebsiteBean tmp = dao.findByUrl("http://tuku.game.china.com/game/html/2011-03-22/169008.htm");
+			if(null != tmp){
+				System.out.println(" >> :"+tmp.getId());
+				System.out.println(" >> :"+tmp.getName());
 			}
-//			System.out.println("dao.findByParentId(5).size():"+dao.findByParentId(5).size());
+			
+			
+			List<WebsiteBean> list = dao.findByParentId(36);
+//			for(WebsiteBean bean:list){
+//				System.out.println("WEB_名称:"+bean.getName());
+//				String url = bean.getUrl();
+//				Pattern p = Pattern.compile("[^0-9]."); 
+//				Matcher m = p.matcher(url.substring(url.lastIndexOf("/")+1, url.lastIndexOf("."))); 
+//				boolean b = m.matches(); 
+//				if(b){
+//					System.out.println("WEB_链接:"+url);
+//				}
+//				System.out.println("\n");
+//			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
-
+	
 }

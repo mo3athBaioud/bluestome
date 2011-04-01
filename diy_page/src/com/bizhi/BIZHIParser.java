@@ -748,8 +748,8 @@ public class BIZHIParser {
 		// init();
 		try {
 			// catalog(URL);
-			 update();
-			 loadImg();
+//			 update();
+//			 loadImg();
 			 imgDownload();
 //			threadParser();
 //			movefile();
@@ -854,9 +854,7 @@ public class BIZHIParser {
 						}
 					}
 				}
-				break;
 			}
-			break;
 		}
 	}
 

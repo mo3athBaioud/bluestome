@@ -181,7 +181,7 @@ public class HttpClientUtils {
 			getMethod = new GetMethod(url);
 			int statusCode = httpclient.executeMethod(getMethod);
 			if (statusCode == HttpStatus.SC_OK) {
-				value = new String(getMethod.getResponseBody(), "GB2312");
+				value = new String(getMethod.getResponseBody(), "UTF-8");
 			}
 		} catch (Exception e) {
 			System.err.println(e);
@@ -194,6 +194,32 @@ public class HttpClientUtils {
 		return value;
 	}
 
+	/**
+	 * 获取响应体
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public static String getResponseBody(String url,String charset) {
+		String value = "";
+		try {
+			httpclient = new HttpClient();
+			getMethod = new GetMethod(url);
+			int statusCode = httpclient.executeMethod(getMethod);
+			if (statusCode == HttpStatus.SC_OK) {
+				value = new String(getMethod.getResponseBody(), charset);
+			}
+		} catch (Exception e) {
+			System.err.println(e);
+		} finally {
+			if (null != getMethod)
+				getMethod.releaseConnection();
+			if (null != httpclient)
+				httpclient = null;
+		}
+		return value;
+	}
+	
 	/**
 	 * 获取响应体
 	 * 
@@ -257,6 +283,7 @@ public class HttpClientUtils {
 			String url) {
 		byte[] value = null;
 		HttpClientParams params = null;
+		Header charset = null;
 		try {
 			httpclient = new HttpClient();
 			// params.setContentCharset("GBK");
@@ -270,7 +297,12 @@ public class HttpClientUtils {
 				getMethod.setRequestHeader("Cookie", cookie);
 			int statusCode = httpclient.executeMethod(getMethod);
 			if (statusCode == HttpStatus.SC_OK) {
-				value = getMethod.getResponseBody();
+//				charset = getMethod.getResponseHeader("charset");
+//				if(null ==  charset){
+//					
+//				}else{
+					value = getMethod.getResponseBody();
+//				}
 			}
 		} catch (Exception e) {
 			System.err.println(e);
@@ -315,13 +347,17 @@ public class HttpClientUtils {
 	}
 
 	public static void main(String args[]) {
-
+		String url = "http://www.showimg.com/other/jingxuan20101102/big/jingxuan003[1].jpg";
 		try {
-			// byte[] value2 = getResponseBodyAsByte(null,
-			// null,"http://www.bizhizhan.com/uploads/allimg/090830/1-0ZS0102521.jpg");
-			// if(null != value2){
-			// System.out.println("未增加破解防盗链引用文件长度:"+value2.length);
-			// }
+			 url = url.replace("[", URLEncoder.encode("[", "utf-8")).replace("]", URLEncoder.encode("]", "utf-8"));
+			 System.out.println("url:"+url);
+			 if(null == url)
+				 return;
+			 byte[] value2 = getResponseBodyAsByte(null,
+			 null,url);
+			 if(null != value2){
+			 System.out.println("未增加破解防盗链引用文件长度:"+value2.length);
+			 }
 			//			
 			// long start = System.currentTimeMillis();
 			// byte[] value =
@@ -339,9 +375,9 @@ public class HttpClientUtils {
 			// }
 
 			// http://www.china.com/zh_cn/ 长度[2010-09-06 18:52]：173574
-			String length = getHttpHeaderResponse(
-					"http://www.china.com/zh_cn/", "Content-Length");
-			System.out.println("网页长度：" + length);
+//			String length = getHttpHeaderResponse(
+//					"http://www.china.com/zh_cn/", "Content-Length");
+//			System.out.println("网页长度：" + length);
 			// System.out.println("isTRUE:"+urlValidation("http://www.bizhi.com/wallpaper/1150_2.html"));
 		} catch (Exception e) {
 			System.err.println(e);

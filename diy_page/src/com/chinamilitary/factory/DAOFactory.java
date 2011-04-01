@@ -5,12 +5,14 @@ import org.apache.commons.logging.LogFactory;
 
 import com.chinamilitary.dao.ArticleDao;
 import com.chinamilitary.dao.ArticleDocDao;
+import com.chinamilitary.dao.IMobileBrandTempDAO;
 import com.chinamilitary.dao.ImageDao;
 import com.chinamilitary.dao.PicFileDao;
 import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.dao.impl.ArticleDaoImpl;
 import com.chinamilitary.dao.impl.ArticleDocDaoImpl;
 import com.chinamilitary.dao.impl.ImageDaoImpl;
+import com.chinamilitary.dao.impl.MobileBrandTempDAOImpl;
 import com.chinamilitary.dao.impl.PicFileDaoImpl;
 import com.chinamilitary.dao.impl.WebSiteDaoImpl;
 
@@ -95,6 +97,20 @@ public class DAOFactory {
 		WebSiteDao dao = null;
 		try{
 			dao = new WebSiteDaoImpl();
+		}catch(Exception e){
+			log.error(e);
+		}
+		return dao;
+	}
+	
+	/**
+	 * 手机品牌临时DAO
+	 * @return
+	 */
+	public IMobileBrandTempDAO getMobileBrandTempDAO(){
+		IMobileBrandTempDAO dao = null;
+		try{
+			dao = new MobileBrandTempDAOImpl();
 		}catch(Exception e){
 			log.error(e);
 		}
