@@ -343,6 +343,7 @@ Ext.onReady(function(){
                     fields: ["id","name"],
                     data: [[1,'图片类型'], [2,'信息类型']]
                 }),
+                triggerAction:'all',
                 blankText: '请选择站点类型',
                 emptyText: '请选择站点类型',
                 editable:false,
@@ -385,6 +386,7 @@ Ext.onReady(function(){
                     fields: ["id","name"],
                     data: [[1,'可用'], [0,'停用']]
                 }),
+                triggerAction:'all',
                 blankText: '请选择状态',
                 emptyText: '请选择状态',
                 editable:false,
@@ -413,13 +415,14 @@ Ext.onReady(function(){
 									title : '系统提示',
 									msg : '添加成功!',
 									buttons : Ext.Msg.OK,
+									fn:function(){
+										frm.reset();
+										app.ds_website.load({params : {start : 0,limit : app.limit}});
+										btn.enable();
+										app.window_add.hide();
+									},
 									icon : Ext.MessageBox.INFO
 								});
-								app.ds_website.load({params : {start : 0,limit : app.limit}});
-//								app.window_add.setTitle('[ ' + dnfield.getValue() + ' ]   添加成功!!');
-								dnfield.reset();
-								btn.enable();
-								app.window_add.hide();
 							},
 							failure : function(){
 								Ext.Msg.show({
