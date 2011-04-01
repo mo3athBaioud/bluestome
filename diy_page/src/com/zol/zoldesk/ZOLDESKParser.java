@@ -619,7 +619,7 @@ public class ZOLDESKParser {
 		// init();
 		try {
 			// catalog(URL);
-			 update();
+//			 update();
 //			 vistDesk();
 //			threadParser();
 			loadImg();
@@ -712,8 +712,9 @@ public class ZOLDESKParser {
 			List<Article> list = articleDao.findByWebId(bean.getId(),"NED");
 			for (Article art : list) {
 				List<ImageBean> imgList = imageDao.findImage(art.getId());
-				System.out.println(">> zol.com.cn 记录[" + art.getTitle() + "|"+art.getId()+"]下的图片数量["+imgList.size()+"]");
+//				System.out.println(">> zol.com.cn 记录[" + art.getTitle() + "|"+art.getId()+"]下的图片数量["+imgList.size()+"]");
 				if(imgList.size() == 0 ){
+					System.out.println(">> zol.com.cn 记录[" + art.getTitle() + "|"+art.getId()+"]下的图片数量["+imgList.size()+"] ");
 					if (!art.getArticleUrl().startsWith("http://vista.zol.com.cn")) {
 						if (getImage(art)) {
 							art.setText("FD");
