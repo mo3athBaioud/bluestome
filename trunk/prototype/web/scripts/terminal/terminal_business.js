@@ -13,15 +13,15 @@ Ext.onReady(function(){
 	
 	//业务名称,终端属性集合[GRPS,WAP,CMNET]
     app.data = [
-        ['飞信','1610041222370609','18729637524','863417002824500','F0F9','4','14','735','86341700','备注',true],
-        ['移动MM','1610041222370609','18729637524','863417002824500','F0F9','4','14','735','86341700','备注',true],
-        ['手机阅读','1610041222370609','18729637524','863417002824500','F0F9','4','14','735','86341700','备注',true],
-        ['淘乐汇','1610041222370609','18729637524','863417002824500','F0F9','4','14','735','86341700','备注',true],
-        ['手机报','1610041222370609','18729637524','863417002824500','F0F9','4','14','735','86341700','备注',true],
-        ['号谱管家','1610041222370609','18729637524','863417002824500','F0F9','4','14','735','86341700','备注',true],
-        ['可视电话','1610041222370609','18729637524','863417002824500','F0F9','4','14','735','86341700','备注',true],
-        ['彩信相册','1610041222370609','18729637524','863417002824500','F0F9','4','14','735','86341700','备注',true],
-        ['移动秘书','1610041222370609','18729637524','863417002824500','F0F9','4','14','735','86341700','备注',true],
+        ['飞信','576分钟','3.5英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
+        ['移动MM','720分钟','3.2英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
+        ['手机阅读','420分钟','3.2英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
+        ['淘乐汇','720分钟','3.5英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
+        ['手机报','576分钟','3.2英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
+        ['号谱管家','525分钟','3.2英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
+        ['可视电话','590分钟','3.7英寸','26万色','支持','支持','2011-03-31 11:00:00'],
+        ['彩信相册','360分钟','3.1英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
+        ['移动秘书','400分钟','3.2英寸','26万色','支持','支持','2011-03-31 11:00:00']
 	];
 	/**
 	app.utp = Ext.data.Record.create([{
@@ -170,7 +170,7 @@ Ext.onReady(function(){
 	 
     app.cm_utp = new Ext.grid.ColumnModel([
 	    app.expander,
-        {header: "业务名称",sortable: true, dataIndex: 'time'}
+        {header: "业务名称",sortable: true, dataIndex: 'bn'}
 //        {header: "有效性", width: 80, sortable: true, dataIndex: 'useful',renderer:function(value){
 //        	if(value){
 //        		return '<font color="green">有效</font>';
@@ -222,50 +222,67 @@ Ext.onReady(function(){
 							},
 							defaultType : 'textfield',
 							items : [
-							{ 
-								fieldLabel : '统计日期',
-								name : 'article.time',
-								allowBlank : false
-							},{
-								fieldLabel : '用户标示',
-								name : 'article.uid',
-								allowBlank : false
-							},{
-								fieldLabel : '手机号码',
-								name : 'article.sn',
-								allowBlank : false
-							},{
-								fieldLabel : 'IMEI号码',
-								name : 'article.imei',
-								allowBlank : false
-							},{
-								fieldLabel : '业务区编码',
-								name : 'article.ywqbm',
-								allowBlank : false
-							},{
-								fieldLabel : 'TAC码',
-								name : 'article.tac',
-								allowBlank : false
-							},{
+							{
 								//下拉选择框
 								xtype:'combo',
-								fieldLabel : '有效性',
-								hiddenName:'article.useful',
+								fieldLabel : '业务名称',
+								hiddenName:'article.bn',
 				                valueField: 'id',
 				                displayField: 'name',
 				                triggerAction:'all',
 				                mode: 'local',
 				                store: new Ext.data.SimpleStore({
 				                    fields: ['id','name'],
-				                    data: [[1,'有效'], [0,'无效']]
+				                    data: [[1,'飞信'], [2,'移动MM'],[3,'手机阅读'],[4,'淘乐汇'],[5,'手机报'],[6,'号谱管家'],[7,'可视电话'],[8,'彩信相册'],[9,'移动秘书']]
 				                }),
 				                editable:false,
-								emptyText : '请选择数据有效性',
+								emptyText : '请选择手机业务',
+								allowBlank : false
+							},
+//							{
+//								fieldLabel : '通话时长',
+//								name : 'article.tac',
+//								allowBlank : false
+//							},
+							{
+								fieldLabel : '屏幕大小',
+								name : 'article.tac',
 								allowBlank : false
 							},{
-								fieldLabel : '备注',
-								xtype:'textarea',
-								name : 'article.remarks',
+								fieldLabel : '屏幕颜色',
+								name : 'article.tac',
+								allowBlank : false
+							},{
+								//下拉选择框
+								xtype:'combo',
+								fieldLabel : '摄像头',
+								hiddenName:'article.camera',
+				                valueField: 'id',
+				                displayField: 'name',
+				                triggerAction:'all',
+				                mode: 'local',
+				                store: new Ext.data.SimpleStore({
+				                    fields: ['id','name'],
+				                    data: [[1,'支持'],[0,'不支持']]
+				                }),
+				                editable:false,
+								emptyText : '请选择终端是否支持摄像头!',
+								allowBlank : false
+							},{
+								//下拉选择框
+								xtype:'combo',
+								fieldLabel : '蓝牙',
+								hiddenName:'article.bluetooth',
+				                valueField: 'id',
+				                displayField: 'name',
+				                triggerAction:'all',
+				                mode: 'local',
+				                store: new Ext.data.SimpleStore({
+				                    fields: ['id','name'],
+				                    data: [[1,'支持'],[0,'不支持']]
+				                }),
+				                editable:false,
+								emptyText : '请选择终端是否支持蓝牙!',
 								allowBlank : false
 							}],
 							buttonAlign : 'right',
@@ -336,55 +353,77 @@ Ext.onReady(function(){
 						},
 						defaultType : 'textfield',
 						items : [
-						{ 
-							fieldLabel : '统计日期',
-							name : 'article.time',
-							readOnly:true,
-							allowBlank : false,
-							value : record.get('time')
-						},{
-							fieldLabel : '用户标示',
-							name : 'article.uid',
-							allowBlank : false,
-							value : record.get('uid')
-						},{
-							fieldLabel : '手机号码',
-							name : 'article.sn',
-							allowBlank : false,
-							value : record.get('sn')
-						},{
-							fieldLabel : 'IMEI号码',
-							name : 'article.imei',
-							allowBlank : false,
-							value : record.get('imei')
-						},{
-							fieldLabel : '业务区编码',
-							name : 'article.ywqbm',
-							allowBlank : false,
-							value : record.get('ywqbm')
-						},{
+						{
 							//下拉选择框
 							xtype:'combo',
-							fieldLabel : '状态',
-							id : 'article_useful',
-							hiddenName:'article.useful',
+							fieldLabel : '业务名称',
+							hiddenName:'article.bn',
 			                valueField: 'id',
 			                displayField: 'name',
 			                triggerAction:'all',
 			                mode: 'local',
 			                store: new Ext.data.SimpleStore({
 			                    fields: ['id','name'],
-			                    data: [[1,'有效'], [0,'无效']]
+			                    data: [[1,'飞信'], [2,'移动MM'],[3,'手机阅读'],[4,'淘乐汇'],[5,'手机报'],[6,'号谱管家'],[7,'可视电话'],[8,'彩信相册'],[9,'移动秘书']]
 			                }),
 			                editable:false,
-			                blankText: '请选择状态',
-							emptyText : '当前状态:'+(record.get('useful') == 1?'有效':'无效'),
+							emptyText : '当前手机业务为:"'+record.get('bn')+'"',
 							allowBlank : false
-						},{
-							fieldLabel : 'TAC码',
+						},
+//						{
+//							fieldLabel : '通话时长',
+//							name : 'article.tac',
+//							allowBlank : false,
+//							value:record.get('thsc')
+//						},
+						{
+							fieldLabel : '屏幕大小',
 							name : 'article.tac',
 							allowBlank : false,
-							value:record.get('tac')
+							value:record.get('screensize')
+						},{
+							fieldLabel : '屏幕颜色',
+							name : 'article.tac',
+							allowBlank : false,
+							value:record.get('screencolor')
+						},{
+							//下拉选择框
+							xtype:'combo',
+							fieldLabel : '摄像头',
+							hiddenName:'article.camera',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                editable:false,
+							emptyText : '当前'+(record.get('carmera') == 1?'支持':'不支持')+'摄像头',
+							allowBlank : false
+						},{
+							//下拉选择框
+							xtype:'combo',
+							fieldLabel : '蓝牙',
+							hiddenName:'article.bluetooth',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                editable:false,
+							emptyText : '当前'+(record.get('carmera') == 1?'支持':'不支持')+'蓝牙',
+							allowBlank : false
+						},{
+							fieldLabel : '其他终端参',
+							xtype:'textarea',
+							name : 'article.remarks',
+							allowBlank : false,
+							value:'可扩展'
 						}],
 						buttonAlign : 'right',
 						minButtonWidth : 60,
@@ -436,7 +475,6 @@ Ext.onReady(function(){
 		iconCls : 'icon-del',
 		handler : function(){
 			var records = app.grid.getSelectionModel().getSelections();
-			
 			if(records.length == 0 ){
 				Ext.Msg.show({
 					title : '提示',
@@ -465,6 +503,7 @@ Ext.onReady(function(){
 	app.text_search_code = new Ext.form.TextField({
 		name : 'textSearchcode',
 		width : 150,
+		emptyText : '该查询支持模糊查询,例如：移动MM,可以只输入MM',
 		listeners : {
 			'specialkey' : function(field, e) {
 				if (e.getKey() == Ext.EventObject.ENTER) {
@@ -554,19 +593,55 @@ Ext.onReady(function(){
 	});
 	**/
 	
+	app.hs_bluetooth = new Ext.form.ComboBox({
+				id : 'hs_bluetooth',
+				hiddenName : 'colName',
+				valueField : 'id',
+				displayField : 'name',
+				mode:'local',
+				store : new Ext.data.SimpleStore({
+					data : [
+							['1', '支持'],
+							['2','不支持']
+				    ],
+					fields : ['id', 'name']
+				}),	
+				selectOnFocus : true,
+				editable : false,
+				allowBlank : true,
+				triggerAction : 'all',
+				emptyText : '是否支持蓝牙?'
+	});
+	
+	app.hs_camera = new Ext.form.ComboBox({
+				id : 'hs_camera',
+				hiddenName : 'colName',
+				valueField : 'id',
+				displayField : 'name',
+				mode:'local',
+				store : new Ext.data.SimpleStore({
+					data : [
+							['1', '支持'],
+							['2','不支持']
+				    ],
+					fields : ['id', 'name']
+				}),	
+				selectOnFocus : true,
+				editable : false,
+				allowBlank : true,
+				triggerAction : 'all',
+				emptyText : '是否支持摄像头?'
+	});
+	
 	app.ds_utp = new Ext.data.ArrayStore({
         fields: [
-           {name: 'time',type:'string'},
-           {name: 'uid',type:'string'},
-           {name: 'sn',type:'string'},
-           {name: 'imei',type:'string'},
-           {name: 'ywqbm',type:'string'},
-           {name: 'thcs', type: 'string'},
-           {name: 'jbjft', type: 'string'},
-           {name: 'thsc', type: 'string'},
-           {name: 'tac', type: 'string'},
-           {name: 'remarks', type: 'string'},
-           {name: 'useful', type: 'boolean'}
+           {name: 'bn',type:'string'},
+           {name: 'thsc',type:'string'},
+           {name: 'screensize', type: 'string'},
+           {name: 'screencolor', type: 'string'},
+           {name: 'camera', type: 'string'},
+           {name: 'bluetooth', type: 'string'},
+           {name: 'time', type: 'boolean'}
         ]
     });
 	
@@ -597,7 +672,7 @@ Ext.onReady(function(){
         },
  		plugins: app.expander,
 		sm:app.sm,
-		tbar : [app.btn_add,'-',app.btn_edit,'-',app.btn_del,'-','请输入手机号码:',app.text_search_code,'-','请输入IMEI:',app.text_imei_code,'请输入TAC码:',app.text_tac_code,app.btn_search_code],
+		tbar : [app.btn_add,'-',app.btn_edit,'-',app.btn_del,'-','请输入业务名称:',app.text_search_code,'-',app.hs_bluetooth,'-',app.hs_camera,'-',app.btn_search_code],
 		bbar : app.ptb
 	});
 	

@@ -285,7 +285,8 @@ Ext.onReady(function(){
         },
  		plugins: expander,
 		sm:app.sm,
-		tbar : ['品牌:',app.hs_brand_combo,'-',app.hs_model_combo,'<b>其他终端参数暂时省略</b>',app.hs_bsi,'-',app.btn_search_code]
+		//'<b>其他终端参数暂时省略</b>'
+		tbar : ['品牌:',app.hs_brand_combo,'-',app.hs_model_combo,'-',app.hs_bsi,'-',app.btn_search_code]
 //		bbar : app.ptb
 	});
 	

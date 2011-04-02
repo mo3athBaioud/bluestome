@@ -318,7 +318,7 @@ Ext.onReady(function(){
 						},
 						defaultType : 'textfield',
 						items : [
-						{
+							{
 								//下拉选择框
 								xtype:'combo',
 								fieldLabel : '手机品牌',
@@ -634,7 +634,7 @@ Ext.onReady(function(){
 	});
 		
 	app.grid = new Ext.grid.GridPanel({
-		title : '一级终端数据管理',
+		title : '二级终端数据管理',
 		iconCls : 'icon-plugin',
 		region : 'center',
 		loadMask : {

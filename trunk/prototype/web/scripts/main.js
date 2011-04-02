@@ -1,14 +1,15 @@
-Ext.BLANK_IMAGE_URL = 'resources/images/default/s.gif';
-Ext.QuickTips.init();
-var start = {
-	id : 'start-panel',
-	title : '图片资源管理系统',
-	layout : 'fit',
-	bodyStyle : 'padding:25px',
-	html : '<img src=images/bg.jpg />'
-};
+//Ext.BLANK_IMAGE_URL = 'resources/images/default/s.gif';
+//Ext.QuickTips.init();
+//var start = {
+//	id : 'start-panel',
+//	title : '图片资源管理系统',
+//	layout : 'fit',
+//	bodyStyle : 'padding:25px',
+//	html : '<img src=images/bg.jpg />'
+//};
 
 Ext.onReady(function() {
+	Ext.QuickTips.init();
 	setTimeout(function() {
 		Ext.get('loading').remove();
 		Ext.getDom('header').style.visibility = 'visible';
@@ -103,12 +104,12 @@ Ext.onReady(function() {
 											text : '修改密码',
 											handler : function(btn) {
 												if (Ext.getCmp('passwordForm').form.isValid()) {
-												Ext.Msg.show({
-													title : '提示',
-													msg : '修改密码成功!',
-													buttons : Ext.Msg.OK,
-													icon : Ext.Msg.INFO
-												});
+													Ext.Msg.show({
+														title : '提示',
+														msg : '修改密码成功!',
+														buttons : Ext.Msg.OK,
+														icon : Ext.Msg.INFO
+													});
 												/**
 													frm.submit({
 														waitTitle : '请稍候',
@@ -160,7 +161,7 @@ Ext.onReady(function() {
 									bodyStyle : 'padding: 7',
 									modal : true,
 									title : '关于本系统',
-									html : '<p>西安移动终端业务支撑平台1.0</p>',
+									html : '<p><center>西安移动终端业务支撑平台1.0<center></p>',
 									width : 300,
 									height : 200,
 									item:[]
@@ -173,6 +174,8 @@ Ext.onReady(function() {
 							handler : function() {
 								Ext.Msg.confirm('操作提示', '您确定要退出本系统?', function(btn) {
 									if ('yes' == btn) {
+										window.location.href = "./login.html";
+										/**
 										Ext.Ajax.request({
 											url : 'logout.action',
 											success : function() {
@@ -187,6 +190,7 @@ Ext.onReady(function() {
 												});
 											}
 										});
+										**/
 									}
 								});
 							}
@@ -230,7 +234,9 @@ Ext.onReady(function() {
 								}
 							}
 						}]
-					},{
+					}
+					/**
+					,{
 						title : '个人设置',
 						iconCls : 'icon-nav',
 						border : false,
@@ -264,7 +270,9 @@ Ext.onReady(function() {
 								}
 							}
 						}]
-					}]
+					}
+					**/
+					]
 				}]
 			}, {
 				id : 'content-panel',

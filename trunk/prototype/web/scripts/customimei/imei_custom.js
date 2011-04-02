@@ -13,15 +13,15 @@ Ext.onReady(function(){
 	
 	//统计日期,用户标识,手机号码,imei号码,业务区编码,通话次数,基本计费跳,通话时长,tac码    
     app.data = [
-        ['2010-06-27','1610041222370609','18729637524','863417002824500','诺基亚','C7','14','735','86341700','备注',true],
-        ['2010-06-27','1610041222370609','18729637525','812347982824500','诺基亚','C5','14','735','81234798','备注',true],
-        ['2010-06-27','1610041222370609','18729637526','863417452824500','诺基亚','5230','14','735','86341745','备注',true],
-        ['2010-06-27','1610041222370609','18729637527','883210322824500','摩托罗拉','MB525 Defy','14','735','88321032','备注',false],
-        ['2010-06-27','1610041222370609','18729637528','873319122824500','摩托罗拉','ME525','14','735','87331912','备注',true],
-        ['2010-06-27','1610041222370609','18729637529','813247092824500','摩托罗拉','XT502','14','735','81324709','备注',true],
-        ['2010-06-27','1610041222370609','18729637524','863417002824500','联想','S708','14','735','86341700','备注',true],
-        ['2010-06-27','1610041222370609','18729637525','812347982824500','联想','S710','14','735','81234798','备注',false],
-        ['2010-06-27','1610041222370609','18729637526','863417452824500','联想','TD80t','14','735','86341745','备注',true]
+        ['2010-06-27','1610041222370609','18729637524','863417002824500','诺基亚','C7','14','735','86341700','备注',0,2],
+        ['2010-06-27','1610041222370609','18729637525','812347982824500','诺基亚','C5','14','735','81234798','备注',-1,0],
+        ['2010-06-27','1610041222370609','18729637526','863417452824500','诺基亚','5230','14','735','86341745','备注',-1,0],
+        ['2010-06-27','1610041222370609','18729637527','883210322824500','摩托罗拉','MB525 Defy','14','735','88321032','备注',-1,0],
+        ['2010-06-27','1610041222370609','18729637528','873319122824500','摩托罗拉','ME525','14','735','87331912','备注',-1,0],
+        ['2010-06-27','1610041222370609','18729637529','813247092824500','摩托罗拉','XT502','14','735','81324709','备注',-1,0],
+        ['2010-06-27','1610041222370609','18729637524','863417002824500','联想','S708','14','735','86341700','备注',0,2],
+        ['2010-06-27','1610041222370609','18729637525','812347982824500','联想','S710','14','735','81234798','备注',1,2],
+        ['2010-06-27','1610041222370609','18729637526','863417452824500','联想','TD80t','14','735','86341745','备注',1,2]
 	];
 	/**
 	app.utp = Ext.data.Record.create([{
@@ -72,11 +72,30 @@ Ext.onReady(function(){
     app.cm_utp = new Ext.grid.ColumnModel([
 	    app.expander,
         {header: "呼叫时间", width: 100, sortable: true, dataIndex: 'time'},
-        {header: "有效性", width: 80, sortable: true, dataIndex: 'useful',renderer:function(value){
-        	if(value){
-        		return '<font color="green">有效</font>';
-        	}else{
-        		return '<font color="red">无效</font>';
+        {header: "有效性", width: 80, sortable: true, dataIndex: 'useful',renderer:function(v){
+        	var x = parseInt(v);
+        	switch(x){
+        		case -1:
+        			return '<font color="blue">未分配</font>';
+        		case 0:
+        			return '<font color="red">无效</font>';
+        		case 1:
+        			return '<font color="green">有效</font>';
+        		default:
+        			return '<font color="yellow">未知</font>';
+        	}
+        }},
+        {header: "状态", width: 80, sortable: true, dataIndex: 'status',renderer:function(v){
+        	var x = parseInt(v);
+        	switch(x){
+        		case 0:
+        			return '<font color="red">未处理</font>';
+        		case 1:
+        			return '<font color="blue">正在处理</font>';
+        		case 2:
+        			return '<font color="green">处理完毕</font>';
+        		default:
+        			return '<font color="yellow">未知</font>';
         	}
         }},
         {header: "用户标识", width: 150, sortable: true, dataIndex: 'uid'},
@@ -193,10 +212,28 @@ Ext.onReady(function(){
 				                mode: 'local',
 				                store: new Ext.data.SimpleStore({
 				                    fields: ['id','name'],
-				                    data: [[1,'有效'], [0,'无效']]
+				                    data: [[-1,'未分配'],[1,'有效'], [0,'无效']]
 				                }),
 				                editable:false,
 								emptyText : '请选择数据有效性',
+								allowBlank : false
+							},{
+								//下拉选择框
+								xtype:'combo',
+								fieldLabel : '状态',
+								id : 'article_status',
+								hiddenName:'article.status',
+				                valueField: 'id',
+				                displayField: 'name',
+				                triggerAction:'all',
+				                mode: 'local',
+				                store: new Ext.data.SimpleStore({
+				                    fields: ['id','name'],
+				                    data: [[0,'未处理'],[1,'正在处理'], [2,'已处理完']]
+				                }),
+				                editable:false,
+				                blankText: '请选择状态',
+								emptyText : '请选择状态',
 								allowBlank : false
 							},{
 								fieldLabel : '备注',
@@ -328,7 +365,7 @@ Ext.onReady(function(){
 						},{
 							//下拉选择框
 							xtype:'combo',
-							fieldLabel : '状态',
+							fieldLabel : '有效性',
 							id : 'article_useful',
 							hiddenName:'article.useful',
 			                valueField: 'id',
@@ -337,11 +374,29 @@ Ext.onReady(function(){
 			                mode: 'local',
 			                store: new Ext.data.SimpleStore({
 			                    fields: ['id','name'],
-			                    data: [[1,'有效'], [0,'无效']]
+			                    data: [ [-1,'未分配'],[1,'有效'], [0,'无效']]
 			                }),
 			                editable:false,
 			                blankText: '请选择状态',
-							emptyText : '当前状态:'+(record.get('useful') == 1?'有效':'无效'),
+							emptyText : '当前有效性:'+(record.get('useful') == 1?'有效':'无效'),
+							allowBlank : false
+						},{
+							//下拉选择框
+							xtype:'combo',
+							fieldLabel : '状态',
+							id : 'article_status',
+							hiddenName:'article.status',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[0,'未处理'],[1,'正在处理'], [2,'已处理完']]
+			                }),
+			                editable:false,
+			                blankText: '请选择状态',
+							emptyText : '当前状态:'+(record.get('status') == 1?'正在处理':'未处理'),
 							allowBlank : false
 						},{
 							fieldLabel : 'TAC码',
@@ -529,7 +584,8 @@ Ext.onReady(function(){
            {name: 'thsc', type: 'string'},
            {name: 'tac', type: 'string'},
            {name: 'remarks', type: 'string'},
-           {name: 'useful', type: 'boolean'}
+           {name: 'useful', type: 'int'},
+           {name: 'status', type: 'int'}
         ]
     });
 	

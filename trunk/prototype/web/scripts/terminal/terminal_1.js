@@ -123,51 +123,108 @@ Ext.onReady(function(){
 							},
 							defaultType : 'textfield',
 							items : [
-							{ 
-								fieldLabel : '统计日期',
-								name : 'article.time',
-								allowBlank : false
-							},{
-								fieldLabel : '用户标示',
-								name : 'article.uid',
-								allowBlank : false
-							},{
-								fieldLabel : '手机号码',
-								name : 'article.sn',
-								allowBlank : false
-							},{
-								fieldLabel : 'IMEI号码',
-								name : 'article.imei',
-								allowBlank : false
-							},{
-								fieldLabel : '业务区编码',
-								name : 'article.ywqbm',
-								allowBlank : false
-							},{
-								fieldLabel : 'TAC码',
-								name : 'article.tac',
-								allowBlank : false
-							},{
+							{
 								//下拉选择框
 								xtype:'combo',
-								fieldLabel : '有效性',
-								hiddenName:'article.useful',
+								fieldLabel : '手机品牌',
+								hiddenName:'article.brand',
 				                valueField: 'id',
 				                displayField: 'name',
 				                triggerAction:'all',
 				                mode: 'local',
 				                store: new Ext.data.SimpleStore({
 				                    fields: ['id','name'],
-				                    data: [[1,'有效'], [0,'无效']]
+				                    data: [[1,'诺基亚'], [2,'摩托罗拉'],[3,'联想']]
 				                }),
 				                editable:false,
-								emptyText : '请选择数据有效性',
+								emptyText : '请选择手机品牌!',
 								allowBlank : false
 							},{
-								fieldLabel : '备注',
+								//下拉选择框
+								xtype:'combo',
+								fieldLabel : '手机型号',
+								hiddenName:'article.model',
+				                valueField: 'id',
+				                displayField: 'name',
+				                triggerAction:'all',
+				                mode: 'local',
+				                store: new Ext.data.SimpleStore({
+				                    fields: ['id','name'],
+				                    data: [[1,'C7'],[2,'C5'],[3,'5230'],[4,'MB525 Defy'],[5,'ME525'],[6,'XT502'],[7,'S708'],[8,'S710'],[9,'TD80t'],[10,'EX128']]
+				                }),
+				                editable:false,
+								emptyText : '请选择手机型号!',
+								allowBlank : false
+							},{
+								//下拉选择框
+								xtype:'combo',
+								fieldLabel : '信息来源',
+								hiddenName:'article.source',
+				                valueField: 'id',
+				                displayField: 'name',
+				                triggerAction:'all',
+				                mode: 'local',
+				                store: new Ext.data.SimpleStore({
+				                    fields: ['id','name'],
+				                    data: [[1,'泡泡网'],[2,'中关村在线'],[3,'太平洋电脑']]
+				                }),
+				                editable:false,
+								emptyText : '请选择信息来源!',
+								allowBlank : false
+							},{
+								fieldLabel : 'TAC码',
+								name : 'article.tac',
+								allowBlank : false
+							},{
+								fieldLabel : '通话时长',
+								name : 'article.tac',
+								allowBlank : false
+							},{
+								fieldLabel : '屏幕大小',
+								name : 'article.tac',
+								allowBlank : false
+							},{
+								fieldLabel : '屏幕颜色',
+								name : 'article.tac',
+								allowBlank : false
+							},{
+								//下拉选择框
+								xtype:'combo',
+								fieldLabel : '摄像头',
+								hiddenName:'article.camera',
+				                valueField: 'id',
+				                displayField: 'name',
+				                triggerAction:'all',
+				                mode: 'local',
+				                store: new Ext.data.SimpleStore({
+				                    fields: ['id','name'],
+				                    data: [[1,'支持'],[0,'不支持']]
+				                }),
+				                editable:false,
+								emptyText : '请选择是否支持摄像头!',
+								allowBlank : false
+							},{
+								//下拉选择框
+								xtype:'combo',
+								fieldLabel : '蓝牙',
+								hiddenName:'article.bluetooth',
+				                valueField: 'id',
+				                displayField: 'name',
+				                triggerAction:'all',
+				                mode: 'local',
+				                store: new Ext.data.SimpleStore({
+				                    fields: ['id','name'],
+				                    data: [[1,'支持'],[0,'不支持']]
+				                }),
+				                editable:false,
+								emptyText : '请选择是否支持蓝牙!',
+								allowBlank : false
+							},{
+								fieldLabel : '其他终端参',
 								xtype:'textarea',
 								name : 'article.remarks',
-								allowBlank : false
+								allowBlank : false,
+								value:'待扩展'
 							}],
 							buttonAlign : 'right',
 							minButtonWidth : 60,
@@ -263,56 +320,113 @@ Ext.onReady(function(){
 						},
 						defaultType : 'textfield',
 						items : [
-						{ 
-							fieldLabel : '统计日期',
-							name : 'article.time',
-							readOnly:true,
-							allowBlank : false,
-							value : record.get('time')
-						},{
-							fieldLabel : '用户标示',
-							name : 'article.uid',
-							allowBlank : false,
-							value : record.get('uid')
-						},{
-							fieldLabel : '手机号码',
-							name : 'article.sn',
-							allowBlank : false,
-							value : record.get('sn')
-						},{
-							fieldLabel : 'IMEI号码',
-							name : 'article.imei',
-							allowBlank : false,
-							value : record.get('imei')
-						},{
-							fieldLabel : '业务区编码',
-							name : 'article.ywqbm',
-							allowBlank : false,
-							value : record.get('ywqbm')
-						},{
-							//下拉选择框
-							xtype:'combo',
-							fieldLabel : '状态',
-							id : 'article_useful',
-							hiddenName:'article.useful',
-			                valueField: 'id',
-			                displayField: 'name',
-			                triggerAction:'all',
-			                mode: 'local',
-			                store: new Ext.data.SimpleStore({
-			                    fields: ['id','name'],
-			                    data: [[1,'有效'], [0,'无效']]
-			                }),
-			                editable:false,
-			                blankText: '请选择状态',
-							emptyText : '当前状态:'+(record.get('useful') == 1?'有效':'无效'),
-							allowBlank : false
-						},{
-							fieldLabel : 'TAC码',
-							name : 'article.tac',
-							allowBlank : false,
-							value:record.get('tac')
-						}],
+							{
+								//下拉选择框
+								xtype:'combo',
+								fieldLabel : '手机品牌',
+								hiddenName:'article.brand',
+				                valueField: 'id',
+				                displayField: 'name',
+				                triggerAction:'all',
+				                mode: 'local',
+				                store: new Ext.data.SimpleStore({
+				                    fields: ['id','name'],
+				                    data: [[1,'诺基亚'], [2,'摩托罗拉'],[3,'联想']]
+				                }),
+				                editable:false,
+								emptyText : '当前品牌'+record.get('brand')+'.',
+								allowBlank : false
+							},{
+								//下拉选择框
+								xtype:'combo',
+								fieldLabel : '手机型号',
+								hiddenName:'article.model',
+				                valueField: 'id',
+				                displayField: 'name',
+				                triggerAction:'all',
+				                mode: 'local',
+				                store: new Ext.data.SimpleStore({
+				                    fields: ['id','name'],
+				                    data: [[1,'C7'],[2,'C5'],[3,'5230'],[4,'MB525 Defy'],[5,'ME525'],[6,'XT502'],[7,'S708'],[8,'S710'],[9,'TD80t'],[10,'EX128']]
+				                }),
+				                editable:false,
+								emptyText : '当前型号'+record.get('model')+'.',
+								allowBlank : false
+							},{
+								//下拉选择框
+								xtype:'combo',
+								fieldLabel : '信息来源',
+								hiddenName:'article.source',
+				                valueField: 'id',
+				                displayField: 'name',
+				                triggerAction:'all',
+				                mode: 'local',
+				                store: new Ext.data.SimpleStore({
+				                    fields: ['id','name'],
+				                    data: [[1,'泡泡网'],[2,'中关村在线'],[3,'太平洋电脑']]
+				                }),
+				                editable:false,
+								emptyText : '当前记录信息来源为"'+record.get('source')+'"!',
+								allowBlank : false
+							},{
+								fieldLabel : 'TAC码',
+								name : 'article.tac',
+								allowBlank : false,
+								value:record.get('tac')
+							},{
+								fieldLabel : '通话时长',
+								name : 'article.tac',
+								allowBlank : false,
+								value:record.get('thsc')
+							},{
+								fieldLabel : '屏幕大小',
+								name : 'article.tac',
+								allowBlank : false,
+								value:record.get('screensize')
+							},{
+								fieldLabel : '屏幕颜色',
+								name : 'article.tac',
+								allowBlank : false,
+								value:record.get('screencolor')
+							},{
+								//下拉选择框
+								xtype:'combo',
+								fieldLabel : '摄像头',
+								hiddenName:'article.camera',
+				                valueField: 'id',
+				                displayField: 'name',
+				                triggerAction:'all',
+				                mode: 'local',
+				                store: new Ext.data.SimpleStore({
+				                    fields: ['id','name'],
+				                    data: [[1,'支持'],[0,'不支持']]
+				                }),
+				                editable:false,
+								emptyText : '当前'+(record.get('carmera') == 1?'支持':'不支持')+'摄像头',
+								allowBlank : false
+							},{
+								//下拉选择框
+								xtype:'combo',
+								fieldLabel : '蓝牙',
+								hiddenName:'article.bluetooth',
+				                valueField: 'id',
+				                displayField: 'name',
+				                triggerAction:'all',
+				                mode: 'local',
+				                store: new Ext.data.SimpleStore({
+				                    fields: ['id','name'],
+				                    data: [[1,'支持'],[0,'不支持']]
+				                }),
+				                editable:false,
+								emptyText : '当前'+(record.get('carmera') == 1?'支持':'不支持')+'蓝牙',
+								allowBlank : false
+							},{
+								fieldLabel : '其他终端参',
+								xtype:'textarea',
+								name : 'article.remarks',
+								allowBlank : false,
+								value:'待扩展'
+							}],
 						buttonAlign : 'right',
 						minButtonWidth : 60,
 						buttons : [{

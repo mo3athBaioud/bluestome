@@ -12,20 +12,14 @@
 							"id":"010101",
 							"leaf":true,
 							"href":"pages/iquery/utp.html",
-							"hrefTarget":"mainFrame",
-							"jsArray":[
-			                     {"js":"modules/sp/spType.js"}
-							]
+							"hrefTarget":"mainFrame"
 						},
 						{
 							"text":"租机业务推荐查询",
 							"id":"010102",
 							"leaf":true,
 							"href":"pages/iquery/rb.html",
-							"hrefTarget":"mainFrame",
-							"jsArray":[
-			                     {"js":"modules/sp/spType.js"}
-							]
+							"hrefTarget":"mainFrame"
 						},
 						{
 							"text":"数据业务推荐查询",
@@ -44,20 +38,14 @@
 							"id":"010201",
 							"leaf":true,
 							"href":"pages/iquery/bat_utp.html",
-							"hrefTarget":"mainFrame",
-							"jsArray":[
-			                     {"js":"modules/sp/spType.js"}
-							]
+							"hrefTarget":"mainFrame"
 						},
 						{
 							"text":"租机业务推荐查询",
 							"id":"010202",
 							"leaf":true,
 							"href":"pages/iquery/bat_rb.html",
-							"hrefTarget":"mainFrame",
-							"jsArray":[
-			                     {"js":"modules/sp/spType.js"}
-							]
+							"hrefTarget":"mainFrame"
 						},
 						{
 							"text":"数据业务推荐查询",
@@ -79,40 +67,28 @@
 				"id":"0201",
 				"leaf":true,
 				"href":"pages/imei/imei_import.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-                     {"js":"modules/sp/spType.js"}
-				]
+				"hrefTarget":"mainFrame"
 			},
 			{
 				"text":"通话IMEI查询",
 				"id":"0202",
 				"leaf":true,
 				"href":"pages/imei/imei_query.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-					{"js":"modules/sp/spType.js"}
-				]
+				"hrefTarget":"mainFrame"
 			},
 			{
 				"text":"通话IMEI导出",
 				"id":"0203",
 				"leaf":true,
 				"href":"pages/imei/imei_export.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-					{"js":"modules/test/miliAddr.js"}
-				]			
+				"hrefTarget":"mainFrame"
 			},
 			{
 				"text":"异常通话IMEI处理",
 				"id":"0204",
 				"leaf":true,
 				"href":"pages/imei/imei_exception.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-					{"js":"modules/test/miliAddr.js"}
-				]			
+				"hrefTarget":"mainFrame"
 			}
 		]
 	},{
@@ -179,36 +155,11 @@
 			{
 				"text":"基础报表",
 				"id":"0601",
-				"children":[
-				    {
-				    	"text":"订单",
-				    	"id":"060101",
-				    	 "children":[
-				    	 	{"text":"日报","id":"04010101","leaf":true},
-					        {"text":"周报","id":"04010102","leaf":true},
-					        {"text":"日报","id":"04010101","leaf":true},
-					        {"text":"周报","id":"04010102","leaf":true}
-				    	 ]
-				    },
-				    {
-				    	"text":"账单",
-				    	"id":"060102",
-				    	 "children":[
-				    	 	{"text":"日报","id":"04010201","leaf":true},
-					        {"text":"周报","id":"04010202","leaf":true},
-					        {"text":"日报","id":"04010201","leaf":true},
-					        {"text":"周报","id":"04010202","leaf":true}
-				    	 ]
-				    }
-					
-				]
+				"leaf":true
 			},{
 				"text":"自定义报表",
 				"id":"0602",
-				"children":[
-					{"text":"订单","id":"060201","leaf":true},
-					{"text":"账单","id":"060202","leaf":true}
-				]
+				"leaf":true
 			}
 		]
 	},{
@@ -223,21 +174,11 @@
 				"hrefTarget":"mainFrame"
 			},
 			{
-				"text":"权限类型",
-				"id":"0702",
-				"leaf":true,
-				"href":"pages/system/sysRole.html",
-				"hrefTarget":"mainFrame"
-			},
-			{
 				"text":"角色管理",
 				"id":"0707",
 				"leaf":true,
 				"href":"pages/system/sysRole.html",
-				"hrefTarget":"mainFrame",
-				"jsArray":[
-					{"js":"modules/sp/spType.js"}
-				]
+				"hrefTarget":"mainFrame"
 			},{
 				"text":"菜单管理",
 				"id":"0703",
@@ -253,13 +194,13 @@
 						"text":"操作日志",
 						"id":"070301",
 						"leaf":true,
-						"href":"modules/test/miliAddr.html",
+						"href":"pages/system/opLog.html",
 						"hrefTarget":"mainFrame"
 					},{
 						"text":"登录日志",
 						"id":"070302",
 						"leaf":true,
-						"href":"modules/test/miliAddr.html",
+						"href":"pages/system/loginLog.html",
 						"hrefTarget":"mainFrame"
 					}
 				]

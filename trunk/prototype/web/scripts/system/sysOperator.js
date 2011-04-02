@@ -1,3 +1,4 @@
+var app = {};
 Ext.onReady(function(){
 	
 	Ext.QuickTips.init();
@@ -42,18 +43,73 @@ Ext.onReady(function(){
 		{name:'msn',mapping:'D_MSN',type:'string'}
 	]);
 
-	var data = [
-		[1,'bluestome','123456','曾经的流星雨',1,'021-52128907','15800371329','zhangxiao917@21cn.com','021-52128907','262372042','zhangxiao917@21cn.com',1,'SYS_OPER',1,'CHINA','2011-04-01 12:00:00']
+	app.data = [
+		[1,'admin','123456','管理员',1,'021-52128907','15800371329','admin@ctc.com','021-52128907','262372042','admin@ctc.com',1,'SYS_OPER',1,'CHINA','2011-04-01 12:00:00'],
+		[2,'bluestome','123456','曾经的流星雨',1,'021-52128907','15800371329','zhangxiao917@21cn.com','021-52128907','262372042','zhangxiao917@21cn.com',1,'SYS_OPER',1,'CHINA','2011-04-01 12:00:00'],
+		[3,'user','123456','用户',1,'021-52128907','15800371329','user@ctc.com','021-52128907','262372042','user@ctc.com',1,'SYS_OPER',1,'CHINA','2011-04-01 12:00:00']
 	];
 
-	var ds_sysOperator = new Ext.data.Store({
-		proxy : new Ext.data.HttpProxy({
-			url : 'sysOperator.action'
-		}),
-		reader : new Ext.data.JsonReader({
-			totalProperty : 'count',
-			root : 'operator'
-		}, [{
+//	var ds_sysOperator = new Ext.data.Store({
+//		proxy : new Ext.data.HttpProxy({
+//			url : 'sysOperator.action'
+//		}),
+//		reader : new Ext.data.JsonReader({
+//			totalProperty : 'count',
+//			root : 'operator'
+//		}, [{
+//			name : 'D_ID',
+//			type : 'int'
+//		}, {
+//			name : 'D_LOGIN_NAME',
+//			type : 'string'
+//		}, {
+//			name : 'D_PASSWORD',
+//			type : 'string'
+//		}, {
+//			name : 'D_REAL_NAME',
+//			type : 'string'
+//		}, {
+//			name : 'D_STATUS',
+//			type : 'int'
+//		}, {
+//			name : 'D_PHONE',
+//			type : 'string'
+//		}, {
+//			name : 'D_MOBILE',
+//			type : 'string'
+//		}, {
+//			name : 'D_EMAIL',
+//			type : 'string'
+//		}, {
+//			name : 'D_FAX',
+//			type : 'string'
+//		}, {
+//			name : 'D_QQ',
+//			type : 'string'
+//		}, {
+//			name : 'D_MSN',
+//			type : 'string'
+//		}, {
+//			name : 'D_OPERATORTYPE_ID',
+//			type : 'int'
+//		}, {
+//			name : 'D_OPERATORTYPE',
+//			type : 'string'
+//		},  {
+//			name : 'D_SPID_ID',
+//			type : 'int'
+//		}, {
+//			name : 'D_SPID',
+//			type : 'string'
+//		}, {
+//			name : 'D_CREATE_DT',
+//			type : 'string'
+//		}])
+//	});
+	
+	var ds_sysOperator = new Ext.data.ArrayStore({
+        fields: [
+		{
 			name : 'D_ID',
 			type : 'int'
 		}, {
@@ -101,29 +157,15 @@ Ext.onReady(function(){
 		}, {
 			name : 'D_CREATE_DT',
 			type : 'string'
-		}])
-	});
-	
+		}]
+    });
+    
 	 var cm_operator =new Ext.grid.ColumnModel([new Ext.grid.RowNumberer(),sm,
 				{	
 					header:"登录名", 
 					dataIndex:"D_LOGIN_NAME", 
 					sortable:true,
-					width:80,
-					menuDisabled : true,
-					renderer:function(v){ 
-						if( v == '') {
-							return "<span style='color:red;font-weight:bold;'>暂无</span>";
-						}else{
-							return v;
-						}
-					}
-				},
-				{
-					header:"操作员类型", 
-					dataIndex:"D_OPERATORTYPE", 
-					sortable:true,
-					width:80,
+					width:120,
 					menuDisabled : true,
 					renderer:function(v){ 
 						if( v == '') {
@@ -136,48 +178,6 @@ Ext.onReady(function(){
 					header:"真实姓名", 
 					dataIndex:"D_REAL_NAME", 
 					sortable:false,
-					width:70,
-					menuDisabled : true,
-					renderer:function(v){ 
-						if( v == '') {
-							return "<span style='color:red;font-weight:bold;'>暂无</span>";
-						}else{
-							return v;
-						}
-					}
-				},
-	//			{
-	//				header:"固话号码", 
-	//				dataIndex:"D_PHONE", 
-	//				sortable:false,
-	//				width:120,
-	//				menuDisabled : true,
-	//				renderer:function(v){ 
-	//					if( v == '') {
-	//						return "<span style='color:red;font-weight:bold;'>暂无</span>";
-	//					}else{
-	//						return v;
-	//					}
-	//				}
-	//			},
-	//			{
-	//				header:"手机号码", 
-	//				dataIndex:"D_MOBILE", 
-	//				sortable:false,
-	//				width:90,
-	//				menuDisabled : true,
-	//				renderer:function(v){ 
-	//					if( v == '') {
-	//						return "<span style='color:red;font-weight:bold;'>暂无</span>";
-	//					}else{
-	//						return v;
-	//					}
-	//				}
-	//			},
-				{
-					header:"电邮地址", 
-					dataIndex:"D_EMAIL", 
-					sortable:false,
 					width:150,
 					menuDisabled : true,
 					renderer:function(v){ 
@@ -187,59 +187,28 @@ Ext.onReady(function(){
 							return v;
 						}
 					}
-				},
-	//			{
-	//				header:"传真号码", 
-	//				dataIndex:"D_FAX", 
-	//				sortable:false,
-	//				width:50,
-	//				menuDisabled : true,
-	//				renderer:function(v){ 
-	//					if( v == '') {
-	//						return "<span style='color:red;font-weight:bold;'>暂无</span>";
-	//					}else{
-	//						return v;
-	//					}
-	//				}
-	//			},
-	//			{
-	//				header:"MSN", 
-	//				dataIndex:"D_MSN", 
-	//				sortable:false,
-	//				width:100,
-	//				menuDisabled : true,
-	//				renderer:function(v){ 
-	//					if( v == '') {
-	//						return "<span style='color:red;font-weight:bold;'>暂无</span>";
-	//					}else{
-	//						return v;
-	//					}
-	//				}
-	//			},
-	//			{
-	//				header:"QQ", 
-	//				dataIndex:"D_QQ", 
-	//				sortable:false,
-	//				width:100,
-	//				menuDisabled : true,
-	//				renderer:function(v){ 
-	//					if( v == '') {
-	//						return "<span style='color:red;font-weight:bold;'>暂无</span>";
-	//					}else{
-	//						return v;
-	//					}
-	//				}
-	//			},
-				{
+				},{
+					header:"电邮地址", 
+					dataIndex:"D_EMAIL", 
+					sortable:false,
+					width:200,
+					menuDisabled : true,
+					renderer:function(v){ 
+						if( v == '') {
+							return "<span style='color:red;font-weight:bold;'>暂无</span>";
+						}else{
+							return v;
+						}
+					}
+				},{
 					header:"创建时间", 
 					dataIndex:"D_CREATE_DT", 
 					sortable:true,
-					width:120
-				},
-				{
+					width:130
+				},{
 					header:"用户状态", 
 					dataIndex:"D_STATUS",
-					width:50,
+					width:100,
 					renderer:function(v){
 						var x = parseInt(v);
 						switch(v){
@@ -252,7 +221,6 @@ Ext.onReady(function(){
 							default:
 								return "<span style='color:red;font-weight:bold;'>未知</span>";
 						}
-	//					return v == 1 ? '启用' : '停用'
 					}
 				}
 	 ])
@@ -277,6 +245,13 @@ Ext.onReady(function(){
 				}
 				Ext.Msg.confirm('确认删除', '你确定删除该条记录?', function(btn) {
 					if (btn == 'yes') {
+					Ext.Msg.show({
+						title : '提示',
+						msg : '删除成功!',
+						buttons : Ext.Msg.OK,
+						icon : Ext.Msg.INFO
+					});
+				/**
 						Ext.Ajax.request({
 							url : 'deloperator.action',
 							params : {
@@ -310,8 +285,9 @@ Ext.onReady(function(){
 								})
 			                }
 						})
+				**/
 					}
-				})
+				});
 			}else{
 				Ext.Msg.show({
 					title : '提示',
@@ -335,6 +311,13 @@ Ext.onReady(function(){
 				}
 				Ext.Msg.confirm('确认解除删除', '你确定解除一下操作员删除状态?', function(btn) {
 					if (btn == 'yes') {
+							Ext.Msg.show({
+								title : '提示',
+								msg : '删除记录成功!',
+								buttons : Ext.Msg.OK,
+								icon : Ext.Msg.INFO
+							});
+					/**	
 						Ext.Ajax.request({
 							url : 'unDel.action',
 							params : {
@@ -367,7 +350,8 @@ Ext.onReady(function(){
 									icon : Ext.Msg.ERROR
 								})
 			                }
-						})
+						});
+					**/	
 					}
 				})
 			}else{
@@ -389,7 +373,7 @@ Ext.onReady(function(){
 		listeners : {
 			'specialkey' : function(field, e) {
 				if (e.getKey() == Ext.EventObject.ENTER) {
-					ds_sysOperator.loadData(data);
+					ds_sysOperator.loadData(app.data);
 //					searchoperator();
 				}
 			}
@@ -469,7 +453,9 @@ Ext.onReady(function(){
 	var btn_search_operator = new Ext.Button({
 		text : '查询',
 		iconCls : 'icon-search',
-		handler : searchoperator
+		handler : function(){
+			ds_sysOperator.loadData(app.data);
+		}
 	});
 	
 	var btn_show_oper_detail = new Ext.Button({
@@ -486,7 +472,6 @@ Ext.onReady(function(){
 					autoHeight : true,
 					modal : true,
 					closable:false,
-	//				closeAction : 'close',
 					items : [new Ext.FormPanel({
 						labelWidth : 70,
 						url : 'updateoperator.action',
@@ -539,14 +524,6 @@ Ext.onReady(function(){
 							value:record.get('D_FAX'),
 							readOnly : true
 						},{
-							fieldLabel : 'QQ号码',		
-							value:record.get('D_QQ'),
-							readOnly : true
-						},{
-							fieldLabel : 'MSN号码',		
-							value:record.get('D_MSN'),
-							readOnly : true
-						},{
 							fieldLabel : '时间',
 							readOnly : true,
 							value:record.get('D_CREATE_DT')
@@ -555,11 +532,37 @@ Ext.onReady(function(){
 							readOnly:true,
 							value:(record.get('D_STATUS') == 1?'启用':'停用')
 						},{
+							fieldLabel : '所属部门',
+							xtype:'combo',
+							hiddenName : 'operator.district',
+							valueField : 'id',
+							displayField : 'name',
+							mode:'local',
+							store : new Ext.data.SimpleStore({
+								data : [
+										['1','机关'],
+										['2', '营业厅']
+							    ],
+								fields : ['id', 'name']
+							}),	
+							selectOnFocus : true,
+							editable:false,
+							allowBlank : false,
+							triggerAction : 'all',
+							emptyText : '当前所属:"机关"'
+						},{
 							fieldLabel:'选择角色',
 							name:'role_id',
 							xtype:'checkbox',
 							handler:function(v){
 								if(v.getValue()){
+									Ext.Msg.show({
+										title : '提示',
+										msg : '角色已启用',
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.INFO
+									});
+									/**
 									new Ext.Window({
 										id:'updateOperatorRole',
 										title:'角色窗口',
@@ -568,7 +571,6 @@ Ext.onReady(function(){
 										autoHeight : true,
 										modal : true,
 										closable:false,
-	//									closeAction : 'close',
 										items:[
 										new Ext.FormPanel({
 											id:'tree_id',
@@ -603,12 +605,13 @@ Ext.onReady(function(){
 											{
 												text : '关闭',
 												handler : function() {
-													this.ownerCt.ownerCt.close()
+													Ext.getCmp('updateOperatorRole').close();
 												}
 											}]								
 										})
 										]
-									}).show()
+									}).show();
+									**/
 								}
 							}
 						}],
@@ -618,7 +621,7 @@ Ext.onReady(function(){
 						{
 							text : '关闭',
 							handler : function() {
-								this.ownerCt.ownerCt.close();
+								Ext.getCmp('show_operator_detail_window').close();
 							}
 						}]
 					})]
@@ -629,7 +632,7 @@ Ext.onReady(function(){
 					msg : '请选择一条你需要查看的记录',
 					buttons : Ext.Msg.OK,
 					icon : Ext.Msg.ERROR
-				})
+				});
 			}
 		}
 	});
@@ -640,6 +643,17 @@ Ext.onReady(function(){
 		handler:function(){
 			if(grid_operator.getSelectionModel().getSelected()){
 			var record = grid_operator.getSelectionModel().getSelected();
+			/**
+				Ext.Msg.show({
+					title : '提示',
+					msg : '选择修改"'+record.get('D_LOGIN_NAME')+'"记录!',
+					buttons : Ext.Msg.OK,
+					fn:function(){
+						
+					},
+					icon : Ext.Msg.INFO
+				});
+			**/ 
 			new Ext.Window({ 
 					id:'update_operator_window',
 					title : '更新操作员',
@@ -648,7 +662,6 @@ Ext.onReady(function(){
 					autoHeight : true,
 					modal : true,
 					closable:false,
-	//				closeAction : 'close',
 					items : [new Ext.FormPanel({
 						id:'update_operator_form',
 						labelWidth : 70,
@@ -715,22 +728,12 @@ Ext.onReady(function(){
 							value:record.get('D_FAX'),
 							vtype:'phone'
 						},{
-							fieldLabel : 'QQ号码',		
-							name : 'operator.qq',
-							value:record.get('D_QQ'),
-							vtype:'qq'
-						},{
-							fieldLabel : 'MSN号码',		
-							name : 'operator.msn',
-							value:record.get('D_MSN'),
-							vtype:'email'
-						},{
 							fieldLabel : '时间',
 							xtype:'hidden',
 							name : 'operator.createDt',
 							readOnly : true,
 							value:record.get('D_CREATE_DT')
-						}, {
+						},{
 							fieldLabel : '状态',
 							xtype:'combo',
 							id:'sysOperator_update_status',
@@ -750,7 +753,27 @@ Ext.onReady(function(){
 							allowBlank : false,
 							triggerAction : 'all',
 							emptyText : '当前状态为:' + (record.get('D_STATUS') == 1 ? '启用':'停用')
-						}, {
+						},{
+							fieldLabel : '所属部门',
+							xtype:'combo',
+							id:'update_operator_district',
+							hiddenName : 'operator.district',
+							valueField : 'id',
+							displayField : 'name',
+							mode:'local',
+							store : new Ext.data.SimpleStore({
+								data : [
+										['1','机关'],
+										['2', '营业厅']
+							    ],
+								fields : ['id', 'name']
+							}),	
+							selectOnFocus : true,
+							editable:false,
+							allowBlank : false,
+							triggerAction : 'all',
+							emptyText : '当前属性为:"机关"'
+						},{
 							fieldLabel:'SP类型',
 							xtype:'hidden',
 							name:'operator.spInfo.id',
@@ -759,8 +782,16 @@ Ext.onReady(function(){
 							fieldLabel:'选择角色',
 							name:'role_id',
 							xtype:'checkbox',
-	//						labelAlign:'right',
 							handler:function(v){
+								if(v.getValue()){
+									Ext.Msg.show({
+										title : '提示',
+										msg : '角色已启用',
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.INFO
+									});
+								}
+								/**
 								if(v.getValue()){
 									new Ext.Window({
 										id:'updateSysOperWin',
@@ -768,7 +799,6 @@ Ext.onReady(function(){
 										width:400,
 										autoHeight:true,
 										closable:false,
-	//									closeAction:'close',
 										items:[
 											new Ext.FormPanel({
 													id:'roleListForm',
@@ -869,6 +899,7 @@ Ext.onReady(function(){
 										]
 									}).show()
 								}
+								**/
 							}
 						}],
 						buttonAlign : 'right',
@@ -876,9 +907,20 @@ Ext.onReady(function(){
 						buttons : [{
 							text : '更新',
 							handler : function(btn) {
-								var frm = this.ownerCt.form;
+								var frm = Ext.getCmp('update_operator_form').form;
 								if (frm.isValid()) {
 										btn.disable();
+										Ext.Msg.show({
+											title : '提示',
+											msg : '更新记录成功!',
+											buttons : Ext.Msg.OK,
+											fn : function() {
+												dnfield.focus(true);
+												btn.enable();
+											},
+											icon : Ext.Msg.INFO
+										});
+									 /**
 										frm.submit({
 											waitTitle : '请稍候',
 											waitMsg : '正在提交表单数据,请稍候...',
@@ -902,7 +944,8 @@ Ext.onReady(function(){
 													icon : Ext.Msg.ERROR
 												});
 											}
-										})
+										});
+									**/
 								}
 							}
 						}, {
@@ -914,7 +957,7 @@ Ext.onReady(function(){
 							text : '取消',
 							handler : function() {
 								Ext.getCmp('update_operator_form').form.reset();
-								this.ownerCt.ownerCt.close()
+								Ext.getCmp('update_operator_window').close();
 							}
 						}]
 					})]
@@ -932,6 +975,7 @@ Ext.onReady(function(){
 	});
 	
 	 var windows_add_operator = new Ext.Window({
+	 	id:'windows_add_operator',
 	 	title:'添加',
 		width : 350,
 		height : 440,
@@ -939,12 +983,6 @@ Ext.onReady(function(){
 		autoHeight : true,
 		modal : true,
 		closable:false,
-	//	closeAction : 'close',
-	//	listeners : {
-	//		'close' : function() {
-	//			windows_add_operator.close();
-	//		}
-	//	},
 		items:[new Ext.FormPanel({
 			id:'add_operator_form',
 			border:false,
@@ -1044,26 +1082,40 @@ Ext.onReady(function(){
 				vtype:'phone',
 				maxLength:50
 			},{
-				fieldLabel:'QQ号码',
-				name:'operator.qq',
-				allowBlank:true,
-				vtype:'qq',
-				maxLength:50
-			},{
-				fieldLabel:'MSN',
-				name:'operator.msn',
-				allowBlank:true,
-				vtype:'email',
-				maxLength:50
-			}
-			],
+				fieldLabel : '所属部门',
+				xtype:'combo',
+				id:'detail_operator_district',
+				hiddenName : 'operator.district',
+				valueField : 'id',
+				displayField : 'name',
+				mode:'local',
+				store : new Ext.data.SimpleStore({
+					data : [
+							['1','机关'],
+							['2', '营业厅']
+				    ],
+					fields : ['id', 'name']
+				}),	
+				selectOnFocus : true,
+				editable:false,
+				allowBlank : false,
+				triggerAction : 'all',
+				emptyText : '请选择所属部门!'
+			}],
 			buttonAlign:'right',
 			minButtonWidth:60,
 			buttons:[{
 			  text:'添加',
 			  handler:function(btn){
-			  	var frm =this.ownerCt.form;
+			  	var frm =Ext.getCmp('add_operator_form').form;
 			  	if(frm.isValid()){
+						Ext.Msg.show({
+							title : '提示',
+							msg : '添加操作员成功!',
+							buttons : Ext.Msg.OK,
+							icon : Ext.Msg.INFO
+						});
+			  		/**
 			  		btn.disable();
 			  		var unfield=frm.findField('operator.loginName');
 					Ext.Ajax.request({
@@ -1097,7 +1149,6 @@ Ext.onReady(function(){
 										autoHeight : true,
 										modal : true,
 										closable:false,
-	//									closeAction : 'hide',
 										items:[
 											new Ext.FormPanel({
 												id:'tree_id',
@@ -1181,7 +1232,6 @@ Ext.onReady(function(){
 													handler : function() {
 														Ext.getCmp('tree_id').form.reset();
 														this.ownerCt.ownerCt.close();
-	//													this.ownerCt.form.reset();
 													}
 												}]								
 											})
@@ -1204,7 +1254,8 @@ Ext.onReady(function(){
 										icon : Ext.Msg.ERROR
 									})
 								}
-					})
+					});
+					**/
 			  	}
 			  }
 			},{
