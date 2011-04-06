@@ -1,0 +1,1288 @@
+<html>
+	<head>
+		<title>shortName：易道系统集成与应用开发平台 V1.03</title>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta http-equiv="cache-control" content="no-cache, must-revalidate">
+		<meta http-equiv="expires" content="0">
+		<link rel="stylesheet" type="text/css"
+			href="/resource/css/ext_icon.css" />
+		<link rel="stylesheet" type="text/css"
+			href="/resource/theme/default/resources/css/ext-all.css" />
+
+		<script type="text/javascript"
+			src="/resource/extjs3.1/adapter/ext/ext-base.js"></script>
+
+		<script type="text/javascript" src="/resource/extjs3.1/ext-all.js"></script>
+
+		<script type="text/javascript"
+			src="/resource/commonjs/ext-lang-zh_CN.js"></script>
+
+		<script type="text/javascript" src="/resource/commonjs/eredg4.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="/resource/css/eredg4.css" />
+
+		<script type="text/javascript" src="/resource/extjs3.1/ux/ux-all.js"></script>
+
+		<link rel="stylesheet" type="text/css"
+			href="/resource/extjs3.1/ux/css/ux-all.css" />
+
+		<script type="text/javascript">
+		  var webContext = '';
+		
+		  var runMode = '1';
+		
+		  Ext.QuickTips.init();
+		
+		  Ext.form.Field.prototype.msgTarget = 'qtip';
+		
+		  Ext.BLANK_IMAGE_URL = '/resource/image/ext/s.gif';
+
+		</script>
+	</head>
+	<script type="text/javascript"
+		src="/resource/commonjs/extTabCloseMenu.js"></script>
+	<script type="text/javascript" src="/arm/js/index.js"></script>
+	<body>
+		<div id="themeTreeDiv" class="x-hidden"></div>
+		<div id="previewDiv" class="x-hidden">
+			<img src="./resource/image/theme/default.jpg" />
+		</div>
+		<script type="text/javascript">Ext.onReady(function(){
+Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
+
+    var node_010102 = new Ext.tree.TreeNode({
+
+        text:'权限管理',
+
+        listeners: {
+
+          'click': function(){
+
+           }},
+
+    	expanded:true,
+
+        id:'id_node_010102'
+
+    });
+
+    var node_010103 = new Ext.tree.TreeNode({
+
+        text:'通话IMEI管理',
+
+        listeners: {
+
+          'click': function(){
+				Ext.MessageBox.alert('Notice','通知');
+           }},
+
+    	expanded:true,
+
+        id:'id_node_010103'
+
+    });
+
+    var node_010104 = new Ext.tree.TreeNode({
+
+        text:'终端管理',
+
+        listeners: {
+
+          'click': function(){
+
+           }},
+
+    	expanded:true,
+
+        id:'id_node_010104'
+
+    });
+    
+    var node_010105 = new Ext.tree.TreeNode({
+
+        text:'日志管理',
+
+        listeners: {
+
+          'click': function(){
+				//Ext.MessageBox.alert('系统提示','010105');
+           }},
+
+    	expanded:true,
+
+        id:'id_node_010105'
+
+    });
+    
+    var node_010106 = new Ext.tree.TreeNode({
+
+        text:'统计分析',
+
+        listeners: {
+
+          'click': function(){
+				Ext.MessageBox.alert('系统提示','010106');
+           }},
+
+    	expanded:true,
+
+        id:'id_node_010106'
+
+    });
+    
+    var node_010107 = new Ext.tree.TreeNode({
+
+        text:'外呼数据管理',
+
+        listeners: {
+
+          'click': function(){
+				Ext.MessageBox.alert('系统提示','010107');
+           }},
+
+    	expanded:true,
+
+        id:'id_node_010107'
+
+    });
+    
+    var node_010108 = new Ext.tree.TreeNode({
+
+        text:'扩展IMEI管理',
+
+        listeners: {
+
+          'click': function(){
+				Ext.MessageBox.alert('系统提示','010108');
+           }},
+
+    	expanded:true,
+
+        id:'id_node_010108'
+
+    });
+    
+    var node_010109 = new Ext.tree.TreeNode({
+
+        text:'数据查询',
+
+        listeners: {
+
+          'click': function(){
+				Ext.MessageBox.alert('系统提示','010109');
+           }},
+
+    	expanded:true,
+
+        id:'id_node_010109'
+
+    });
+    
+    var node_01010401 = new Ext.tree.TreeNode({
+
+        text:'终端一级数据维护',
+
+        listeners: {
+
+        'click': function(){
+
+           addTab('pages/terminal/terminal_1.html','终端一级数据维护','01010401','shortName -> 系统管理 -> 终端管理 -> 终端一级数据维护','server_connect.png');
+
+         }},
+
+    	expanded:false,
+
+        iconCls:'server_connectIcon',
+
+        id:'id_node_01010401'
+
+    });
+
+    var node_01010301 = new Ext.tree.TreeNode({
+
+        text:'通话IMEI导入',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/imei/imei_import.html','通话IMEI导入','01010301','shortName -> 系统管理 -> 通话IMEI管理 -> 通话IMEI导入','application_view_list.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'applicationIcon',
+
+        id:'id_node_01010301'
+
+    });
+
+    var node_0101 = new Ext.tree.TreeNode({
+
+        text:'业务管理',
+
+        listeners: {
+
+          'click': function(){
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'folder_wrenchIcon',
+
+        id:'id_node_0101'
+
+    });
+
+     var node_0201 = new Ext.tree.TreeNode({
+
+        text:'系统管理',
+
+        listeners: {
+
+          'click': function(){
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'folder_wrenchIcon',
+
+        id:'id_node_0201'
+
+    });
+
+    var node_01010302 = new Ext.tree.TreeNode({
+
+        text:'通话IMEI查询',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/imei/imei_query.html','通话IMEI查询','01010302','shortName -> 系统管理 -> 通话IMEI管理 -> 通话IMEI查询','config.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'configIcon',
+
+        id:'id_node_01010302'
+
+    });
+
+    var node_01010402 = new Ext.tree.TreeNode({
+
+        text:'终端二级数据维护',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/terminal/terminal_2.html','终端二级数据维护','01010402','shortName -> 系统管理 -> 终端管理 -> 终端二级数据维护','user_comment.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'user_commentIcon',
+
+        id:'id_node_01010402'
+
+    });
+
+    var node_01010204 = new Ext.tree.TreeNode({
+
+        text:'角色管理与授权',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/system/sysRole.html','角色管理与授权','01010204','shortName -> 系统管理 -> 权限管理 -> 角色管理与授权','award_star_silver_3.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'award_star_silver_3Icon',
+
+        id:'id_node_01010204'
+
+    });
+
+    var node_01010303 = new Ext.tree.TreeNode({
+
+        text:'通话IMEI导出',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/imei/imei_export.html','通话IMEI导出','01010303','shortName -> 系统管理 -> 通话IMEI管理 -> 通话IMEI导出','bug.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'bugIcon',
+
+        id:'id_node_01010303'
+
+    });
+
+    var node_01010304 = new Ext.tree.TreeNode({
+
+        text:'异常通话IMEI处理',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/imei/imei_export.html','异常通话IMEI处理','01010304','shortName -> 系统管理 -> 通话IMEI管理 -> 异常通话IMEI处理','bug.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'bugIcon',
+
+        id:'id_node_01010304'
+
+    });
+    
+    var node_01010202 = new Ext.tree.TreeNode({
+
+        text:'人员管理与授权',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/system/sysOperator.html','人员管理与授权','01010202','shortName -> 系统管理 -> 权限管理 -> 人员管理与授权','group_link.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'group_linkIcon',
+
+        id:'id_node_01010202'
+
+    });
+
+    var node_01010403 = new Ext.tree.TreeNode({
+
+        text:'正式终端数据维护',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/terminal/terminal.html','正式终端数据维护','01010403','shortName -> 系统管理 -> 终端管理 -> 正式终端数据维护','database_refresh.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'database_refreshIcon',
+
+        id:'id_node_01010403'
+
+    });
+
+    var node_01010205 = new Ext.tree.TreeNode({
+
+        text:'菜单资源管理',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/system/sysMenu.html','菜单资源管理','01010205','shortName -> 系统管理 -> 权限管理 -> 菜单资源管理','layout_content.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'layout_contentIcon',
+
+        id:'id_node_01010205'
+
+    });
+
+    var node_01010404 = new Ext.tree.TreeNode({
+
+        text:'业务终端关联维护',
+
+        listeners: {
+
+          'click': function(){
+			
+             addTab('pages/terminal/terminal_business.html','业务终端关联维护','01010404','shortName -> 系统管理 -> 终端管理 -> 业务终端关联维护','plugin.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'pluginIcon',
+
+        id:'id_node_01010404'
+
+    });
+
+     var node_01010501 = new Ext.tree.TreeNode({
+
+        text:'操作日志',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/system/opLog.html','操作日志','01010501','shortName -> 系统管理 -> 日志管理 -> 操作日志','application_view_list.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'applicationIcon',
+
+        id:'id_node_01010501'
+
+    });
+
+     var node_01010502 = new Ext.tree.TreeNode({
+
+        text:'登录日志',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/system/loginLog.html','操作日志','01010502','shortName -> 系统管理 -> 日志管理 -> 登录日志','application_view_list.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'applicationIcon',
+
+        id:'id_node_01010502'
+
+    });
+    
+     var node_01010601 = new Ext.tree.TreeNode({
+
+        text:'基础报表',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/system/opLog.html','基础报表','01010601','shortName -> 系统管理 -> 统计分析 -> 基础报表','application_view_list.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'icon-chart_pie',
+
+        id:'id_node_01010601'
+
+    });
+
+     var node_01010602 = new Ext.tree.TreeNode({
+
+        text:'自定义报表',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/system/loginLog.html','自定义报表','01010602','shortName -> 系统管理 -> 统计分析 -> 自定义报表','application_view_list.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'icon-chart_pie',
+
+        id:'id_node_01010602'
+
+    });
+    
+     var node_01010701 = new Ext.tree.TreeNode({
+
+        text:'外呼数据管理',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/customimei/imei_custom.html','外呼数据管理','01010701','shortName -> 系统管理 -> 外呼数据管理 -> 外呼数据管理','application_view_list.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'applicationIcon',
+
+        id:'id_node_01010701'
+
+    });
+    
+     var node_01010801 = new Ext.tree.TreeNode({
+
+        text:'扩展IMEI管理',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/imeiextends/imei_extends.html','扩展IMEI管理','01010801','shortName -> 系统管理 -> 扩展IMEI管理 -> 扩展IMEI管理','application_view_list.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'applicationIcon',
+
+        id:'id_node_01010801'
+
+    });
+    
+     var node_01010901 = new Ext.tree.TreeNode({
+
+        text:'单项业务数据查询',
+
+        listeners: {
+
+          'click': function(){
+           }},
+
+    	expanded:false,
+
+        iconCls:'applicationIcon',
+
+        id:'id_node_01010901'
+
+    });
+
+     var node_0101090101 = new Ext.tree.TreeNode({
+
+        text:'用户终端属性查询',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/iquery/utp.html','用户终端属性查询','0101090101','shortName -> 数据查询 -> 单项业务数据查询 -> 用户终端属性查询','application_view_list.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'applicationIcon',
+
+        id:'id_node_0101090101'
+
+    });
+    
+     var node_0101090102 = new Ext.tree.TreeNode({
+
+        text:'租机业务推荐查询',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/iquery/rb.html','租机业务推荐查询','0101090102','shortName -> 数据查询 -> 单项业务数据查询 -> 租机业务推荐查询','application_view_list.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'applicationIcon',
+
+        id:'id_node_0101090102'
+
+    });
+    
+     var node_0101090103 = new Ext.tree.TreeNode({
+
+        text:'数据业务推荐查询',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/iquery/db.html','数据业务推荐查询','0101090103','shortName -> 系统管理 -> 统计分析 -> 数据业务推荐查询','application_view_list.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'applicationIcon',
+
+        id:'id_node_0101090103'
+
+    });
+    
+     var node_01010902 = new Ext.tree.TreeNode({
+
+        text:'批量业务数据查询',
+
+        listeners: {
+
+          'click': function(){
+           }},
+
+    	expanded:false,
+
+        iconCls:'applicationIcon',
+
+        id:'id_node_01010902'
+
+    });
+    
+     var node_0101090201 = new Ext.tree.TreeNode({
+
+        text:'批量用户终端属性查询',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/iquery/bat_utp.html','用户终端属性查询','0101090201','shortName -> 系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量用户终端属性查询','application_view_list.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'icon-application',
+
+        id:'id_node_0101090201'
+
+    });
+    
+     var node_0101090202 = new Ext.tree.TreeNode({
+
+        text:'批量租机业务推荐查询',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/iquery/bat_rb.html','租机业务推荐查询','0101090202','shortName ->系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量租机业务推荐查询','application_view_list.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'applicationIcon',
+
+        id:'id_node_0101090202'
+
+    });
+    
+     var node_0101090203 = new Ext.tree.TreeNode({
+
+        text:'批量数据业务推荐查询',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/iquery/bat_db.html','数据业务推荐查询','0101090203','shortName -> 系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量数据业务推荐查询','application_view_list.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'applicationIcon',
+
+        id:'id_node_0101090203'
+
+    });
+    
+    node_0201.appendChild(node_010102);
+
+    node_010104.appendChild(node_01010401);
+
+    node_010103.appendChild(node_01010301);
+
+    node_0101.appendChild(node_010103);
+
+    node_010103.appendChild(node_01010303);
+
+    node_010104.appendChild(node_01010402);
+
+    node_010102.appendChild(node_01010204);
+
+    node_010103.appendChild(node_01010302);
+    
+    node_010103.appendChild(node_01010304);
+    
+    node_0101.appendChild(node_010104);
+
+    node_010102.appendChild(node_01010202);
+
+    node_010104.appendChild(node_01010403);
+
+    node_010102.appendChild(node_01010205);
+
+    node_010104.appendChild(node_01010404);
+    
+    node_0201.appendChild(node_010105);
+    
+    node_010105.appendChild(node_01010501);
+
+    node_010105.appendChild(node_01010502);
+    
+    node_0101.appendChild(node_010106);
+    
+    node_010106.appendChild(node_01010601);
+    
+    node_010106.appendChild(node_01010602);
+    
+    node_0101.appendChild(node_010107);
+    
+    node_010107.appendChild(node_01010701);
+    
+    node_0101.appendChild(node_010108);
+    
+    node_010108.appendChild(node_01010801);
+    
+    node_0101.appendChild(node_010109);
+    
+    node_01010901.appendChild(node_0101090101);
+    
+    node_01010901.appendChild(node_0101090102);
+    
+    node_01010901.appendChild(node_0101090103);
+    
+    node_010109.appendChild(node_01010901);
+    
+    node_01010902.appendChild(node_0101090201);
+    
+    node_01010902.appendChild(node_0101090202);
+    
+    node_01010902.appendChild(node_0101090203);
+    
+	node_010109.appendChild(node_01010902);
+
+    var treePanel_0101 = new Ext.tree.TreePanel({
+
+       autoHeight:false,
+
+       autoWidth:false,
+
+       autoScroll:false,
+
+       animate:false,
+
+       rootVisible:false,
+
+       useArrows:true,
+
+       title:'',
+
+       border: false,
+
+       containerScroll:true,
+
+       applyTo:'div.card.0101',
+
+       root:node_0101
+
+    });
+    
+    var treePanel_0201 = new Ext.tree.TreePanel({
+
+       autoHeight:false,
+
+       autoWidth:false,
+
+       autoScroll:false,
+
+       animate:false,
+
+       rootVisible:false,
+
+       useArrows:true,
+
+       title:'',
+
+       border: false,
+
+       containerScroll:true,
+
+       applyTo:'div.card.0201',
+
+       root:node_0201
+
+    });
+	});
+	</script>
+		<!-- 由<shortName:arm.Viewport/>标签生成的代码开始 -->
+		
+		<!-- overflow: auto;  -->
+		<div id="div.card.0101"
+			style="height: 100%; width: 100%;"></div>
+
+		<div id="div.card.0201"
+			style="height: 100%; width: 100%;"></div>
+
+		<script type="text/javascript">
+
+var default_theme = 'default';
+
+var mainTabs;
+
+Ext.onReady(function(){
+
+  Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
+
+            mainTabs = new Ext.TabPanel({
+
+                region:'center', 
+
+                activeTab:0,
+
+                id:'mainTabs',
+
+                enableTabScroll:true,
+
+                height:550,
+
+                border:false,
+
+                frame:true,
+
+                plugins: new Ext.ux.TabCloseMenu(),
+
+                items:[{
+
+                      title:"<img align='top' class='IEPNG' src='./resource/image/ext/user.png'/>我的工作台",
+
+                      listeners: {
+                      	activate: function(){
+                      		Ext.getCmp('centerPanel').setTitle('shortName -> 我的工作台');
+                    	}
+                   	  },
+
+                      html:"<iframe name='mainFrame'  src='http://www.javaeye.com' scrolling='auto' frameborder='0' width='100%' height='100%' ></iframe>"
+
+                    }]
+
+             });
+
+             
+
+             var viewport = new Ext.Viewport({
+
+                 layout:'border',
+
+                 items:[
+
+                 new Ext.Panel({
+
+                     region:'north',
+
+                     contentEl:'north', 
+
+                     iconCls:'application_homeIcon', 
+
+                     height:85,
+
+                     collapsible:true,
+
+                     border:false,
+
+                     layout: 'fit',
+
+                     title:'shortName：XXXXXXXXXXX'}),
+
+                 
+
+                 new Ext.BoxComponent({
+
+                     region:'south',
+
+                     contentEl: 'south',
+
+                     height:17,
+
+                     layout: 'fit',
+
+                     collapsible: true}),
+
+                 
+
+                 {region:'center', 
+
+                     id: 'centerPanel', 
+
+                     iconCls:'',
+
+                     title:'shortName',
+
+                     autoScroll:false,
+
+                     layout: 'fit',
+
+                     items:[mainTabs]},
+
+                   {region:'west',
+
+                    width: 220,
+
+                    collapsible: true,
+
+                    minSize: 200,
+
+                    maxSize: 350,
+
+                    split: true,
+
+                    //collapseMode:'mini',
+
+                    iconCls:'book_previousIcon',
+
+                    title: '系统导航',
+
+                    layout:'accordion',
+
+                    layoutConfig:{
+
+                      animate:true,
+
+                      activeOnTop :true
+
+                    },
+
+                   items: [
+                    {
+                    autoScroll:true,
+                    border:false,
+                    contentEl: 'div.card.0101',
+                    iconCls:'folder_wrenchIcon',
+                    title:'业务管理'
+                   },{
+                    autoScroll:true,
+                    border:false,
+                    contentEl: 'div.card.0201',
+                    iconCls:'folder_wrenchIcon',
+                    title:'系统管理'
+                   }]}
+                ]}); 
+
+    });
+
+/**
+
+ * 响应树节点单击事件
+
+ */
+
+function addTab(url,name,menuid,pathCh,icon){
+
+//  alert('addTab.menuid:'+menuid);
+  var id = "tab_id_" + menuid;
+  if(url == '#'){
+    showOkTipMsg('此菜单还没有指定请求页面,请点击其它功能菜单.');
+  }else{
+  var index = url.indexOf('.ered');
+  if(index != -1)
+    url = url + '&menuid4Log=' + menuid;
+	 var n = mainTabs.getComponent(id);
+ 
+  if (!n) {
+
+     // 如果对centerPanel进行遮罩,则可以出现阴影mainTabs
+
+     Ext.getCmp('centerPanel').getEl().mask('<span style=font-size:12>正在加载页面,请稍等...</span>', 'x-mask-loading');
+
+     //document.getElementById('endIeStatus').click();//解决Iframe IE加载不完全的问题
+
+     // 兼容IE和FF触发.click()函数
+
+     var endIeStatus = document.getElementById("endIeStatus");
+
+     if(document.createEvent){
+
+         var ev = document.createEvent('HTMLEvents');
+
+         ev.initEvent('click', false, true);
+
+         endIeStatus.dispatchEvent(ev);
+
+     }
+
+     else endIeStatus.click();
+
+     n = mainTabs.add({
+
+       id:id,
+
+       title:"<img align='top' class='IEPNG' src='./resource/image/ext/" + icon + "'/>" + name,
+
+       closable:true,
+
+       layout:'fit',
+
+       listeners: {activate: function(){
+       	Ext.getCmp('centerPanel').setTitle(pathCh)
+      	}
+     	},
+
+       //html:'<iframe scrolling="auto" frameborder="0" width="100%" height="100%" src='+url+'></iframe>'
+
+       //如果功能页面使用中心区域阴影加载模式则使用下面的代码unmaskCenterPanel();页面加载完毕后取消阴影
+
+       	html:'<iframe scrolling="auto" frameborder="0" onload="unmaskCenterPanel()" width="100%" height="100%" src='+url+'></iframe>'
+
+         });
+
+       }
+
+  mainTabs.setActiveTab(n);
+
+ }
+
+  }
+
+
+
+// 解决Iframe IE加载不完全的问题
+
+function endIeStatus(){}
+
+
+
+Ext.EventManager.on(window, 'load', function(){
+
+     setTimeout(
+
+         function() {
+
+            Ext.get('loading').remove();
+
+            Ext.get('loading-mask').fadeOut({remove:true});
+
+            }, 200); 
+
+});
+
+  
+
+/**
+
+ * 取消阴影(当子页面加载完成后通过parent.XXXX来调用)
+
+ */
+
+function unmaskCenterPanel(){
+
+ // 如果对centerPanel进行遮罩,则可以出现阴影
+
+ Ext.getCmp('centerPanel').getEl().unmask();
+
+}
+
+</script>
+
+		<style type="text/css">
+
+ #loading-mask {
+
+    Z-INDEX: 20000;
+
+    LEFT: 0px;
+
+    WIDTH: 100%;
+
+    POSITION: absolute;
+
+    TOP: 0px;
+
+    HEIGHT: 100%;
+
+    BACKGROUND-COLOR: white
+
+}
+
+#loading {
+
+    PADDING-RIGHT: 2px;
+
+    PADDING-LEFT: 2px;
+
+    Z-INDEX: 20001;
+
+    LEFT: 45%;
+
+    PADDING-BOTTOM: 2px;
+
+    PADDING-TOP: 2px;
+
+    POSITION: absolute;
+
+    TOP: 40%;
+
+    HEIGHT: auto
+
+}
+
+#loading IMG {
+
+    MARGIN-BOTTOM: 5px
+
+}
+
+#loading .loading-indicator {
+
+    PADDING-RIGHT: 10px;
+
+    PADDING-LEFT: 10px;
+
+    BACKGROUND: white;
+
+    PADDING-BOTTOM: 10px;
+
+    MARGIN: 0px;
+
+    FONT: 12px 宋体, arial, helvetica;
+
+    COLOR: #555;
+
+    PADDING-TOP: 10px;
+
+    HEIGHT: auto;
+
+    TEXT-ALIGN: center
+
+}
+
+
+
+.banner {
+
+    font-family: "宋体";
+
+    font-size: 12px;
+
+    color:4798D7;
+
+}
+</style>
+
+		<!--显示loding区域-->
+
+		<DIV id=loading-mask></DIV>
+
+		<DIV id=loading>
+
+			<DIV class=loading-indicator>
+				<IMG style="MARGIN-RIGHT: 8px" height=32
+					src="./resource/image/ajax1.gif" width=36 align=absMiddle>
+				正在初始化,请稍等...
+			</DIV>
+
+		</DIV>
+
+		<div id="north">
+
+			<table border="0" cellpadding="0" cellspacing="0" width="100%"
+				height="60"
+				background="./resource/image/banner_background/default.png">
+				<tr>
+					<td style="padding-left:15px">
+						<img class="IEPNG" src="./resource/image/eRedG4_Title_2.png" />
+					</td>
+					<td style="padding-right:5px">
+						<table width="100%" border="0" cellpadding="0" cellspacing="3"
+							class="banner">
+							<tr align="right">
+								<td>
+									上午好,超级用户! 今天是:2011-04-06 星期三
+									<span id="rTime"><span>
+								</td>
+
+							</tr>
+
+							<tr align="right">
+
+								<td>
+
+									<table border="0" cellpadding="0" cellspacing="1">
+
+										<tr>
+
+											<td>
+												<div id="themeDiv">
+											</td>
+
+											<td>
+												&nbsp;
+											</td>
+
+											<td>
+												<div id="configDiv">
+											</td>
+
+											<td>
+												&nbsp;
+											</td>
+
+											<td>
+												<div id="closeDiv">
+											</td>
+
+										</tr>
+
+									</table>
+
+								</td>
+
+							</tr>
+
+						</table>
+
+					</td>
+
+				</tr>
+
+			</table>
+
+		</div>
+
+		<div id="south" align="left">
+			<table class="banner" width="100%">
+				<tr>
+					<td width="65%">
+						<nobr>
+							&nbsp;
+							<img class="IEPNG" src="./resource/image/ext/comments2.png" />
+							&nbsp;欢迎您,超级用户!&nbsp;帐户:super&nbsp;所属部门:移动事业部
+						</nobr>
+					</td>
+
+					<td width="35%">
+						<div align="right">
+							<nobr>
+								Copyright&copy 2011 Blutestome
+							</nobr>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<a href="#" onclick="javascript:endIeStatus();" id="endIeStatus"
+			style="display: none;" />
+	</body>
+
+</html>

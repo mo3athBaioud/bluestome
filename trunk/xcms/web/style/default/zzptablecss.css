@@ -1,0 +1,95 @@
+TD 
+{
+	FONT: 9pt ËÎÌו; CURSOR: default
+}
+TH 
+{
+	FONT: 10pt ËÎÌו; CURSOR: default;COLOR:WHITE;FONT-WEIGHT:BOLD
+}
+Table
+{
+	
+}
+.title 
+{
+	PADDING-RIGHT: 4px;
+	PADDING-LEFT: 4px; BACKGROUND: #4455aa;
+	PADDING-BOTTOM: 4px; OVERFLOW: hidden;
+	PADDING-TOP: 4px;
+	BORDER-RIGHT: #555 1px solid;
+	BORDER-TOP: #fff 1px solid;
+	BORDER-LEFT: #fff 1px solid; 
+	BORDER-BOTTOM: #555 0px solid; WHITE-SPACE: nowrap;
+	CURSOR: hand
+}
+
+.cdata 
+{
+	PADDING-RIGHT: 3px;
+	PADDING-LEFT: 3px;
+	PADDING-BOTTOM: 3px; OVERFLOW: hidden;
+	PADDING-TOP: 3px;
+	BORDER-TOP: #fff 1px solid;
+	BORDER-LEFT: #fff 1px solid;
+	BORDER-RIGHT: #ddd 1px solid;
+	BORDER-BOTTOM: #ddd 1px solid; WHITE-SPACE: nowrap
+}
+
+.coolMenu
+{
+	position: absolute;
+	height: 1px;
+	width: 1px;
+	font-size: 9pt;
+	background-color: menu;
+	border-top: 2px outset buttonhighlight;
+	border-left: 2px outset buttonhighlight;
+	border-bottom: 1px solid buttonshadow;
+	border-right: 1px solid buttonshadow;
+	visibility: hidden;
+}
+
+.coolMenu .coolMenuItem
+{
+	height: 20px;
+	margin: 1px;
+	padding-right: 10px;
+	cursor: hand;
+	overflow: hidden;
+}
+
+.coolMenu .coolMenuItem	IMG
+{
+	vertical-align: middle;
+	margin-left: 1px;
+	margin-right: 6px;
+}
+
+.coolMenu .coolMenuItem .coolMenuMore
+{
+	font-family: webdings;
+}
+
+.coolMenu .coolMenuDivider
+{
+	border: 1px inset;
+	border-top-color: buttonshadow;
+	border-bottom-color: buttonhighlight;
+	height: 2px;
+	overflow: hidden;
+	margin-left: 2px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+.sinput
+{
+	BORDER-BOTTOM: black 1px solid; 
+	BORDER-LEFT: 0px; 
+	BORDER-RIGHT: 0px; 
+	BORDER-TOP: 0px;	
+	FONT-FAMILY: ËÎÌו,Arial; 
+	FONT-SIZE: 9pt; 
+	WIDTH: 15pt;
+	height: 12pt;
+}
