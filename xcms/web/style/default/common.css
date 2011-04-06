@@ -1,0 +1,226 @@
+/********************* 通用样式定义 ************************/
+
+table,th,td,p,li,lu,input,textarea,select,dl,dd,div {
+	font-family: 宋体,"Tahoma", "Verdana", "Arial";
+	font-size: 9pt;
+}
+body,table,th,td,p,li,lu,div,a {
+	font-family:宋体;
+	line-height:17pt;
+	font-size:9pt;
+}
+
+body {
+	/*background-image:url(images/bg.gif);
+	background-color:#336699;*/
+	padding:5 5;
+	margin:0 0;
+}
+
+/** 放树型菜单的body */
+body.treemenu {
+	background-color:#D6DFF7;
+	background-image:url(images/blueBg.jpg);
+	margin:0px 0px;padding:2px 2px;
+}
+
+
+/*最外层表格样式*/
+TABLE.outer {
+	width:100%; 
+	height:100%;
+}
+
+TABLE.outer TD.content {
+	/*background-color:#DBEAF5;*/
+}
+
+TABLE.outer TD.left {
+	width:230px;
+	border-right:1 solid #bbb;
+}
+TABLE.outer TD.mainmenu {
+	height:50px;
+	text-align:left;
+	background-color:#285179;
+}
+
+
+/*导航条样式*/
+TABLE.mainmenu{
+	height:50px;
+	background-color:#285179;
+	color:white;
+}
+TABLE.mainmenu TD.item {
+	border-right:1 solid white;
+	cursor:hand;font-size:10pt;
+	padding-left:20px;padding-right:20px;
+	background-color:#285179;
+}
+TABLE.mainmenu TD.itemMOver {
+	background-color:#6699cc;
+	color:black;
+}
+
+ul.decimal {
+	list-style-type:decimal;
+}
+
+
+
+p.ulTitle {
+	font-weight:bold;font-size:10pt;
+}
+
+ul.links {
+	list-style-position:outside;
+	padding:0;
+	line-height:14px;
+}
+ul.links li{
+	list-style-type:circle;
+	line-height:20px;
+}
+
+ul.links li a {
+	color:#333366;
+	text-decoration:none;
+}
+ul.links li a:hover {
+	color:red;
+	text-decoration:underline;
+}
+
+.fontLight {
+	color:white;
+}
+
+.fontStress {
+	color:red;
+}
+
+a { font-size:9pt; }
+a.defaultBig { font-size:12pt; }
+a.defaultSmall { font-size:9pt; }
+
+a.light:link { font-size:9pt; color:#2F98FF; }
+a.light:visited { font-size:9pt; color:#800080; }
+a.light:hover { font-size:9pt; color:blue; }
+
+/** 列表链接的样式 */
+a.list {font-size:10pt;color:#333366;text-decoration:none;background-image:url(images/list.gif);padding-left:16px;background-repeat:no-repeat;}
+a.list:hover{color:red;}
+
+/** 添加链接的样式 */
+a.add {font-size:10pt;color:#333366;text-decoration:none;background-image:url(images/add.gif);padding-left:16px;background-repeat:no-repeat;}
+a.add:hover{color:red;}
+
+/** 上下间距 */
+div.space {
+	padding-bottom:10px;
+}
+
+div.title {
+	/*font-weight:bold;color:#444444;font-size:12pt;height:25px;width:100%;*/
+	font-size:11pt;color:#366798;height:25px;
+	padding-left:10px;
+	font-weight:normal;
+	text-align:center;
+	padding-top:5px;padding-bottom:2px;
+}
+
+.mainMenuItem {
+	background-image:url(images/tab.bg.off.gif);
+	border-left:1 solid #629DC5;border-right:1 solid #0C5280;
+	padding-left:15px;padding-right:15px;
+	color:white;font-weight:bold;
+	text-align:center;height:35px;cursor:hand;
+}
+
+span.stress {
+	color:red;padding-left:3px;
+}
+
+/*
+
+TABLE.outer TR.title {
+	background-color:#6699cc;
+}
+TABLE.outer TR.menu {
+	background-color:#15257D;
+	color:color:#6699cc;
+}
+TABLE.outer TD.lineLight {
+	height:1px;
+	background-color:white;
+}
+TABLE.outer TD.lineDark {
+	height:1px;
+	background-color:black;
+}
+TABLE.outer TD.leftArea {
+	background-color:#B6D0EB;
+}
+
+TABLE.outer TD.content {
+	padding:5px 5px;
+	line-height:18px;
+	color:444;
+}
+
+
+
+div.block {
+	
+	width:98%;margin-top:10px;
+	padding:0;
+	text-align:left;
+}
+div.blockTitle {
+	color:black;
+	font-weight:bold;font-size:9pt;
+	border-bottom:1 solid white;padding:2 2px;
+}
+div.blockContent {
+	padding:5 5px;color:#444444;
+}
+
+div.space {
+	padding-bottom:10px;
+}
+
+div.title {
+	font-size:11pt;color:#000099;
+}
+
+div.page {
+	border:1 dotted #B6D0EB;
+	color:#333;font-size:9pt;
+	padding:3px 3px;
+}
+
+*/
+
+
+
+/*
+a		{ color: #5B91CC }
+a:hover	{ color: #003399; text-decoration: none}
+
+
+a.mainMenu {color:#6699cc;text-decoration: none}
+a.mainMenu:hover {color:#DDDDDD;text-decoration: underline}
+
+a.title	{ font-size: 10.5pt; font-weight: bold; color: #003399;text-decoration: none }
+a.title:hover	{ font-size: 10.5pt; font-weight: bold; color: #BD4B00 }
+
+a.titleNormal {font-size:11pt;color:#000099;}
+a.titleNormal:hover {font-size:11pt;color:#000099;text-decoration: underline}
+a.titleNormal:visited {font-size:11pt;color:#800080;text-decoration: underline}
+
+a.page:link	{ font-size: 10.5pt;  color: #000099;text-decoration: underline }
+a.page:visited	{ font-size: 10.5pt; color: #800080;text-decoration: underline }
+a.page:hover	{ font-size: 10.5pt; color: red;text-decoration: underline }*/
+
+

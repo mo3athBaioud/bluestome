@@ -1,0 +1,22 @@
+[{
+		"text":"站点管理",
+		"id":"01",
+		"href":"pages/websites/website.jsp",
+		"leaf":true,
+		"icon":"images/html.png",
+		"hrefTarget":"center1"
+},{
+		"text":"USGS-地震数据管理",
+		"id":"02",
+		"href":"pages/usgs/usgs.jsp",
+		"leaf":true,
+		"icon":"images/html.png",
+		"hrefTarget":"center2"
+},{
+		"text":"系统配置管理",
+		"id":"03",
+		"href":"pages/sysconfig/sysconfig.jsp",
+		"leaf":true,
+		"icon":"images/html.png",
+		"hrefTarget":"mainFrame"
+}]

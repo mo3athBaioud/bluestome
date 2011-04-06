@@ -1,0 +1,25 @@
+#Wed Apr 06 15:12:05 CST 2011
+eclipse.preferences.version=1
+encoding//web/resource/commonjs/eredg4.js=UTF-8
+encoding//web/scripts/customimei/imei_custom.js=UTF-8
+encoding//web/scripts/imeiextends/imei_extends.js=UTF-8
+encoding//web/scripts/imeimanager/imei_exception_deal.js=UTF-8
+encoding//web/scripts/imeimanager/imei_export.js=UTF-8
+encoding//web/scripts/imeimanager/imei_import.js=UTF-8
+encoding//web/scripts/imeimanager/imei_query.js=UTF-8
+encoding//web/scripts/iquery/bat_db.js=UTF-8
+encoding//web/scripts/iquery/bat_rb.js=UTF-8
+encoding//web/scripts/iquery/bat_utp.js=UTF-8
+encoding//web/scripts/iquery/db.js=UTF-8
+encoding//web/scripts/iquery/rb.js=UTF-8
+encoding//web/scripts/iquery/utp.js=UTF-8
+encoding//web/scripts/system/loginLog.js=UTF-8
+encoding//web/scripts/system/opLog.js=UTF-8
+encoding//web/scripts/system/sysMenu.js=UTF-8
+encoding//web/scripts/system/sysOperator.js=UTF-8
+encoding//web/scripts/system/sysRole.js=UTF-8
+encoding//web/scripts/terminal/terminal.js=UTF-8
+encoding//web/scripts/terminal/terminal_1.js=UTF-8
+encoding//web/scripts/terminal/terminal_2.js=UTF-8
+encoding//web/scripts/terminal/terminal_business.js=UTF-8
+encoding//web/scripts/upload/UploadDialog.js=UTF-8
