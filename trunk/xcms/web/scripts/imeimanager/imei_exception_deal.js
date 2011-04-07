@@ -252,7 +252,7 @@ Ext.onReady(function(){
 	
 	app.update_btn = new Ext.Button({ 
 		text : '编辑',
-		iconCls : 'icon-edit',
+		iconCls : 'icon-bug_edit',
 		handler : function() {
 			if(app.grid.getSelectionModel().getSelected()){
 				var record = app.grid.getSelectionModel().getSelected();
@@ -402,7 +402,7 @@ Ext.onReady(function(){
 		
 	app.grid = new Ext.grid.GridPanel({
 		title : '异常IMEI处理',
-		iconCls : 'icon-plugin',
+		iconCls : 'icon-cart_error',
 		region : 'center',
 		loadMask : {
 			msg : '数据加载中...'

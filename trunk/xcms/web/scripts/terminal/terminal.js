@@ -627,7 +627,7 @@ Ext.onReady(function(){
         ]
     });
 	
-	app.ds_utp.loadData(app.data);
+//	app.ds_utp.loadData(app.data);
 	
 	app.ptb = new Ext.PagingToolbar({
 		pageSize:app.limit,
@@ -639,7 +639,7 @@ Ext.onReady(function(){
 		
 	app.grid = new Ext.grid.GridPanel({
 		title : '正式终端数据管理',
-		iconCls : 'icon-plugin',
+		iconCls : 'icon-monitor_lightning',
 		region : 'center',
 		loadMask : {
 			msg : '数据加载中...'
@@ -670,5 +670,68 @@ Ext.onReady(function(){
 				}
 	});
 
-    app.grid.render('terminal');
+//    app.grid.render('terminal');
+    
+	var root = new Ext.tree.AsyncTreeNode({
+		text : '手机品牌',
+		expanded : true,
+		id : '001'
+	});
+	
+	var hsBrandTree = new Ext.tree.TreePanel({
+		loader : new Ext.tree.TreeLoader({
+					baseAttrs : {},
+					dataUrl : '/tree/hs_brand.json'
+				}),
+		root : root,
+		title : '',
+		applyTo : 'terminal_brand',
+		autoScroll : false,
+		animate : false,
+		useArrows : false,
+		border : false
+	});
+	
+	hsBrandTree.root.select();
+	
+	hsBrandTree.on('click', function(node) {
+		app.ds_utp.loadData(app.data);
+		/**
+		deptid = node.attributes.id;
+		store.load({
+			params : {
+				start : 0,
+				limit : bbar.pageSize,
+				deptid : deptid
+			}
+		});
+		**/
+	});
+	
+	var viewport = new Ext.Viewport({
+		layout : 'border',
+		items : [{
+					title : '<span style="font-weight:normal">手机品牌</span>',
+					iconCls : 'icon-phone',
+					tools : [{
+								id : 'refresh',
+								handler : function() {
+									hsBrandTree.root.reload()
+								}
+							}],
+					collapsible : true,
+					width : 210,
+					minSize : 160,
+					maxSize : 280,
+					split : true,
+					region : 'west',
+					autoScroll : true,
+					// collapseMode:'mini',
+					items : [hsBrandTree]
+				}, {
+					region : 'center',
+					layout : 'fit',
+					items : [app.grid]
+				}]
+	});
 }); 

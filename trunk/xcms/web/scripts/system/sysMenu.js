@@ -747,7 +747,7 @@ Ext.onReady(function(){
 	var grid_sysmenu = new Ext.grid.GridPanel({
 		title : '菜单管理',
 //		width:800,
-		height:true,
+		height:500,
 		autoScroll: true,
 		iconCls : 'icon-plugin',
 		region : 'center',

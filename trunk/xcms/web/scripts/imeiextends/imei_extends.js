@@ -461,14 +461,13 @@ Ext.onReady(function(){
 		
 	app.grid = new Ext.grid.GridPanel({
 		title : '扩展IMEI管理',
-		iconCls : 'icon-plugin',
+		iconCls : 'icon-basket_go',
 		region : 'center',
 		loadMask : {
 			msg : '数据加载中...'
 		},
 	    cm: app.cm_utp,
 	    ds: app.ds_utp,
-//	    width:1000,
 	    height:500,
         autoScroll: true,
 		sm:app.sm,
