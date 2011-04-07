@@ -5,6 +5,8 @@
 		<meta http-equiv="cache-control" content="no-cache, must-revalidate">
 		<meta http-equiv="expires" content="0">
 		<link rel="stylesheet" type="text/css"
+			href="/style/index.css" />
+		<link rel="stylesheet" type="text/css"
 			href="/resource/css/ext_icon.css" />
 		<link rel="stylesheet" type="text/css"
 			href="/resource/theme/default/resources/css/ext-all.css" />
@@ -41,7 +43,6 @@
 	</head>
 	<script type="text/javascript"
 		src="/resource/commonjs/extTabCloseMenu.js"></script>
-	<script type="text/javascript" src="/arm/js/index.js"></script>
 	<body>
 		<div id="themeTreeDiv" class="x-hidden"></div>
 		<div id="previewDiv" class="x-hidden">
@@ -186,13 +187,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
         'click': function(){
 
-           addTab('pages/terminal/terminal_1.html','终端一级数据维护','01010401','shortName -> 系统管理 -> 终端管理 -> 终端一级数据维护','server_connect.png');
+           addTab('pages/terminal/terminal_1.html','终端一级数据维护','01010401','shortName -> 系统管理 -> 终端管理 -> 终端一级数据维护','xhtml.png');
 
          }},
 
     	expanded:false,
 
-        iconCls:'server_connectIcon',
+        iconCls:'icon-xhtml',
 
         id:'id_node_01010401'
 
@@ -206,13 +207,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/imei/imei_import.html','通话IMEI导入','01010301','shortName -> 系统管理 -> 通话IMEI管理 -> 通话IMEI导入','application_view_list.png');
+             addTab('pages/imei/imei_import.html','通话IMEI导入','01010301','shortName -> 系统管理 -> 通话IMEI管理 -> 通话IMEI导入','cart_put.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'applicationIcon',
+        iconCls:'icon-cart_put',
 
         id:'id_node_01010301'
 
@@ -262,13 +263,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/imei/imei_query.html','通话IMEI查询','01010302','shortName -> 系统管理 -> 通话IMEI管理 -> 通话IMEI查询','config.png');
+             addTab('pages/imei/imei_query.html','通话IMEI查询','01010302','shortName -> 系统管理 -> 通话IMEI管理 -> 通话IMEI查询','cart.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'configIcon',
+        iconCls:'icon-cart',
 
         id:'id_node_01010302'
 
@@ -282,13 +283,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/terminal/terminal_2.html','终端二级数据维护','01010402','shortName -> 系统管理 -> 终端管理 -> 终端二级数据维护','user_comment.png');
+             addTab('pages/terminal/terminal_2.html','终端二级数据维护','01010402','shortName -> 系统管理 -> 终端管理 -> 终端二级数据维护','script_lightning.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'user_commentIcon',
+        iconCls:'icon-script_lightning',
 
         id:'id_node_01010402'
 
@@ -322,13 +323,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/imei/imei_export.html','通话IMEI导出','01010303','shortName -> 系统管理 -> 通话IMEI管理 -> 通话IMEI导出','bug.png');
+             addTab('pages/imei/imei_export.html','通话IMEI导出','01010303','shortName -> 系统管理 -> 通话IMEI管理 -> 通话IMEI导出','cart_remove.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'bugIcon',
+        iconCls:'icon-cart_remove',
 
         id:'id_node_01010303'
 
@@ -342,13 +343,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/imei/imei_export.html','异常通话IMEI处理','01010304','shortName -> 系统管理 -> 通话IMEI管理 -> 异常通话IMEI处理','bug.png');
+             addTab('pages/imei/imei_exception.html','异常通话IMEI处理','01010304','shortName -> 系统管理 -> 通话IMEI管理 -> 异常通话IMEI处理','cart_error.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'bugIcon',
+        iconCls:'icon-cart_error',
 
         id:'id_node_01010304'
 
@@ -382,13 +383,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/terminal/terminal.html','正式终端数据维护','01010403','shortName -> 系统管理 -> 终端管理 -> 正式终端数据维护','database_refresh.png');
+             addTab('pages/terminal/terminal.html','正式终端数据维护','01010403','shortName -> 系统管理 -> 终端管理 -> 正式终端数据维护','monitor_lightning.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'database_refreshIcon',
+        iconCls:'icon-monitor_lightning',
 
         id:'id_node_01010403'
 
@@ -422,13 +423,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 			
-             addTab('pages/terminal/terminal_business.html','业务终端关联维护','01010404','shortName -> 系统管理 -> 终端管理 -> 业务终端关联维护','plugin.png');
+             addTab('pages/terminal/terminal_business.html','业务终端关联维护','01010404','shortName -> 系统管理 -> 终端管理 -> 业务终端关联维护','script_link.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'pluginIcon',
+        iconCls:'icon-script_link',
 
         id:'id_node_01010404'
 
@@ -442,13 +443,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/system/opLog.html','操作日志','01010501','shortName -> 系统管理 -> 日志管理 -> 操作日志','application_view_list.png');
+             addTab('pages/system/opLog.html','操作日志','01010501','shortName -> 系统管理 -> 日志管理 -> 操作日志','page_white_text.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'applicationIcon',
+        iconCls:'icon-page_white_text',
 
         id:'id_node_01010501'
 
@@ -462,13 +463,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/system/loginLog.html','操作日志','01010502','shortName -> 系统管理 -> 日志管理 -> 登录日志','application_view_list.png');
+             addTab('pages/system/loginLog.html','操作日志','01010502','shortName -> 系统管理 -> 日志管理 -> 登录日志','page_white_text.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'applicationIcon',
+        iconCls:'icon-page_white_text',
 
         id:'id_node_01010502'
 
@@ -482,7 +483,7 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/system/opLog.html','基础报表','01010601','shortName -> 系统管理 -> 统计分析 -> 基础报表','application_view_list.png');
+             addTab('pages/system/opLog.html','基础报表','01010601','shortName -> 系统管理 -> 统计分析 -> 基础报表','chart_pie.png');
 
            }},
 
@@ -502,7 +503,7 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/system/loginLog.html','自定义报表','01010602','shortName -> 系统管理 -> 统计分析 -> 自定义报表','application_view_list.png');
+             addTab('pages/system/loginLog.html','自定义报表','01010602','shortName -> 系统管理 -> 统计分析 -> 自定义报表','chart_pie.png');
 
            }},
 
@@ -522,13 +523,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/customimei/imei_custom.html','外呼数据管理','01010701','shortName -> 系统管理 -> 外呼数据管理 -> 外呼数据管理','application_view_list.png');
+             addTab('pages/customimei/imei_custom.html','外呼数据管理','01010701','shortName -> 系统管理 -> 外呼数据管理 -> 外呼数据管理','telephone.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'applicationIcon',
+        iconCls:'icon-telephone',
 
         id:'id_node_01010701'
 
@@ -542,13 +543,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/imeiextends/imei_extends.html','扩展IMEI管理','01010801','shortName -> 系统管理 -> 扩展IMEI管理 -> 扩展IMEI管理','application_view_list.png');
+             addTab('pages/imeiextends/imei_extends.html','扩展IMEI管理','01010801','shortName -> 系统管理 -> 扩展IMEI管理 -> 扩展IMEI管理','basket_go.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'applicationIcon',
+        iconCls:'icon-basket_go',
 
         id:'id_node_01010801'
 
@@ -565,7 +566,7 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
     	expanded:false,
 
-        iconCls:'applicationIcon',
+        iconCls:'icon-magnifier',
 
         id:'id_node_01010901'
 
@@ -579,13 +580,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/iquery/utp.html','用户终端属性查询','0101090101','shortName -> 数据查询 -> 单项业务数据查询 -> 用户终端属性查询','application_view_list.png');
+             addTab('pages/iquery/utp.html','用户终端属性查询','0101090101','shortName -> 数据查询 -> 单项业务数据查询 -> 用户终端属性查询','application_view_columns.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'applicationIcon',
+        iconCls:'icon-application_view_columns',
 
         id:'id_node_0101090101'
 
@@ -599,13 +600,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/iquery/rb.html','租机业务推荐查询','0101090102','shortName -> 数据查询 -> 单项业务数据查询 -> 租机业务推荐查询','application_view_list.png');
+             addTab('pages/iquery/rb.html','租机业务推荐查询','0101090102','shortName -> 数据查询 -> 单项业务数据查询 -> 租机业务推荐查询','application_view_columns.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'applicationIcon',
+        iconCls:'icon-application_view_columns',
 
         id:'id_node_0101090102'
 
@@ -619,13 +620,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/iquery/db.html','数据业务推荐查询','0101090103','shortName -> 系统管理 -> 统计分析 -> 数据业务推荐查询','application_view_list.png');
+             addTab('pages/iquery/db.html','数据业务推荐查询','0101090103','shortName -> 系统管理 -> 统计分析 -> 数据业务推荐查询','application_view_columns.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'applicationIcon',
+        iconCls:'icon-application_view_columns',
 
         id:'id_node_0101090103'
 
@@ -642,7 +643,7 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
     	expanded:false,
 
-        iconCls:'applicationIcon',
+        iconCls:'icon-magnifier',
 
         id:'id_node_01010902'
 
@@ -656,13 +657,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/iquery/bat_utp.html','用户终端属性查询','0101090201','shortName -> 系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量用户终端属性查询','application_view_list.png');
+             addTab('pages/iquery/bat_utp.html','用户终端属性查询','0101090201','shortName -> 系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量用户终端属性查询','application_view_columns.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'icon-application',
+        iconCls:'icon-application_view_columns',
 
         id:'id_node_0101090201'
 
@@ -676,13 +677,13 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/iquery/bat_rb.html','租机业务推荐查询','0101090202','shortName ->系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量租机业务推荐查询','application_view_list.png');
+             addTab('pages/iquery/bat_rb.html','租机业务推荐查询','0101090202','shortName ->系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量租机业务推荐查询','application_view_columns.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'applicationIcon',
+        iconCls:'icon-application_view_columns',
 
         id:'id_node_0101090202'
 
@@ -696,15 +697,84 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
 
           'click': function(){
 
-             addTab('pages/iquery/bat_db.html','数据业务推荐查询','0101090203','shortName -> 系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量数据业务推荐查询','application_view_list.png');
+             addTab('pages/iquery/bat_db.html','数据业务推荐查询','0101090203','shortName -> 系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量数据业务推荐查询','application_view_columns.png');
 
            }},
 
     	expanded:false,
 
-        iconCls:'applicationIcon',
+        iconCls:'icon-application_view_columns',
 
         id:'id_node_0101090203'
+
+    });
+    
+     var node_020110 = new Ext.tree.TreeNode({
+        text:'参数管理',
+        listeners: {
+        'click': function(){
+         }},
+    	expanded:true,
+        id:'id_node_010110'
+    });
+    
+      var node_02011001 = new Ext.tree.TreeNode({
+
+        text:'常量数据管理',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/iquery/bat_db.html','常量数据管理','02011001','shortName -> 系统管理 -> 参数管理 -> 常量数据管理','application_view_columns.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'icon-application_view_columns',
+
+        id:'id_node_02011001'
+
+    });
+
+      var node_02011002 = new Ext.tree.TreeNode({
+
+        text:'系统参数管理',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/iquery/bat_db.html','系统参数管理','02011002','shortName -> 系统管理 -> 参数管理 -> 系统参数管理','application_view_columns.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'icon-application_view_columns',
+
+        id:'id_node_02011002'
+
+    });
+    
+      var node_02011003 = new Ext.tree.TreeNode({
+
+        text:'手机品牌管理',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/system/sysPhone.html','手机品牌管理','02011003','shortName -> 系统管理 -> 参数管理 -> 手机品牌管理','phone.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'icon-phone',
+
+        id:'id_node_02011003'
 
     });
     
@@ -773,6 +843,14 @@ Ext.BLANK_IMAGE_URL= './resource/image/ext/s.gif';
     node_01010902.appendChild(node_0101090203);
     
 	node_010109.appendChild(node_01010902);
+	
+	node_0201.appendChild(node_020110);
+	
+	node_020110.appendChild(node_02011001);
+	
+	node_020110.appendChild(node_02011002);
+	
+	node_020110.appendChild(node_02011003);
 
     var treePanel_0101 = new Ext.tree.TreePanel({
 
@@ -874,7 +952,7 @@ Ext.onReady(function(){
                     	}
                    	  },
 
-                      html:"<iframe name='mainFrame'  src='http://www.javaeye.com' scrolling='auto' frameborder='0' width='100%' height='100%' ></iframe>"
+                      html:"<iframe name='mainFrame'  src='info.html' scrolling='auto' frameborder='0' width='100%' height='100%' ></iframe>"
 
                     }]
 
