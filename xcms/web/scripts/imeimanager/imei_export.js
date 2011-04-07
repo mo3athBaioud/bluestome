@@ -193,7 +193,7 @@ Ext.onReady(function(){
 		
 	app.grid = new Ext.grid.GridPanel({
 		title : '通话IMEI导出',
-		iconCls : 'icon-plugin',
+		iconCls : 'icon-cart_remove',
 		region : 'center',
 		loadMask : {
 			msg : '数据加载中...'

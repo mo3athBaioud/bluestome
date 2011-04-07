@@ -601,7 +601,7 @@ Ext.onReady(function(){
 		
 	app.grid = new Ext.grid.GridPanel({
 		title : '外呼数据管理',
-		iconCls : 'icon-plugin',
+		iconCls : 'icon-telephone',
 		region : 'center',
 		loadMask : {
 			msg : '数据加载中...'

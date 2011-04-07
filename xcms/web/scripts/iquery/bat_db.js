@@ -245,7 +245,7 @@ Ext.onReady(function(){
 		
 	app.grid = new Ext.grid.GridPanel({
 		title : '数据业务推荐查询',
-		iconCls : 'icon-plugin',
+		iconCls : 'icon-application_view_columns',
 		region : 'center',
 		loadMask : {
 			msg : '数据加载中...'

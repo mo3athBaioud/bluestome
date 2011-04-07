@@ -263,7 +263,7 @@ Ext.onReady(function(){
 		
 	app.grid = new Ext.grid.GridPanel({
 		title : '用户终端属性查询',
-		iconCls : 'icon-plugin',
+		iconCls : 'icon-application_view_columns',
 		region : 'center',
 		loadMask : {
 			msg : '数据加载中...'

@@ -239,7 +239,7 @@ Ext.onReady(function(){
 		
 	app.grid = new Ext.grid.GridPanel({
 		title : '通话IMEI查询',
-		iconCls : 'icon-plugin',
+		iconCls : 'icon-cart',
 		region : 'center',
 		loadMask : {
 			msg : '数据加载中...'

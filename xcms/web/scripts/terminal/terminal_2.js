@@ -562,7 +562,7 @@ Ext.onReady(function(){
 	
 	app.btn_transto_office = new Ext.Button({
 		text : '转入正式数据',
-		iconCls : 'icon-edit',
+		iconCls : 'icon-monitor_lightning',
 		handler : function(){
 			if(app.grid.getSelectionModel().getSelected()){
 				Ext.Msg.confirm('转入正式终端数据', '你确定需要转入所选终端数据到正式数据下?', function(btn) {
@@ -639,7 +639,7 @@ Ext.onReady(function(){
 		
 	app.grid = new Ext.grid.GridPanel({
 		title : '二级终端数据管理',
-		iconCls : 'icon-plugin',
+		iconCls : 'icon-script_lightning',
 		region : 'center',
 		loadMask : {
 			msg : '数据加载中...'
@@ -647,6 +647,7 @@ Ext.onReady(function(){
 	    cm: app.cm_utp,
 	    ds: app.ds_utp,
 //	    width:1000,
+		applyTo : 'terminal_2',
 	    height:550,
         autoScroll: true,
         viewConfig: {
@@ -670,5 +671,69 @@ Ext.onReady(function(){
 				}
 	});
 
-    app.grid.render('terminal_2');
+//    app.grid.render('terminal_2');
+    
+	var root = new Ext.tree.AsyncTreeNode({
+		text : '手机品牌',
+		expanded : true,
+		id : '001'
+	});
+	
+	var hsBrandTree = new Ext.tree.TreePanel({
+		loader : new Ext.tree.TreeLoader({
+			baseAttrs : {},
+			dataUrl : '/tree/hs_brand.json'
+		}),
+		root : root,
+		title : '',
+		applyTo : 'terminal_brand',
+		autoScroll : false,
+		animate : false,
+		useArrows : false,
+		border : false
+	});
+	
+	hsBrandTree.root.select();
+	
+	hsBrandTree.on('click', function(node) {
+		app.ds_utp.loadData(app.data);
+		/**
+		deptid = node.attributes.id;
+		store.load({
+			params : {
+				start : 0,
+				limit : bbar.pageSize,
+				deptid : deptid
+			}
+		});
+		**/
+	});
+	
+	var viewport = new Ext.Viewport({
+		layout : 'border',
+		items : [{
+					title : '<span style="font-weight:normal">手机品牌</span>',
+					iconCls : 'icon-phone',
+					tools : [{
+						id : 'refresh',
+						handler : function() {
+							hsBrandTree.root.reload()
+						}
+					}],
+					collapsible : true,
+					width : 210,
+					minSize : 160,
+					maxSize : 280,
+					split : true,
+					region : 'west',
+					autoScroll : true,
+					// collapseMode:'mini',
+					items : [hsBrandTree]
+				}, {
+					region : 'center',
+					layout : 'fit',
+					items : [app.grid]
+				}]
+	});
+    
 });
