@@ -1,7 +1,8 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 	<head>
 		<meta content="text/html; charset=UTF-8" http-equiv="content-type">
-		<title>一级终端数据管理</title>
+		<title>手机品牌管理</title>
 		<link rel="stylesheet" type="text/css"
 			href="../../resources/css/ext-all.css" />
 		<link rel="stylesheet" type="text/css"
@@ -47,29 +48,12 @@
 		<script type="text/javascript" src="../../scripts/common/UploadDialog.js"></script>
 		<script type="text/javascript" src="../../scripts/common/RowExpander.js"></script>
 		<script type="text/javascript" src="../../scripts/common/examples.js"></script>
-		<script type="text/javascript" src="../../scripts/terminal/terminal_1.js"></script>
-		<script type="text/javascript">
-		Ext.EventManager.on(window, 'load', function(){
-			 setTimeout(
-				 function() {
-					Ext.get('loading').remove();
-					Ext.get('loading-mask').fadeOut({remove:true});
-					}, 5); 
-		});
-		</script>
+		<script type="text/javascript" src="../../scripts/common/validation.js"></script>
+		<script type="text/javascript" src="../../scripts/common/TreeCheckNodeUI.js"></script>
+		<script type="text/javascript" src="../../scripts/system/sysPhone.js"></script>
 	</head>
 	<body>
-			<DIV id=loading-mask></DIV>
-			<DIV id=loading>
-			<DIV class=loading-indicator>
-			<IMG style="MARGIN-RIGHT: 5px" 
-				height=16
-				src="/resource/image/ajax.gif"
-				width=16 align=absMiddle>正在载入页面,请稍等...</DIV>
-			</DIV>
 			<div id="terminal_brand"></div>
-			<div id="terminal_1"></div>
-			<!-- 
-			 -->
+			<div id="sysPhone"></div>
 	</body>
 </html>
