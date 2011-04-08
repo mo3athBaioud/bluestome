@@ -234,7 +234,7 @@ public class MilitaryParser {
 							System.err.println("缓存中已存在地址["+bean.getLink()+"]");
 							continue;
 						}
-						if (HttpClientUtils.validationURL(bean.getLink())) {
+//						if (HttpClientUtils.validationURL(bean.getLink())) {
 							acticle = new Article();
 							acticle.setArticleUrl(bean.getLink());
 							acticle.setTitle(bean.getName());
@@ -297,15 +297,15 @@ public class MilitaryParser {
 								if (null == client.get(aKey)) {
 									client.add(aKey, acticle);
 								}
-								getImage(result);
+//								getImage(result);
 							}else{
 								System.out.println(">> 添加文章失败");
 							}
-						} else {
-							System.err.println(">> getActicle 地址暂不可用 ["
-									+ bean.getLink() + "]");
-							continue;
-						}
+//						} else {
+//							System.err.println(">> getActicle 地址暂不可用 ["
+//									+ bean.getLink() + "]");
+//							continue;
+//						}
 					} catch (Exception e) {
 						LINKLIST.add(bean);
 						e.printStackTrace();
@@ -503,18 +503,19 @@ public class MilitaryParser {
 						List<ImageBean> imgList = XMLParser
 								.readXmlFromURL(article.getActicleXmlUrl());
 						if(null != imgList && imgList.size() > 0){
+							String length = "0";
 							for (ImageBean bean : imgList) {
-								if (!HttpClientUtils
-										.validationURL(bean.getImgUrl())
-										|| !HttpClientUtils.validationURL(bean
-												.getHttpUrl())) {
-									System.err.println(">> 地址不通["
-											+ bean.getHttpUrl() + "]");
-									continue;
-								}
-								String length = HttpClientUtils
-										.getHttpHeaderResponse(bean.getHttpUrl(),
-												"Content-Length");
+//								if (!HttpClientUtils
+//										.validationURL(bean.getImgUrl())
+//										|| !HttpClientUtils.validationURL(bean
+//												.getHttpUrl())) {
+//									System.err.println(">> 地址不通["
+//											+ bean.getHttpUrl() + "]");
+//									continue;
+//								}
+//								String length = HttpClientUtils
+//										.getHttpHeaderResponse(bean.getHttpUrl(),
+//												"Content-Length");
 								System.out.println(">> Content-Length:" + length);
 								if (null != length) {
 									bean.setFileSize(Long.valueOf(length));
@@ -528,18 +529,18 @@ public class MilitaryParser {
 										System.out.println("图片标题为："
 												+ bean.getTitle() + ",未添加到数据库");
 									} else {
-										bean.setId(result);
+//										bean.setId(result);
 										client.add(bean.getHttpUrl(), bean
 												.getHttpUrl());
 										client.add(CacheUtils.getImageKey(result),
 												bean);
-										if(imgDownload(bean, article.getWebId())){
-											bean.setLink("FD");
-											if(imageDao.update(bean)){
-												System.out
-														.println(">> 图片下载成功，更新[tbl_image("+bean.getArticleId()+"|"+bean.getId()+")]图片记录");
-											}
-										}
+//										if(imgDownload(bean, article.getWebId())){
+//											bean.setLink("FD");
+//											if(imageDao.update(bean)){
+//												System.out
+//														.println(">> 图片下载成功，更新[tbl_image("+bean.getArticleId()+"|"+bean.getId()+")]图片记录");
+//											}
+//										}
 									}
 								}
 							}
@@ -575,7 +576,10 @@ public class MilitaryParser {
 			length = String.valueOf(big.length);
 			if(length.equalsIgnoreCase("20261") || length.equalsIgnoreCase("3267") || length.equalsIgnoreCase("4096")){
 				System.out.println(">>> 尝试使用Referer来获取图片");
-				big = HttpClientUtils.getResponseBodyAsByte(imgBean.getReferer(), null, imgBean.getHttpUrl());
+				big = HttpClientUtils.getResponseBodyAsByte(imgBean.getHttpUrl(), null, imgBean.getHttpUrl());
+				if(null == big){
+					return false;
+				}
 				length = String.valueOf(big.length);
 				if(length.equalsIgnoreCase("20261") || length.equalsIgnoreCase("3267") || length.equalsIgnoreCase("4096")){
 					System.err.println("下载被屏蔽，未突破盗链系统...");
@@ -616,14 +620,19 @@ public class MilitaryParser {
 					+ fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
-				boolean b = picFiledao.insert(bean);
-				if (b) {
-					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
-							+ bean.getName()), bean);
-					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
-							+ bean.getSmallName()), bean);
-					return true;
-				} else {
+				imgBean.setFileSize(Long.valueOf(length));
+				if(imageDao.update(imgBean)){
+					boolean b = picFiledao.insert(bean);
+					if (b) {
+						client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+								+ bean.getName()), bean);
+						client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+								+ bean.getSmallName()), bean);
+						return true;
+					} else {
+						return false;
+					}
+				}else{
 					return false;
 				}
 			} catch (Exception e) {
@@ -805,6 +814,49 @@ public class MilitaryParser {
 
 	}
 
+	/**
+	 * 获取图片连接数据
+	 * @throws Exception
+	 */
+	static void getArticleImages() throws Exception{
+		List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
+		for (WebsiteBean bean : list) {
+			List<Article> alist = articleDao.findByWebId(bean.getId(), "NED");
+			for(Article a:alist){
+				getImage(a.getId());
+			}
+			
+		}
+	}
+	
+	
+	/**
+	 * 下载图片文件
+	 * @throws Exception
+	 */
+	static void downloadImages() throws Exception{
+		List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
+		for (WebsiteBean bean : list) {
+			List<Article> alist = articleDao.findByWebId(bean.getId(), "FD");
+			for(Article a:alist){
+				System.out.println(" >> "+a.getId()+"|"+a.getTitle());
+				List<ImageBean> mlist = imageDao.findImage(a.getId());
+				for(ImageBean img:mlist){
+					if(img.getLink().equals("NED")){
+					if(imgDownload(img, bean.getId())){
+						img.setLink("FD");
+						if (imageDao.update(img)) {
+							System.out.println(">> 保存图片["
+									+ img.getHttpUrl() + "]成功");
+						}
+					}
+					}
+				}
+			}
+			
+		}
+	}
+	
 	public static void main(String args[]) {
 		try {
 
@@ -814,7 +866,11 @@ public class MilitaryParser {
 
 //			 index();
 
-			getActicle(D_PARENT_ID); // 5 , 143
+//			getActicle(D_PARENT_ID); // 5 , 143
+
+//			getArticleImages();
+			
+			downloadImages();
 
 //			getActicle(143); // 5 , 143
 			
