@@ -943,7 +943,15 @@ public class The51PPParser {
 				imgBean.getHttpUrl().lastIndexOf("/") + 1,
 				imgBean.getHttpUrl().length());
 		s_fileName = s_fileName.replace(".", "_s.");
+		String length = "0";
 		try {
+			byte[] big = null;
+			big = HttpClientUtils.getResponseBodyAsByte(imgBean
+					.getCommentshowurl(), null, imgBean.getHttpUrl());
+			if (null == big)
+				return false;
+			length = String.valueOf(big.length);
+			
 			bean = new PicfileBean();
 			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH + 
 					StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
@@ -973,13 +981,18 @@ public class The51PPParser {
 					+ File.separator + fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
-				boolean b = picFiledao.insert(bean);
-				if (b) {
-					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
-							+ bean.getName()), bean);
-					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
-							+ bean.getSmallName()), bean);
-				} else {
+				imgBean.setFileSize(Long.valueOf(length));
+				if(imageDao.update(imgBean)){
+					boolean b = picFiledao.insert(bean);
+					if (b) {
+						client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+								+ bean.getName()), bean);
+						client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+								+ bean.getSmallName()), bean);
+					} else {
+						return false;
+					}
+				}else{
 					return false;
 				}
 			} catch (Exception e) {
