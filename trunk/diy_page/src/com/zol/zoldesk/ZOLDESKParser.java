@@ -619,7 +619,7 @@ public class ZOLDESKParser {
 		// init();
 		try {
 			// catalog(URL);
-//			 update();
+			 update();
 //			 vistDesk();
 //			threadParser();
 			loadImg();
@@ -891,13 +891,18 @@ public class ZOLDESKParser {
 					+ fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
-				boolean b = picFiledao.insert(bean);
-				if (b) {
-					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
-							+ bean.getName()), bean);
-					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
-							+ bean.getSmallName()), bean);
-				} else {
+				imgBean.setFileSize(Long.valueOf(length));
+				if(imageDao.update(imgBean)){
+					boolean b = picFiledao.insert(bean);
+					if (b) {
+						client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+								+ bean.getName()), bean);
+						client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+								+ bean.getSmallName()), bean);
+					} else {
+						return false;
+					}
+				}else{
 					return false;
 				}
 			} catch (Exception e) {
