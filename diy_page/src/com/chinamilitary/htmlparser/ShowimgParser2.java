@@ -1270,14 +1270,19 @@ public class ShowimgParser2 {
 					+ fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
-				boolean b = picFileDao.insert(bean);
-				if (b) {
-					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
-							+ bean.getName()), bean);
-					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
-							+ bean.getSmallName()), bean);
-				} else {
-					System.out.println(">> 添加图片数据失败");
+				imgBean.setFileSize(Long.valueOf(length));
+				if(imageDao.update(imgBean)){
+					boolean b = picFileDao.insert(bean);
+					if (b) {
+						client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+								+ bean.getName()), bean);
+						client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+								+ bean.getSmallName()), bean);
+					} else {
+						System.out.println(">> 添加图片数据失败");
+						return false;
+					}
+				}else{
 					return false;
 				}
 			} catch (Exception e) {
