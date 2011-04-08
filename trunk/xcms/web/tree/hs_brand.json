@@ -1,0 +1,185 @@
+[
+	{
+		"text":"诺基亚",
+		"id":"01",
+		"children":[
+			{
+					"text":"诺基亚 C7",
+					"id":"0102",
+					"leaf":true
+			},{
+					"text":"诺基亚 C5",
+					"id":"0103",
+					"leaf":true
+			},{
+					"text":"诺基亚 C4",
+					"id":"0104",
+					"leaf":true
+			},{
+					"text":"诺基亚 C3",
+					"id":"0105",
+					"leaf":true
+			}
+			
+		]
+	},{
+		"text":"摩托罗拉",
+		"id":"02",
+		"children":[
+			{
+				"text":"摩托罗拉 MB525 Defy",
+				"id":"0201",
+				"leaf":true,
+				"href":"pages/imei/imei_import.html",
+				"hrefTarget":"mainFrame",
+				"jsArray":[
+                     {"js":"modules/sp/spType.js"}
+				]
+			},
+			{
+				"text":"摩托罗拉 CLIQ(MB200)",
+				"id":"0202",
+				"leaf":true,
+				"href":"pages/imei/imei_query.html",
+				"hrefTarget":"mainFrame",
+				"jsArray":[
+					{"js":"modules/sp/spType.js"}
+				]
+			},
+			{
+				"text":"摩托罗拉 ME525",
+				"id":"0203",
+				"leaf":true,
+				"href":"pages/imei/imei_export.html",
+				"hrefTarget":"mainFrame",
+				"jsArray":[
+					{"js":"modules/test/miliAddr.js"}
+				]			
+			},
+			{
+				"text":"摩托罗拉 XT502",
+				"id":"0204",
+				"leaf":true,
+				"href":"pages/imei/imei_exception.html",
+				"hrefTarget":"mainFrame",
+				"jsArray":[
+					{"js":"modules/test/miliAddr.js"}
+				]			
+			}
+		]
+	},{
+		"text":"三星",
+		"id":"03",
+		"children":[
+			{
+				"text":"三星 盖世 S5830",
+				"id":"0301",
+				"leaf":true,
+				"href":"pages/imeiextends/imei_extends.html",
+				"hrefTarget":"mainFrame"
+			},{
+				"text":"三星 i9000 Galaxy S 8G",
+				"id":"0302",
+				"leaf":true,
+				"href":"pages/imeiextends/imei_extends.html",
+				"hrefTarget":"mainFrame"
+			},{
+				"text":"三星 盖世 S5570",
+				"id":"0303",
+				"leaf":true,
+				"href":"pages/imeiextends/imei_extends.html",
+				"hrefTarget":"mainFrame"
+			},{
+				"text":"三星 S5830 Galaxy Ace",
+				"id":"0304",
+				"leaf":true,
+				"href":"pages/imeiextends/imei_extends.html",
+				"hrefTarget":"mainFrame"
+			},{
+				"text":"三星 i5800 Galaxy 3",
+				"id":"0305",
+				"leaf":true,
+				"href":"pages/imeiextends/imei_extends.html",
+				"hrefTarget":"mainFrame"
+			}
+		]
+	},{
+		"text":"索爱",
+		"id":"04",
+		"children":[
+			{
+				"text":"索爱 X10i",
+				"id":"0401",
+				"leaf":true,
+				"href":"pages/customimei/imei_custom.html",
+				"hrefTarget":"mainFrame"
+			},{
+				"text":"索爱 X8",
+				"id":"0402",
+				"leaf":true,
+				"href":"pages/customimei/imei_custom.html",
+				"hrefTarget":"mainFrame"
+			},{
+				"text":"索爱 W595",
+				"id":"0403",
+				"leaf":true,
+				"href":"pages/customimei/imei_custom.html",
+				"hrefTarget":"mainFrame"
+			},{
+				"text":"索爱 赏秀 U1",
+				"id":"0404",
+				"leaf":true,
+				"href":"pages/customimei/imei_custom.html",
+				"hrefTarget":"mainFrame"
+			}
+		]
+	},{
+		"text":"HTC",
+		"id":"05",
+		"children":[
+			{
+				"text":"HTC G11 Incredible S",
+				"id":"0501",
+				"leaf":true,
+				"href":"pages/terminal/terminal_1.html",
+				"hrefTarget":"mainFrame"
+			},
+			{
+				"text":"HTC G8 Wildfire",
+				"id":"0502",
+				"leaf":true,
+				"href":"pages/terminal/terminal_2.html",
+				"hrefTarget":"mainFrame"
+			},
+			{
+				"text":"HTC G7 Desire",
+				"id":"0503",
+				"leaf":true,
+				"href":"pages/terminal/terminal.html",
+				"hrefTarget":"mainFrame"
+			},
+			{
+				"text":"HTC G10 Desire HD",
+				"id":"0504",
+				"leaf":true,
+				"href":"pages/terminal/terminal_business.html",
+				"hrefTarget":"mainFrame"
+			}
+		]
+	},{
+		"text":"苹果",
+		"id":"06",
+		"children":[
+		    {
+		    	"text":"iPhone4",
+		    	"id":"060101",
+				"leaf":true
+		    },
+		    {
+		    	"text":"iPhone3GS",
+		    	"id":"060102",
+				"leaf":true
+		    }
+		]
+	}
+]
