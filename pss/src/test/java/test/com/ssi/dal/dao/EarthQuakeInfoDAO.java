@@ -111,7 +111,6 @@ public class EarthQuakeInfoDAO {
 		}
 	}
 	
-	@Test
 	public void insertDetail(){
 		List<EarthQuakeInfo> list =null;
 		HashMap map = new HashMap();
