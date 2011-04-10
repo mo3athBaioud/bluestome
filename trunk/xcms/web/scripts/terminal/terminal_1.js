@@ -712,7 +712,7 @@ Ext.onReady(function(){
 //    app.grid.render('terminal_1');
 
 	var root = new Ext.tree.AsyncTreeNode({
-		text : '手机品牌',
+		text : '手机品牌来源',
 		expanded : true,
 		id : '001'
 	});
@@ -720,7 +720,7 @@ Ext.onReady(function(){
 	var deptTree = new Ext.tree.TreePanel({
 		loader : new Ext.tree.TreeLoader({
 					baseAttrs : {},
-					dataUrl : '/tree/hs_brand.json'
+					dataUrl : '/tree/source_hs_brand.json'
 				}),
 		root : root,
 		title : '',
@@ -750,7 +750,7 @@ Ext.onReady(function(){
 	var viewport = new Ext.Viewport({
 			layout : 'border',
 			items : [{
-						title : '<span style="font-weight:normal">手机品牌</span>',
+						title : '<span style="font-weight:normal">手机品牌来源</span>',
 						iconCls : 'icon-phone',
 						tools : [{
 									id : 'refresh',

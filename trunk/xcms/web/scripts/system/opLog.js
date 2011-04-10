@@ -289,7 +289,7 @@ Ext.onReady (function(){
 							readOnly:true,
 							value:(records.get('D_ISDEL')==1?'未删除':'已删除')
 						}],
-					buttonAlign:'right',
+					buttonAlign:'center',
 					minButtonWidth:60,
 					buttons:[
 						{ 
@@ -406,10 +406,9 @@ Ext.onReady (function(){
 	
 	var grid_opLog = new Ext.grid.GridPanel({
 		title : '操作日志管理',
-		iconCls : 'icon-plugin',
+		iconCls : 'icon-page_white_text',
 		region : 'center',
-		height:true,
-//		width:800,
+		height:400,
 		autoScroll: true,
 		loadMask : {
 			msg : '数据加载中...'

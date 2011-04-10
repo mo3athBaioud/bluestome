@@ -9,7 +9,8 @@ Ext.onReady(function(){
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
     app.data = [
-        ['15800371329','魅族','M8','支持','支持']
+        ['15800371329','魅族','M8','支持','支持'],
+        ['15800371330','摩托罗拉','ME525','支持','支持']
 	];
 	/**
 	app.utp = Ext.data.Record.create([{
@@ -53,22 +54,44 @@ Ext.onReady(function(){
     
     // align="center" valign="middle"
     var expander = new Ext.grid.RowExpander({
-//        tpl : new Ext.Template(
-//			 '<p>数据业务推荐</p>',
-//			 '优先等级1',
-//			 '优先等级2',
-//			 '优先等级3'
-//        )
         tpl : new Ext.Template(
 			 '<tpl for=".">',
-			 '<div><span align="left">优先等级1</span>' +
-			 '<table border="0"><tr><td>1.飞信[<font color="red">未使用</font>]</td></tr><tr><td>2.移动MM[<font color="red">未使用</font>]</td></tr><tr><td>3.手机阅读[<font color="red">未使用</font>]</td></tr></table></div>',
-			 '<div><span align="left">优先等级2</span>' +
-			 '<table border="0"><tr><td>1.淘乐汇[<font color="red">未使用</font>]</td></tr><tr><td>2.手机报[<font color="green">使用</font>]</td></tr><tr><td>3.号谱管家[<font color="red">未使用</font>]</td></tr></table></div>',
-			 '</td></tr></table></div>',
-			 '<div><span align="left">优先等级3</span>' +
-			 '<table border="0"><tr><td>1.可视电话[<font color="red">未使用</font>]</td></tr><tr><td>2.彩信相册[<font color="red">未使用</font>]</td></tr><tr><td>3.移动秘书[<font color="red">未使用</font>]</td></tr></table></div>',
-			 '</td></tr></table></div>',
+			 '<table>' +
+			 '<tr><td>' +
+			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr><td><b>优先等级1</b></td></tr>' +
+			 '<tr align="left"><td>' +
+			 '<ul>' +
+			 '<li>飞信[<font color="blue">使用</font>]</li>' +
+			 '<li>移动MM[<font color="blue">使用</font>]</li> ' +
+			 '<li><b>手机阅读[<font color="red">未使用</font>]</b></li>' +
+			 '</ul>' +
+			 '</td></tr>' +
+			 '</table> '+
+			 '</td><td>' +
+			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr><td><b>优先等级2</b></td></tr>' +
+			 '<tr align="left"><td>' +
+			 '<ul>' +
+			 '<li>淘乐汇[<font color="blue">使用</font>]</li> 	'+
+			 '<li>手机报[<font color="blue">使用</font>]</li>' +
+			 '<li><b>号谱管家[<font color="red">未使用</font>]</b></li>' +
+			 '</ul>' +
+			 '</td></tr>' +
+			 '</table>' +
+			 '</td><td>' +
+			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr><td><b>优先等级3</b></td></tr>' +
+			 '<tr align="left"><td>' +
+			 '<ul>'+
+			 '<li><b>可视电话[<font color="red">未使用</font>]</b></li>' +
+			 '<li><b>彩信相册[<font color="red">未使用</font>]</b></li>' +
+			 '<li><b>移动秘书[<font color="red">未使用</font>]</b></li>'+
+			 '</ul>' +
+			 '</td></tr>' +
+			 '</table>' +
+			 '</td></tr>' +
+			 '</table>',
 			 '</tpl>',
 			 '<div class="x-clear"></div>')
     });
@@ -197,9 +220,13 @@ Ext.onReady(function(){
 	
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
 				if(grid.getSelectionModel().isSelected(rowIndex)){
-					var record = app.grid.getSelectionModel().getSelected();
-					var url = String.format("../../pages/images/image.jsp?id={0}",record.get('d_id'));
-					window.location = url;
+					Ext.Msg.show({
+						title : '消息:双击可查看终端详情',
+						width:300,
+						msg : '该功能正在开发!',
+						buttons : Ext.Msg.OK,
+						icon : Ext.MessageBox.INFO
+					});
 				}
 	});
 

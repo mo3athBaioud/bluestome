@@ -1,34 +1,36 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 	<head>
-		<meta content="text/html; charset=UTF-8" http-equiv="content-type">
-		<meta http-equiv="cache-control" content="no-cache">
+		<title>我的工作台</title>
+		<link rel="stylesheet" type="text/css"
+			href="/resource/css/ext_icon.css" />
+		<link rel="stylesheet" type="text/css"
+			href="/resource/theme/default/resources/css/ext-all.css" />
+		<link rel="stylesheet" type="text/css" href="/style/index.css" />
+		<link rel="stylesheet" type="text/css" href="/resource/extjs3.1/ux/css/Portal.css" />
+		<script type="text/javascript"
+			src="/resource/extjs3.1/adapter/ext/ext-base.js"></script>
+		<script type="text/javascript" src="/resource/extjs3.1/ext-all.js"></script>
+		<script type="text/javascript"
+			src="/resource/commonjs/ext-lang-zh_CN.js"></script>
+		<style type="text/css">
+	    html, body {
+	        font:normal 12px verdana;
+	        margin:0;
+	        padding:0;
+	        border:0 none;
+	        overflow:hidden;
+	        height:100%;
+	    }
+    </style>
+	</head>
 	<body>
-
-
-		<div style="padding:10px;">
-			<div style="font-size:14px; font-weight:bold">
-				<span style="font-weight:bold">个人信息</span>
-				<br>
-				<br>
-				<a href="#" target="_blank">我的信息</a>
-				<a href="#" target="_blank">密码修改</a>
-				<br>
-				<br>
-			</div>
-			<br>
-			<br>
-
-			<div style="font-size:14px; font-weight:bold">
-				<span style="font-weight:bold">系统消息</span>
-				<br />
-				<!-- 
-				<marquee align="absbottom" behavior="scroll" direction="up">
-					绝对底部对齐（与g、p等字母的最下端对齐)
-				</marquee>
-				 -->
-			</div>
-			<br>
-		</div>
+		<script type="text/javascript"
+			src="/resource/extjs3.1/examples/shared/examples.js"></script>
+		<script type="text/javascript" src="/scripts/mydesk.js"></script>
+		<script type="text/javascript" src="/resource/extjs3.1/ux/Portal.js"></script>
+		<script type="text/javascript" src="/resource/extjs3.1/ux/PortalColumn.js"></script>
+		<script type="text/javascript" src="/resource/extjs3.1/ux/Portlet.js"></script>
+		<div id="mydesk"></div>
+		<div id="mydesk-grid"></div>
 	</body>
 </html>

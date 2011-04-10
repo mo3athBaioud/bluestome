@@ -1,0 +1,1119 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+
+
+<html>
+
+	<head>
+
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+		<title>陕西移动SSLVPN统一登录门户--登录</title>
+
+		<link href="css/css1.css" rel="stylesheet" type="text/css">
+
+
+
+		<script src="../com/common.js"></script>
+
+		<script src="../com/component.js"></script>
+
+
+
+		<link rel=stylesheet type=text/css href="./css/tips/tips.css">
+
+		<style type="text/css">
+
+#header{ background-color:;}
+
+#p_rand_code,#cert_auth,#TipsBox,#DkeyTips,#ComLayer,#loading{ display:none;}
+
+</style>
+
+
+
+	</head>
+
+
+
+	<body onLoad="init();body_onload();" class="body-bg-user">
+
+
+
+		<form id="form1" name="form1" method="post" action="login_psw.csp"
+			onsubmit="return formSubmit();" />
+
+			<table width="100%" height="100%" border="0" cellpadding="0"
+				cellspacing="0" class="bgimg-user">
+
+
+
+				<tr>
+
+					<td align="center" valign="middle">
+
+						<table width="812" height="421" border="0" cellpadding="0"
+							cellspacing="0"
+							style="position:absolute;top:50%;left:50%;margin-top:-250px;margin-left:-406px"
+							class="bg-mainimg">
+
+							<tr>
+
+								<td class="login-fix-1" style="position:relative;">
+									<ul class="logon-intcont-user" style="top:140px;left:390px">
+
+										<li>
+											用户名：
+
+											<input class="intext1" id="fld_lu" name="svpn_name"
+												type="text">
+										<li>
+											密&nbsp;&nbsp;&nbsp;码：
+
+											<input id="pwd_p" name="svpn_password" type="password"
+												class="intext1" style="width:130px">
+
+										</li>
+
+
+
+										<!--	    <li>附加码： 
+
+                <input id="verifyCode" name="verifyCode" type="text" size="8" class="intext2" tabindex="3" desc="附加码" >
+
+                <img align="absmiddle" onClick="this.src='/por/rand_code.csp?rnd='+Math.random();" alt="" width="63" height="19"  />              </li>   
+
+			  
+
+	  	  <li>校验码</li>     -->
+
+
+
+										<li id="p_rand_code">
+											校验码：
+
+											<input type="text" style="width:80px;" id="randcode"
+												name="svpn_rand_code" maxlength="4" class="intext2"
+												autocomplete="off">
+
+											<span style="padding-left:2px"><img id="randompic"
+													align="absmiddle"
+													onClick="this.src='/por/rand_code.csp?rnd='+Math.random();"
+													alt="" width="63" height="19" />
+											</span>
+										</li>
+
+
+
+										<li class="btn-li">
+
+											<!--
+
+			  <button id="logButton" name="Submit" type="submit" onfocus="closeSoftKb()"   value="登陆" tabindex="4" class="btn-b-log">登陆</button>
+
+			  -->
+
+											<input name="submit1" type="submit" value="登陆"
+												class="btn-b-log">
+											&nbsp;
+
+											<input type="reset" value="重置" class="btn-b-log" tabindex="5">
+
+										</li>
+
+										<li class="text-red">
+
+
+
+											<div id="TipsBox" class="tips">
+												<div class="tips-head" style="display:none">
+
+													<input id="btnCloseTips" name="close" type="button"
+														value="&nbsp;" class="btnClose"
+														onmouseover="this.className='btnCloseHover'"
+														onMouseOut="this.className='btnClose'"
+														onMouseDown="this.className='btnCloseActive'"
+														onClick="hideTips();" />
+
+													<img id="loader" src="../com/images/ajax_loader.gif"
+														align="absmiddle" />
+
+												</div>
+
+												<div class="tips-body">
+												</div>
+
+											</div>
+
+										</li>
+
+									</ul>
+								</td>
+
+							</tr>
+
+
+
+							<tr>
+
+
+
+								<td valign="top" class="loginbg1-user">
+
+									<table border="0" cellpadding="0" cellspacing="0"
+										class="login-info">
+
+										<tr>
+
+											<td valign="top" class="text-log">
+												<br>
+											</td>
+
+											<td valign="top" class="text-log">
+												<br>
+											</td>
+
+										</tr>
+
+										<tr>
+
+											<td valign="top" class="text-log">
+												<font color="#333">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
+											</td>
+
+											<!--           <td valign="top" class="text-log">״ʹñϵͳ<a target="_blank" href="./subject/4Aûֲ.txt">4Aûֲ</a>   </td>   -->
+
+
+
+											<td valign="top" class="text-log">
+												<a href="javascript:onInstall(INST_COMP)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;手动安装组件</a>
+											</td>
+
+										</tr>
+
+										<tr>
+
+											<td width="3%" valign="top" class="text-log">
+												<font color="#333">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
+											</td>
+
+											<!--          <td width="97%" valign="top" class="text-log">ֹ<a href="http://10.131.83.101/iTrusCA/download/ePass2001_with_confirmation.exe">4A߰</a><a target="_blank" href="../subject/SecureCRT.zip">SecureCRT</a>
+
+                </td>        -->
+
+											<td valign="top" class="text-log">
+												<a href="javascript:onInstall(g_DKeyVerEnable)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下载DKey驱动</a>
+											</td>
+
+										</tr>
+
+										<tr>
+
+											<td valign="top" class="text-log">
+												<font color="#333">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
+											</td>
+									</table>
+								</td>
+
+							</tr>
+
+						</table>
+
+					</td>
+
+				</tr>
+
+			</table>
+
+		</form>
+
+
+
+		<script>
+
+var pass_cert_auth = "0";
+
+var use_soft_kb = "0";
+
+var displaysetup = "1";
+
+var g_DKeyVerEnable = "0";
+
+var INST_COMP = 4;
+
+var errorMsg="";
+
+var g_enableRandCode ="0";
+
+
+
+//panwc added for anonymous login -->
+
+var g_allowAnonymousAccess = "0" 
+
+var g_denyNormalAccess = "0" 
+
+var g_documentComplete = 0;
+
+//panwc added end <--
+
+
+
+//ccm add 
+
+	if("100" == GetCookie("UsingDkey"))
+
+	{		
+
+		CertLogin();
+
+	}
+
+//ccm add end
+
+
+
+//panwc added for anonymous login -->
+
+  var certname = GetCookie("CERT_USERNAME");
+
+  if(g_allowAnonymousAccess == '1')
+
+   {
+
+   	 	 if(g_denyNormalAccess =='1')
+
+   	 	  {
+
+ 
+
+   	 	  	if(errorMsg != "")
+
+   	 	  	{
+
+						alert(errorMsg); 
+
+						window.close();
+
+					}		
+
+   	 	  }
+
+   }	
+
+ //panwc added end <--
+
+
+
+
+
+function init()
+
+{
+
+	
+
+	SetCookie("G_TransMethod", "0");
+
+	SetCookie("G_UCP_senv", "1|200|100");
+
+	SetCookie("g_LoginPage","login_psw");
+
+	SetCookie("VisitTimes","0");
+
+	SetCookie("haveLogin", "0");
+
+ 
+
+
+
+	if(errorMsg != ""){
+
+	
+
+		showTips(errorMsg,0);
+
+	}
+
+}
+
+
+
+//xbb added for anonymous login -->
+
+function chekUserName()
+
+{
+
+	//var node = (isIE())?event.srcElement:this;
+
+	var node = document.getElementById("form1").svpn_name;
+
+
+
+}
+
+ 
+
+function isIE()
+
+{
+
+	return navigator.userAgent.indexOf("MSIE") != -1;
+
+}
+
+//xbb added end <--
+
+
+
+function closeSoftKb()
+
+{
+
+ 
+
+	if(use_soft_kb == "1")
+
+	{
+
+		closekeyboard();
+
+	}
+
+}
+
+ 
+
+
+
+//panwc added for 4.2 anonymous login 2009.04.14 -->
+
+function onInputNameFocus()
+
+{ 
+
+	if(g_allowAnonymousAccess == "1")
+
+	{
+
+ 	//	document.getElementById("logButton").innerHTML = "登 录";
+
+ 	} 	 
+
+} 
+
+
+
+function onButtonMouseMove()
+
+{
+
+	chekUserName();
+
+	//document.getElementById("logButton").focus();
+
+	
+
+}
+
+ 
+
+
+
+function onInputNameBlur()
+
+{ 
+
+	chekUserName(); 
+
+}
+
+//panwc added end 2009.04.14 <--
+
+
+
+
+
+function onTransMethod()
+
+{
+
+	//var parma = "dialogHeight:280px;dialogWidth:500px;dialogTop:100px;dialogLeft:100px;resizable:no;center:no";
+
+	//showModalDialog("../com/transMethod.html",window,parma);
+
+	var parma = "width=500,height=280,top=100,left=100,resizable=no,location=no,menubar=no,scrollbars=no,status=no";
+
+	window.open("../com/transMethod.html","transmethod",parma);
+
+}
+
+
+
+function onInstall(toInstall)
+
+{
+
+	//var parma = "dialogHeight:160px;dialogWidth:400px;dialogTop:100px;dialogLeft:100px;resizable:no;center:no";
+
+	//showModalDialog("../com/setup.html?" + toInstall,window, parma);
+
+	var parma =  "width=400,height=160,top=100,left=100,resizable=no,location=no,menubar=no,scrollbars=no,status=no";
+
+	window.open("../com/setup.html?" + toInstall,"install", parma);
+
+
+
+}
+
+
+
+function HandleDkey()
+
+			{
+
+				//SetCookie("UsingDkey", "1");
+
+				if(navigator.appVersion.match(/MSIE/i) != null && IsVista() && (g_DKeyVerEnable & DKEY_ENABLE_V2))
+
+
+
+				{
+
+					window.location = "/com/StartIEAsAdmin.html";
+
+				}
+
+				else
+
+				{
+
+					window.location = "dkey_portal.csp";
+
+				}
+
+			}
+
+
+
+function getURL(flag){
+
+    self.location.href=flag;
+
+}
+
+ 
+
+
+
+function body_onload()
+
+{
+
+	document.getElementById("form1").reset();
+
+	
+
+	//panwc modified for 4.2 anonymous login -->
+
+	if(g_allowAnonymousAccess != "1")
+
+	{
+
+		document.getElementById("form1").svpn_name.focus();
+
+	} 
+
+	//panwc modified end <--
+
+	//smc add
+
+ 
+
+
+
+	//panwc added for AutoLogin 09.05.21 -->
+
+	ProcessAutoLogin(); 
+
+	//panwc added end 09.05.21 <--
+
+	g_documentComplete = 1;
+
+}
+
+
+
+function formSubmit(){
+
+	if(typeof(g_documentComplete) == "undefined" || g_documentComplete == 0)
+
+	{
+
+		return false;
+
+	}
+
+	if(checkReLoginEx()) return  false;
+
+    var usrname = document.getElementById("form1").svpn_name.value;
+
+	var usrpsw = document.getElementById("form1").svpn_password.value;
+
+	var isValidSign = true;
+
+	
+
+	
+
+	
+
+	if(usrname == "")
+
+	{
+
+		showTips("请输入用户名,否则无法登录",0);
+
+		document.getElementById("form1").svpn_name.focus();
+
+		isValidSign = false;
+
+	}
+
+	if(mbStringLength(usrname) > 72)
+
+	{
+
+		showTips(" 不合法的用户名,用户名不能超过72个字节 ",0);
+
+		document.getElementById("form1").svpn_name.focus();
+
+		isValidSign = false;
+
+	}
+
+	if(isValidSign==true){
+
+
+
+	}
+
+	return isValidSign;
+
+}
+
+function showTips(info,type){
+
+/*
+
+     var node=document.getElementById("TipsBox");
+
+	 for(var i=0;i<node.firstChild.childNodes.length;i++){
+
+		node.firstChild.childNodes[i].style.display = "none";
+
+	 }
+
+	 if(type==null) type = 0;
+
+	 node.firstChild.childNodes[type].style.display = "block";
+
+	 node.style.display="block";
+
+	 node.lastChild.innerHTML=info;
+
+	 */
+
+	 alert(info);
+
+}
+
+function hideTips(){
+
+     var node=document.getElementById("TipsBox");
+
+	 node.style.display="none";
+
+}
+
+
+
+
+
+//panwc added for AutoLogin 09.05.21 -->
+
+
+
+function ProcessAutoLogin()
+
+{
+
+		if(checkReLoginEx()) 
+
+			return false;
+
+			
+
+		//magic code is enabled, return directly.
+
+		if(typeof(document.randcode) != "undefined")
+
+		{
+
+			return;
+
+		}
+
+
+
+		if(g_IEHelperObj == null)
+
+		{
+
+			g_IEHelperObj = CreateObject(G_DLLS[ID_IEHELPER][ID_PROGID]);
+
+		}	
+
+		
+
+		//IEHelper object isn't installed, return directly.
+
+		if(g_IEHelperObj == null)
+
+		{
+
+			return;
+
+		}
+
+		
+
+		var autoLoginName = null;
+
+		var autoLoginPwd = null;
+
+		
+
+		try
+
+		{
+
+ 
+
+			//Current IE needs not auto login, return directly. 
+
+			if(g_IEHelperObj.IsCurrentIEAutoLogin == 0)
+
+			{  
+
+				return;	
+
+			}
+
+
+
+			var userInfo = g_IEHelperObj.AutoLoginNameAndPwd.split('\t');
+
+			autoLoginName = userInfo[0];
+
+			autoLoginPwd 	= userInfo[1];
+
+		}
+
+		catch(e) // something must be wrong
+
+		{  
+
+			return;
+
+		}	
+
+		
+
+		document.getElementById("svpn_name").value = autoLoginName;
+
+		document.getElementById("svpn_password").value = autoLoginPwd;
+
+		
+
+		if(g_enableRandCode == '1')
+
+  		{
+
+			chekUserName();
+
+			document.getElementById("randcode").focus();
+
+  		}
+
+		else
+
+		{
+
+			document.getElementById("form1").submit();
+
+		}
+
+		
+
+		return;
+
+}
+
+ 
+
+//panwc added end for AutoLogin 09.05.21 <-- 
+
+ 
+
+ 
+
+//ccm add   
+
+var IsKeyEnable = 0;
+
+
+
+ function IsUsingCertDkey()
+
+{
+
+	IsKeyEnable = parseInt(g_DKeyVerEnable);
+
+	if(IsKeyEnable == 0)//not enable DKEY
+
+	{
+
+		return;
+
+	}
+
+	
+
+	if("100" == GetCookie("UsingDkey"))//have installed
+
+	{
+
+		SetCookie("UsingDkey","200");
+
+	}
+
+	else
+
+	{
+
+		var ret = MakeCscmOK();
+
+		if(ret == E_INSTALL)
+
+		{			
+
+			SetCookie("UsingDkey","100");	
+
+			return;
+
+		}
+
+	}
+
+	
+
+	if(g_CscmObj == null )
+
+	{
+
+		g_CscmObj = CreateObject(G_DLLS[ID_CSCM][ID_PROGID]);
+
+	}
+
+	if( g_CscmObj == null )
+
+	{
+
+		alert("g_CscmObj error!");
+
+		return;
+
+	}
+
+	
+
+	var downloadUrl = GetHostPath(G_DLLS[ID_SUPEREXE][ID_CODEBASE]);
+
+	ret = g_CscmObj.SetDownloadExeURL(downloadUrl);
+
+	
+
+	if(IsKeyEnable == 1)
+
+	{
+
+		ret = CheckProcessV2();
+
+	}
+
+	else if(IsKeyEnable == 2)
+
+	{
+
+		ret = CheckProcessV3();
+
+	}
+
+	else
+
+	{
+
+		ret = CheckProcessV2();
+
+		if(!ret)
+
+		{
+
+			ret = CheckProcessV3();
+
+		}		
+
+	}		
+
+}
+
+
+
+function CheckProcessV2()
+
+{
+
+	if( !MakeNddkeyV2OK(g_CscmObj) )
+
+	{
+
+		return 0;
+
+	}
+
+	if(g_Nddkeyv2Obj == null)
+
+	{
+
+		g_Nddkeyv2Obj = CreateObject(G_DLLS[ID_NDDKEYV2][ID_PROGID]);
+
+	}	
+
+	if(g_Nddkeyv2Obj == null)
+
+	{
+
+		return 0;
+
+	} 
+
+	try
+
+	{
+
+		g_Nddkeyv2Obj.OpenDevice(1,"");
+
+	}
+
+	catch(error)
+
+	{
+
+		return 0;
+
+	}
+
+	try
+
+	{
+
+		g_Nddkeyv2Obj.OpenFile(0x0,0xff);
+
+	}
+
+	catch(error)
+
+	{			
+
+		g_Nddkeyv2Obj.CloseDevice();
+
+		SetCookie("UsingDkey","1");
+
+		return 1;
+
+	}
+
+	g_Nddkeyv2Obj.CloseDevice();
+
+	return 0;	
+
+}
+
+
+
+function CheckProcessV3()
+
+{
+
+
+
+	 if(IsVista())
+
+	 {
+
+		return 0;
+
+	 }
+
+	
+
+	if( !MakeNddkeyV3OK(g_CscmObj) )
+
+	{
+
+		return 0;
+
+	}
+
+	
+
+	if(g_Nddkeyv3Obj == null)
+
+	{
+
+		g_Nddkeyv3Obj = CreateObject(G_DLLS[ID_NDDKEYV3][ID_PROGID]);
+
+	}	
+
+	if(g_Nddkeyv3Obj == null)
+
+	{
+
+
+
+		return 0;
+
+	} 
+
+	
+
+	try
+
+	{
+
+		var hCard = g_Nddkeyv3Obj.OpenDevice(1);
+
+	}
+
+	catch(error)
+
+	{		
+
+		return 0;
+
+	}
+
+	try
+
+	{
+
+		var userlength = g_Nddkeyv3Obj.GetFileLength(hCard,0xff);
+
+		var userName = g_Nddkeyv3Obj.ReadFile(hCard,0xff,userlength);
+
+	}
+
+	catch(error)
+
+	{
+
+		g_Nddkeyv3Obj.CloseDevice(hCard);
+
+		SetCookie("UsingDkey","2");
+
+		return 1;
+
+	}
+
+ 	g_Nddkeyv3Obj.CloseDevice(hCard);
+
+ 	return 0;
+
+}
+
+
+
+
+
+
+
+function CertLogin()
+
+{
+
+	if(!checkReLoginEx())	
+
+	{	
+
+		var NeedMSCM ;
+
+		if( GetCookie("ignore_cscm") != "1")
+
+		{
+
+			IsUsingCertDkey();
+
+			NeedMSCM = GetCookie("UsingDkey");
+
+			if(NeedMSCM == "100")
+
+			{		    
+
+				return;
+
+			}
+
+			if(NeedMSCM != "200")//== 200 means MSCM install or create object error
+
+			{
+
+				ClearSslState();
+
+			}			
+
+		}
+
+		if( NeedMSCM == "100" || NeedMSCM == "200")
+
+		{
+
+			SetCookie("UsingDkey","0");
+
+		}	
+
+		getURL('login_cert.csp');
+
+	}
+
+}
+
+//ccm add end
+
+
+
+
+
+
+
+</script>
+
+
+
+	</body>
+
+</html>
+
+
