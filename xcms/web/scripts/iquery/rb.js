@@ -54,26 +54,84 @@ Ext.onReady(function(){
     
     // align="center" valign="middle"
     var expander = new Ext.grid.RowExpander({
+//        tpl : new Ext.Template(
+//			 '<p>租机业务推荐</p>'+
+//			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+//			 '<tr><td>1.IPHONE4(TDS-CDMA)' +
+//			 '<p>图片:<img src="http://images.sanhaostreet.com/product//9/373/132886/main201010211137093432.jpg" width="100" height="80" alt="huawei"/></p>' +
+//			 '<p>资费:预存5000送5000</p>' +
+//			 '<p>业务介绍：为了满足需求，增加字数，补充字数！</p>' +
+//			 '</td></tr>' +
+//			 '<tr><td>2.华为E100：' +
+//			 '<p>图片:<img src="http://phone.10086.cn/UploadFile/smallpic/GO_hw_T2010_20101222.jpg" width="40" height="80" alt="huawei"/></p>' +
+//			 '<p>资费:预存500送500</p>' +
+//			 '<p>业务介绍：为了满足需求，增加字数，补充字数！</p>' +
+//			 '</td></tr>' +
+//			 '<tr><td>3.Moto E810' +
+//			 '<p>图片:<img src="http://phone.10086.cn/UploadFile/smallpic/GO_hw_T2010_20101222.jpg" width="40" height="80" alt="huawei"/></p>' +
+//			 '<p>资费:预存4000送4000</p>' +
+//			 '<p>业务介绍：为了满足需求，增加字数，补充字数！</p>' +
+//			 '</td></tr>' +
+//			 '</table>'
+//        )
         tpl : new Ext.Template(
-			 '<p>租机业务推荐</p>'+
+			 '<tpl for=".">',
+			 '<table>' +
+			 '<tr><td>' +
 			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
-			 '<tr><td>1.IPHONE4(TDS-CDMA)' +
-			 '<p>图片:<img src="http://images.sanhaostreet.com/product//9/373/132886/main201010211137093432.jpg" width="100" height="80" alt="huawei"/></p>' +
-			 '<p>资费:预存5000送5000</p>' +
-			 '<p>业务介绍：为了满足需求，增加字数，补充字数！</p>' +
+			 '<tr><td><b>业务名称:</b>1.IPHONE4(TDS-CDMA)</td></tr>' +
+			 '<tr><td><img width="100" height="80" src="http://images.sanhaostreet.com/product//9/373/132886/main201010211137093432.jpg"/></td></tr>' +
+			 '</table> '+
+			 '</td><td>' +
+			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr><td><b>资费:</b></td></tr>' +
+			 '<tr align="left"><td width="100" height="80">预存5000送5000</td></tr>' +
+			 '</table>' +
+			 '</td><td>' +
+			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr><td><b>业务介绍:</b></td></tr>' +
+			 '<tr align="left"><td width="100" height="80">为了满足需求，增加字数，补充字数！</td></tr>' +
+			 '</table>' +
 			 '</td></tr>' +
-			 '<tr><td>2.华为E100：' +
-			 '<p>图片:<img src="http://phone.10086.cn/UploadFile/smallpic/GO_hw_T2010_20101222.jpg" width="40" height="80" alt="huawei"/></p>' +
-			 '<p>资费:预存500送500</p>' +
-			 '<p>业务介绍：为了满足需求，增加字数，补充字数！</p>' +
+			 '</table>',
+			 '<table>' +
+			 '<tr><td>' +
+			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr><td><b>业务名称:</b>2.华为U8500</td></tr>' +
+			 '<tr><td><img width="100" height="80" src="http://img5.pcpop.com/ProductImages/Leader/3/3779/003779548.jpg"/></td></tr>' +
+			 '</table> '+
+			 '</td><td>' +
+			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr><td><b>资费:</b></td></tr>' +
+			 '<tr align="left"><td width="100" height="80">预存5000送5000</td></tr>' +
+			 '</table>' +
+			 '</td><td>' +
+			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr><td><b>业务介绍:</b></td></tr>' +
+			 '<tr align="left"><td width="100" height="80">为了满足需求，增加字数，补充字数！</td></tr>' +
+			 '</table>' +
 			 '</td></tr>' +
-			 '<tr><td>3.Moto E810' +
-			 '<p>图片:<img src="http://phone.10086.cn/UploadFile/smallpic/GO_hw_T2010_20101222.jpg" width="40" height="80" alt="huawei"/></p>' +
-			 '<p>资费:预存4000送4000</p>' +
-			 '<p>业务介绍：为了满足需求，增加字数，补充字数！</p>' +
+			 '</table>',
+			 '<table>' +
+			 '<tr><td>' +
+			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr><td><b>业务名称:</b>3.MOTO ME525</td></tr>' +
+			 '<tr><td><img width="100" height="80" src="http://images.sanhaostreet.com/product//9/373/132886/main201010211137093432.jpg"/></td></tr>' +
+			 '</table> '+
+			 '</td><td>' +
+			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr><td><b>资费:</b></td></tr>' +
+			 '<tr align="left"><td width="100" height="80">预存5000送5000</td></tr>' +
+			 '</table>' +
+			 '</td><td>' +
+			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr><td><b>业务介绍:</b></td></tr>' +
+			 '<tr align="left"><td width="100" height="80">为了满足需求，增加字数，补充字数！</td></tr>' +
+			 '</table>' +
 			 '</td></tr>' +
-			 '</table>'
-        )
+			 '</table>',
+			 '</tpl>',
+			 '<div class="x-clear"></div>')
     });
     
     function doo(obj){

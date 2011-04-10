@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+		<meta http-equiv="cache-control" content="no-cache">
+		<link rel="stylesheet" type="text/css"
+			href="/resources/css/ext-all.css" />
+		<link rel="stylesheet" type="text/css" href="/style/index.css" />
+		<link href="/style/default/common.css" rel="stylesheet"
+			type="text/css">
+		<link href="/style/default/form.css" rel="stylesheet" type="text/css">
+		<link href="/style/default/list.css" rel="stylesheet" type="text/css">
+		<style type="text/css">
+        html, body {
+            font: normal 11px verdana;
+        }
+        #main-panel td {
+            padding:5px;
+        }
+	    </style>
+	</head>
+	<body>
+		<div style="padding:10px;">
+			<div style="font-size:14px; font-weight:bold">
+				<span style="font-weight:bold">个人信息</span>
+				<br>
+				<br>
+				<a href="#" target="_blank">我的信息</a>
+				<a href="#" target="_blank">密码修改</a>
+				<br>
+				<br>
+			</div>
+			<br>
+			<br>
+			<!-- 
+			<div style="font-size:14px; font-weight:bold">
+				<span style="font-weight:bold">系统消息</span>
+				<br />
+			</div>
+			<br>
+			 -->
+		</div>
+
+		<div class="basicTab">
+			<div class="selltopul">
+				<ul>
+					<li class="selltopuli" id="TAB_LI_0" style="display:block">
+						<a href='javascript:goCenterLink("index_bill_info.jsp", "_self");'
+							title="话费信息查询与定制">话费信息...</a>
+					</li>
+
+					<li class="selltopulihover">
+						帐单查询...
+					</li>
+
+					<li class="selltopuli" id="TAB_LI_2" style="display:block">
+						<a
+							href='javascript:goCenterLink("index_bill_detail.jsp", "_self");'
+							title="详单查询与定制">详单查询...</a>
+					</li>
+
+					<li class="selltopuli" id="TAB_LI_3" style="display:block">
+						<a
+							href='javascript:goCenterLink("billFileDownload.jsp", "_self");'
+							title="各渠道帐单、详单及话费信息服务操作手册">各渠道帐...</a>
+					</li>
+
+					<li id="TAB_BUTTON_DOWN" style="display:none;">
+						<img src="/prx/000/http/smcc.com/jsp/busicore/images/right.gif"
+							alt="显示下个标签" onClick="updown(1);" style="cursor:hand;" />
+					</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

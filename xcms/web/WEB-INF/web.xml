@@ -6,6 +6,7 @@
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	
 	<welcome-file-list>
+		<welcome-file>login.html</welcome-file>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 </web-app>

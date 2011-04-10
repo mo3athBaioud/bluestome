@@ -227,11 +227,10 @@ Ext.onReady(function(){
 	
 	var grid_loginLog = new Ext.grid.GridPanel({
 		title : '登陆日志管理',
-		iconCls : 'icon-plugin',
+		iconCls : 'icon-page_white_text',
 		region : 'center',
-		height:true,
+		height:500,
 		autoScroll: true,
-//		width:800,
 		loadMask : {
 			msg : '数据加载中...'
 		},
