@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="mobile" type="com.ssi.mobile.dal.domain.MobileBrand" />
+
+	<resultMap class="mobile" id="mobileMap">
+		<result column="d_id" property="id"/>
+		<result column="D_BRAND_ID" property="brandId"/>
+		<result column="D_CH_NAME" property="name"/>
+		<result column="D_EN_NAME" property="enName"/>
+		<result column="D_ICON" property="icon"/>
+		<result column="D_SOURCE" property="source"/>
+		<result column="D_SOURCE_URL" property="sourceUrl"/>
+		<result column="D_DESCRIPTION" property="description"/>
+		<result column="D_CREATE_DT" property="createtime"/>						
+		<result column="D_MODIFY_DT" property="modifytime"/>						
+	</resultMap>
+
+    <insert id="mobilebrand.insert" parameterClass="mobile"> 
+ 		INSERT INTO TBL_MOBILE_BRAND 
+ 		(D_BRAND_ID, D_CH_NAME, D_EN_NAME, D_ICON, D_SOURCE, D_SOURCE_URL, D_DESCRIPTION, D_CREATE_DT, D_MODIFY_DT) 
+ 		VALUES (#brandId#,#name#,#enName#,#icon#,#source#,#sourceUrl#,#description#,#createtime#,now())
+ 		<selectKey resultClass="int" type="post" keyProperty="id">
+ 			select LAST_INSERT_ID() as value
+ 		</selectKey>
+	</insert>
+    
+    <update id="mobilebrand.update" parameterClass="mobile"> 
+ 		update 
+ 			TBL_MOBILE_BRAND 
+ 		set 
+	 		D_BRAND_ID = #brandId#,
+	 		D_CH_NAME = #name#,
+	 		D_EN_NAME = #enName#,
+	 		D_ICON = #icon#,
+	 		D_SOURCE = #source#,
+	 		D_SOURCE_URL = #sourceUrl#,
+	 		D_DESCRIPTION = #description#,
+	 		d_modifytime=now()
+ 		where d_id = #id#
+	</update>
+	
+	<statement id="mobilebrand.selectByMap"  parameterClass="java.util.Map" resultMap="mobileMap">
+    	SELECT DISTINCT t.* FROM TBL_MOBILE_BRAND t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="brandId" prepend="and">
+				t.D_BRAND_ID = #brandId#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="and">
+				t.D_CH_NAME = #name#
+			</isNotEmpty>
+			<isNotEmpty property="enName" prepend="and">
+				t.D_EN_NAME = #enName#
+			</isNotEmpty>
+			<isNotEmpty property="icon" prepend="and">
+				t.D_ICON = #icon#
+			</isNotEmpty>
+			<isNotEmpty property="source" prepend="and">
+				t.D_SOURCE = #source#
+			</isNotEmpty>
+			<isNotEmpty property="sourceUrl" prepend="and">
+				t.D_SOURCE_URL = #sourceUrl#
+			</isNotEmpty>
+			<isNotEmpty property="description" prepend="and">
+				t.D_DESCRIPTION = #description#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="asc">
+				$asc$
+			</isNotEmpty>
+		</dynamic>
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+
+	<statement id="mobilebrand.count"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
+    	SELECT COUNT(*) FROM TBL_MOBILE_BRAND t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="brandId" prepend="and">
+				t.D_BRAND_ID = #brandId#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="and">
+				t.D_CH_NAME = #name#
+			</isNotEmpty>
+			<isNotEmpty property="enName" prepend="and">
+				t.D_EN_NAME = #enName#
+			</isNotEmpty>
+			<isNotEmpty property="icon" prepend="and">
+				t.D_ICON = #icon#
+			</isNotEmpty>
+			<isNotEmpty property="source" prepend="and">
+				t.D_SOURCE = #source#
+			</isNotEmpty>
+			<isNotEmpty property="sourceUrl" prepend="and">
+				t.D_SOURCE_URL = #sourceUrl#
+			</isNotEmpty>
+			<isNotEmpty property="description" prepend="and">
+				t.D_DESCRIPTION = #description#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+	
+	
+</sqlMap>
+
+
+
