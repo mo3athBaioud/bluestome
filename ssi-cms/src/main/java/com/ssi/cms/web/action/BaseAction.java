@@ -39,6 +39,10 @@ public class BaseAction extends ActionSupport implements SessionAware,
 	protected String colName;
 
 	protected String value;
+	
+	private Integer[] ids;
+	
+	private Integer id;
 
 	public String execute() throws Exception {
 		try {
@@ -98,6 +102,22 @@ public class BaseAction extends ActionSupport implements SessionAware,
 
 	public void setStart(Integer start) {
 		this.start = start;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer[] getIds() {
+		return ids;
+	}
+
+	public void setIds(Integer[] ids) {
+		this.ids = ids;
 	}
 
 	
