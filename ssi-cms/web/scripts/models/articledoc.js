@@ -8,7 +8,7 @@ Ext.onReady(function(){
 	app.values = values;
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
-	app.article = Ext.data.Record.create([{
+	app.articledoc = Ext.data.Record.create([{
 		name : 'id',
 		mapping : 'd_id',
 		type : 'int'
@@ -54,7 +54,7 @@ Ext.onReady(function(){
 		type : 'string'
 	}]);
     
-    app.cm_article = new Ext.grid.ColumnModel([new Ext.grid.RowNumberer(),app.sm, 
+    app.cm_articledoc = new Ext.grid.ColumnModel([new Ext.grid.RowNumberer(),app.sm, 
 //        {header: "ID", sortable: true, dataIndex: 'd_id'}, //width: 50, 
         {header: "类型", width: 35, sortable: true, dataIndex: 'd_title',
         	renderer : function(value) {
@@ -102,8 +102,6 @@ Ext.onReady(function(){
 		handler:function(){
 			if(app.grid.getSelectionModel().getSelected()){
 				var record = app.grid.getSelectionModel().getSelected();
-				alert('获取文章ID:'+record.get('d_id'));
-				alert('获取文章所属网站ID:'+webId);
 			}else{
 				Ext.MessageBox.alert("提示信息!!", "请选择要获取URL的数据!!");
 			}
@@ -137,7 +135,6 @@ Ext.onReady(function(){
 			success:function(response,option){
 				var obj = Ext.util.JSON.decode(response.responseText);
 				if(obj.success){
-//    	         	Ext.MessageBox.alert('提示',obj.msg);
 					app.ds_article.load({params : {start:0,limit:app.limit}}); //,colName:app.colName,value:app.values
 				}else{
 	             	Ext.MessageBox.alert('提示',obj.msg);
@@ -180,12 +177,24 @@ Ext.onReady(function(){
 		}
 	});
 	
+	app.btn_fresh = new Ext.Button({
+		text : '刷新',
+		handler : function() {
+			app.ds_article.reload({
+						params : {
+							start : 0,
+							limit : app.ptb.pageSize
+						}
+			});
+		}
+	});
+	
 	app.window_add = new Ext.Window({
 		title : '添加',
 		iconCls : 'icon-add',
 		width : 400,
+		height: 250,
 		resizable : false,
-		autoHeight : true,
 		modal : true,
 		closeAction : 'hide',
 		listeners : {
@@ -220,14 +229,17 @@ Ext.onReady(function(){
 				name : 'articleDoc.url',
 				maxLength : 150
 			},{
+				fieldLabel : '评分',
+				name : 'articleDoc.grade',
+				value:webId
+			},{
 				fieldLabel : '所属网站ID',
-				name : 'articleDoc.websiteBean.id',
+				name : 'articleDoc.webId',
 				readOnly:true,
 				value:webId
 			},{
 				fieldLabel : '状态',
 				name : 'articleDoc.status',
-//				allowBlank : false,
 				maxLength : 20
 			}],
 			buttonAlign : 'right',
@@ -303,9 +315,8 @@ Ext.onReady(function(){
 					title : '编辑',
 					iconCls:'icon-edit',
 					width : 450,
-					height : 440,
+					height : 300,
 					resizable : false,
-					autoHeight : true,
 					modal : true,
 					closeAction : 'close',
 					items : [new Ext.FormPanel({
@@ -322,47 +333,42 @@ Ext.onReady(function(){
 						},
 						defaultType : 'textfield',
 						items : [
-						{ 
-							fieldLabel : '类型ID',
-							id : 'article.id',
-							name : 'article.id',
-							readOnly:true,
-							value : record.get('d_id')
+						{
+							fieldLabel : 'ID',
+							id : 'articleDoc.id',
+							name : 'articleDoc.id',
+							maxLength : 50,
+							value:record.get('d_id')
 						},{
 							fieldLabel : '标题',
-							name : 'article.title',
-							value : record.get('d_title')
+							id : 'articleDoc.title',
+							name : 'articleDoc.title',
+							maxLength : 50,
+							value:record.get('d_title')
 						},{
-							fieldLabel : '外部地址',
-							name : 'article.articleUrl',
-							value : record.get('d_acticle_url')
+							fieldLabel : '作者',		
+							name : 'articleDoc.author',
+							maxLength : 150,
+							value:record.get('d_author')
 						},{
-							fieldLabel : '内容URL',
-							name : 'article.acticleRealUrl',
-							value : record.get('d_article_real_url')
+							fieldLabel : '评分',
+							name : 'articleDoc.grade',
+							value:webId
 						},{
-							fieldLabel : '内容XML',
-							name : 'article.acticleXmlUrl',
-							value : record.get('d_article_xml_url')
+							fieldLabel : '文章地址',		
+							name : 'articleDoc.url',
+							maxLength : 150,
+							value:record.get('d_url')
 						},{
-							fieldLabel : '时间',
-							xtype:'hidden',
-							name : 'article.createTime',
-							value:record.get('d_createtime')
-						},{
-							fieldLabel : '所属网站',
-							name : 'article.webSiteBean.id',
-							value : webId
+							fieldLabel : '所属网站ID',
+							name : 'articleDoc.webId',
+							readOnly:true,
+							value:webId,
+							value:record.get('d_web_id')
 						},{
 							fieldLabel : '状态',
-							name : 'article.text',
-							value : record.get('d_text')
-						},{
-							fieldLabel : '介绍',
-							xtype:'textarea',
-							name : 'article.intro',
-//							allowBlank : false,
-							value:record.get('d_intro')
+							name : 'articleDoc.status',
+							maxLength : 20
 						}],
 						buttonAlign : 'right',
 						minButtonWidth : 60,
@@ -372,14 +378,12 @@ Ext.onReady(function(){
 								var frm = this.ownerCt.form;
 								if (frm.isValid()) {
 									btn.disable();
-									var dnfield = frm.findField('article.title');
+									var dnfield = frm.findField('articleDoc.title');
 									frm.submit({
 										waitTitle : '请稍候',
 										waitMsg : '正在提交表单数据,请稍候...',
 										success : function(form, action) {
 											Ext.MessageBox.alert("成功！", "修改成功!");
-//											dnfield.reset();
-//											btn.enable();
 											this.ownerCt.ownerCt.hide();
 //											app.ds_article.load({params : {start : 0,limit : app.limit}});
 										},
@@ -388,12 +392,8 @@ Ext.onReady(function(){
 												title : '错误提示',
 												msg : '"' + dnfield.getValue() + '" ' + '名称可能已经存在或者您没有更新数据的权限!',
 												buttons : Ext.Msg.OK,
-//												fn : function() {
-//													dnfield.focus(true);
-//													btn.enable();
-//												},
 												icon : Ext.Msg.ERROR
-											})
+											});
 										}
 									})
 								}
@@ -416,7 +416,7 @@ Ext.onReady(function(){
 				Ext.MessageBox.alert("提示信息!!", "请选择要修改行!!");
 		}
 		}
-	})
+	});
 	
 	app.ds_article.load({
 		params : {
@@ -466,8 +466,8 @@ Ext.onReady(function(){
 		pageSize:app.limit,
 		store:app.ds_article,
 		displayInfo:true,
-//		displayMsg:'第 {0} - {1} 条  共 {2} 条',
-		displayMsg : '显示{0}条到{1}条,共{2}条',
+		displayMsg:'第 {0} - {1} 条  共 {2} 条',
+//		displayMsg : '显示{0}条到{1}条,共{2}条',
 		emptyMsg:'没有记录',
 		items : ['-', '&nbsp;&nbsp;', app.pagesize_combo]
 	});
@@ -479,43 +479,22 @@ Ext.onReady(function(){
 		loadMask : {
 			msg : '数据加载中...'
 		},
-	    cm: app.cm_article,
+	    cm: app.cm_articledoc,
 	    ds: app.ds_article,
-//		autoHeight:true,
 		width:850,
-		autoScroll: true,
 		height:600,
-//		autoWidth:true,
-//		width:800,
-//		frame : true,
-//		autoExpandColumn : 'title',
+		autoScroll: true,
 		sm:app.sm,
-		//,'-',
-		tbar : [app.btn_get_img_url,'-',app.btn_add_code,'-',app.update_code_btn,'-', {
-									text : '刷新',
-//									iconCls : 'page_refreshIcon',
-									handler : function() {
-										app.ds_article.reload({
-													params : {
-														start : 0,
-														limit : app.ptb.pageSize
-													}
-										});
-									}
-								},'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
+		tbar : [app.btn_add_code,'-',app.update_code_btn,'-', app.btn_fresh,'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
 		bbar : app.ptb
 	});
 	
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
-				if(grid.getSelectionModel().isSelected(rowIndex)){
-					var record = app.grid.getSelectionModel().getSelected();
-//					app.text_search_code.setValue(record.get('d_title'));
-//					var url = String.format(project+"/pages/articlesdoc/explorer.jsp?url={0}&start={1}&limit={2}&webid={3}",record.get('d_url'),0,app.limit,webId);
-					var url = record.get('d_url');
-//					Ext.MessageBox.alert('Title',url);
-					window.open(url,'doc','height=600,width=800,top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
-//					window.open = url;
-				}
+		if(grid.getSelectionModel().isSelected(rowIndex)){
+			var record = app.grid.getSelectionModel().getSelected();
+			var url = record.get('d_url');
+			window.open(url,'doc','height=600,width=800,top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
+		}
 	});
 
     app.grid.render('div-article');
