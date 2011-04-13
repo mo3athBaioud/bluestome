@@ -193,6 +193,7 @@ Ext.onReady(function() {
 		                enableDD:false,
 		                containerScroll: true,
 						items : [{
+							id:'website_tree_id',
 							xtype : 'treepanel',
 							border : false,
 							rootVisible : true,
