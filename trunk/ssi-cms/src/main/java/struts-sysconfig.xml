@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="sysconfig" extends="struts-default" namespace="/sysconfig">
+    
+		<action name="list" class="sysconfigAction" method="list" />
+		<action name="delete" class="sysconfigAction" method="delete" />
+		<action name="insert" class="sysconfigAction" method="insert" />
+		<action name="update" class="sysconfigAction" method="update" />
+	</package>
+</struts>
