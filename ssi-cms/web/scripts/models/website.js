@@ -295,11 +295,12 @@ Ext.onReady(function(){
 	});
 
 	app.window_add = new Ext.Window({
+		layout : 'fit',
 		title : '添加',
 		iconCls : 'icon-world_add',
 		width : 400,
+		height:300,
 		resizable : false,
-		autoHeight : true,
 		modal : true,
 		closeAction : 'hide',
 		listeners : {
@@ -472,13 +473,13 @@ Ext.onReady(function(){
 			if(app.grid.getSelectionModel().getSelected()){
 				var record = app.grid.getSelectionModel().getSelected();
 				var updateWin = new Ext.Window({ 
+					layout : 'fit',
 					id:'update_website_win',
 					title : '编辑',
 					iconCls:'icon-world_edit',
 					width : 450,
 					height : 440,
 					resizable : false,
-					autoHeight : true,
 					modal : true,
 					closeAction : 'close',
 					scope : this,
