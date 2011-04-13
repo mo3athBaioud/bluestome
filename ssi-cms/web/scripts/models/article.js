@@ -53,16 +53,26 @@ Ext.onReady(function(){
         )
     });
     
+    //语言图标
+    function qtips(val){
+    	if(null == val || '' ==  val){
+	        return '<span style="display:table;width:100%;" qtip=\'<img src="'+project+'/images/nopic.jpg">\'>暂无缩略图</span>'
+    	}else{
+	        return '<span style="display:table;width:100%;" qtip=\'<img src="' + val + '">\'>缩略图</span>'
+    	}
+    }
+    
     app.cm_article = new Ext.grid.ColumnModel([
 	    expander,
-//        {header: "ID", sortable: true, dataIndex: 'd_id'}, //width: 50, 
         {header: "类型", width: 50,
         	renderer : function(value) {
 				return '<img src="'+project+'/images/picture.png"/>';
 			}
         },
+        {header: "ID", width: 80, sortable: true, dataIndex: 'd_id'}, //width: 50, 
         {header: "标题", width: 200, sortable: true, dataIndex: 'd_title'},
         {header: "地址", width: 300, sortable: true, dataIndex: 'd_acticle_url'},
+        {header: "预览", width: 70, sortable: true, dataIndex: 'd_article_xml_url',renderer: qtips},
         {header: "状态", width: 70, sortable: true, dataIndex: 'd_text'},
         {header: "创建时间", width: 150, sortable: true,dataIndex: 'd_createtime'}
     ]);
@@ -76,6 +86,7 @@ Ext.onReady(function(){
 				mode:'local',
 				store : new Ext.data.SimpleStore({
 					data : [
+							['id', '文章ID'],
 							['title', '文章标题'],
 							['intro','文章介绍'],
 							['text','文章状态']
