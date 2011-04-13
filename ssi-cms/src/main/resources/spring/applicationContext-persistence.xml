@@ -96,6 +96,9 @@
 				<value>
 					classpath:com/ssi/dal/usgs/domain/sqlmap/sqlmap-config.xml
 				</value>
+				<value>
+					classpath:com/ssi/mobile/dal/domain/sqlmap/sqlmap-config.xml
+				</value>
 			</list>
 		</property>
 		<property name="dataSource">

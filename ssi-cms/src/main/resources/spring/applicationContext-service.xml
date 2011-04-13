@@ -39,4 +39,9 @@
 			<ref bean="earthQuakeInfoDAO" />
 		</property>
 	</bean>
+	
+	<!-- 2011-03-18 新框架业务类 -->
+	<bean id="sysconfigService" class="com.ssi.cms.web.service.impl.SysconfigServiceImpl">
+		<property name="entityDAO" ref="sysconfigDAO" />
+	</bean>
 </beans>

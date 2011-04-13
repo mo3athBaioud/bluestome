@@ -3,16 +3,21 @@
           "-//SPRING//DTD BEAN//EN"
           "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<bean id="websiteDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.WebsiteDAOImpl"/>
-	<bean id="articleDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.ArticleDAOImpl"/>
-	<bean id="articleDocDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.ArticleDocDAOImpl"/>
-	<bean id="imageDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.ImageDAOImpl"/>
-	<bean id="pictureFileDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.PictureFileDAOImpl"/>
-	<bean id="imageFileDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.ImageFileDAOImpl"/>
-	<bean id="chartDAO"  parent="baseDAO" class="com.ssi.common.dal.dao.impl.ChartDAOImpl"/>
+	<bean id="articleDAO"  parent="entityDAO" class="com.ssi.common.dal.dao.impl.ArticleDAOImpl" singleton="true"/>
+	<bean id="articleDocDAO"  parent="entityDAO" class="com.ssi.common.dal.dao.impl.ArticleDocDAOImpl" singleton="true"/>
+	<bean id="chartDAO"  parent="entityDAO" class="com.ssi.common.dal.dao.impl.ChartDAOImpl" singleton="true"/>
+	<bean id="entityDAO" parent="baseDAO" class="com.ssi.common.dal.IbatisEntityDao"/>
+	<bean id="imageDAO"  parent="entityDAO" class="com.ssi.common.dal.dao.impl.ImageDAOImpl" singleton="true"/>
+	<bean id="imageFileDAO"  parent="entityDAO" class="com.ssi.common.dal.dao.impl.ImageFileDAOImpl" singleton="true"/>
+	<bean id="pictureFileDAO"  parent="entityDAO" class="com.ssi.common.dal.dao.impl.PictureFileDAOImpl" singleton="true"/>
+	<bean id="sysconfigDAO"  parent="entityDAO" class="com.ssi.common.dal.dao.impl.SysConfigDAOImpl" singleton="true"/>
+	<bean id="websiteDAO"  parent="entityDAO" class="com.ssi.common.dal.dao.impl.WebsiteDAOImpl" singleton="true"/>
 	
 	
-	<bean id="earthQuakeInfoDAO"    parent="baseDAO" class="com.ssi.dal.usgs.dao.impl.EarthQuakeInfoDAOImpl"/>
-	<bean id="earthQuakeDetailDAO"  parent="baseDAO" class="com.ssi.dal.usgs.dao.impl.EarthQuakeDetailDAOImpl"/>
-	<bean id="earthQuakeRegionDAO"  parent="baseDAO" class="com.ssi.dal.usgs.dao.impl.EarthRegionDAOImpl"/>
+	<bean id="earthQuakeInfoDAO"    parent="entityDAO" class="com.ssi.dal.usgs.dao.impl.EarthQuakeInfoDAOImpl" singleton="true"/>
+	<bean id="earthQuakeDetailDAO"  parent="entityDAO" class="com.ssi.dal.usgs.dao.impl.EarthQuakeDetailDAOImpl" singleton="true"/>
+	<bean id="earthQuakeRegionDAO"  parent="entityDAO" class="com.ssi.dal.usgs.dao.impl.EarthRegionDAOImpl" singleton="true"/>
+	
+	<bean id="mobileBrandDAO"  parent="entityDAO" class="com.ssi.mobile.dal.dao.impl.MobileBrandDAOImpl" singleton="true"/>
+	
 </beans>

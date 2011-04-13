@@ -53,4 +53,12 @@
 			<ref bean="usgsService" />
 		</property>
 	</bean>
+
+	<bean id="sysconfigAction"
+		class="com.ssi.cms.web.action.SysconfigAction" scope="prototype"
+		parent="baseAction">
+		<property name="sysconfigService">
+			<ref bean="sysconfigService" />
+		</property>
+	</bean>
 </beans>
