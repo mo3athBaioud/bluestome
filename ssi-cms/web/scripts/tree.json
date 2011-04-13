@@ -12,4 +12,11 @@
 		"leaf":true,
 		"icon":"images/html.png",
 		"hrefTarget":"mainFrame"
+},{
+		"text":"系统配置管理",
+		"id":"03",
+		"href":"pages/sysconfig/sysconfig.jsp",
+		"leaf":true,
+		"icon":"images/html.png",
+		"hrefTarget":"mainFrame"
 }]
