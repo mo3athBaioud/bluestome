@@ -20,31 +20,6 @@ public class ArticleDAOImpl extends IbatisEntityDao<Article> implements IArticle
 	}
 	
 	/**
-	 * 添加记录
-	 * @param article
-	 * @return
-	 */
-//	public int insert(Article article){
-//		int result = -1;
-//		if(checkExists(article.getTitle(),article.getWebId(),article.getArticleUrl())){
-//			logger.info("webid["+article.getWebId()+"],title["+article.getTitle()+"],url["+article.getArticleUrl()+"] exists");
-//			return result;
-//		}
-//		result = (Integer)getEntityDelegate().insert("INSERT_ARTICLE", article, getRoute());
-//		return result;
-//	}
-	/**
-	 * 更新方法
-	 * @param article
-	 * @return
-	 */
-//	public int update(Article article){
-//		int result = -1;
-//		result = getEntityDelegate().update("UPDATE_ARTICLE", article, getRoute());
-//		return result;
-//	}
-	
-	/**
 	 * 根据对象查找记录
 	 * @param map
 	 * @return
