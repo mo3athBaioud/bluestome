@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ssi.cms.web.service.ArticleDocIService;
 import com.ssi.cms.web.service.IArticleService;
+import com.ssi.cms.web.service.ImageIService;
 import com.ssi.common.dal.domain.Article;
 import com.ssi.common.dal.domain.ArticleDoc;
 
@@ -29,9 +30,11 @@ public class ArticleAction extends BaseAction {
 	private List<ArticleDoc> articleDocList;
 
 	private IArticleService articleService;
+	
+	private ImageIService imageService;
 
 	private ArticleDocIService articleDocService;
-
+	
 	private Article article;
 
 	private Integer id;
@@ -246,6 +249,41 @@ public class ArticleAction extends BaseAction {
 		}
 		
 	}
+	
+	/**
+	 *  
+	 *设置文章缩略图
+	 */
+	public void previewIcon() throws Exception{
+		response.setCharacterEncoding("UTF-8");
+		try {
+			article = articleService.findById(id);
+			if(!article.getActicleXmlUrl().toLowerCase().endsWith(".xml")){
+				String iconUrl = request.getParameter("icon");
+				if(null != iconUrl && !"".equals(iconUrl)){
+					article.setActicleXmlUrl(iconUrl);
+					boolean b = articleService.update(article);
+					if(b){
+						response.getWriter().print(
+								"{success:true,msg:'设置文章[" + article.getTitle() + "]缩略图成功!'}");
+					}else{
+						response.getWriter().print(
+								"{failure:true,msg:'设置文章[" + article.getTitle() + "]缩略图失败!'}");
+					}
+				}else{
+					response.getWriter().print(
+							"{failure:true,msg:'设置文章[" + article.getTitle() + "]缩略图失败，未获取缩略图地址!'}");
+				}
+			}else{
+				response.getWriter().print(
+						"{failure:true,msg:'设置文章[" + article.getTitle() + "]缩略图失败，该文章不允许设置缩略图!'}");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.warn(">> ArticleAction.update.Exception:" + e);
+			response.getWriter().print("{failure:true,msg:'更新数据失败'}");
+		}
+	}
 
 	public Article getArticle() {
 		return article;
@@ -310,6 +348,8 @@ public class ArticleAction extends BaseAction {
 			json.put("d_text", article.getText());
 			json.put("d_title", article.getTitle());
 			json.put("d_web_id", article.getWebId());
+			int imgCount = imageService.getCount(null, null, article.getId());
+			json.put("d_img_count", imgCount);
 			jsonArr.add(json);
 		}
 		buffer.append(jsonArr.toString()).append("}");
@@ -349,6 +389,9 @@ public class ArticleAction extends BaseAction {
 		out.print(buffer.toString());
 		out.close();
 	}
+	
+	
+	
 
 	public IArticleService getArticleService() {
 		return articleService;
@@ -366,5 +409,14 @@ public class ArticleAction extends BaseAction {
 		this.ids = ids;
 	}
 
+	public ImageIService getImageService() {
+		return imageService;
+	}
+
+	public void setImageService(ImageIService imageService) {
+		this.imageService = imageService;
+	}
+
+	
 	
 }

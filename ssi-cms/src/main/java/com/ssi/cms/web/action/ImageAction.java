@@ -148,12 +148,11 @@ public class ImageAction extends BaseAction {
 			if(null != image.getPictureFile()){
 				json.put("d_httpurl", URL_PREFIX+image.getPictureFile().getName());
 				json.put("d_imgurl", URL_PREFIX+image.getPictureFile().getSmallName());
-			}else{
-				json.put("d_httpurl", image.getHttpUrl());
-				json.put("d_imgurl", image.getImgUrl());
 			}
-			json.put("d_src_httpurl", image.getHttpUrl());
-			json.put("d_src_imgurl", image.getImgUrl());
+			json.put("d_httpurl_src", image.getHttpUrl());
+			json.put("d_imgurl_src", image.getImgUrl());
+//			json.put("d_src_httpurl", image.getHttpUrl());
+//			json.put("d_src_imgurl", image.getImgUrl());
 			json.put("d_intro", image.getIntro());
 			json.put("d_link", image.getLink());
 			json.put("d_name", image.getName());
