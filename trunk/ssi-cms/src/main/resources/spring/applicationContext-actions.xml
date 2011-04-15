@@ -28,6 +28,9 @@
 		<property name="articleDocService">
 			<ref bean="articleDocService" />
 		</property>
+		<property name="imageService">
+			<ref bean="imageService" />
+		</property>
 	</bean>
 
 	<bean id="imageAction"
