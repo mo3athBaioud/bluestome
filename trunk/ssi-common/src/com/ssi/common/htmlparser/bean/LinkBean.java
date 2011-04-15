@@ -63,7 +63,10 @@ public class LinkBean implements Serializable{
 	}
 
 	public boolean isThumb() {
-		return thumb;
+		if(null != thumbUrl && !"".equals(thumbUrl)){
+			return true;
+		}
+		return false;
 	}
 
 	public void setThumb(boolean thumb) {
