@@ -30,7 +30,7 @@
 		</dynamic>
     </statement>
 
-  	<statement id="GET_SYSCONFIG_COUNT"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
+  	<statement id="sysconfig.count"  parameterClass="java.util.Map" resultClass="java.lang.Integer">
 		SELECT COUNT(*) FROM tbl_sysconfig T WHERE 1 = 1
 		<dynamic>
 			<isNotEmpty property="id" prepend="and">
@@ -60,7 +60,7 @@
 		</dynamic>
 	</statement>
 
-   	<statement id="QUERY_SYSCONFIG_BY_MAP"  parameterClass="java.util.Map" resultMap="sysConfigMap">
+   	<statement id="sysconfig.selectByMap"  parameterClass="java.util.Map" resultMap="sysConfigMap">
 		SELECT DISTINCT T.* FROM tbl_sysconfig T WHERE 1 = 1
 		<dynamic>
 			<isNotEmpty property="id" prepend="and">
@@ -123,6 +123,10 @@
  		d_modify_dt=now()
  		where d_id = #id#
 	</update>
+	
+	<delete id="sysconfig.deleteByPrimaryKey" parameterClass="java.lang.Integer">
+		delete from tbl_sysconfig where d_id = #value#
+	</delete>
 </sqlMap>
 
 
