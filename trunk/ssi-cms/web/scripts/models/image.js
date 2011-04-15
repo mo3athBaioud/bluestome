@@ -2,23 +2,42 @@
 Ext.onReady(function(){
 	Ext.QuickTips.init();
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
-	app.limit = 10;
+	app.limit = 15;
  	app.colName = colName;
 	app.values = values;
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
+    app.expander = new Ext.grid.RowExpander({
+        tpl : new Ext.Template(
+        	'<tpl for=".">', 
+        	'<p>缩略图:<a href="{d_imgurl_src}" target="_blank">地址</a></p>',
+        	'<p>原始图:<a href="{d_httpurl_src}" target="_blank">地址</a></p>',
+        	'<div class="thumb-wrap" id="{id}">', 
+        	'<div class="thumb"><table qtip="{d_title} border="0" width="100%"><tr><td align="center" valign="middle">', 
+        	'<img qtip="{d_title}" alt="{d_title}" class="thumb-img" src="{d_imgurl_src}" >', 
+        	'</td></tr></table></div>',
+        	'</div>',
+        	'</tpl>', 
+        	'<div class="x-clear"></div>')
+	 });
+	 
     function qtips(val){
-//	style="display:table;width:100%;" 
-		var imgUrl = '<span qtip=\'<img src="'+val+'"> \' >' + val + '</span>';
+		var imgUrl = '<span qtip=\'<img src="'+val+'"> \' >'+val+'</span>';
     	return imgUrl;
     }
     
-    app.cm_image = new Ext.grid.ColumnModel([new Ext.grid.RowNumberer(),app.sm, 
-        {id:'ID',header: "ID", sortable: true, dataIndex: 'd_id'},
-        {header: "标题", sortable: true, dataIndex: 'd_title'},
-        {header: "图片URL", sortable: true,renderer:qtips, dataIndex: 'd_imgurl'},
-//        {header: "状态", sortable: true, dataIndex: 'd_link'},
-        {header: "创建时间", sortable: true,dataIndex: 'd_createtime'}
+    function download(val){
+		var url = val;
+		window.location = url;
+    }
+    
+    app.cm_image = new Ext.grid.ColumnModel([
+    	app.expander, 
+        {id:'ID',header: "ID", width:100,sortable: true, dataIndex: 'd_id'},
+        {header: "标题", sortable: true, width:250,dataIndex: 'd_title'},
+        {header: "图片名称", sortable: true, dataIndex: 'd_name'},
+        {header: "状态", sortable: true, width:100,dataIndex: 'd_link'},
+        {header: "创建时间", sortable: true,width:150,dataIndex: 'd_createtime'}
     ]);
     
     app.cm_image.defaultSortable = false;
@@ -50,13 +69,71 @@ Ext.onReady(function(){
 		handler : app.searchcode
 	});
 	
+	
 	app.btn_download_img = new Ext.Button({
 		text:'下载图片',
 		iconCls:'icon-save',
 		handler:function(){
 			if(app.grid.getSelectionModel().getSelected()){
 				var record = app.grid.getSelectionModel().getSelected();
-				alert('获取文章ID:'+record.get('d_id'));
+				download(record.get('d_imgurl_src'));
+			}else{
+				Ext.MessageBox.alert("提示信息!!", "请选择要获取URL的数据!!");
+			}
+		}
+	});
+	
+	app.btn_back = new Ext.Button({
+		text:'返回',
+		iconCls:'icon-arrow_left',
+		handler:function(){
+			var url = String.format(project+"/pages/articles/article.jsp?id={0}",webId);
+			window.location = url;
+		}
+	});
+	
+	app.btn_set_article_icon = new Ext.Button({
+		text:'设置文章缩略图',
+		iconCls:'icon-anchor',
+		handler:function(){
+			if(app.grid.getSelectionModel().getSelected()){
+				var record = app.grid.getSelectionModel().getSelected();
+				Ext.Ajax.request({
+					url : project+'/article/picon.cgi',
+					params : {
+						id :record.get('d_article_id'),
+						icon : record.get('d_imgurl_src')
+					},
+					success:function(response,option){
+						var obj = Ext.util.JSON.decode(response.responseText);
+						if(obj.success){
+							Ext.Msg.show({
+								title : '系统提示',
+								msg : obj.msg,
+								buttons : Ext.Msg.OK,
+								fn:function(){
+									app.ds_image.load({params : {start:0,limit:app.limit}}); 
+								},
+								icon : Ext.MessageBox.INFO
+							});
+						}else{
+							Ext.Msg.show({
+								title : '系统提示',
+								msg : obj.msg,
+								buttons : Ext.Msg.OK,
+								icon : Ext.MessageBox.ERROR
+							});
+						}
+					},
+		            failure:function(){
+						Ext.Msg.show({
+							title : '系统提示',
+							msg : '服务器内部错误',
+							buttons : Ext.Msg.OK,
+							icon : Ext.MessageBox.ERROR
+						});
+		            }
+				})
 			}else{
 				Ext.MessageBox.alert("提示信息!!", "请选择要获取URL的数据!!");
 			}
@@ -109,8 +186,8 @@ Ext.onReady(function(){
 		}, [{name : 'd_id',type : 'int'
 		}, {name : 'd_article_id',type : 'int'
 		}, {name : 'd_title',type : 'string'
-		}, {name : 'd_imgurl',type : 'string'
-		}, {name : 'd_httpurl',type : 'string'
+		}, {name : 'd_imgurl_src',type : 'string'
+		}, {name : 'd_httpurl_src',type : 'string'
 		}, {name : 'd_commentsuburl',type : 'string'
 		}, {name : 'd_name',type : 'string'
 		}, {name : 'd_createtime',type : 'string'
@@ -156,26 +233,25 @@ Ext.onReady(function(){
 		},
 	    cm: app.cm_image,
 	    ds: app.ds_image,
-		autoHeight : true,
-//		autoWidth : true,
-//		width:800,
-		tbar : [app.btn_download_img,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code], //'-',app.btn_search_code
+	    height:600,
+        autoScroll: true,
+        viewConfig: {
+            forceFit:true
+        },
+ 		plugins: app.expander,
+ 		sm:app.sm,
+		tbar : [app.btn_back,'-',app.btn_set_article_icon,'-',app.btn_download_img,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code], //'-',app.btn_search_code
 		bbar : app.ptb
 	});
 	
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
 		if(grid.getSelectionModel().isSelected(rowIndex)){
-			var record = app.grid.getSelectionModel().getSelected();
-			Ext.get('op').dom.value += "ID:"+record.get('d_id') +　"\t" + record.get('d_title') + "\n" + record.get('d_name') 
-					+ '\t\t' + record.get('d_imgurl')
-					+ "\n---------------------------------------------------------------------------------------------------\n";
-			var url = record.get('d_imgurl');
-			window.location = url
+					var record = app.grid.getSelectionModel().getSelected();
+					var url = String.format(project+"/pages/images/image-dataview.jsp?id={0}&webid={1}",record.get('d_article_id'),webId);
+					window.location = url;
 		}
 	});
 
     app.grid.render('div-image');
-    
-//    app.grid.getSelectionModel().selectFirstRow();
     
 });

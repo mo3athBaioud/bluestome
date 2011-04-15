@@ -969,12 +969,12 @@ Ext.onReady(function(){
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
 		if(grid.getSelectionModel().isSelected(rowIndex)){
 			var record = app.grid.getSelectionModel().getSelected();
-			update(record);
 			/**
-			var url = record.get('d_web_url');
-			var arturl = project+'/pages/articles/article.jsp?id='+record.get('d_id');
-			window.open(arturl,'_blank');
+			update(record);
 			**/
+			var webId = record.get('d_id');
+			var url = String.format(project+"/pages/articles/article.jsp?id={0}",webId);
+			window.location = url;
 		}
 	});
 	

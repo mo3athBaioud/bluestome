@@ -44,10 +44,16 @@ Ext.onReady(function(){
 		name : 'webId',
 		mapping : 'd_web_id',
 		type : 'int'
+	}, {
+		name : 'imgCount',
+		mapping : 'd_img_count',
+		type : 'int'
 	}]);
     
+    //d_img_count
     var expander = new Ext.grid.RowExpander({
         tpl : new Ext.Template(
+        	'<p><b>图片数:</b><br/>{d_img_count}</p>',
             '<p><b>备注:</b><br/>{d_intro}</p>',
             '<p><b>网址:</b><br/>{d_acticle_url}<a href="{d_acticle_url}" target="_blank"><img src="'+project+'/images/world_go.png" alt="{d_web_name}"/></a></p>'
         )
@@ -56,22 +62,23 @@ Ext.onReady(function(){
     //语言图标
     function qtips(val){
     	if(null == val || '' ==  val){
-	        return '<span style="display:table;width:100%;" qtip=\'<img src="'+project+'/images/nopic.jpg">\'>暂无缩略图</span>'
+	        return '<span style="display:table;width:100%;" qtip=\'<img src="'+project+'/images/nopic.jpg">\'>无</span>'
     	}else{
-	        return '<span style="display:table;width:100%;" qtip=\'<img src="' + val + '">\'>缩略图</span>'
+	        return '<span style="display:table;width:100%;" qtip=\'<img src="' + val + '">\'>有</span>'
     	}
     }
     
     app.cm_article = new Ext.grid.ColumnModel([
 	    expander,
-        {header: "类型", width: 50,
+        {header: "类型", width: 80,
         	renderer : function(value) {
 				return '<img src="'+project+'/images/picture.png"/>';
 			}
         },
         {header: "ID", width: 80, sortable: true, dataIndex: 'd_id'}, //width: 50, 
-        {header: "标题", width: 200, sortable: true, dataIndex: 'd_title'},
-        {header: "地址", width: 300, sortable: true, dataIndex: 'd_acticle_url'},
+        {header: "标题", width: 150, sortable: true, dataIndex: 'd_title'},
+        {header: "地址", width: 200, sortable: true, dataIndex: 'd_acticle_url'},
+        {header: "图数", width: 80, sortable: true, dataIndex: 'd_img_count'},
         {header: "预览", width: 70, sortable: true, dataIndex: 'd_article_xml_url',renderer: qtips},
         {header: "状态", width: 70, sortable: true, dataIndex: 'd_text'},
         {header: "创建时间", width: 150, sortable: true,dataIndex: 'd_createtime'}
@@ -200,6 +207,7 @@ Ext.onReady(function(){
 		}, {name : 'd_text',type : 'string'
 		}, {name : 'd_createtime',type : 'string'
 		}, {name : 'd_intro',type : 'string'
+		}, {name : 'd_img_count',type : 'int'
 		}])
 	});
 	
@@ -559,6 +567,7 @@ Ext.onReady(function(){
 			if(app.grid.getSelectionModel().getSelected()){
 			var record = app.grid.getSelectionModel().getSelected();
 				var updateWin = new Ext.Window({ 
+					id:'update_article_win',
 					title : '编辑',
 					iconCls:'icon-edit',
 					width : 450,
@@ -567,7 +576,9 @@ Ext.onReady(function(){
 					autoHeight : true,
 					modal : true,
 					closeAction : 'close',
-					items : [new Ext.FormPanel({
+					items : [
+					new Ext.FormPanel({
+						id:'update_article_form',
 						labelWidth : 80,
 						labelAlign : 'right',
 						url : project+'/article/update.cgi',
@@ -654,23 +665,19 @@ Ext.onReady(function(){
 												title : '系统提示',
 												msg : '修改文章"' + dnfield.getValue() + '"成功!',
 												buttons : Ext.Msg.OK,
-//												fn : function() {
-//													dnfield.focus(true);
-//													btn.enable();
-//												},
+												fn : function() {
+													Ext.getCmp('update_article_form').form.reset();
+													app.ds_article.load({params : {start : 0,limit : app.limit}});
+													btn.enable();
+												},
 												icon : Ext.MessageBox.INFO
 											});
-											app.ds_article.load({params : {start : 0,limit : app.limit}});
 										},
 										failure : function() {
 											Ext.Msg.show({
 												title : '错误提示',
 												msg : '"' + dnfield.getValue() + '" ' + '名称可能已经存在或者您没有更新数据的权限!',
 												buttons : Ext.Msg.OK,
-//												fn : function() {
-//													dnfield.focus(true);
-//													btn.enable();
-//												},
 												icon : Ext.Msg.ERROR
 											});
 										}
@@ -680,13 +687,15 @@ Ext.onReady(function(){
 						}, {
 							text : '重置',
 							handler : function() {
-								this.ownerCt.form.reset();
+//								this.ownerCt.form.reset();
+								Ext.getCmp('update_article_form').form.reset();
 							}
 						}, {
 							text : '取消',
 							handler : function() {
-								this.ownerCt.ownerCt.close();
-								this.ownerCt.form.reset();
+								Ext.getCmp('update_article_form').form.reset();
+								var win = Ext.getCmp('update_article_win');
+								win.close();
 							}
 						}]
 					})]
@@ -764,7 +773,7 @@ Ext.onReady(function(){
 		},
 	    cm: app.cm_article,
 	    ds: app.ds_article,
-	    width:850,
+//	    width:850,
 	    height:600,
         autoScroll: true,
         viewConfig: {
@@ -783,7 +792,7 @@ Ext.onReady(function(){
 //					Ext.get('op').dom.value += "ID:"+record.get('d_id') +　"\t" + record.get('d_title') + "\t" + record.get('d_acticle_url') 
 //							+ '\td_web_id:'+webId
 //							+ "\n---------------------------------------------------------------------------------------------------\n";
-					var url = String.format(project+"/pages/images/image.jsp?id={0}",record.get('d_id'));
+					var url = String.format(project+"/pages/images/image.jsp?id={0}&webid={1}",record.get('d_id'),record.get('d_web_id'));
 					window.location = url;
 				}
 	});
