@@ -14,8 +14,10 @@
         <script type="text/javascript" src="${ctx}/scripts/common/ImageDragZone.js">
         </script>
 		<script type="text/javascript" src="${ctx}/adapter/ext/ext-lang-zh_CN.js"></script>
-		<script type="text/javascript" src="${ctx}/scripts/common/RowExpander.js"></script>
+		<!-- 
 		<script type="text/javascript" src="${ctx}/scripts/models/image.js"></script>
+		 -->
+		<script type="text/javascript" src="${ctx}/scripts/models/image-dataview.js"></script>
 		<script type="text/javascript">
 		    	var project = '${ctx}';
 				var articleId = '${param.id}';
@@ -26,12 +28,12 @@
         <style type="text/css">
             .thumb {
                 background: #dddddd;
-                padding: 2px 2px 2px 2px;
+                padding: 3px;
             } .thumb table {
-                height: 100%;
-                width: 250px;
+                height: 120px;
+                width: 120px;
             } .thumb img {
-                border: 0px solid white;
+                border: 1px solid white;
             } .thumb-wrap {
                 float: left;
                 margin: 4px;
