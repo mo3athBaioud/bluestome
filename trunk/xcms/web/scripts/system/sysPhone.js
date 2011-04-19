@@ -27,7 +27,7 @@ Ext.onReady(function(){
 		return checked
 	}
 	
-	var Operator =Ext.data.Record.create([
+	var record =Ext.data.Record.create([
 		{name:'id',mapping:'D_ID',type:'int'},
 		{name:'enName',mapping:'D_ENNAME',type:'string'},
 		{name:'chName',mapping:'D_CHNAME',type:'string'},
@@ -37,10 +37,61 @@ Ext.onReady(function(){
 	]);
 
 	app.data = [
-		[1,'Nokia','诺基亚','images/nokia.jpg',1,'芬兰'],
-		[2,'Moto','摩托罗拉','images/moto.jpg',1,'美国'],
-		[3,'HTC','宏达','images/htc.jpg',1,'中国台湾'],
-		[4,'Sanm','三星','images/sx.jpg',1,'韩国']
+//		[1,'Nokia','诺基亚','images/nokia.jpg',1,'芬兰'],
+//		[2,'Moto','摩托罗拉','images/moto.jpg',1,'美国'],
+//		[3,'HTC','宏达','images/htc.jpg',1,'中国台湾'],
+//		[4,'Sanm','三星','images/sx.jpg',1,'韩国']
+		[1,'NOKIA（诺基亚）','NOKIA（诺基亚）','http://2.zol-img.com.cn/manu_photo/297_.jpg',1,'暂无'],
+		[2,'Samsung（三星）','Samsung（三星）','http://2.zol-img.com.cn/manu_photo/98_.jpg',1,'暂无'],
+		[3,'MOTO（摩托罗拉）','MOTO（摩托罗拉）','http://2.zol-img.com.cn/manu_photo/295_.jpg',1,'暂无'],
+		[4,'HTC','HTC','http://2.zol-img.com.cn/manu_photo/33080_.jpg',1,'暂无'],
+		[5,'Apple（苹果）','Apple（苹果）','http://2.zol-img.com.cn/manu_photo/544_.jpg',1,'暂无'],
+		[6,'Sony Ericsson（索尼爱立信）','Sony Ericsson（索尼爱立信）','http://2.zol-img.com.cn/manu_photo/1069_.jpg',1,'暂无'],
+		[7,'联想','联想','http://2.zol-img.com.cn/manu_photo/1763_.jpg',1,'暂无'],
+		[8,'LG','LG','http://2.zol-img.com.cn/manu_photo/143_.jpg',1,'暂无'],
+		[9,'天语','天语','http://2.zol-img.com.cn/manu_photo/32729_.jpg',1,'暂无'],
+		[10,'步步高','步步高','http://2.zol-img.com.cn/manu_photo/1795_.jpg',1,'暂无'],
+		[11,'MEIZU（魅族）','MEIZU（魅族）','http://2.zol-img.com.cn/manu_photo/1434_.jpg',1,'暂无'],
+		[12,'Sharp（夏普）','Sharp（夏普）','http://2.zol-img.com.cn/manu_photo/300_.jpg',1,'暂无'],
+		[13,'Apanda（首派）','Apanda（首派）','http://2.zol-img.com.cn/manu_photo/33941_.jpg',1,'暂无'],
+		[14,'华为','华为','http://2.zol-img.com.cn/manu_photo/613_.jpg',1,'暂无'],
+		[15,'CoolPAD（酷派）','CoolPAD（酷派）','http://2.zol-img.com.cn/manu_photo/1606_.jpg',1,'暂无'],
+		[16,'ZTE（中兴）','ZTE（中兴）','http://2.zol-img.com.cn/manu_photo/642_.jpg',1,'暂无'],
+		[17,'纽曼','纽曼','http://2.zol-img.com.cn/manu_photo/1081_.jpg',1,'暂无'],
+		[18,'多普达','多普达','http://2.zol-img.com.cn/manu_photo/1041_.jpg',1,'暂无'],
+		[19,'OPPO','OPPO','http://2.zol-img.com.cn/manu_photo/1673_.jpg',1,'暂无'],
+		[20,'现代手机','现代手机','http://2.zol-img.com.cn/manu_photo/34004_.jpg',1,'暂无'],
+		[21,'金立','金立','http://2.zol-img.com.cn/manu_photo/1632_.jpg',1,'暂无'],
+		[22,'DELL（戴尔）','DELL（戴尔）','http://2.zol-img.com.cn/manu_photo/21_.jpg',1,'暂无'],
+		[23,'长虹','长虹','http://2.zol-img.com.cn/manu_photo/1589_.jpg',1,'暂无'],
+		[24,'Konka（康佳）','Konka（康佳）','http://2.zol-img.com.cn/manu_photo/599_.jpg',1,'暂无'],
+		[25,'Acer宏?','Acer宏?','http://2.zol-img.com.cn/manu_photo/218_.jpg',1,'暂无'],
+		[26,'泰克飞石','泰克飞石','http://2.zol-img.com.cn/manu_photo/32833_.jpg',1,'暂无'],
+		[27,'iHKC（弘谷电）','iHKC（弘谷电）','http://2.zol-img.com.cn/manu_photo/32730_.jpg',1,'暂无'],
+		[28,'Toshiba（东芝）','Toshiba（东芝）','http://2.zol-img.com.cn/manu_photo/209_.jpg',1,'暂无'],
+		[29,'DEC（中恒）','DEC（中恒）','http://2.zol-img.com.cn/manu_photo/1099_.jpg',1,'暂无'],
+		[30,'Haier（海尔）','Haier（海尔）','http://2.zol-img.com.cn/manu_photo/221_.jpg',1,'暂无'],
+		[31,'Hisense（海信）','Hisense（海信）','http://2.zol-img.com.cn/manu_photo/19_.jpg',1,'暂无'],
+		[32,'ASUS（华硕）','ASUS（华硕）','http://2.zol-img.com.cn/manu_photo/227_.jpg',1,'暂无'],
+		[33,'EY（亿通）','EY（亿通）','http://2.zol-img.com.cn/manu_photo/34096_.jpg',1,'暂无'],
+		[34,'koobee','koobee','http://2.zol-img.com.cn/manu_photo/34023_.jpg',1,'暂无'],
+		[35,'HEDY（七喜）','HEDY（七喜）','http://2.zol-img.com.cn/manu_photo/23_.jpg',1,'暂无'],
+		[36,'TCL','TCL','http://2.zol-img.com.cn/manu_photo/171_.jpg',1,'暂无'],
+		[37,'Amoi（夏新）','Amoi（夏新）','http://2.zol-img.com.cn/manu_photo/563_.jpg',1,'暂无'],
+		[38,'ViewSonic（优派）','ViewSonic（优派）','http://2.zol-img.com.cn/manu_photo/314_.jpg',1,'暂无'],
+		[39,'CASIO（卡西欧）','CASIO（卡西欧）','http://2.zol-img.com.cn/manu_photo/321_.jpg',1,'暂无'],
+		[40,'GIGABYTE（技嘉）','GIGABYTE（技嘉）','http://2.zol-img.com.cn/manu_photo/234_.jpg',1,'暂无'],
+		[41,'HP（惠普）','HP（惠普）','http://2.zol-img.com.cn/manu_photo/223_.jpg',1,'暂无'],
+		[42,'Philips（飞利浦）','Philips（飞利浦）','http://2.zol-img.com.cn/manu_photo/159_.jpg',1,'暂无'],
+		[43,'爱国者','爱国者','http://2.zol-img.com.cn/manu_photo/29_.jpg',1,'暂无'],
+		[44,'malata（万利达）','malata（万利达）','http://2.zol-img.com.cn/manu_photo/1071_.jpg',1,'暂无'],
+		[45,'西铂','西铂','http://2.zol-img.com.cn/manu_photo/34048_.jpg',1,'暂无'],
+		[46,'首亿','首亿','http://2.zol-img.com.cn/manu_photo/34445_.jpg',1,'暂无'],
+		[47,'FADAR（锋达通）','FADAR（锋达通）','http://2.zol-img.com.cn/manu_photo/33477_.jpg',1,'暂无'],
+		[48,'华录','华录','http://2.zol-img.com.cn/manu_photo/33139_.jpg',1,'暂无'],
+		[49,'Sansui（山水）','Sansui（山水）','http://2.zol-img.com.cn/manu_photo/1008_.jpg',1,'暂无'],
+		[50,'宇达电通MIO','宇达电通MIO','http://2.zol-img.com.cn/manu_photo/1806_.jpg',1,'暂无'],
+		[51,'bodee（博迪）','bodee（博迪）','http://2.zol-img.com.cn/manu_photo/33502_.jpg',1,'暂无']	
 	];
 
 //	var ds_phone = new Ext.data.Store({
@@ -124,14 +175,26 @@ Ext.onReady(function(){
 		}]
     });
     
+    //语言图片
+    function qtips(val){
+//    	var record = grid_phone.getSelectionModel().getSelected();
+    	if('' != val && null != val){
+        	return '<span style="display:table;width:100%;" qtip=\'<img src="' + val + '">\'>缩略图</span>'
+    	}else{
+        	return '<span style="display:table;width:100%;" qtip=\'<img src="/images/nopic.jpg">\'>暂无图标</span>'
+    	}
+    }
+                
 	 var cm_phone =new Ext.grid.ColumnModel([new Ext.grid.RowNumberer(),sm,
 				{	
+					id:'d_enname',
 					header:"英文名称", 
 					dataIndex:"D_ENNAME", 
 					sortable:true,
 					width:120,
 					menuDisabled : true
 				},{
+					id:'d_chname',
 					header:"中文名称", 
 					dataIndex:"D_CHNAME", 
 					sortable:false,
@@ -141,13 +204,17 @@ Ext.onReady(function(){
 					header:"产地", 
 					dataIndex:"D_REGION", 
 					sortable:false,
-					width:200,
+					width:100,
 					menuDisabled : true
 				},{
 					header:"图标", 
 					dataIndex:"D_ICON", 
 					sortable:true,
-					width:130
+					width:130,
+				    renderer: qtips
+//					renderer : function(value) {
+//						return '<img height=20px src="'+value+'"/>';
+//					}
 				},{
 					header:"状态", 
 					dataIndex:"D_STATUS",
@@ -172,7 +239,9 @@ Ext.onReady(function(){
 	 	text:'添加',
 	 	iconCls:'icon-phone_add',
 	 	handler:function(){
+			Ext.getCmp('btn_form_reset').show();
 	 		windows_add_phone.show();
+	 		windows_add_phone.setTitle('<img src="../../images/phone_add.png" align="top" class="IEPNG">添加');
 	 	}
 	 });
 	 
@@ -209,7 +278,7 @@ Ext.onReady(function(){
 	
 	 var btn_undel_phone = new Ext.Button({
 		text : '解除删除',
-//		iconCls : 'icon-user_delete',
+		iconCls : 'icon-cancel',
 		handler : function() {
 			var records = grid_phone.getSelectionModel().getSelections();
 			if(records.length != 0 ){
@@ -253,52 +322,52 @@ Ext.onReady(function(){
 	});
 	
 	var searchoperator = function() {
-			var colname = search_comb_queyrCol_phone.getValue();
-			var values = text_search_phone.getValue();
-				Ext.Ajax.request({
-					url : 'sysOperator.action',
-					params : {
-						colName : colname,
-						value :  values
-					},
-					success:function(response,option){
-						var obj = Ext.util.JSON.decode(response.responseText);
-						if(obj.success){
-							ds_phone.load({
-								params : 
-								{
-									start : 0,
-									limit : limit
-								}
-							})
-						}else{
-							if(obj.msg == null || obj.msg == ''){
-								Ext.Msg.show({
-									title : '提示',
-									msg : '查询数据失败',
-									buttons : Ext.Msg.OK,
-									icon : Ext.Msg.ERROR
-								})
-							}else{
-								Ext.Msg.show({
-									title : '提示',
-									msg : obj.msg,
-									buttons : Ext.Msg.OK,
-									icon : Ext.Msg.ERROR
-								})
+		var colname = search_comb_queyrCol_phone.getValue();
+		var values = text_search_phone.getValue();
+			Ext.Ajax.request({
+				url : 'sysOperator.action',
+				params : {
+					colName : colname,
+					value :  values
+				},
+				success:function(response,option){
+					var obj = Ext.util.JSON.decode(response.responseText);
+					if(obj.success){
+						ds_phone.load({
+							params : 
+							{
+								start : 0,
+								limit : limit
 							}
-						}
-					},
-	                failure:function(response,option){
+						})
+					}else{
+						if(obj.msg == null || obj.msg == ''){
 							Ext.Msg.show({
 								title : '提示',
-								msg : '系统错误',
+								msg : '查询数据失败',
 								buttons : Ext.Msg.OK,
 								icon : Ext.Msg.ERROR
-							});
-	                }
-				})
-	}
+							})
+						}else{
+							Ext.Msg.show({
+								title : '提示',
+								msg : obj.msg,
+								buttons : Ext.Msg.OK,
+								icon : Ext.Msg.ERROR
+							})
+						}
+					}
+				},
+	            failure:function(response,option){
+						Ext.Msg.show({
+							title : '提示',
+							msg : '系统错误',
+							buttons : Ext.Msg.OK,
+							icon : Ext.Msg.ERROR
+						});
+	            }
+			})
+	};
 	
 	var search_comb_queyrCol_phone = new Ext.form.ComboBox({
 		fieldLabel : '查询条件',
@@ -309,9 +378,8 @@ Ext.onReady(function(){
 		mode:'local',
 		store : new Ext.data.SimpleStore({
 			data : [
-					['enName', '登录名'],
-					['realName', '真实姓名'],
-				    ['email', '电子邮件']
+					['enName', '英文名称'],
+					['realName', '中文名称']
 		    ],
 			fields : ['id', 'name']
 		}),	
@@ -320,6 +388,31 @@ Ext.onReady(function(){
 		allowBlank : true,
 		triggerAction : 'all',
 		emptyText : '查询的字段名'
+	});
+	
+	var search_comb_queyrCol_region = new Ext.form.ComboBox({
+		fieldLabel : '查询条件',
+		id : 'column_operator',
+		hiddenName : 'colName',
+		valueField : 'id',
+		displayField : 'name',
+		mode:'local',
+		store : new Ext.data.SimpleStore({
+			data : [
+				['1','中国'],
+				['2', '美国'],
+				['3', '韩国'],
+				['4', '日本'],
+				['5', '台湾'],
+				['6', '芬兰']
+		    ],
+			fields : ['id', 'name']
+		}),	
+		selectOnFocus : true,
+		editable : false,
+		allowBlank : true,
+		triggerAction : 'all',
+		emptyText : '请选择手机产品'
 	});
 	
 	var btn_search_phone = new Ext.Button({
@@ -332,229 +425,28 @@ Ext.onReady(function(){
 	
 	var btn_show_phone_detail = new Ext.Button({
 		text : '查看详情',
-//		iconCls : 'icon-user_comment',
+		iconCls : 'icon-application_view_detail',
 		handler : function() {
-			if(grid_phone.getSelectionModel().getSelected()){
-				var record = grid_phone.getSelectionModel().getSelected();
-				new Ext.Window({ 
-					title:'<img src="../../images/user_comment.png" align="top" class="IEPNG"><span style="font-weight:normal">查看系统操作员详情</span>',
-					id:'show_phone_detail_window',
-					width : 350,
-					resizable : false,
-					autoHeight : true,
-					modal : true,
-					closable:false,
-					items : [new Ext.FormPanel({
-						labelWidth : 70,
-						url : 'updateoperator.action',
-						border : false,
-						baseCls : 'x-plain',
-						bodyStyle : 'padding:5px 5px 0',
-						defaultType : 'textfield',
-						defaults:{
-							anchor : '80%',
-							msgTarget:'side'
-						},
-						items : [
-						{ 
-							fieldLabel : 'ID',
-							xtype:'hidden',
-							value : record.get('D_ID'),
-							readOnly : true
-						},
-						{
-							fieldLabel : '英文名称',
-							value : record.get('D_ENNAME'),
-							readOnly : true
-						},{
-							fieldLabel : '中文名称',	
-							xtype:'hidden',
-							value:record.get('D_CHNAME'),
-							readOnly : true
-						},{
-							fieldLabel : '图标',
-							value : record.get('D_ICON'),
-							readOnly : true
-						},{
-							fieldLabel : '状态',
-							value:'系统操作员',
-							readOnly:true
-						},{
-							fieldLabel : '产地',
-							xtype:'combo',
-							hiddenName : 'phone.district',
-							valueField : 'id',
-							displayField : 'name',
-							mode:'local',
-							store : new Ext.data.SimpleStore({
-								data : [
-										['1','中国'],
-										['2', '美国'],
-										['3', '韩国'],
-										['4', '日本'],
-										['5', '台湾'],
-										['6', '芬兰']
-							    ],
-								fields : ['id', 'name']
-							}),	
-							selectOnFocus : true,
-							editable:false,
-							allowBlank : false,
-							triggerAction : 'all',
-							emptyText : '当前所属:"'+record.get('D_REGION')+'"'
-						}],
-						buttonAlign : 'right',
-						minButtonWidth : 60,
-						buttons : [
-						{
-							text : '关闭',
-							handler : function() {
-								Ext.getCmp('show_phone_detail_window').close();
-							}
-						}]
-					})]
-				}).show()
-			}else{
-				Ext.Msg.show({
-					title : '提示',
-					msg : '请选择一条你需要查看的记录',
-					buttons : Ext.Msg.OK,
-					icon : Ext.Msg.ERROR
-				});
-			}
+			Ext.getCmp('btn_form_reset').hide();
+			Ext.getCmp('btn_form_add').hide();
+			var record = grid_phone.getSelectionModel().getSelected();
+			app.phone_form.getForm().loadRecord(record);
+	 		windows_add_phone.show();
+	 		windows_add_phone.setTitle('<img src="../../images/phone_add.png" align="top" class="IEPNG">查看详情');
 		}
 	});
 	
 	var update_phone_btn = new Ext.Button({  
 		text: '修改',
-//		iconCls:'icon-user_edit',
+		iconCls:'icon-edit',
 		handler:function(){
 			if(grid_phone.getSelectionModel().getSelected()){
-			var record = grid_phone.getSelectionModel().getSelected();
-			new Ext.Window({ 
-					id:'update_phone_window',
-					title : '<img src="../../images/user_edit.png" align="top" class="IEPNG">更新操作员',
-					width : 350,
-					resizable : false,
-					autoHeight : true,
-					modal : true,
-					closable:false,
-					items : [new Ext.FormPanel({
-						id:'update_phone_form',
-						labelWidth : 70,
-						labelAlign : 'right',
-						url : 'updateoperator.action',
-						border : false,
-						baseCls : 'x-plain',
-						bodyStyle : 'pding:5px 5px 0',
-						defaultType : 'textfield',
-						defaults: {
-	                        anchor: '80%',
-	                        msgTarget:'side'
-	                    },
-	                    items : [
-						{ 
-							fieldLabel : 'ID',
-							xtype:'hidden',
-							id : 'id',
-							name : 'phone.id',
-							readOnly : true,
-							value : record.get('D_ID')
-						},
-						{
-							fieldLabel : '英文名称',
-							name : 'phone.enName',
-							value : record.get('D_ENNAME'),
-							vtype:'alphanum'
-							
-						}, {
-							fieldLabel : '中文名称',	
-							name : 'phone.chName',
-							value:record.get('D_CHNAME')
-						},{
-							fieldLabel : '图标',
-							name : 'phone.icon',
-							value : record.get('D_ICON')
-						},{
-							fieldLabel : '状态',
-							xtype:'combo',
-							id:'sysOperator_update_status',
-							hiddenName : 'phone.status',
-							valueField : 'id',
-							displayField : 'name',
-							mode:'local',
-							store : new Ext.data.SimpleStore({
-								data : [
-										['1','启用'],
-										['2','停用']
-							    ],
-								fields : ['id', 'name']
-							}),	
-							selectOnFocus : true,
-							editable:false,
-							allowBlank : false,
-							triggerAction : 'all',
-							emptyText : '当前状态为:' + (record.get('D_STATUS') == 1 ? '启用':'停用')
-						},{
-							fieldLabel : '产地',
-							xtype:'combo',
-							id:'update_operator_district',
-							hiddenName : 'phone.district',
-							valueField : 'id',
-							displayField : 'name',
-							mode:'local',
-							store : new Ext.data.SimpleStore({
-								data : [
-										['1','中国'],
-										['2','美国'],
-										['3','韩国'],
-										['4','日本'],
-										['5','台湾'],
-										['6','芬兰']
-							    ],
-								fields : ['id', 'name']
-							}),	
-							selectOnFocus : true,
-							editable:false,
-							allowBlank : false,
-							triggerAction : 'all',
-							emptyText : '当前产地为'+record.get('D_REGION')+'!'
-						}],
-						buttonAlign : 'right',
-						minButtonWidth : 60,
-						buttons : [{
-							text : '更新',
-							handler : function(btn) {
-								var frm = Ext.getCmp('update_phone_form').form;
-								if (frm.isValid()) {
-										btn.disable();
-										Ext.Msg.show({
-											title : '提示',
-											msg : '更新记录成功!',
-											buttons : Ext.Msg.OK,
-											fn : function() {
-												dnfield.focus(true);
-												btn.enable();
-											},
-											icon : Ext.Msg.INFO
-										});
-								}
-							}
-						}, {
-							text : '重置',
-							handler : function() {
-								Ext.getCmp('update_phone_form').form.reset();
-							}
-						}, {
-							text : '取消',
-							handler : function() {
-								Ext.getCmp('update_phone_form').form.reset();
-								Ext.getCmp('update_phone_window').close();
-							}
-						}]
-					})]
-				
-			}).show();
+				Ext.getCmp('btn_form_add').show();
+				Ext.getCmp('btn_form_reset').hide();
+				var record = grid_phone.getSelectionModel().getSelected();
+				app.phone_form.getForm().loadRecord(record);
+				windows_add_phone.show();
+				windows_add_phone.setTitle('<img src="../../images/user_edit.png" align="top" class="IEPNG">编辑');
 		}else{
 			Ext.Msg.show({
 				title : '提示',
@@ -566,17 +458,9 @@ Ext.onReady(function(){
 		}
 	});
 	
-	 var windows_add_phone = new Ext.Window({
-	 	id:'windows_add_phone',
-	 	title:'<img src="../../images/phone_add.png" align="top" class="IEPNG">添加',
-		width : 350,
-		height : 440,
-		resizable : false,
-		autoHeight : true,
-		modal : true,
-		closable:false,
-		items:[new Ext.FormPanel({
-			id:'add_phone_form',
+	
+	app.phone_form = new Ext.FormPanel({
+			id:'phone_form',
 			border:false,
 			baseCls:'x-plain',
 			bodyStyle:'pding:5px 5px 0',
@@ -590,28 +474,28 @@ Ext.onReady(function(){
 			items:[{	
 				fieldLabel : '英文名称',
 				id:'phone.enName',
-				name:'phone.enName',
+				name:'D_ENNAME',
 				allowBlank:false,
-				vtype:'alphanum',
-				maxLength:20
+//				vtype:'alphanum',
+				maxLength:64
 			},{	
 				fieldLabel:'中文名称',
 				id:'pass',
-				name:'phone.chName',
+				name:'D_CHNAME',
 				vtype:'safe',
-				inputType:'chName',
+//				inputType:'chName',
 				allowBlank:false,
-				maxLength:20
+				maxLength:64
 			},{
 				fieldLabel:'图标',
-				name:'icon',
+				name:'D_ICON',
 	            inputType: 'icon',
 	            allowBlank: false, //false则不能为空，默认为true
-	            maxLength:20
+	            maxLength:512
 			},{
 				fieldLabel:'状态',
 				xtype:'combo',
-				id:'sysOperator_add_status',
+				id:'D_STATUS',
 				hiddenName:'phone.status',
 				valueField:'id',
 				displayField:'name',
@@ -634,7 +518,7 @@ Ext.onReady(function(){
 				fieldLabel : '产地',
 				xtype:'combo',
 				id:'detail_operator_district',
-				hiddenName : 'phone.district',
+				hiddenName : 'D_REGION',
 				valueField : 'id',
 				displayField : 'name',
 				mode:'local',
@@ -655,34 +539,63 @@ Ext.onReady(function(){
 				triggerAction : 'all',
 				emptyText : '请选择产地!'
 			}],
-			buttonAlign:'right',
+			buttonAlign:'center',
 			minButtonWidth:60,
 			buttons:[{
+			  id:'btn_form_add',
+			  iconCls:'icon-accept',
 			  text:'添加',
 			  handler:function(btn){
-			  	var frm =Ext.getCmp('add_phone_form').form;
+			  	var frm =Ext.getCmp('phone_form').form;
 			  	if(frm.isValid()){
 						Ext.Msg.show({
 							title : '提示',
 							msg : '添加操作员成功!',
 							buttons : Ext.Msg.OK,
+							fn:function(){
+								hsBrandTree.root.reload()
+								Ext.getCmp('phone_form').form.reset();
+								windows_add_phone.hide();
+							},
 							icon : Ext.Msg.INFO
 						});
 			  	}
 			  }
 			},{
+				id:'btn_form_reset',
 				text : '重置',
+				iconCls:'icon-arrow_refresh_small',
 				handler : function() {
-					Ext.getCmp('add_phone_form').form.reset();
+					Ext.getCmp('phone_form').form.reset();
 				}
 			}, {
+				id:'btn_form_cancel',
+				iconCls:'icon-delete',
 				text : '取消',
 				handler : function() {
+					Ext.getCmp('phone_form').form.reset();
 					windows_add_phone.hide();
-					Ext.getCmp('add_phone_form').form.reset();
 				}
 			}]
-		})]
+		});
+		
+	 var windows_add_phone = new Ext.Window({
+	 	id:'windows_add_phone',
+	 	title:'<img src="../../images/phone_add.png" align="top" class="IEPNG">添加',
+		width : 350,
+		height : 440,
+		resizable : false,
+		autoHeight : true,
+		modal : true,
+		closable:false,
+		animCollapse : true,
+		pageY : 20,
+		pageX : document.body.clientWidth / 2 - 420 / 2,
+		animateTarget : Ext.getBody(),
+		constrain : true,
+		items:[
+			app.phone_form
+		]
 		
 	});
 	
@@ -708,7 +621,7 @@ Ext.onReady(function(){
 		cm : cm_phone,
 		ds : ds_phone,
 		sm : sm,
-	    tbar : [btn_add_phone, '-', btn_undel_phone,'-',btn_del_phone,'-',update_phone_btn,'-',btn_show_phone_detail,'-',search_comb_queyrCol_phone,'-',
+	    tbar : [btn_add_phone, '-', btn_undel_phone,'-',btn_del_phone,'-',update_phone_btn,'-',btn_show_phone_detail,'-','手机产地:',search_comb_queyrCol_region,'-',search_comb_queyrCol_phone,'-',
 				text_search_phone, btn_search_phone],
 		bbar : ptb
 	});
@@ -751,29 +664,30 @@ Ext.onReady(function(){
 	
 	var viewport = new Ext.Viewport({
 		layout : 'border',
-		items : [{
-					title : '<span style="font-weight:normal">手机品牌</span>',
-					iconCls : 'icon-phone',
-					tools : [{
-								id : 'refresh',
-								handler : function() {
-									hsBrandTree.root.reload()
-								}
-							}],
-					collapsible : true,
-					width : 210,
-					minSize : 160,
-					maxSize : 280,
-					split : true,
-					region : 'west',
-					autoScroll : true,
-					// collapseMode:'mini',
-					items : [hsBrandTree]
-				}, {
-					region : 'center',
-					layout : 'fit',
-					items : [grid_phone]
-				}]
+		items : [
+		{
+			title : '<span style="font-weight:normal">手机品牌</span>',
+			iconCls : 'icon-phone',
+			tools : [{
+						id : 'refresh',
+						handler : function() {
+							hsBrandTree.root.reload()
+						}
+					}],
+			collapsible : true,
+			width : 210,
+			minSize : 160,
+			maxSize : 280,
+			split : true,
+			region : 'west',
+			autoScroll : true,
+			// collapseMode:'mini',
+			items : [hsBrandTree]
+		},{
+			region : 'center',
+			layout : 'fit',
+			items : [grid_phone]
+		}]
 	});
 
 })

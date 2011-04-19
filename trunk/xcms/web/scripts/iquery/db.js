@@ -9,8 +9,8 @@ Ext.onReady(function(){
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
     app.data = [
-        ['15800371329','魅族','M8','支持','支持'],
-        ['15800371330','摩托罗拉','ME525','支持','支持']
+        ['15800371329','魅族','M8','支持','支持','81234798','81234798756463728'],
+        ['15800371330','摩托罗拉','ME525','支持','支持','81234798','81234798756463728']
 	];
 	/**
 	app.utp = Ext.data.Record.create([{
@@ -100,7 +100,9 @@ Ext.onReady(function(){
 	    expander,
         {header: "手机号码", width: 100, sortable: true, dataIndex: 'sn'},
         {header: "品牌", width: 100, sortable: true, dataIndex: 'brand'},
-        {header: "型号", width: 100, sortable: true, dataIndex: 'model'}
+        {header: "型号", width: 100, sortable: true, dataIndex: 'model'},
+        {header: "TAC", width: 100, sortable: true, dataIndex: 'tac'},
+        {header: "IMEI", width: 100, sortable: true, dataIndex: 'imei'}
     ]);
     
 	app.btn_search_code = new Ext.Button({
@@ -185,7 +187,9 @@ Ext.onReady(function(){
            {name: 'brand', type: 'string'},
            {name: 'model', type: 'string'},
            {name: 'mms', type: 'string'},
-           {name: 'gprs', type: 'string'}
+           {name: 'gprs', type: 'string'},
+           {name: 'tac', type: 'string'},
+           {name: 'imei', type: 'string'}
         ]
     });
 	

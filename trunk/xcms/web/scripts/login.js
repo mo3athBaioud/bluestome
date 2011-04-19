@@ -29,7 +29,7 @@ Ext.onReady(function() {
 										labelSeparator : '：',
 										items : [{
 													fieldLabel : '帐&nbsp;号',
-													cls : 'user',
+													iconCls : 'user',
 													name : 'username',
 													id : 'account',
 													blankText : '帐号不能为空,请输入!',
@@ -45,7 +45,7 @@ Ext.onReady(function() {
 													}
 												}, {
 													fieldLabel : '密&nbsp;码',
-													cls : 'key',
+													iconCls : 'key',
 													name : 'password',
 													id : 'password',
 													inputType : 'password',
@@ -101,11 +101,13 @@ Ext.onReady(function() {
 					});
 
 			var win = new Ext.Window({
-						title : '西安移动终端业务支持平台(西安泰讯信息技术技术有限公司测试版)',
+				//西安移动终端营销系统(西安泰讯信息技术技术有限公司测试版)
+						title : '演示版',
 						renderTo : Ext.getBody(),
 						layout : 'fit',
 						width : 460,
-						height : 300,
+//						height : 300,
+						autoHeight : true,
 						closeAction : 'hide',
 						plain : true,
 						modal : true,
@@ -115,7 +117,10 @@ Ext.onReady(function() {
 						draggable : false,
 						closable : false,
 						resizable : false,
-						animateTarget : document.body,
+						pageY : document.body.clientHeight / 2 - 460 / 2,
+						pageX : document.body.clientWidth / 2 - 420 / 2,
+						animateTarget : Ext.getBody(),
+//						animateTarget : document.body,
 						items : panel,
 						buttons : [{
 									text : '&nbsp;登录',
@@ -149,35 +154,36 @@ Ext.onReady(function() {
 			 */
 			function login() {
 				if (Ext.getCmp('loginForm').form.isValid()) {
-					window.location.href = "./index.html";
-					/**
 					Ext.getCmp('loginForm').form.submit({
-								url : 'login.cgi',
+								url : '/servlet/LoginServlet',
 								waitTitle : '提示',
 								method : 'POST',
 								waitMsg : '正在验证您的身份,请稍候.....',
 								success : function(form, action) {
 									var loginResult = action.result.success;
-									window.location.href = 'index.jsp';
+									window.location.href = action.result.url;
 								},
 								failure : function(form, action) {
 									var errmsg = action.result.msg;
 									var errtype = action.result.errorType;
 									Ext.Msg.alert('提示', errmsg, function() {
-												if (errtype == '1') {
-													Ext.getCmp('loginForm').form.reset();
-													var account = Ext.getCmp('loginForm').findById('account');
-													account.focus();
-													account.validate();
-												} else {
-													var password = Ext.getCmp('loginForm').findById('password');
-													password.focus();
-													password.setValue('');
-												}
-											});
+										if (errtype == '1') {
+											Ext.getCmp('loginForm').form.reset();
+											var account = Ext.getCmp('loginForm').findById('account');
+											account.focus();
+											account.validate();
+										} else if(errtype == '2'){
+											/**
+											var password = Ext.getCmp('loginForm').findById('password');
+											password.focus();
+											password.setValue('');
+											**/
+											var form = Ext.getCmp('loginForm').form;
+											form.reset();
+										}
+									});
 								}
 							});
-							**/
 				}
 			}
 			/**

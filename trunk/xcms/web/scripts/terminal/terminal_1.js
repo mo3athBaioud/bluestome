@@ -14,16 +14,16 @@ Ext.onReady(function(){
 	//统计日期,用户标识,手机号码,imei号码,业务区编码,通话次数,基本计费跳,通话时长,tac码    
 //        ['品牌','型号','TAC','手机制式','通话时间','手机屏幕','主屏颜色','摄像头','蓝牙','来源','采集时间']
     app.data = [
-        ['诺基亚','C7','81234798','GSM,WCDMA','576分钟','3.5英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00'],
-        ['诺基亚','C5-03','81234798','GSM,WCDMA','720分钟','3.2英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00'],
-        ['诺基亚','5230','81234798','GSM,WCDMA','420分钟','3.2英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00'],
-        ['诺基亚','N8','81234798','GSM,WCDMA','720分钟','3.5英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00'],
-        ['诺基亚','C6','81234798','GSM,WCDMA','576分钟','3.2英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00'],
-        ['诺基亚','5800XM','81234798','GSM,WCDMA','525分钟','3.2英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00'],
-        ['摩托罗拉','MB525 Defy','81234798','GSM,WCDMA','590分钟','3.7英寸','26万色','支持','支持','泡泡网','2011-03-31 11:00:00'],
-        ['摩托罗拉','CLIQ(MB200)','81234798','GSM,WCDMA','360分钟','3.1英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00'],
-        ['摩托罗拉','XT502','81234798','GSM,WCDMA','400分钟','3.2英寸','26万色','支持','支持','泡泡网','2011-03-31 11:00:00'],
-        ['摩托罗拉','XT720','81234798','GSM,WCDMA','540分钟','3.7英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00']
+        ['诺基亚','C7','81234798','GSM,WCDMA','576分钟','3.5英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00','芬兰','358'],
+        ['诺基亚','C5-03','81234798','GSM,WCDMA','720分钟','3.2英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00','芬兰','358'],
+        ['诺基亚','5230','81234798','GSM,WCDMA','420分钟','3.2英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00','芬兰','358'],
+        ['诺基亚','N8','81234798','GSM,WCDMA','720分钟','3.5英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00','芬兰','358'],
+        ['诺基亚','C6','81234798','GSM,WCDMA','576分钟','3.2英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00','芬兰','358'],
+        ['诺基亚','5800XM','81234798','GSM,WCDMA','525分钟','3.2英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00','芬兰','358'],
+        ['摩托罗拉','MB525 Defy','81234798','GSM,WCDMA','590分钟','3.7英寸','26万色','支持','支持','泡泡网','2011-03-31 11:00:00','美国','310'],
+        ['摩托罗拉','CLIQ(MB200)','81234798','GSM,WCDMA','360分钟','3.1英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00','美国','310'],
+        ['摩托罗拉','XT502','81234798','GSM,WCDMA','400分钟','3.2英寸','26万色','支持','支持','泡泡网','2011-03-31 11:00:00','美国','310'],
+        ['摩托罗拉','XT720','81234798','GSM,WCDMA','540分钟','3.7英寸','1677万色','支持','支持','泡泡网','2011-03-31 11:00:00','美国','310']
 	];
 	/**
 	app.utp = Ext.data.Record.create([{
@@ -79,6 +79,7 @@ Ext.onReady(function(){
 //   ['品牌','型号','TAC','手机制式','通话时间','手机屏幕','主屏颜色','摄像头','蓝牙','来源','采集时间']
     app.cm_utp = new Ext.grid.ColumnModel([
 	    app.expander,
+	    {header: "产地", width: 80, sortable: true, dataIndex: 'country'},
         {header: "品牌", width: 100, sortable: true, dataIndex: 'brand'},
         {header: "型号", width: 80, sortable: true, dataIndex: 'model'},
         {header: "TAC", width: 150, sortable: true, dataIndex: 'tac'},
@@ -517,6 +518,7 @@ Ext.onReady(function(){
 				hiddenName : 'colName',
 				valueField : 'id',
 				displayField : 'name',
+				width:120,
 				mode:'local',
 				store : new Ext.data.SimpleStore({
 					data : [
@@ -536,6 +538,7 @@ Ext.onReady(function(){
 	
 	app.hs_model_combo = new Ext.form.ComboBox({
 				id : 'hs_model',
+				width:120,
 				hiddenName : 'colName',
 				valueField : 'id',
 				displayField : 'name',
@@ -553,7 +556,7 @@ Ext.onReady(function(){
 				editable : false,
 				allowBlank : true,
 				triggerAction : 'all',
-				emptyText : '请选择终端型号，如果没有列出手机型号，请先选择终端品牌!'
+				emptyText : '请先选择终端型号!'
 	});
 	
 	app.text_search_code = new Ext.form.TextField({
@@ -661,7 +664,9 @@ Ext.onReady(function(){
            {name: 'camera', type: 'string'},
            {name: 'bluetooth', type: 'string'},
            {name: 'source', type: 'string'},
-           {name: 'time', type: 'string'}
+           {name: 'time', type: 'string'},
+           {name: 'country',type:'string' },
+           {name:'mcc',type:'string' }
         ]
     });
 	
@@ -679,14 +684,14 @@ Ext.onReady(function(){
 		title : '一级终端数据管理',
 		iconCls : 'icon-xhtml',
 		region : 'center',
-		applyTo : 'terminal_1',
+//		applyTo : 'terminal_1',
 		loadMask : {
 			msg : '数据加载中...'
 		},
 	    cm: app.cm_utp,
 	    ds: app.ds_utp,
 //	    width:1000,
-	    height:550,
+	    height:500,
         autoScroll: true,
         viewConfig: {
             forceFit:true
@@ -709,7 +714,7 @@ Ext.onReady(function(){
 				}
 	});
 
-//    app.grid.render('terminal_1');
+    app.grid.render('terminal_1');
 
 	var root = new Ext.tree.AsyncTreeNode({
 		text : '手机品牌来源',

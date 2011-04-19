@@ -9,7 +9,8 @@ Ext.onReady(function(){
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
     app.data = [
-        ['15800371329','魅族','M8','支持','支持']
+        ['15800371329','魅族','M8','支持','支持','81234798','81234798756463728'],
+        ['15801801342','夏普','U330','支持','支持','81234798','81234798756463738']
 	];
 	/**
 	app.utp = Ext.data.Record.create([{
@@ -53,109 +54,282 @@ Ext.onReady(function(){
     
     // align="center" valign="middle"
     var expander = new Ext.grid.RowExpander({
+//        tpl : new Ext.Template(
+//			 '<span align="left"><b>终端功能参数</b></span><br/><table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+//			 '<tr>' +
+//			 '<td><b>mms:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>gprs:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>wap:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>kjava:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>edge:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>3g:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>email:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>手机动画:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>streamiNg:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>IMPS:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>POC:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>电视:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>智能手机:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>智能操作系统:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>LCD彩色:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>LCD尺寸:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>内存:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>振铃格式:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>多媒体格式:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>摄像头(内置):</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>MP3:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>音乐手机(DRM):</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>可视电话:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>USSD:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>STK:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>EFR:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>红外:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>RS232:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>数据线:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>预留1:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>预留2:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>预留3:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>预留4:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>预留5:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '</table><br/>',
+//			 '<span align="left"><b>终端业务参数</b></span><br/><table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+//			 '<tr>' +
+//			 '<td><b>移动证券:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>手机导航:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>手机地图:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>音乐随身听:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>全曲下载:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>WAP全曲下载:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>扫描上网:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>名片识别:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>手机电视:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>手机支付:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>手机邮箱:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>飞信:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '<tr>' +
+//			 '<td><b>移动OA:</b><font color="blue">{mms}</font></td>' +
+//			 '<td><b>移动MM:</b>{gprs}</td>' +
+//			 '</tr>' +
+//			 '</table>'
+//			 
+//        ),
         tpl : new Ext.Template(
-			 '<span align="left"><b>终端功能参数</b></span><br/><table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
-			 '<tr>' +
-			 '<td><b>mms:</b>{mms}</td>' +
-			 '<td><b>gprs:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>wap:</b>{mms}</td>' +
-			 '<td><b>kjava:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>edge:</b>{mms}</td>' +
-			 '<td><b>3g:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>email:</b>{mms}</td>' +
-			 '<td><b>手机动画:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>streamiNg:</b>{mms}</td>' +
-			 '<td><b>IMPS:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>POC:</b>{mms}</td>' +
-			 '<td><b>电视:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>智能手机:</b>{mms}</td>' +
-			 '<td><b>智能操作系统:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>LCD彩色:</b>{mms}</td>' +
-			 '<td><b>LCD尺寸:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>内存:</b>{mms}</td>' +
-			 '<td><b>振铃格式:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>多媒体格式:</b>{mms}</td>' +
-			 '<td><b>摄像头(内置):</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>MP3:</b>{mms}</td>' +
-			 '<td><b>音乐手机(DRM):</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>可视电话:</b>{mms}</td>' +
-			 '<td><b>USSD:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>STK:</b>{mms}</td>' +
-			 '<td><b>EFR:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>红外:</b>{mms}</td>' +
-			 '<td><b>RS232:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>数据线:</b>{mms}</td>' +
-			 '<td><b>预留1:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>预留2:</b>{mms}</td>' +
-			 '<td><b>预留3:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>预留4:</b>{mms}</td>' +
-			 '<td><b>预留5:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '</table><br/>',
-			 '<span align="left"><b>终端业务参数</b></span><br/><table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
-			 '<tr>' +
-			 '<td><b>移动证券:</b>{mms}</td>' +
-			 '<td><b>手机导航:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>手机地图:</b>{mms}</td>' +
-			 '<td><b>音乐随身听:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>全曲下载:</b>{mms}</td>' +
-			 '<td><b>WAP全曲下载:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>扫描上网:</b>{mms}</td>' +
-			 '<td><b>名片识别:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>手机电视:</b>{mms}</td>' +
-			 '<td><b>手机支付:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>手机邮箱:</b>{mms}</td>' +
-			 '<td><b>飞信:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '<tr>' +
-			 '<td><b>移动OA:</b>{mms}</td>' +
-			 '<td><b>移动MM:</b>{gprs}</td>' +
-			 '</tr>' +
-			 '</table>'
-			 
-        ),
+			 '<div align="left"><b>终端功能参数</b></div>' +
+			 '<table>' +
+			 '<tr><td>' +
+			 '<table class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr align="center" >' +
+			 '<td><b>mms:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>gprs:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>wap:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>kjava:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>edge:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>3g:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>手机动画:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>email:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '</table>'+
+			 '</td><td>' +
+			 '<table class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr align="center" >' +
+			 '<td><b>streamiNg:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>IMPS:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>POC:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>电视:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>智能手机:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>智能操作系统:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>LCD彩色:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>LCD尺寸:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '</table>'+
+			 '</td><td>' +
+			 '<table class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr align="center" >' +
+			 '<td><b>内存:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>振铃格式:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>多媒体格式:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>摄像头(内置):</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>MP3:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>音乐手机(DRM):</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>可视电话:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>USSD:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '</table>'+
+			 '</td><td>' +
+			 '<table class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr align="center" >' +
+			 '<td><b>STK:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>红外:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>数据线:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>预留1:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>预留2:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>预留3:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>预留4:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>预留5:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '</table>'+
+			 '</td></tr>'+
+			 '</table>',
+			 '<div align="left"><b>终端业务参数</b></div>' +
+			 '<table>' +
+			 '<tr><td>' +
+			 '<table class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr align="center" >' +
+			 '<td><b>移动证券:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>手机导航:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>手机地图:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>移动OA:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '</table>'+
+			 '</td><td>' +
+			 '<table class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr align="center" >' +
+			 '<td><b>音乐随身听:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>全曲下载:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>WAP全曲下载:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>移动MM:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '</table>'+
+			 '</td><td>' +
+			 '<table class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr align="center" >' +
+			 '<td><b>扫描上网:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>名片识别:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>手机电视:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '</table>'+
+			 '</td><td>' +
+			 '<table class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
+			 '<tr align="center" >' +
+			 '<td><b>手机支付:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>手机邮箱:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '<tr align="center" >' +
+			 '<td><b>飞信:</b></td><td><font color="blue">{mms}</font></td>' +
+			 '</tr>'+
+			 '</table>'+
+			 '</td></tr>'+
+			 '</table>',
+			 '<div class="x-clear"></div>'			 
+		 ),
         lazyRender : true
     });
     
@@ -163,7 +337,9 @@ Ext.onReady(function(){
 	    expander,
         {header: "手机号码", width: 100, sortable: true, dataIndex: 'sn'},
         {header: "品牌", width: 100, sortable: true, dataIndex: 'brand'},
-        {header: "型号", width: 100, sortable: true, dataIndex: 'model'}
+        {header: "型号", width: 100, sortable: true, dataIndex: 'model'},
+        {header: "TAC", width: 100, sortable: true, dataIndex: 'tac'},
+        {header: "IMEI", width: 100, sortable: true, dataIndex: 'imei'}
     ]);
     
 	app.hs_brand_combo = new Ext.form.ComboBox({
@@ -352,7 +528,9 @@ Ext.onReady(function(){
            {name: 'brand', type: 'string'},
            {name: 'model', type: 'string'},
            {name: 'mms', type: 'string'},
-           {name: 'gprs', type: 'string'}
+           {name: 'gprs', type: 'string'},
+           {name: 'tac', type: 'string'},
+           {name: 'imei', type: 'string'}
         ]
     });
 	
@@ -386,9 +564,12 @@ Ext.onReady(function(){
 	
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
 				if(grid.getSelectionModel().isSelected(rowIndex)){
-					var record = app.grid.getSelectionModel().getSelected();
-					var url = String.format("../../pages/images/image.jsp?id={0}",record.get('d_id'));
-					window.location = url;
+					Ext.Msg.show({
+						title : '系统提示',
+						msg : '显示终端数据列表详情',
+						buttons : Ext.Msg.OK,
+						icon : Ext.MessageBox.INFO
+					});
 				}
 	});
 

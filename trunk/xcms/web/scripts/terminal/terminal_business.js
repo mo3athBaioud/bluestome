@@ -13,15 +13,15 @@ Ext.onReady(function(){
 	
 	//业务名称,终端属性集合[GRPS,WAP,CMNET]
     app.data = [
-        ['飞信','576分钟','3.5英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
-        ['移动MM','720分钟','3.2英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
-        ['手机阅读','420分钟','3.2英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
-        ['淘乐汇','720分钟','3.5英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
-        ['手机报','576分钟','3.2英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
-        ['号谱管家','525分钟','3.2英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
-        ['可视电话','590分钟','3.7英寸','26万色','支持','支持','2011-03-31 11:00:00'],
-        ['彩信相册','360分钟','3.1英寸','1677万色','支持','支持','2011-03-31 11:00:00'],
-        ['移动秘书','400分钟','3.2英寸','26万色','支持','支持','2011-03-31 11:00:00']
+        ['飞信','576分钟','3.5英寸','1677万色',1,1,'2011-03-31 11:00:00'],
+        ['移动MM','720分钟','3.2英寸','1677万色',1,1,'2011-03-31 11:00:00'],
+        ['手机阅读','420分钟','3.2英寸','1677万色',1,1,'2011-03-31 11:00:00'],
+        ['淘乐汇','720分钟','3.5英寸','1677万色',1,1,'2011-03-31 11:00:00'],
+        ['手机报','576分钟','3.2英寸','1677万色',1,1,'2011-03-31 11:00:00'],
+        ['号谱管家','525分钟','3.2英寸','1677万色',1,1,'2011-03-31 11:00:00'],
+        ['可视电话','590分钟','3.7英寸','26万色',1,1,'2011-03-31 11:00:00'],
+        ['彩信相册','360分钟','3.1英寸','1677万色',1,1,'2011-03-31 11:00:00'],
+        ['移动秘书','400分钟','3.2英寸','26万色',1,1,'2011-03-31 11:00:00']
 	];
 	/**
 	app.utp = Ext.data.Record.create([{
@@ -170,19 +170,28 @@ Ext.onReady(function(){
 	 
     app.cm_utp = new Ext.grid.ColumnModel([
 	    app.expander,
-        {header: "业务名称",sortable: true, dataIndex: 'bn'}
-//        {header: "有效性", width: 80, sortable: true, dataIndex: 'useful',renderer:function(value){
-//        	if(value){
-//        		return '<font color="green">有效</font>';
-//        	}else{
-//        		return '<font color="red">无效</font>';
-//        	}
-//        }},
-//        {header: "用户标识", width: 150, sortable: true, dataIndex: 'uid'},
-//        {header: "手机号码", width: 100, sortable: true, dataIndex: 'sn'},
-//        {header: "imei号码", width: 150, sortable: true, dataIndex: 'imei'},
-//        {header: "业务区编码", width: 100, sortable: true, dataIndex: 'ywqbm'},
-//        {header: "tac码", width: 80, sortable: true, dataIndex: 'tac'}
+        {header: "业务名称",width:100,sortable: true, dataIndex: 'bn'},
+        {header: "蓝牙", width: 80, sortable: true, dataIndex: 'bluetooth',renderer:function(value){
+        	if(value == 1){
+        		return '<font color="green">支持</font>';
+        	}else{
+        		return '<font color="red">不支持</font>';
+        	}
+        }},
+        {header: "GRPS", width: 80, sortable: true, dataIndex: 'camera',renderer:function(value){
+        	if(value == 1){
+        		return '<font color="green">支持</font>';
+        	}else{
+        		return '<font color="red">不支持</font>';
+        	}
+        }},
+        {header: "摄像头", width: 80, sortable: true, dataIndex: 'camera',renderer:function(value){
+        	if(value == 1){
+        		return '<font color="green">支持</font>';
+        	}else{
+        		return '<font color="red">不支持</font>';
+        	}
+        }}
     ]);
     
 	app.btn_search_code = new Ext.Button({
@@ -643,8 +652,8 @@ Ext.onReady(function(){
            {name: 'thsc',type:'string'},
            {name: 'screensize', type: 'string'},
            {name: 'screencolor', type: 'string'},
-           {name: 'camera', type: 'string'},
-           {name: 'bluetooth', type: 'string'},
+           {name: 'camera', type: 'int'},
+           {name: 'bluetooth', type: 'int'},
            {name: 'time', type: 'boolean'}
         ]
     });
