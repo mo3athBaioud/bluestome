@@ -187,7 +187,7 @@ Ext.onReady(function() {
 														maxLength:20
 													}										
 												],
-												buttonAlign : 'right',
+												buttonAlign : 'center',
 												minButtonWidth : 60,
 												buttons : [{
 													text : '修改密码',

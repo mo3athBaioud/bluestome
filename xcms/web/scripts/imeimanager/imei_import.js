@@ -6,7 +6,7 @@ Ext.onReady(function(){
   	Ext.BLANK_IMAGE_URL = '/resource/image/ext/s.gif';
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
     Ext.QuickTips.init();
-	app.limit = 15;
+	app.limit = 50;
 	app.colName = "";
 	app.values = "";
     app.sm = new Ext.grid.CheckboxSelectionModel();
@@ -286,11 +286,11 @@ Ext.onReady(function(){
 	    cm: app.cm_utp,
 	    ds: app.ds_utp,
 //	    width:1000,
-	    height:550,
+	    height:500,
         autoScroll: true,
 		sm:app.sm,
-		tbar : [app.btn_upload,'-','请输入手机号码:',app.text_search_code,'-','请输入IMEI:',app.text_imei_code,'请输入TAC码:',app.text_tac_code,app.btn_search_code]
-//		bbar : app.ptb
+		tbar : [app.btn_upload,'-','请输入手机号码:',app.text_search_code,'-','请输入IMEI:',app.text_imei_code,'请输入TAC码:',app.text_tac_code,app.btn_search_code],
+		bbar : app.ptb
 	});
 	
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
