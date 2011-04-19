@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 public class LoginFilter implements Filter {
 	FilterConfig config;
 
-	String[] limitUrls = new String[] { "login.html","/servlet/LoginServlet","/servlet/LogoutServlet"};
+	String[] limitUrls = new String[] { "/login.html","/login2.html","/servlet/LoginServlet","/servlet/LogoutServlet"};
 
 	public void init(FilterConfig config) throws ServletException {
 		this.config = config;
