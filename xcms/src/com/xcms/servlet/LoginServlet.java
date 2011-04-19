@@ -62,7 +62,7 @@ public class LoginServlet extends HttpServlet {
 				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"index.html'}");
 				return;
 			}else{
-				response.getWriter().print("{failure:true,msg:'登录失败，["+USERS[0][0]+"]密码不正确'}");
+				response.getWriter().print("{failure:true,errorType:'1',msg:'登录失败，["+USERS[0][0]+"]密码不正确'}");
 				return;
 			}
 		}
@@ -73,12 +73,12 @@ public class LoginServlet extends HttpServlet {
 				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/index.html'}");
 				return;
 			}else{
-				response.getWriter().print("{failure:true,msg:'登录失败，["+USERS[1][0]+"]密码不正确'}");
+				response.getWriter().print("{failure:true,errorType:'1',msg:'登录失败，["+USERS[1][0]+"]密码不正确'}");
 				return;
 			}
 		}
 		
-		response.getWriter().print("{failure:true,msg:'登录失败,无此用户["+name+"]'}");
+		response.getWriter().print("{failure:true,errorType:'2',msg:'登录失败,无此用户["+name+"]'}");
 		return;
 	}
 
