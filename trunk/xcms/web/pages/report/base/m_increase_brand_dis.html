@@ -1,0 +1,115 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>月新增终端品牌分布表</title>
+	    <style type="text/css">
+	    #container {
+	        padding:10px;
+	    }
+	    #container .x-panel {
+	        margin:10px;
+	    }
+	    #container .x-panel-ml {
+	        padding-left:1px;
+	    }
+	    #container .x-panel-mr {
+	        padding-right:1px;
+	    }
+	    #container .x-panel-bl {
+	        padding-left:2px;
+	    }
+	
+	    #container .x-panel-br {
+	        padding-right:2px;
+	    }
+	    #container .x-panel-body {
+	
+	    }
+	    #container .x-panel-mc {
+	        padding-top:0;
+	    }
+	    #container .x-panel-bc .x-panel-footer {
+	        padding-bottom:2px;
+	    }
+	    #container .x-panel-nofooter .x-panel-bc {
+	        height:2px;
+	    }
+	    #container .x-toolbar {
+	        border:1px solid #99BBE8;
+	        border-width: 0 0 1px 0;
+	    }
+	    .chart {
+	        background-image: url(chart.gif) !important;
+	    }
+	    </style>
+		<link rel="stylesheet" type="text/css"
+			href="/resource/css/ext_icon.css" />
+		<link rel="stylesheet" type="text/css"
+			href="/resource/theme/default/resources/css/ext-all.css" />
+		<script type="text/javascript"
+			src="/resource/extjs3.1/adapter/ext/ext-base.js"></script>
+		<script type="text/javascript" src="/resource/extjs3.1/ext-all.js"></script>
+		<script type="text/javascript"
+			src="/resource/commonjs/ext-lang-zh_CN.js"></script>
+		<script type="text/javascript">
+			Ext.onReady(function(){
+			
+			    var store = new Ext.data.JsonStore({
+			        fields:['name', 'visits', 'views'],
+			        data: [
+			            {name:'2010-08', visits: 650, views: 3000000},
+			            {name:'2010-09', visits: 740, views: 3500000},
+			            {name:'2010-10', visits: 790, views: 4000000},
+			            {name:'2010-11', visits: 820, views: 4200000},
+			            {name:'2010-12', visits: 850, views: 4500000},
+			            {name:'2011-01', visits: 880, views: 5800000},
+			            {name:'2011-02', visits: 920, views: 6000000},
+			            {name:'2011-03', visits: 1000, views: 7500000}
+			        ]
+			    });
+			
+			    // extra extra simple
+			    new Ext.Panel({
+			        title: '月新增终端品牌分布表',
+			        renderTo: 'container',
+			        height:600,
+			        layout:'fit',
+			        items: {
+			            xtype: 'linechart',
+			            store: store,
+			            xField: 'name',
+			            yField: 'visits',
+						listeners: {
+							itemclick: function(o){
+								var rec = store.getAt(o.index);
+								Ext.example.msg('Item Selected', 'You chose {0}.', rec.get('name'));
+							}
+						}
+			        }
+//					tbar : ['预留']
+			    });
+			});		
+		</script>
+    </head>
+	<body>
+		<script type="text/javascript" src="/amline/swfobject.js"></script>
+		<div id="container">
+		</div>
+		<!-- 
+		<div id="flashcontent">
+			<strong>请更新您的FLASH播放器</strong>
+		</div>
+		<script type="text/javascript">
+		// <![CDATA[
+		var so = new SWFObject("/amline/amline.swf", "amline", "800", "600", "8", "#FFFFFF");
+		so.addVariable("path", "/amline/");
+		so.addVariable("wmode","transparent");
+		// you can set two or more different settings files here (separated by commas)
+		so.addVariable("settings_file", encodeURIComponent("/amline/m_increase_brand_dis_settings.xml"));
+		so.addVariable("data_file", encodeURIComponent("/amline/m_increase_brand_dis_data.xml"));
+		so.write("flashcontent");
+		// ]]>
+	</script>
+		 -->
+	</body>
+</html>
