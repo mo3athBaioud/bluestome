@@ -327,7 +327,7 @@
       <text_color></text_color>                               <!-- [text_color] (hex color code) button text color -->
       <text_size>25</text_size>                                 <!-- [text_size](Number) button text size -->
       <text>                                                  <!-- [] (text) html tags may be used (supports <b>, <i>, <u>, <font>, <a href="">, <br/>. Enter text between []: <![CDATA[your <b>bold</b> and <i>italic</i> text]]>-->
-        <![CDATA[<b>月新增终端品牌分布表</b>]]>
+        <![CDATA[<b>月新增智能终端情况分布表</b>]]>
       </text>        
     </label>    
   
@@ -341,7 +341,7 @@
     <graph gid="1">                                           <!-- if you are using XML data file, graph "gid" must match graph "gid" in data file -->
                                                             
       <axis>left</axis>                                       <!-- [left] (left/ right) indicates which y axis should be used -->
-      <title>月新增终端品牌</title>                                  <!-- [] (graph title) -->
+      <title>月新增智能终端</title>                                  <!-- [] (graph title) -->
       <color>#15428B</color>                                  <!-- [] (hex color code) if not defined, uses colors from this array: #FF0000, #0000FF, #00FF00, #FF9900, #CC00CC, #00CCCC, #33FF00, #990000, #000066 -->
       <color_hover></color_hover>                             <!-- [#BBBB00] (hex color code) -->
       <line_alpha></line_alpha>                               <!-- [100] (0 - 100) -->
