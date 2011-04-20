@@ -2,14 +2,26 @@ package com.xcms.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class LogoutServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	protected final Log logger = LogFactory.getLog(this.getClass());
+	
 	/**
 	 * Constructor of the object.
 	 */
@@ -54,12 +66,12 @@ public class LogoutServlet extends HttpServlet {
 			throws ServletException, IOException {
 		response.setCharacterEncoding("UTF-8");
 		if(null != request.getSession().getAttribute("LOGIN_SESSION_NAME")){
-			System.out.println(" >> Exit System");
+			String name = (String)request.getSession().getAttribute("LOGIN_SESSION_NAME");
+			logger.info(" >> User["+name+"] at "+getStringDate()+" Exit System");
 			request.getSession().removeAttribute("LOGIN_SESSION_NAME");
-			response.getWriter().print("{success:true,msg:'成功退出'}");
-			return;
 		}
-		response.getWriter().print("{failure:true,msg:'退出失败,您还未登录呢!'}");
+//		response.getWriter().print("{failure:true,msg:'退出失败,您还未登录呢!'}");
+		response.getWriter().print("{success:true,msg:'成功退出'}");
 		return;
 	}
 
@@ -70,6 +82,18 @@ public class LogoutServlet extends HttpServlet {
 	 */
 	public void init() throws ServletException {
 		// Put your code here
+	}
+
+	/**
+	 * 获取现在时间
+	 * 
+	 * @return 返回字符串格式 yyyy-MM-dd HH:mm:ss
+	 */
+	public static String getStringDate() {
+		Date currentTime = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dateString = formatter.format(currentTime);
+		return dateString;
 	}
 
 }
