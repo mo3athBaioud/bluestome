@@ -222,7 +222,7 @@
       <enabled>true</enabled>                                 <!-- [false] (true / false) whether to show values near legend entries or not -->
       <width>44</width>                                       <!-- [80] (Number) width of text field for value -->
       <align>left</align>                                     <!-- [right] (right / left) -->
-      <text><![CDATA[: ${value}]]></text>                     <!-- [{value}] ({title} {value} {series} {description} {percents}) You can format any text: {value} will be replaced with value, {description} - with description and so on. You can add your own text or html code too. -->
+      <text><![CDATA[: {value}]]></text>                     <!-- [{value}] ({title} {value} {series} {description} {percents}) You can format any text: {value} will be replaced with value, {description} - with description and so on. You can add your own text or html code too. -->
      </values>
   </legend>
   
@@ -359,7 +359,7 @@
       <hidden></hidden>                                       <!-- [false] (true / false) vill not be visible until you check corresponding checkbox in the legend -->
       <selected></selected>                                   <!-- [true] (true / false) if true, balloon indicating value will be visible then roll over plot area -->
       <balloon_text>
-        <![CDATA[${value}]]>                                          <!-- [<b>{value}</b><br>{description}] ({title} {value} {series} {description} {percents}) You can format any balloon text: {title} will be replaced with real title, {value} - with value and so on. You can add your own text or html code too. -->
+        <![CDATA[{value}]]>                                          <!-- [<b>{value}</b><br>{description}] ({title} {value} {series} {description} {percents}) You can format any balloon text: {title} will be replaced with real title, {value} - with value and so on. You can add your own text or html code too. -->
       </balloon_text>
       <data_labels>
         <![CDATA[]]>                                          <!-- [] ({title} {value} {series} {description} {percents}) Data labels can display value (and more) near your point on the plot area. -->

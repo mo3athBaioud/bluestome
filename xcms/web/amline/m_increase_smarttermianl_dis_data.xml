@@ -18,19 +18,19 @@
 	</series>
 	<graphs>
 		<graph gid="1">
-			<value xid="0">16573</value>
-			<value xid="1">6717</value>
-			<value xid="2">11253</value>
-			<value xid="3">8539</value>
-			<value xid="4">7495</value>
-			<value xid="5">16093</value>
-			<value xid="6">6956</value>
-			<value xid="7">19692</value>
-			<value xid="8">66297</value>
-			<value xid="9">7495</value>
-			<value xid="10">16093</value>
-			<value xid="11">6956</value>
-			<value xid="12">3325</value>
+			<value xid="0">595</value>
+			<value xid="1">226</value>
+			<value xid="2">423</value>
+			<value xid="3">483</value>
+			<value xid="4">625</value>
+			<value xid="5">1142</value>
+			<value xid="6">717</value>
+			<value xid="7">1911</value>
+			<value xid="8">7463</value>
+			<value xid="9">288</value>
+			<value xid="10">595</value>
+			<value xid="11">226</value>
+			<value xid="12">423</value>
 		</graph>
 	</graphs>
 </chart>
