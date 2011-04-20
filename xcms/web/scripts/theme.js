@@ -8,11 +8,11 @@ Ext.onReady(function() {
 						tooltip : '<span style="font-size:12px">切换系统主题主题样式</span>',
 						pressed : true,
 						arrowAlign : 'right',
-						renderTo : 'themeDiv',
+//						renderTo : 'themeDiv',
 						handler : function() {
 							themeWindowInit();
 						}
-					});
+			});
 
 //			var configButton = new Ext.Button({
 //						text : '首选项',
@@ -46,16 +46,17 @@ Ext.onReady(function() {
 									var obj = Ext.util.JSON.decode(response.responseText);
 									if(obj.success){
 										/**
-										**/
 										Ext.Msg.show({
 											title : '系统提示',
 											msg : obj.msg,
 											buttons : Ext.Msg.OK,
 											fn:function(){
-												window.location.href = '/login.html';
+												window.location.href = '/login2.html';
 											},
 											icon : Ext.MessageBox.INFO
 										});
+										**/
+										window.location.href = '/login2.html';
 									}else{
 										Ext.Msg.show({
 											title : '系统提示',

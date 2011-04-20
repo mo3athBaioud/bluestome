@@ -82,6 +82,7 @@ Ext.onReady(function() {
 		tools: tools,
         collapsible: true,
         animCollapse: false,
+        closable:false,
         height:220,
         autoScroll: true,
         bbar : ptb,
@@ -111,6 +112,7 @@ Ext.onReady(function() {
                     width:200,
 			        collapsible: true,
 			        animCollapse: false,
+			        closable:false,
 			        tools: tools,
 			        bodyStyle:'padding:10px',
                     items:[
@@ -225,15 +227,17 @@ Ext.onReady(function() {
                 	xtype:'panel',
                 	baseCls:'x-plain',
                 	height:10
-	            },{
-	            	columnWidth:.5,
-                    title:'<img align="TOP" class="IEPNG" src="/images/icons/views.gif"/>其他内容',
-                    width:200,
-			        collapsible: true,
-			        animCollapse: false,
-			        tools: tools,
-            		html:'<p>暂无</p>'
-	            }]
+	            }
+//	            ,{
+//	            	columnWidth:.5,
+//                    title:'<img align="TOP" class="IEPNG" src="/images/icons/views.gif"/>其他内容',
+//                    width:200,
+//			        collapsible: true,
+//			        animCollapse: false,
+//			        tools: tools,
+//            		html:'<p>暂无</p>'
+//	            }
+	            ]
             },{
                 columnWidth:.33, 
                 layout:'fit',

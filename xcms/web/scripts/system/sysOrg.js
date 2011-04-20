@@ -471,7 +471,7 @@ Ext.onReady(function(){
 	    height:550,
         autoScroll: true,
 		sm:app.sm,
-		tbar : [app.btn_add,'-',app.btn_edit,'-',app.btn_del,'-','请输入TAC码:',app.text_tac_code,app.btn_search_code],
+		tbar : [app.btn_add,'-',app.btn_edit,'-',app.btn_del,'-','请输入组织名称:',app.text_tac_code,app.btn_search_code],
 		bbar : app.ptb
 	});
 	

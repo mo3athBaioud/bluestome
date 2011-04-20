@@ -834,7 +834,7 @@ Ext.onReady(function(){
 	var text_search_role = new Ext.form.TextField({
 		name : 'textSearchrole',
 		width : 200,
-		emptyText : '请输入查询条件!',
+		emptyText : '请输入角色名称!',
 		listeners : {
 			'specialkey' : function(field, e) {
 				if (e.getKey() == Ext.EventObject.ENTER) {
@@ -865,7 +865,7 @@ Ext.onReady(function(){
 				editable : false,
 				allowBlank : true,
 				triggerAction : 'all',
-				emptyText : '查询的字段名'
+				emptyText : '请选择查询的字段'
 	})
 	
 	 var searchrole = function() {

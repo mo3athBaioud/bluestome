@@ -447,7 +447,7 @@ Ext.onReady(function(){
 				editable : false,
 				allowBlank : true,
 				triggerAction : 'all',
-				emptyText : '查询的字段名'
+				emptyText : '请选择查询字段'
 	});
 	
 	var btn_search_operator = new Ext.Button({

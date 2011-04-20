@@ -286,7 +286,7 @@ Ext.onReady(function(){
 				for(i = 0;i<records.length;i++){
 					ids.push(records[i].get('D_ID'))
 				}
-				Ext.Msg.confirm('确认解除删除', '你确定解除一下操作员删除状态?', function(btn) {
+				Ext.Msg.confirm('确认解除删除', '你确定解除品牌删除状态?', function(btn) {
 					if (btn == 'yes') {
 							Ext.Msg.show({
 								title : '提示',
@@ -621,7 +621,7 @@ Ext.onReady(function(){
 		cm : cm_phone,
 		ds : ds_phone,
 		sm : sm,
-	    tbar : [btn_add_phone, '-', btn_undel_phone,'-',btn_del_phone,'-',update_phone_btn,'-',btn_show_phone_detail,'-','手机产地:',search_comb_queyrCol_region,'-',search_comb_queyrCol_phone,'-',
+	    tbar : [btn_add_phone, '-', btn_undel_phone,'-',btn_del_phone,'-',update_phone_btn,'-',btn_show_phone_detail,'-',search_comb_queyrCol_region,'-',search_comb_queyrCol_phone,'-',
 				text_search_phone, btn_search_phone],
 		bbar : ptb
 	});

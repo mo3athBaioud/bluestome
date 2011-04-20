@@ -208,7 +208,7 @@ Ext.onReady(function(){
 		handler : function(){
 				var updateWin = new Ext.Window({
 					id:'add_win',
-					title : '添加扩展IMEI',
+					title : '添加业务终端关系',
 					iconCls:'icon-add',
 					width : 450,
 					resizable : false,
@@ -342,7 +342,7 @@ Ext.onReady(function(){
 				var record = app.grid.getSelectionModel().getSelected();
 				var updateWin = new Ext.Window({
 					id:'update_win',
-					title : '编辑',
+					title : '修改',
 					iconCls:'icon-edit',
 					width : 450,
 					resizable : false,
