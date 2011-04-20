@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chart>
+  <!--<message><![CDATA[You can broadcast any message to chart from data XML file]]></message> -->
+	<series>
+		<value xid="0">2010-01</value>
+		<value xid="1">2010-02</value>
+		<value xid="2">2010-03</value>
+		<value xid="3">2010-04</value>
+		<value xid="4">2010-05</value>
+		<value xid="5">2010-06</value>
+		<value xid="6">2010-07</value>
+		<value xid="7">2010-08</value>
+		<value xid="8">2010-09</value>
+		<value xid="9">2010-10</value>
+		<value xid="10">2010-11</value>
+		<value xid="11">2010-12</value>
+		<value xid="12">2011-01</value>
+		<value xid="13">2011-02</value>
+		<value xid="14">2011-03</value>
+	</series>
+	<graphs>
+		<graph gid="1">
+			<value xid="0">300</value>
+			<value xid="1">350</value>
+			<value xid="2">360</value>
+			<value xid="3">350</value>
+			<value xid="4">381</value>
+			<value xid="5">425</value>
+			<value xid="6">412</value>
+			<value xid="7">416</value>
+			<value xid="8">424</value>
+			<value xid="9">434</value>
+			<value xid="10">448</value>
+			<value xid="11">490</value>
+			<value xid="12">521</value>
+			<value xid="13">620</value>
+			<value xid="14">702</value>
+		</graph>
+	</graphs>
+</chart>
