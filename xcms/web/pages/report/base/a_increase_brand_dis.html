@@ -12,7 +12,7 @@
 		<script type="text/javascript">
 		    //导出报表为Excel
 		    function export2Excel(){
-			    window.location.href = '/pages/report/file/2.xls';
+			    window.location.href = '/pages/report/file/6.xls';
 		    }
 		</script>
 	</head>
@@ -47,6 +47,7 @@
 				</TR>
 			</TABLE>
 		</FORM>
+		<script type="text/javascript" src="/amline/swfobject.js"></script>
 		<div id="flashcontent">
 			<strong>请更新您的FLASH播放器</strong>
 		</div>
@@ -56,7 +57,7 @@
 		so.addVariable("path", "/amline/");
 		so.addVariable("wmode","transparent");
 		// you can set two or more different settings files here (separated by commas)
-		so.addVariable("settings_file", encodeURIComponent("/amline/m_increase_brand_dis_settings.xml"));
+		so.addVariable("settings_file", encodeURIComponent("/amline/a_increase_brand_dis_settings.xml"));
 		so.addVariable("data_file", encodeURIComponent("/amline/m_increase_brand_dis_data.xml"));
 		so.write("flashcontent");
 		// ]]>
