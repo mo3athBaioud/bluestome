@@ -90,7 +90,7 @@ Ext.onReady(function(){
 			 '</td><td>' +
 			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
 			 '<tr><td><b>业务介绍:</b></td></tr>' +
-			 '<tr align="left"><td width="100" height="80">为了满足需求，增加字数，补充字数！</td></tr>' +
+			 '<tr align="left"><td width="100" height="80">买手机，送话费！</td></tr>' +
 			 '</table>' +
 			 '</td></tr>' +
 			 '</table>',
@@ -103,12 +103,12 @@ Ext.onReady(function(){
 			 '</td><td>' +
 			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
 			 '<tr><td><b>资费:</b></td></tr>' +
-			 '<tr align="left"><td width="100" height="80">预存5000送5000</td></tr>' +
+			 '<tr align="left"><td width="100" height="80">预存4000送4000</td></tr>' +
 			 '</table>' +
 			 '</td><td>' +
 			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
 			 '<tr><td><b>业务介绍:</b></td></tr>' +
-			 '<tr align="left"><td width="100" height="80">为了满足需求，增加字数，补充字数！</td></tr>' +
+			 '<tr align="left"><td width="100" height="80">买手机，送话费！</td></tr>' +
 			 '</table>' +
 			 '</td></tr>' +
 			 '</table>',
@@ -116,17 +116,17 @@ Ext.onReady(function(){
 			 '<tr><td>' +
 			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
 			 '<tr><td><b>业务名称:</b>3.MOTO ME525</td></tr>' +
-			 '<tr><td><img width="100" height="80" src="http://images.sanhaostreet.com/product//9/373/132886/main201010211137093432.jpg"/></td></tr>' +
+			 '<tr><td><img width="100" height="80" src="http://img5.pcpop.com/ProductImages/Leader/4/4287/004287752.jpg"/></td></tr>' +
 			 '</table> '+
 			 '</td><td>' +
 			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
 			 '<tr><td><b>资费:</b></td></tr>' +
-			 '<tr align="left"><td width="100" height="80">预存5000送5000</td></tr>' +
+			 '<tr align="left"><td width="100" height="80">预存3000送3000</td></tr>' +
 			 '</table>' +
 			 '</td><td>' +
 			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
 			 '<tr><td><b>业务介绍:</b></td></tr>' +
-			 '<tr align="left"><td width="100" height="80">为了满足需求，增加字数，补充字数！</td></tr>' +
+			 '<tr align="left"><td width="100" height="80">买手机，送话费！</td></tr>' +
 			 '</table>' +
 			 '</td></tr>' +
 			 '</table>',

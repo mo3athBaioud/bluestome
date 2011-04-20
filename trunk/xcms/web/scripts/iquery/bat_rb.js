@@ -89,7 +89,7 @@ Ext.onReady(function(){
 			 '</td><td>' +
 			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
 			 '<tr><td><b>业务介绍:</b></td></tr>' +
-			 '<tr align="left"><td width="100" height="80">为了满足需求，增加字数，补充字数！</td></tr>' +
+			 '<tr align="left"><td width="100" height="80">买手机，送话费！</td></tr>' +
 			 '</table>' +
 			 '</td></tr>' +
 			 '</table>',
@@ -102,12 +102,12 @@ Ext.onReady(function(){
 			 '</td><td>' +
 			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
 			 '<tr><td><b>资费:</b></td></tr>' +
-			 '<tr align="left"><td width="100" height="80">预存5000送5000</td></tr>' +
+			 '<tr align="left"><td width="100" height="80">预存4000送4000</td></tr>' +
 			 '</table>' +
 			 '</td><td>' +
 			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
 			 '<tr><td><b>业务介绍:</b></td></tr>' +
-			 '<tr align="left"><td width="100" height="80">为了满足需求，增加字数，补充字数！</td></tr>' +
+			 '<tr align="left"><td width="100" height="80">买手机，送话费！</td></tr>' +
 			 '</table>' +
 			 '</td></tr>' +
 			 '</table>',
@@ -120,12 +120,12 @@ Ext.onReady(function(){
 			 '</td><td>' +
 			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
 			 '<tr><td><b>资费:</b></td></tr>' +
-			 '<tr align="left"><td width="100" height="80">预存5000送5000</td></tr>' +
+			 '<tr align="left"><td width="100" height="80">预存3000送3000</td></tr>' +
 			 '</table>' +
 			 '</td><td>' +
 			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
 			 '<tr><td><b>业务介绍:</b></td></tr>' +
-			 '<tr align="left"><td width="100" height="80">为了满足需求，增加字数，补充字数！</td></tr>' +
+			 '<tr align="left"><td width="100" height="80">买手机，送话费！</td></tr>' +
 			 '</table>' +
 			 '</td></tr>' +
 			 '</table>',

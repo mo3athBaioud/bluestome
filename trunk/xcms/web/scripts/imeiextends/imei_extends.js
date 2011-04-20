@@ -129,7 +129,7 @@ Ext.onReady(function(){
 		handler : function(){
 				var updateWin = new Ext.Window({
 					id:'add_win',
-					title : '添加扩展IMEI',
+					title : '添加外呼数据',
 					iconCls:'icon-add',
 					width : 450,
 					resizable : false,
