@@ -1,7 +1,6 @@
 package com.xcms.filter;
 
 import java.io.IOException;
-import java.util.Enumeration;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -14,7 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class LoginFilter implements Filter {
+	
+	protected final Log logger = LogFactory.getLog(this.getClass());
+	
 	FilterConfig config;
 
 	String[] limitUrls = new String[] { "/login.html","/login2.html","/servlet/LoginServlet","/servlet/LogoutServlet"};
@@ -31,20 +36,26 @@ public class LoginFilter implements Filter {
 
 		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
-		System.out.println(" >> Client:"+request.getRemoteAddr()+":"+request.getRemotePort()+"|"+request.getRequestURL());
-		String back = "login.html";
+		logger.info(" >> Client:"+request.getRemoteAddr()+":"+request.getRemotePort());
+		String back = "login2.html";
 		RequestDispatcher dispatcher = request.getRequestDispatcher(back);
 		try {
 			String currentURL = request.getRequestURI(); // 取得根目录所对应的绝对路径:
 			String targetURL = currentURL.substring(currentURL.lastIndexOf("/",
 					1), currentURL.length()); // 截取到当前文件名用于比较
 			if (session.getAttribute("LOGIN_SESSION_NAME") != null) {
+				String name = (String)request.getSession().getAttribute("LOGIN_SESSION_NAME");
+				if(null != name){
+					logger.info(" >> User["+name+"].Visit.URL:"+request.getRequestURL());
+				}
 				chain.doFilter(request, response);
 			} else {
 				if (!checkUrl(targetURL)) {
-					dispatcher.forward(request, response);
+					logger.warn(" >> No Login ,return to login page");
+//					dispatcher.forward(request, response);
+					chain.doFilter(request, response);
 				} else {
-					System.out.println("other URL:");
+					logger.info(" >> Client.RequestURL:"+request.getRequestURL());
 					chain.doFilter(request, response);
 				}
 			}
