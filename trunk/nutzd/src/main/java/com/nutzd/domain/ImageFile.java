@@ -17,25 +17,21 @@ public class ImageFile {
 	private int id;
 	
 	@Column("d_article_id")
-	@Id
 	private int articleId;
 	
 	@One(target = Article.class, field = "articleId")
 	private Article article;
 	
 	@Column("d_image_id")
-	@Id
 	private int imageId;
 	
 	@One(target = Image.class, field = "imageId")
 	private Image image;
 	
 	@Column("d_file_url")
-	@Name
 	private String fileUrl;
 	
 	@Column("d_file_title")
-	@Name
 	private String fileTitle;
 	
 	@Column("d_file_name")

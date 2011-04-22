@@ -13,12 +13,15 @@ import org.nutz.dao.entity.annotation.View;
 
 
 @Table("tbl_web_site")
-@View("view_website_count")
+//@View("view_website_count")
 public class Website {
 
 	@Id
 	@Column("d_id")
 	private int id;
+	
+	@Column("d_id")
+	private int webId;
 	
 	@Column("d_parent_id")
 	private int parentId = 0;
@@ -30,7 +33,6 @@ public class Website {
 	private Website father;
 	
 	@Column("d_web_name")
-	@Name
 	private String name;
 	
 	@Column("d_web_url")
@@ -48,7 +50,7 @@ public class Website {
 	@Column("d_modifytime")
 	private Date modifytime;
 	
-	@Column("atotal")
+//	@Column("atotal")
 	@Readonly
 	private int atotal;
 
@@ -138,6 +140,14 @@ public class Website {
 
 	public void setAtotal(int atotal) {
 		this.atotal = atotal;
+	}
+
+	public int getWebId() {
+		return webId;
+	}
+
+	public void setWebId(int webId) {
+		this.webId = webId;
 	}
 	
 	
