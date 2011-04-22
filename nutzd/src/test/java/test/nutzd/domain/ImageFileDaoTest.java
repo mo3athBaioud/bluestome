@@ -6,12 +6,11 @@ import org.junit.*;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.dao.impl.NutDao;
-import org.nutz.json.Json;
 
 import com.nutzd.domain.TempArticleGroup;
-import com.nutzd.domain.Article;
+import com.nutzd.domain.ImageFile;
 import com.nutzd.domain.dao.NutzdDataSource;
-public class ArticleDaoTest {
+public class ImageFileDaoTest {
 	
 	private NutzdDataSource nds = null;
 	private Dao dao = null;
@@ -31,44 +30,36 @@ public class ArticleDaoTest {
 	}
 	
 	public void queryForList(){
-		List<Article> list = dao.query(Article.class, Cnd.where("url", "like", "%taobao%"), null);
-		for(Article wb:list){
-			System.out.println(" >> queryForList \t"+wb.getId()+"|"+wb.getTitle()+"|"+wb.getArticleUrl());
-		}
-	}
-	
-	public void queryForPage(){
-		List<Article> list = dao.query(Article.class, null, dao.createPager(20,5));
-		for(Article wb:list){
-			dao.fetchLinks(wb, "website");
-			String json = Json.toJson(wb);
-			System.out.println(">> \r"+json+"\r\n");
-//			System.out.println(" >> queryForPage \t"+wb.getId()+"|"+wb.getTitle()+"|"+wb.getArticleUrl()+"|"+wb.getItotal()+"|"+wb.getCreatetime());
-//			if(null != wb.getWebsite()){
-//				System.out.println(" >> website:"+wb.getWebsite().getName()+"|"+wb.getWebsite().getUrl());
-//			}
+		List<ImageFile> list = dao.query(ImageFile.class, Cnd.where("url", "like", "%taobao%"), null);
+		for(ImageFile wb:list){
+			System.out.println(" >> queryForList \t"+wb.getId()+"|"+wb.getFileTitle()+"|"+wb.getFileUrl());
 		}
 	}
 	
 	@Test
+	public void queryForPage(){
+		List<ImageFile> list = dao.query(ImageFile.class, null, dao.createPager(20,10));
+		for(ImageFile wb:list){
+			System.out.println(" >> queryForPage \t"+wb.getId()+"|"+wb.getFileTitle()+"|"+wb.getFileUrl()+"|"+wb.getFileName());
+		}
+	}
+	
 	public void queryForObject(){
 		int id = 5;
 		String name = "健康图库-猎奇奇图";
-		Article wb = dao.fetch(Article.class,id);
-		System.out.println(" >> queryForObject \t"+wb.getId()+"|"+wb.getTitle()+"|"+wb.getArticleUrl()+"|"+wb.getItotal());
+		ImageFile wb = dao.fetch(ImageFile.class,id);
+		System.out.println(" >> queryForObject \t"+wb.getId()+"|"+wb.getFileName()+"|"+wb.getFileUrl());
 	}
 	
 	public void insert(){
-		Article wb = new Article();
-		wb = dao.insert(wb);
 	}
 	
 	public void delete(){
 		int id = 1667,id2 = 1668;
-		int result = dao.delete(Article.class, id);
+		int result = dao.delete(ImageFile.class, id);
 		System.out.println(" >> delete.result.id:"+result);
 		
-		result = dao.delete(Article.class, id2);
+		result = dao.delete(ImageFile.class, id2);
 		System.out.println(" >> delete.result.id2:"+result);
 	}
 	

@@ -1,5 +1,6 @@
 package com.nutzd.domain;
 
+import org.nutz.dao.Dao;
 import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Name;
@@ -8,6 +9,7 @@ import org.nutz.dao.entity.annotation.Prev;
 import org.nutz.dao.entity.annotation.Readonly;
 import org.nutz.dao.entity.annotation.SQL;
 import org.nutz.dao.entity.annotation.Table;
+import org.nutz.ioc.loader.annotation.IocBean;
 
 @Table("tbl_article")
 public class Article {
@@ -24,7 +26,6 @@ public class Article {
 	private Website website;
 	
 	@Column("d_title")
-	@Name
 	private String title;
 	
 	@Column("d_acticle_url")
@@ -37,7 +38,6 @@ public class Article {
 	private String articleXmlUrl;
 	
 	@Column("d_text")
-	@Name
 	private String text;
 	
 	@Column("d_createtime")
@@ -49,7 +49,7 @@ public class Article {
 	@Prev( @SQL("SELECT count(*) as itotal FROM tbl_image WHERE d_article_id=@id") )
 	@Readonly
 	private int itotal;
-
+	
 	public String getArticleUrl() {
 		return articleUrl;
 	}
@@ -141,5 +141,5 @@ public class Article {
 	public void onFetch(){
 		this.itotal++;
 	}
-	
+
 }
