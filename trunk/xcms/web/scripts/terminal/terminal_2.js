@@ -564,6 +564,29 @@ Ext.onReady(function(){
 		app.ds_utp.loadData(app.data);
 	};
 	
+	app.btn_terminal_query_components = new Ext.Button({
+		text:'终端查询组件',
+		iconCls:'icon-search',
+		handler:function(){
+			showTerminalWindow();
+		}
+	});
+	
+	//定义一个终端查询组件
+	app.terminalQueryWin = new TerminalQuery({
+		ds:'ds-123',
+		width:650,
+		height:500,
+		///servlet/FormServlet http://180.168.68.82:6012/nutzd/website/root.cgi
+		url:'/servlet/FormServlet',
+		parentId:'terminal1_grid',
+		other:null
+	});
+		
+	var showTerminalWindow = function(){
+		app.terminalQueryWin.show();
+	}
+	
 	app.btn_transto_office = new Ext.Button({
 		text : '转入正式数据',
 		iconCls : 'icon-monitor_lightning',
@@ -661,7 +684,8 @@ Ext.onReady(function(){
         },
  		plugins: app.expander,
 		sm:app.sm,
-		tbar : [app.btn_transto_office,'-',app.btn_add,'-',app.btn_edit,'-',app.btn_del,'-',app.hs_brand_combo,'-',app.hs_model_combo,'请输入TAC码:',app.text_tac_code,app.btn_search_code],
+		//app.btn_add,'-','-',app.hs_brand_combo,'-',app.hs_model_combo,
+		tbar : [app.btn_terminal_query_components,'-',app.btn_transto_office,'-',app.btn_edit,'-',app.btn_del,'TAC码:',app.text_tac_code,app.btn_search_code],
 		bbar : app.ptb
 	});
 	

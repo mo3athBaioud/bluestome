@@ -29,7 +29,7 @@ Ext.onReady(function() {
 										labelSeparator : '：',
 										items : [{
 													fieldLabel : '帐&nbsp;号',
-													iconCls : 'user',
+													iconCls : 'icon-user',
 													name : 'username',
 													id : 'account',
 													blankText : '帐号不能为空,请输入!',
@@ -45,7 +45,7 @@ Ext.onReady(function() {
 													}
 												}, {
 													fieldLabel : '密&nbsp;码',
-													iconCls : 'key',
+													iconCls : 'icon-key',
 													name : 'password',
 													id : 'password',
 													inputType : 'password',

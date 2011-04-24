@@ -346,6 +346,7 @@ Ext.onReady(function(){
     
 	app.btn_search_code = new Ext.Button({
 		text : '查询',
+		disabled:false,
 		iconCls : 'icon-search',
 		handler : function(){
 			app.searchcode();
@@ -362,6 +363,22 @@ Ext.onReady(function(){
 				}
 			}
 		}
+	});
+
+	app.text_phone_number = new Ext.form.TextField({
+		name : 'phone_number',
+		width : 150,
+		vtype:'mobile'
+//		,
+//		listeners:{
+//			change:function(obj){
+//				if(!obj.validate()){
+//					alert('输入的参数不合法');
+//				}else{
+//					app.btn_search_code.enable();
+//				}
+//			}
+//		}
 	});
 
 	app.searchcode = function() {
@@ -457,7 +474,7 @@ Ext.onReady(function(){
         },
  		plugins: expander,
 		sm:app.sm,
-		tbar : ['请输入手机号码:',app.text_search_code,'-',app.btn_search_code],
+		tbar : ['请输入手机号码：',app.text_phone_number,'-',app.btn_search_code],
 		bbar : app.ptb
 	});
 	

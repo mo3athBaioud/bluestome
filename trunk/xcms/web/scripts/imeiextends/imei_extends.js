@@ -131,11 +131,16 @@ Ext.onReady(function(){
 					id:'add_win',
 					title : '添加外呼数据',
 					iconCls:'icon-add',
-					width : 450,
+					width : 500,
 					resizable : false,
 					autoHeight : true,
 					modal : true,
-					closeAction : 'close',
+					closeAction : 'hide',
+					animCollapse : true,
+					pageY : 20,
+					pageX : document.body.clientWidth / 2 - 420 / 2,
+					animateTarget : Ext.getBody(),
+					constrain : true,
 					items : [
 						new Ext.FormPanel({
 							id:'add_form',
@@ -177,15 +182,16 @@ Ext.onReady(function(){
 								name : 'article.tac',
 								allowBlank : false
 							}],
-							buttonAlign : 'right',
+							buttonAlign : 'center',
 							minButtonWidth : 60,
 							buttons : [{
 								text : '添加',
+								iconCls:'icon-add',
 								handler : function(btn) {
 									var frm = Ext.getCmp('add_form').form;
 									if (frm.isValid()) {
 										var win = Ext.getCmp('add_win');
-										win.close();
+										win.hide();
 										Ext.Msg.show({
 											title : '系统提示',
 											msg : '添加成功!',
@@ -199,14 +205,17 @@ Ext.onReady(function(){
 								}
 							}, {
 								text : '重置',
+								iconCls:'icon-arrow_refresh',
 								handler : function() {
 									Ext.getCmp('add_form').form.reset();
 								}
 							}, {
 								text : '取消',
+								iconCls:'icon-cancel',
 								handler : function() {
+									Ext.getCmp('add_form').form.reset();
 									var win = Ext.getCmp('add_win');
-									win.close();
+									win.hide();
 								}
 							}]
 						})
@@ -223,14 +232,21 @@ Ext.onReady(function(){
 				var record = app.grid.getSelectionModel().getSelected();
 				var updateWin = new Ext.Window({
 					id:'update_win',
-					title : '编辑',
+					title : '修改',
 					iconCls:'icon-edit',
-					width : 450,
+					width : 500,
 					resizable : false,
 					autoHeight : true,
 					modal : true,
-					closeAction : 'close',
-					items : [new Ext.FormPanel({
+					closeAction : 'hide',
+					animCollapse : true,
+					pageY : 20,
+					pageX : document.body.clientWidth / 2 - 420 / 2,
+					animateTarget : Ext.getBody(),
+					constrain : true,
+					items : [
+					new Ext.FormPanel({
+						id:'update_form',
 						labelWidth : 80,
 						labelAlign : 'right',
 						url : '/article/update.cgi',
@@ -244,7 +260,7 @@ Ext.onReady(function(){
 						},
 						defaultType : 'textfield',
 						items : [
-						{ 
+						{
 							fieldLabel : '统计日期',
 							name : 'article.time',
 							readOnly:true,
@@ -270,18 +286,20 @@ Ext.onReady(function(){
 							name : 'article.tac',
 							value:record.get('tac')
 						}],
-						buttonAlign : 'right',
+						buttonAlign : 'center',
 						minButtonWidth : 60,
 						buttons : [{
 							text : '更新',
+							iconCls:'icon-edit',
 							handler : function(btn) {
 								var win = Ext.getCmp('update_win');
-								win.close();
+								win.hide();
 								Ext.Msg.show({
 									title : '系统提示',
 									msg : '修改成功!',
 									buttons : Ext.Msg.OK,
 									fn:function(){
+										Ext.getCmp('update_form').form.reset();
 										app.ds_utp.loadData(app.data);
 									},
 									icon : Ext.MessageBox.INFO
@@ -289,14 +307,18 @@ Ext.onReady(function(){
 							}
 						}, {
 							text : '重置',
+							iconCls:'icon-arrow_refresh',
 							handler : function() {
-								this.ownerCt.form.reset();
+								Ext.getCmp('update_form').form.reset();
+//								this.ownerCt.form.reset();
 							}
 						}, {
 							text : '取消',
+							iconCls:'icon-cancel',
 							handler : function() {
+								Ext.getCmp('update_form').form.reset();
 								var win = Ext.getCmp('update_win');
-								win.close();
+								win.hide();
 							}
 						}]
 					})]

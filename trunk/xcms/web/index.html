@@ -485,6 +485,26 @@
 
     });
 
+    var node_01010206 = new Ext.tree.TreeNode({
+
+        text:'数据对象管理',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/system/sysObject.html','数据对象管理','01010206','西安移动终端营销系统 -> 系统管理 -> 权限管理 -> 数据对象管理','database.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'icon-database',
+
+        id:'id_node_01010206'
+
+    });
+    
     var node_01010404 = new Ext.tree.TreeNode({
 
         text:'业务终端关联维护',
@@ -1087,6 +1107,8 @@
 
     node_010102.appendChild(node_01010205);
 
+    node_010102.appendChild(node_01010206);
+    
     node_010104.appendChild(node_01010404);
     
     node_0201.appendChild(node_010105);

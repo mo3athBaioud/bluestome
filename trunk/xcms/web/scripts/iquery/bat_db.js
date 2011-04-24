@@ -175,6 +175,7 @@ Ext.onReady(function(){
 	
 	app.btn_search_code = new Ext.Button({
 		text : '查询',
+		disabled:false,
 		iconCls : 'icon-search',
 		handler : function(){
 			app.searchcode();
@@ -193,6 +194,22 @@ Ext.onReady(function(){
 		}
 	});
 
+	app.text_phone_number = new Ext.form.TextField({
+		name : 'phone_number',
+		width : 150,
+		vtype:'mobile'
+//		,
+//		listeners:{
+//			change:function(){
+//				if(!this.validate()){
+//					alert('输入的参数不合法');
+//				}else{
+//					app.btn_search_code.enable();
+//				}
+//			}
+//		}
+	});
+	
 	app.searchcode = function() {
 		/**
 		app.colName = app.search_comb_queyrCol_code.getValue();
@@ -249,6 +266,29 @@ Ext.onReady(function(){
 	});
 	**/
 	
+	app.btn_terminal_query_components = new Ext.Button({
+		text:'终端查询组件',
+		iconCls:'icon-search',
+		handler:function(){
+			showTerminalWindow();
+		}
+	});
+	
+	//定义一个终端查询组件
+	app.terminalQueryWin = new TerminalQuery({
+		ds:'ds-123',
+		width:650,
+		height:500,
+		///servlet/FormServlet http://180.168.68.82:6012/nutzd/website/root.cgi
+		url:'/servlet/FormServlet',
+		parentId:'terminal1_grid',
+		other:null
+	});
+		
+	var showTerminalWindow = function(){
+		app.terminalQueryWin.show();
+	}
+	
 	app.ds_utp = new Ext.data.ArrayStore({
         fields: [
            {name: 'sn',type:'string'},
@@ -287,7 +327,8 @@ Ext.onReady(function(){
  		plugins: expander,
 		sm:app.sm,
 		//'<b>其他终端参数暂时省略</b>',
-		tbar : ['品牌:',app.hs_brand_combo,'-',app.hs_model_combo,'-',app.data_business,'-',app.btn_search_code]
+		//'品牌:',app.hs_brand_combo,'-',app.hs_model_combo,'-',app.data_business,'-',
+		tbar : [app.btn_terminal_query_components,'-','手机号码：',app.text_phone_number,'-','数据业务列表：',app.data_business,'-',app.btn_search_code]
 //		bbar : app.ptb
 	});
 	

@@ -3909,7 +3909,7 @@ a:hover {
 }
 
 .icon-user {
-	background-image: url(../images/user.png) !important;
+	background-image: url(/images/user.png) !important;
 }
 
 .icon-user_add {
