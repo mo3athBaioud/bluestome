@@ -24,10 +24,11 @@ Ext.onReady(function() {
 											width : 260
 										},
 										bodyStyle : 'padding:20 0 0 50',
-										defaultType : 'textfield',
-										labelWidth : 40,
+//										defaultType : 'textfield',
+										labelWidth : 80,
 										labelSeparator : '：',
 										items : [{
+													xtype:'textfield',
 													fieldLabel : '帐&nbsp;号',
 													iconCls : 'icon-user',
 													name : 'username',
@@ -44,6 +45,7 @@ Ext.onReady(function() {
 														}
 													}
 												}, {
+													xtype:'textfield',
 													fieldLabel : '密&nbsp;码',
 													iconCls : 'icon-key',
 													name : 'password',
@@ -60,6 +62,22 @@ Ext.onReady(function() {
 															}
 														}
 													}
+												}, {
+													fieldLabel : '验证码',
+													layout:'column',
+													bodyStyle : 'padding:0px 5px 0px 0px ',
+													items:[
+														{
+															columnWidth:.7,
+															width:200,
+										                	xtype:'textfield',
+															name:'checkcode'
+														},{
+															columnWidth:.3,
+															xtype:'panel',
+															html:'<img src="/servlet/CheckCodeServlet?d'+new Date()+'" >'
+														}
+													]
 												}]
 									},{
 										title : '关于',
