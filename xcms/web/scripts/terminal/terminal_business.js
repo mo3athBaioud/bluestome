@@ -202,6 +202,478 @@ Ext.onReady(function(){
 		}
 	});
 	
+	app.terminal_bussiness_add_form = new Ext.form.FormPanel({
+		id:'terminal_bussiness_add_form',
+		labelWidth : 60,
+		labelAlign : 'right',
+        frame:true,
+        width:600,
+		defaults : {
+			msgTarget : 'side',
+			anchor : '98%'
+		},
+		defaultType:'textfield',
+		items : [
+			{
+		    	xtype:'fieldset',
+		    	title:'业务基本属性',
+				items:[
+					{
+						//下拉选择框
+						xtype:'combo',
+						fieldLabel : '业务名称',
+						hiddenName:'bn',
+		                valueField: 'id',
+		                displayField: 'name',
+		                triggerAction:'all',
+		                mode: 'local',
+		                store: new Ext.data.SimpleStore({
+		                    fields: ['id','name'],
+		                    data: [[1,'飞信'], [2,'移动MM'],[3,'手机阅读'],[4,'淘乐汇'],[5,'手机报'],[6,'号谱管家'],[7,'可视电话'],[8,'彩信相册'],[9,'移动秘书']]
+		                }),
+		                editable:false,
+						emptyText : '请选择手机业务',
+						allowBlank : false
+					}
+				]
+			},{
+		    	xtype:'fieldset',
+		    	title:'终端基本属性',
+				layout:'column',
+				items:[
+		     		{
+		                columnWidth:.3,
+		                layout: 'form',
+		                items: [{
+		                    xtype:'combo',
+		                    fieldLabel: '蓝牙',
+		                    width:100,
+							hiddenName:'bluetooth',
+//					                    name: 'bluetooth',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择蓝牙属性!',
+			                editable:false
+		                }, {
+		                    xtype:'combo',
+		                    fieldLabel: 'GPRS',
+		                    width:100,
+							hiddenName:'gprs',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择GRPS属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: '操作系统',
+		                    width:100,
+							hiddenName:'os',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持'],[2,'需要后台支持']]
+			                }),
+			                emptyText : '请选择操作系统属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: '红外',
+		                    width:100,
+							hiddenName:'ir',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择红外属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: '数据线',
+		                    width:100,
+							hiddenName:'dataline',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择数据线属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: '可视电话',
+		                    width:100,
+							hiddenName:'videophone',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择可视电话属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: 'USSD',
+		                    width:100,
+							hiddenName:'ussd',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择USSD属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: 'STK',
+		                    width:100,
+							hiddenName:'stk',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择STK属性!',
+			                editable:false
+		                }]
+		            },{
+		                columnWidth:.3,
+		                layout: 'form',
+		                items: [{
+		                    xtype:'combo',
+		                    fieldLabel: '摄像头',
+		                    width:100,
+							hiddenName:'camere',
+//					                    name: 'camere',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择摄像头属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: '内存卡',
+		                    width:100,
+							hiddenName:'memory',
+//					                    name: 'memory',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择内存卡属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: '智能手机',
+		                    width:100,
+							hiddenName:'smartphone',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'是'],[0,'否']]
+			                }),
+			                emptyText : '请选择智能手机属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: '电视',
+		                    width:100,
+							hiddenName:'tv',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择电视属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: 'POC',
+		                    width:100,
+							hiddenName:'poc',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择POC属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: 'IMPS',
+		                    width:100,
+							hiddenName:'imps',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择IMPS属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: 'StreamiNG',
+		                    width:100,
+							hiddenName:'streaming',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择数据流属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: 'KJAVA',
+		                    width:100,
+							hiddenName:'kjava',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择KJAVA属性!',
+			                editable:false
+	               		}]
+		            },{
+		                columnWidth:.3,
+		                layout: 'form',
+		                items: [{
+		                    xtype:'combo',
+		                    fieldLabel: '屏幕大小',
+		                    width:100,
+							hiddenName:'last',
+//					                    name: 'last',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择屏幕大小属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: 'GPS',
+		                    width:100,
+							hiddenName:'gps',
+//					                    name: 'gps',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择GPS属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: 'WAP',
+		                    width:100,
+							hiddenName:'wap',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择WAP属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: 'EDGE',
+		                    width:100,
+							hiddenName:'edge',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择EDGE属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: '手机动画',
+		                    width:100,
+							hiddenName:'phoneanimation',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择手机动画属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: '电子邮件',
+		                    width:100,
+							hiddenName:'email',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择电子邮件属性!',
+			                editable:false
+		                },{
+		                    xtype:'combo',
+		                    fieldLabel: 'MP3',
+		                    width:100,
+							hiddenName:'mp3',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [[1,'支持'],[0,'不支持']]
+			                }),
+			                emptyText : '请选择MP3属性!',
+			                editable:false
+		                }]
+		            }]
+			}
+		],
+		buttonAlign : 'center',
+		minButtonWidth : 60,
+		buttons : [{
+			text : '保存',
+			iconCls:'icon-accept',
+			handler : function(btn) {
+				var frm = Ext.getCmp('terminal_bussiness_add_form').form;
+				if (frm.isValid()) {
+					app.add_win_new.hide();
+					Ext.Msg.show({
+						title : '系统提示',
+						msg : '保存成功!',
+						buttons : Ext.Msg.OK,
+						fn:function(){
+							app.ds_utp.loadData(app.data);
+						},
+						icon : Ext.MessageBox.INFO
+					});
+				}
+			}
+		}, {
+			text : '重置',
+			iconCls:'icon-arrow_refresh',
+			buttonAlign : 'center',
+			handler : function() {
+				Ext.getCmp('terminal_bussiness_add_form').form.reset();
+			}
+		}, {
+			text : '取消',
+			iconCls:'icon-cancel',
+			buttonAlign : 'center',
+			handler : function() {
+				Ext.getCmp('terminal_bussiness_add_form').form.reset()
+				app.add_win_new.hide();
+			}
+		}
+		]
+	});
+	
+	app.add_win_new = new Ext.Window({
+		title : '添加终终端业务关系数据',
+		iconCls:'icon-add',
+		width:650,
+		height:420,
+//		autoHeight:true,
+		modal : true,
+		closeAction : 'hide',
+		animCollapse : true,
+		pageY : 20,
+		pageX : document.body.clientWidth / 2 - 420 / 2,
+		animateTarget : Ext.getBody(),
+		constrain : true,
+		layout : 'fit',
+		autoScroll: true,
+		bodyStyle : 'padding:5px',
+		items : app.terminal_bussiness_add_form
+		
+	});
+	
+	app.btn_add_new = new Ext.Button({
+		text : '添加',
+		iconCls : 'icon-add',
+		handler : function(){
+			app.add_win_new.show();
+			app.add_win_new.setTitle('添加终终端业务关系数据');
+		}
+	});
+	
 	app.btn_add = new Ext.Button({
 		text : '添加',
 		iconCls : 'icon-add',
@@ -340,16 +812,22 @@ Ext.onReady(function(){
 		handler : function(){
 			if(app.grid.getSelectionModel().getSelected()){
 				var record = app.grid.getSelectionModel().getSelected();
+				app.terminal_bussiness_add_form.getForm().loadRecord(record);
+				app.add_win_new.show();
+				app.add_win_new.setTitle('修改业务和终端关系');
+				/**
 				var updateWin = new Ext.Window({
 					id:'update_win',
 					title : '修改',
 					iconCls:'icon-edit',
-					width : 450,
+					width : 600,
 					resizable : false,
 					autoHeight : true,
 					modal : true,
 					closeAction : 'close',
-					items : [new Ext.FormPanel({
+					items : [
+					app.terminal_bussiness_add_form
+					new Ext.FormPanel({
 						id:'update_form',
 						labelWidth : 80,
 						labelAlign : 'right',
@@ -381,12 +859,6 @@ Ext.onReady(function(){
 							emptyText : '当前手机业务为:"'+record.get('bn')+'"',
 							allowBlank : false
 						},
-//						{
-//							fieldLabel : '通话时长',
-//							name : 'article.tac',
-//							allowBlank : false,
-//							value:record.get('thsc')
-//						},
 						{
 							fieldLabel : '屏幕大小',
 							name : 'article.tac',
@@ -470,8 +942,10 @@ Ext.onReady(function(){
 								win.close();
 							}
 						}]
-					})]
+					})
+					]
 			}).show();
+					**/
 			}else{
 				Ext.Msg.show({
 					title : '系统提示',
@@ -606,6 +1080,29 @@ Ext.onReady(function(){
 	});
 	**/
 	
+	app.btn_terminal_query_components = new Ext.Button({
+		text:'终端查询组件',
+		iconCls:'icon-search',
+		handler:function(){
+			showTerminalWindow();
+		}
+	});
+	
+	//定义一个终端查询组件
+	app.terminalQueryWin = new TerminalQuery({
+		ds:'ds-123',
+		width:650,
+		height:500,
+		///servlet/FormServlet http://180.168.68.82:6012/nutzd/website/root.cgi
+		url:'/servlet/FormServlet',
+		parentId:'terminal1_grid',
+		other:null
+	});
+		
+	var showTerminalWindow = function(){
+		app.terminalQueryWin.show();
+	}
+	
 	app.hs_bluetooth = new Ext.form.ComboBox({
 				id : 'hs_bluetooth',
 				hiddenName : 'colName',
@@ -644,6 +1141,23 @@ Ext.onReady(function(){
 				allowBlank : true,
 				triggerAction : 'all',
 				emptyText : '是否支持摄像头?'
+	});
+	
+	app.list_bussiness = new Ext.form.ComboBox({
+				id : 'list_bussiness',
+				hiddenName : 'colName',
+				valueField : 'id',
+				displayField : 'name',
+				mode:'local',
+				store : new Ext.data.SimpleStore({
+                    fields: ['id','name'],
+                    data: [[1,'飞信'], [2,'移动MM'],[3,'手机阅读'],[4,'淘乐汇'],[5,'手机报'],[6,'号谱管家'],[7,'可视电话'],[8,'彩信相册'],[9,'移动秘书']]
+				}),	
+				selectOnFocus : true,
+				editable : false,
+				allowBlank : true,
+				triggerAction : 'all',
+				emptyText : '请选择业务'
 	});
 	
 	app.ds_utp = new Ext.data.ArrayStore({
@@ -685,7 +1199,8 @@ Ext.onReady(function(){
         },
  		plugins: app.expander,
 		sm:app.sm,
-		tbar : [app.btn_add,'-',app.btn_edit,'-',app.btn_del,'-','请输入业务名称:',app.text_search_code,'-',app.hs_bluetooth,'-',app.hs_camera,'-',app.btn_search_code],
+		//,'-','请输入业务名称:',app.text_search_code,'-',app.hs_bluetooth,'-',app.hs_camera,'-',app.btn_search_code
+		tbar : [app.btn_terminal_query_components,'-',app.btn_add_new,'-',app.btn_edit,'-',app.btn_del,'-','业务列表:',app.list_bussiness,app.btn_search_code],
 		bbar : app.ptb
 	});
 	

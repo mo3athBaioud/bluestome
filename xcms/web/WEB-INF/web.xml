@@ -26,6 +26,11 @@
 		<servlet-name>LogoutServlet</servlet-name>
 		<servlet-class>com.xcms.servlet.LogoutServlet</servlet-class>
 	</servlet>
+  <servlet>
+    <servlet-name>FormServlet</servlet-name>
+    <servlet-class>com.xcms.servlet.FormServlet</servlet-class>
+  </servlet>
+
 
 
 	<servlet-mapping>
@@ -36,6 +41,10 @@
 		<servlet-name>LogoutServlet</servlet-name>
 		<url-pattern>/servlet/LogoutServlet</url-pattern>
 	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FormServlet</servlet-name>
+    <url-pattern>/servlet/FormServlet</url-pattern>
+  </servlet-mapping>
 
 	<welcome-file-list>
 		<welcome-file>login2.html</welcome-file>

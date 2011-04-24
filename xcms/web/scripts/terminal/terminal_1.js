@@ -536,6 +536,28 @@ Ext.onReady(function(){
 				emptyText : '请选择终端品牌!'
 	});
 	
+	app.hs_source = new Ext.form.ComboBox({
+				id : 'hs_brand',
+				hiddenName : 'colName',
+				valueField : 'id',
+				displayField : 'name',
+				width:120,
+				mode:'local',
+				store : new Ext.data.SimpleStore({
+					data : [
+							['1', '泡泡网'],
+							['2','中关村在线'],
+							['3','太平洋数码']
+				    ],
+					fields : ['id', 'name']
+				}),	
+				selectOnFocus : true,
+				editable : false,
+				allowBlank : true,
+				triggerAction : 'all',
+				emptyText : '请选择数据来源!'
+	});
+	
 	app.hs_model_combo = new Ext.form.ComboBox({
 				id : 'hs_model',
 				width:120,
@@ -571,6 +593,29 @@ Ext.onReady(function(){
 		}
 	});
 
+	app.btn_terminal_query_components = new Ext.Button({
+		text:'终端查询组件',
+		iconCls:'icon-search',
+		handler:function(){
+			showTerminalWindow();
+		}
+	});
+	
+	//定义一个终端查询组件
+	app.terminalQueryWin = new TerminalQuery({
+		ds:'ds-123',
+		width:650,
+		height:500,
+		///servlet/FormServlet http://180.168.68.82:6012/nutzd/website/root.cgi
+		url:'/servlet/FormServlet',
+		parentId:'terminal1_grid',
+		other:null
+	});
+		
+	var showTerminalWindow = function(){
+		app.terminalQueryWin.show();
+	}
+	
 	app.text_imei_code = new Ext.form.TextField({
 		name : 'text_imei',
 		width : 150,
@@ -585,6 +630,7 @@ Ext.onReady(function(){
 	
 	app.text_tac_code = new Ext.form.TextField({
 		name : 'text_tac',
+		iconCls:'icon-phone',
 		width : 150,
 		listeners : {
 			'specialkey' : function(field, e) {
@@ -681,6 +727,7 @@ Ext.onReady(function(){
 	});
 		
 	app.grid = new Ext.grid.GridPanel({
+		id:'terminal1_grid',
 		title : '一级终端数据管理',
 		iconCls : 'icon-xhtml',
 		region : 'center',
@@ -698,7 +745,8 @@ Ext.onReady(function(){
         },
  		plugins: app.expander,
 		sm:app.sm,
-		tbar : [app.btn_transto_l2,'-',app.btn_add,'-',app.btn_edit,'-',app.btn_del,'-',app.hs_brand_combo,'-',app.hs_model_combo,'请输入TAC码:',app.text_tac_code,app.btn_search_code],
+		//app.btn_add,'-',app.hs_brand_combo,'-',app.hs_model_combo 
+		tbar : [app.btn_terminal_query_components,'-',app.btn_transto_l2,'-',app.btn_edit,'-',app.btn_del,'-','数据来源：',app.hs_source,'-','TAC码:',app.text_tac_code,app.btn_search_code],
 		bbar : app.ptb
 	});
 	

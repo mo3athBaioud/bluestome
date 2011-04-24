@@ -13,7 +13,7 @@ Ext.apply(Ext.form.VTypes, {
 //         alert('mobile:\t'+r.test(v));
          return r.test(v);
      },
-     mobileText : '请输入正确的移动电话号码!<br />格式如：13{5,8}XXXXXXXXX',
+     mobileText : '请输入正确的移动电话号码!<br />格式如：13800138000,15800158000',
      // 邮政编码
      zip : function(v) {
          var r = /^[1-9]\d{5}$/;

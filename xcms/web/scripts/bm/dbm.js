@@ -491,6 +491,29 @@ Ext.onReady(function(){
 		]
 	});	
 	
+	app.btn_terminal_query_components = new Ext.Button({
+		text:'终端查询组件',
+		iconCls:'icon-search',
+		handler:function(){
+			showTerminalWindow();
+		}
+	});
+	
+	//定义一个终端查询组件
+	app.terminalQueryWin = new TerminalQuery({
+		ds:'ds-123',
+		width:650,
+		height:500,
+		///servlet/FormServlet http://180.168.68.82:6012/nutzd/website/root.cgi
+		url:'/servlet/FormServlet',
+		parentId:'terminal1_grid',
+		other:null
+	});
+		
+	var showTerminalWindow = function(){
+		app.terminalQueryWin.show();
+	}
+	
 	//数据业务名称,业务介绍,适用用户,业务状态,业务属性，创建时间
 	app.ds_utp = new Ext.data.ArrayStore({
         fields: [
@@ -527,7 +550,7 @@ Ext.onReady(function(){
         },
  		plugins: expander,
 		sm:app.sm,
-		tbar : [app.btn_add,'-',app.btn_bat_import,'-',app.btn_update,'-',app.btn_disable,'-',app.text_search_code,'-',app.btn_search_code],
+		tbar : [app.btn_terminal_query_components,'-',app.btn_add,'-',app.btn_bat_import,'-',app.btn_update,'-',app.btn_disable,'-',app.text_search_code,'-',app.btn_search_code],
 		bbar : app.ptb
 	});
 	

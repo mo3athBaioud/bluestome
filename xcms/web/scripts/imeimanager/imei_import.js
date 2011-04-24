@@ -229,6 +229,10 @@ Ext.onReady(function(){
 			}
 		}
 	});
+	//终端查询组件
+//	app.terminal_query_components = new TerminalQuery(){
+//		ds:app.ds_utp
+//	}
 	
 	app.searchcode = function() {
 		app.ds_utp.loadData(app.data);
@@ -277,6 +281,7 @@ Ext.onReady(function(){
 	});
 		
 	app.grid = new Ext.grid.GridPanel({
+		id:'imei_import_grid',
 		title : '通话IMEI导入',
 		iconCls : 'icon-cart_put',
 		region : 'center',
