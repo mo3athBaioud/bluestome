@@ -241,7 +241,7 @@ Ext.onReady(function(){
 								name : 'article.remarks',
 								allowBlank : false
 							}],
-							buttonAlign : 'right',
+							buttonAlign : 'center',
 							minButtonWidth : 60,
 							buttons : [{
 								text : '添加',
@@ -404,7 +404,7 @@ Ext.onReady(function(){
 							allowBlank : false,
 							value:record.get('tac')
 						}],
-						buttonAlign : 'right',
+						buttonAlign : 'center',
 						minButtonWidth : 60,
 						buttons : [{
 							text : '更新',
@@ -412,7 +412,7 @@ Ext.onReady(function(){
 								var frm = Ext.getCmp('update_form').form;
 								if (frm.isValid()) {
 									var win = Ext.getCmp('update_win');
-									win.close();
+									win.hide();
 									Ext.Msg.show({
 										title : '系统提示',
 										msg : '修改成功!',
@@ -427,13 +427,14 @@ Ext.onReady(function(){
 						}, {
 							text : '重置',
 							handler : function() {
-								this.ownerCt.form.reset();
+								Ext.getCmp('update_form').form.reset();
 							}
 						}, {
 							text : '取消',
 							handler : function() {
+								Ext.getCmp('update_form').form.reset();
 								var win = Ext.getCmp('update_win');
-								win.close();
+								win.hide();
 							}
 						}]
 					})]

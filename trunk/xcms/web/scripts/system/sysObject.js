@@ -197,7 +197,7 @@ Ext.onReady(function(){
 				                editable:false,
 								emptyText : '请选择表状态!',
 								allowBlank : false
-							},],
+							}],
 							buttonAlign : 'center',
 							minButtonWidth : 60,
 							buttons : [{

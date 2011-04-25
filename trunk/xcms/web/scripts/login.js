@@ -64,18 +64,28 @@ Ext.onReady(function() {
 													}
 												}, {
 													fieldLabel : '验证码',
+													baseCls : 'x-plain',
+													bodyStyle : 'padding:0 10px 0 0',
 													layout:'column',
-													bodyStyle : 'padding:0px 5px 0px 0px ',
 													items:[
 														{
 															columnWidth:.7,
-															width:200,
-										                	xtype:'textfield',
-															name:'checkcode'
+															items:[
+																{
+																	width:200,
+												                	xtype:'textfield',
+												                	id:'checkcode',
+																	name:'checkcode',
+																	blankText : '请输入验证码!',
+																	allowBlank : false
+																}
+															]
 														},{
 															columnWidth:.3,
-															xtype:'panel',
-															html:'<img src="/servlet/CheckCodeServlet?d'+new Date()+'" >'
+															items:[{
+																xtype:'panel',
+																html:'<img src="/servlet/CheckCodeServlet?d'+new Date()+'" >'
+															}]
 														}
 													]
 												}]

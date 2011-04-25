@@ -360,10 +360,11 @@ Ext.onReady(function(){
 				name : 'lookup.remarks',
 				maxLength : 512
 			}],
-			buttonAlign : 'right',
+			buttonAlign : 'center',
 			minButtonWidth : 60,
 			buttons : [{
-				text : '添加',
+				text : '保存',
+				iconCls:'icon-accpet',
 				handler : function(btn) {
 					var frm = this.ownerCt.form;
 					if (frm.isValid()) {
@@ -407,11 +408,13 @@ Ext.onReady(function(){
  				}
 			}, {
 				text : '重置',
+				iconCls:'icon-arrow_refresh',
 				handler : function() {
 					Ext.getCmp('constants_add_form').form.reset();
 				}
 			}, {
 				text : '取消',
+				iconCls:'icon-cancel',
 				handler : function() {
 					Ext.getCmp('constants_add_form').form.reset();
 					var addWin = Ext.getCmp('navigate_add_windows');
@@ -484,10 +487,11 @@ Ext.onReady(function(){
 							maxLength : 512,
 							value:record.get('d_remarks')
 						}],
-						buttonAlign : 'right',
+						buttonAlign : 'center',
 						minButtonWidth : 60,
 						buttons : [{
-							text : '更新',
+							text : '保存',
+							iconCls:'icon-accpet',
 							handler : function(btn) {
 								var frm = this.ownerCt.form;
 								if (frm.isValid()) {
@@ -526,11 +530,13 @@ Ext.onReady(function(){
 							}
 						}, {
 							text : '重置',
+							iconCls:'icon-arrow_refresh',
 							handler : function() {
 								Ext.getCmp('update_navagite_form').form.reset();
 							}
 						}, {
 							text : '取消',
+							iconCls:'icon-cancel',
 							handler : function() {
 								Ext.getCmp('update_navagite_form').form.reset();
 								var updateWin = Ext.getCmp('update_navagite_window');
@@ -603,10 +609,11 @@ Ext.onReady(function(){
 							maxLength : 512,
 							value:record.get('d_remarks')
 						}],
-						buttonAlign : 'right',
+						buttonAlign : 'center',
 						minButtonWidth : 60,
 						buttons : [{
-							text : '添加',
+							text : '保存',
+							iconCls:'icon-accpet',
 							handler : function(btn) {
 								var frm = Ext.getCmp('copy_navagite_form').form;
 								if (frm.isValid()) {
@@ -652,11 +659,13 @@ Ext.onReady(function(){
 							}
 						}, {
 							text : '重置',
+							iconCls:'icon-arrow_refresh',
 							handler : function() {
 								Ext.getCmp('copy_navagite_form').form.reset();
 							}
 						}, {
 							text : '取消',
+							iconCls:'icon-cancel',
 							handler : function() {
 								Ext.getCmp('copy_navagite_form').form.reset();
 								var copyWin = Ext.getCmp('copy_navagite_window');

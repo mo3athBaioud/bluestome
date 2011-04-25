@@ -188,7 +188,7 @@ Ext.onReady(function(){
 				triggerAction:'all',
 				emptyText:'角色状态(启用,停用)'
 			}],
-			buttonAlign:'right',
+			buttonAlign:'center',
 			minButtonWidth:60,
 			buttons:[{
 			  text:'添加',
@@ -658,7 +658,7 @@ Ext.onReady(function(){
 	            					 }
 								     ]
 								  }],
-				buttonAlign:'right',
+				buttonAlign:'center',
 				minButtonWidth:60,
 				buttons:[{
 				  text:'修改',
