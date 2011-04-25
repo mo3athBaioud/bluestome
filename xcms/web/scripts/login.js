@@ -62,7 +62,9 @@ Ext.onReady(function() {
 															}
 														}
 													}
-												}, {
+												}
+												/**
+												, {
 													fieldLabel : '验证码',
 													baseCls : 'x-plain',
 													bodyStyle : 'padding:0 10px 0 0',
@@ -88,7 +90,9 @@ Ext.onReady(function() {
 															}]
 														}
 													]
-												}]
+												}
+												**/
+												]
 									},{
 										title : '关于',
 										contentEl : 'aboutDiv',

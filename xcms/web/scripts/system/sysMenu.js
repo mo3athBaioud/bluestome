@@ -138,6 +138,7 @@ Ext.onReady(function(){
 	//		}
 	//	},
 		items:[new Ext.FormPanel({
+			id:'add_menu_form',
 			border:false,
 			baseCls:'x-plain',
 			bodyStyle:'padding:5px 5px 0',
@@ -195,10 +196,11 @@ Ext.onReady(function(){
 				emptyText:'菜单使用状态(启用,禁用)'
 			}
 			],
-			buttonAlign:'right',
+			buttonAlign:'center',
 			minButtonWidth:60,
 			buttons:[{
-			  text:'添加菜单',
+			  text:'保存',
+			  iconCls:'icon-accpet',
 			  handler:function(btn){
 			  	var frm =this.ownerCt.form;
 			  	if(frm.isValid()){
@@ -232,14 +234,16 @@ Ext.onReady(function(){
 			  }
 			},{
 				text : '重置',
+			  	iconCls:'icon-arrow_refresh',
 				handler : function() {
-					this.ownerCt.form.reset();
+					Ext.getCmp('add_menu_form').form.reset();
 				}
 			}, {
 				text : '取消',
+			  	iconCls:'icon-cancel',
 				handler : function() {
+					Ext.getCmp('add_menu_form').form.reset();
 					windows_add_sysmenu.hide();
-					this.ownerCt.form.reset();
 				}
 			}]
 		})]
@@ -584,11 +588,12 @@ Ext.onReady(function(){
 							name:'sysMenu.isDel',
 							value:records.get('D_ISDEL')
 						}],
-					buttonAlign:'right',
+					buttonAlign:'center',
 					minButtonWidth:60,
 					buttons:[
 						{ 
-							text:'修改',
+							text:'保存',
+							iconCls:'icon-accpet',
 							handler:function(btn){
 							  	var frm = this.ownerCt.form;
 								if(frm.isValid()){
@@ -602,8 +607,9 @@ Ext.onReady(function(){
 													buttons : Ext.Msg.OK,
 													icon : Ext.Msg.ERROR,
 													fn:function(){
+														frm.reset();
 														var sysMenu_update_win = Ext.getCmp('sysMenu_update_win');
-														sysMenu_update_win.close();
+														sysMenu_update_win.hide();
 														ds_sysmenu.load({params : {start : 0,limit : limit}});
 													}
 												});
@@ -624,14 +630,16 @@ Ext.onReady(function(){
 							}
 						},{ 
 							text : '重置',
+							iconCls:'icon-arrow_refresh',
 							handler : function() {
 								Ext.getCmp('sysMenu_update_form').form.reset();
 							}
 						},{ 
 							text : '取消',
+							iconCls:'icon-cancel',
 							handler : function() {
 								Ext.getCmp('sysMenu_update_form').form.reset();
-								Ext.getCmp('sysMenu_update_win').close();
+								Ext.getCmp('sysMenu_update_win').hide();
 							}
 						}]
 					})]
@@ -665,6 +673,7 @@ Ext.onReady(function(){
 	//				closeAction : 'close',
 					items : [
 						new Ext.FormPanel({ 
+						id:'detail_sysmen_form',
 						labelAlign : 'right',
 						labelWidth : 100,
 						border : false,
@@ -711,13 +720,15 @@ Ext.onReady(function(){
 							value:(records.get('D_ISDEL') == 1?'未删除':'已删除')
 								
 						}],
-					buttonAlign:'right',
+					buttonAlign:'center',
 					minButtonWidth:60,
 					buttons:[
 						{ 
 							text : '关闭',
+							iconCls:'icon-cancel',
 							handler : function() {
-								Ext.getCmp('sysMenu_update_win').close();
+								Ext.getCmp('detail_sysmen_form').form.reset();
+								Ext.getCmp('sysMenu_update_win').hide();
 							}
 						}]
 					})]
