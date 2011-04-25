@@ -330,10 +330,11 @@ Ext.onReady(function(){
 							name : 'imeiException.d_remarks',
 							value:record.get('d_remarks')
 						}],
-						buttonAlign : 'right',
+						buttonAlign : 'center',
 						minButtonWidth : 60,
 						buttons : [{
 							text : '更新',
+							iconCls:'icon-accept',
 							handler : function(btn) {
 								var frm = this.ownerCt.form;
 								Ext.Msg.show({
@@ -343,22 +344,24 @@ Ext.onReady(function(){
 									fn:function(){
 										frm.reset();
 										var win = Ext.getCmp('updateWin');
-										win.close();
+										win.hide();
 									},
 									icon : Ext.MessageBox.INFO
 								});
 							}
 						}, {
 							text : '重置',
+							iconCls:'icon-arrow_refresh',
 							handler : function() {
-								this.ownerCt.ownerCt.form.reset();
+								Ext.getCmp('updateForm').form.reset();
 							}
 						}, {
 							text : '取消',
+							iconCls:'icon-cancel',
 							handler : function() {
-								this.ownerCt.ownerCt.form.reset();
+								Ext.getCmp('updateForm').form.reset();
 								var win = Ext.getCmp('updateWin');
-								win.close();
+								win.hide();
 							}
 						}]
 					})]

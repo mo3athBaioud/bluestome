@@ -473,6 +473,7 @@ Ext.onReady(function(){
 					modal : true,
 					closable:false,
 					items : [new Ext.FormPanel({
+						id:'operator_detail_form',
 						labelWidth : 70,
 						url : 'updateoperator.action',
 						border : false,
@@ -615,13 +616,14 @@ Ext.onReady(function(){
 								}
 							}
 						}],
-						buttonAlign : 'center',
 						minButtonWidth : 60,
 						buttons : [
 						{
 							text : '关闭',
+							iconCls:'icon-cancel',
 							handler : function() {
-								Ext.getCmp('show_operator_detail_window').close();
+								Ext.getCmp('operator_detail_form').form.reset();
+								Ext.getCmp('show_operator_detail_window').hide();
 							}
 						}]
 					})]
@@ -905,10 +907,12 @@ Ext.onReady(function(){
 						buttonAlign : 'center',
 						minButtonWidth : 60,
 						buttons : [{
-							text : '更新',
+							text : '保存',
+							iconCls:'icon-accpet',
 							handler : function(btn) {
 								var frm = Ext.getCmp('update_operator_form').form;
 								if (frm.isValid()) {
+										frm.reset();
 										btn.disable();
 										Ext.Msg.show({
 											title : '提示',
@@ -950,14 +954,16 @@ Ext.onReady(function(){
 							}
 						}, {
 							text : '重置',
+							iconCls:'icon-arrow_refresh',
 							handler : function() {
 								Ext.getCmp('update_operator_form').form.reset();
 							}
 						}, {
 							text : '取消',
+							iconCls:'icon-cancel',
 							handler : function() {
 								Ext.getCmp('update_operator_form').form.reset();
-								Ext.getCmp('update_operator_window').close();
+								Ext.getCmp('update_operator_window').hide();
 							}
 						}]
 					})]
@@ -1105,10 +1111,12 @@ Ext.onReady(function(){
 			buttonAlign:'center',
 			minButtonWidth:60,
 			buttons:[{
-			  text:'添加',
+			  text:'保存',
+			  iconCls:'icon-accpet',
 			  handler:function(btn){
 			  	var frm =Ext.getCmp('add_operator_form').form;
 			  	if(frm.isValid()){
+			  		frm.reset();
 						Ext.Msg.show({
 							title : '提示',
 							msg : '添加操作员成功!',
@@ -1260,11 +1268,13 @@ Ext.onReady(function(){
 			  }
 			},{
 				text : '重置',
+				iconCls:'icon-arrow_refresh',
 				handler : function() {
 					Ext.getCmp('add_operator_form').form.reset();
 				}
 			}, {
 				text : '取消',
+				iconCls:'icon-cancel',
 				handler : function() {
 					windows_add_operator.hide();
 					Ext.getCmp('add_operator_form').form.reset();

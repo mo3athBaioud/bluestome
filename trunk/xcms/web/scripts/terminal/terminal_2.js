@@ -258,11 +258,13 @@ Ext.onReady(function(){
 							minButtonWidth : 60,
 							buttons : [{
 								text : '添加',
+								iconCls:'icon-accept',
 								handler : function(btn) {
 									var frm = Ext.getCmp('add_form').form;
 									if (frm.isValid()) {
+										frm.reset();
 										var win = Ext.getCmp('add_win');
-										win.close();
+										win.hide();
 										Ext.Msg.show({
 											title : '系统提示',
 											msg : '添加成功!',
@@ -276,16 +278,17 @@ Ext.onReady(function(){
 								}
 							}, {
 								text : '重置',
-								buttonAlign : 'center',
+								iconCls:'icon-arrow_refresh',
 								handler : function() {
 									Ext.getCmp('add_form').form.reset();
 								}
 							}, {
 								text : '取消',
-								buttonAlign : 'center',
+								iconCls:'icon-cancel',
 								handler : function() {
+									Ext.getCmp('add_form').form.reset();
 									var win = Ext.getCmp('add_win');
-									win.close();
+									win.hide();
 								}
 							}]
 						})
@@ -417,12 +420,14 @@ Ext.onReady(function(){
 						buttonAlign : 'center',
 						minButtonWidth : 60,
 						buttons : [{
-							text : '更新',
+							text : '保存',
+							iconCls:'icon-accept',
 							handler : function(btn) {
 								var frm = Ext.getCmp('update_form').form;
 								if (frm.isValid()) {
+									fre.reset();
 									var win = Ext.getCmp('update_win');
-									win.close();
+									win.hide();
 									Ext.Msg.show({
 										title : '系统提示',
 										msg : '修改成功!',
@@ -436,16 +441,17 @@ Ext.onReady(function(){
 							}
 						}, {
 							text : '重置',
-							buttonAlign : 'center',
+							iconCls:'icon-arrow_refresh',
 							handler : function() {
-								this.ownerCt.form.reset();
+								Ext.getCmp('update_form').form.reset();
 							}
 						}, {
 							text : '取消',
-							buttonAlign : 'center',
+							iconCls:'icon-cancel',
 							handler : function() {
+								Ext.getCmp('update_form').form.reset();
 								var win = Ext.getCmp('update_win');
-								win.close();
+								win.hide();
 							}
 						}]
 					})]

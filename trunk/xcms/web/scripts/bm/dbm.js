@@ -212,7 +212,7 @@ Ext.onReady(function(){
 		iconCls : 'icon-add',
 		handler : function(){
 			app.add_win.show();
-			add.add_win.setTitle("添加");
+			app.add_win.setTitle("添加");
 			Ext.getCmp('dbm_form_reset').show();
 		}
 	});
@@ -239,7 +239,7 @@ Ext.onReady(function(){
  				var record = app.grid.getSelectionModel().getSelected();
 				app.dbm_form.getForm().loadRecord(record);
 				app.add_win.show();
-				add.add_win.setTitle("修改租数据业务");
+				app.add_win.setTitle("修改租数据业务");
 				/**
 					Ext.Msg.show({
 						title : '系统提示',

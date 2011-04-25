@@ -175,8 +175,7 @@ Ext.onReady(function(){
  			applyTo:'p4text', 
         	xtype:'label',
             border:0
-        },
-	    ],
+        }],
 	     buttons : [
 		     {
 			      text : '上传',

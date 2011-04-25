@@ -192,9 +192,12 @@ Ext.onReady(function(){
 			minButtonWidth:60,
 			buttons:[{
 			  text:'添加',
+			  iconCls:'icon-accept',
 			  handler:function(btn){
 			  	var frm =Ext.getCmp('role_form_add').form;
 			  	if(frm.isValid()){
+			  		frm.reset();
+			  		windows_add_role.hide();
 			  		var unfield=frm.findField('role.roleName');
 					Ext.Msg.show({
 						title : '提示',
@@ -234,11 +237,13 @@ Ext.onReady(function(){
 			  }
 			},{
 				text : '重置',
+				iconCls:'icon-arrow_refresh',
 				handler : function() {
 					Ext.getCmp('role_form_add').form.reset();
 				}
 			}, {
 				text : '取消',
+				iconCls:'icon-cancel',
 				handler : function() {
 					Ext.getCmp('role_form_add').form.reset();
 					windows_add_role.hide();
