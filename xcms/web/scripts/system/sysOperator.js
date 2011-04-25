@@ -615,7 +615,7 @@ Ext.onReady(function(){
 								}
 							}
 						}],
-						buttonAlign : 'right',
+						buttonAlign : 'center',
 						minButtonWidth : 60,
 						buttons : [
 						{
@@ -902,7 +902,7 @@ Ext.onReady(function(){
 								**/
 							}
 						}],
-						buttonAlign : 'right',
+						buttonAlign : 'center',
 						minButtonWidth : 60,
 						buttons : [{
 							text : '更新',
@@ -1102,7 +1102,7 @@ Ext.onReady(function(){
 				triggerAction : 'all',
 				emptyText : '请选择所属部门!'
 			}],
-			buttonAlign:'right',
+			buttonAlign:'center',
 			minButtonWidth:60,
 			buttons:[{
 			  text:'添加',

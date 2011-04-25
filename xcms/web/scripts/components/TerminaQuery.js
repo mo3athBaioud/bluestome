@@ -616,7 +616,7 @@ TerminalQuery =  Ext.extend(Ext.Window, {
 		 		}
 		 	]
 		}));
-	},
+	}
 });
 
 var hs_model_ds = new Ext.data.SimpleStore({
