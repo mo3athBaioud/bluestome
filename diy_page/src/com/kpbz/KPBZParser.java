@@ -235,13 +235,12 @@ public class KPBZParser {
 				result.put(tmp, l1);
 			}
 			result.setBool(true);
-		} else {
-			l1 = new LinkBean();
-			l1.setLink(url);
-			l1.setTitle("Title");
-			result.put(tmp, l1);
-			result.setBool(true);
 		}
+		l1 = new LinkBean();
+		l1.setLink(url);
+		l1.setTitle("Title");
+		result.put(tmp, l1);
+		result.setBool(true);
 		return result;
 	}
 	
@@ -449,12 +448,12 @@ public class KPBZParser {
 									imgBean.setTitle("NT:"
 											+ CommonUtil.getDateTimeString());
 							}
-							length = HttpClientUtils.getHttpHeaderResponse(
-									imgSrc, "Content-Length");
-							System.out.println("Title:"+imgBean.getTitle());
-							System.out.println("ArticleId:"+imgBean.getArticleId());
-							System.out.println("大图地址:"+imgBean.getHttpUrl());
-							System.out.println("小图地址:"+imgBean.getImgUrl());
+//							length = HttpClientUtils.getHttpHeaderResponse(
+//									imgSrc, "Content-Length");
+//							System.out.println("Title:"+imgBean.getTitle());
+//							System.out.println("ArticleId:"+imgBean.getArticleId());
+//							System.out.println("大图地址:"+imgBean.getHttpUrl());
+//							System.out.println("小图地址:"+imgBean.getImgUrl());
 							imgBean.setLink("NED");
 							try {
 								size = Integer.parseInt(length);
@@ -815,11 +814,7 @@ public class KPBZParser {
 					for(ImageBean bean : list) {
 						if(bean.getLink().equalsIgnoreCase("NED")){
 							if(download(bean)){
-								bean.setStatus(1);
-								bean.setLink("FD");
-								if(imageDao.update(bean)){
-									System.out.println(">> 更新图片对象["+bean.getId()+"]成功");
-								}
+								System.out.println(">> 更新图片对象["+bean.getId()+"]成功");
 							}
 						}
 					}
@@ -839,6 +834,21 @@ public class KPBZParser {
 				imgBean.getHttpUrl().length());
 		String length = "0";
 		try {
+			byte[] small = null;
+			small = HttpClientUtils.getResponseBodyAsByte(imgBean.getImgUrl(), null, imgBean.getImgUrl());
+			if(null == small)
+				return false;
+			//小图
+			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName)) == null) {
+				IOUtil.createFile(small, File.separator+PIC_SAVE_PATH
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId() + File.separator
+						+ s_fileName);
+			}
+			
 			byte[] big = null;
 			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, imgBean.getHttpUrl());
 			if(null == big)
@@ -847,23 +857,12 @@ public class KPBZParser {
 			if(length.equalsIgnoreCase("20261")){
 				return false;
 			}
-			//小图
-			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
-					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-					+ imgBean.getArticleId() + File.separator
-					+ s_fileName)) == null) {
-				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
-						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-						+ imgBean.getArticleId() + File.separator
-						+ s_fileName);
-			}
-			
 			//大图
 			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
 					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 					+ imgBean.getArticleId() + File.separator
 					+ fileName)) == null) {
-				IOUtil.createFile(big, PIC_SAVE_PATH
+				IOUtil.createFile(big, File.separator+PIC_SAVE_PATH
 						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 						+ imgBean.getArticleId() + File.separator
 						+ fileName);
@@ -881,14 +880,19 @@ public class KPBZParser {
 					+ fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
-				boolean b = picFiledao.insert(bean);
-				if (b) {
-					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
-							+ bean.getName()), bean);
-					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
-							+ bean.getSmallName()), bean);
-				} else {
-					return false;
+				imgBean.setStatus(1);
+				imgBean.setLink("FD");
+				imgBean.setFileSize(Long.valueOf(length));
+				if(imageDao.update(imgBean)){
+					boolean b = picFiledao.insert(bean);
+					if (b) {
+						client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+								+ bean.getName()), bean);
+						client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+								+ bean.getSmallName()), bean);
+					} else {
+						return false;
+					}
 				}
 			} catch (Exception e) {
 				System.out.println("数据库异常");
