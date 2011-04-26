@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -356,8 +357,12 @@ public class BIZHIParser {
 										.elementAt(0);
 								System.out.println(imgTag.getAttribute("alt")
 										+ "|[" + url + "]");
-								article.setActicleXmlUrl(URL
-										+ imgTag.getImageURL());
+								if(!imgTag.getImageURL().startsWith("http://")){
+									article.setActicleXmlUrl(URL
+											+ imgTag.getImageURL());
+								}else{
+									article.setActicleXmlUrl(imgTag.getImageURL());
+								}
 								article.setTitle(imgTag.getAttribute("alt")); // NT:No
 							}
 							int key = articleDao.insert(article);
@@ -748,8 +753,8 @@ public class BIZHIParser {
 		// init();
 		try {
 			// catalog(URL);
-//			 update();
-//			 loadImg();
+			 update();
+			 loadImg();
 			 imgDownload();
 //			threadParser();
 //			movefile();
@@ -787,25 +792,32 @@ public class BIZHIParser {
 	static void patch() throws Exception{
 		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : webList) {
-//			List<Article> list = articleDao.findByWebId(bean.getId(), "FD");
-//			System.out.println(" >> name:["+bean.getName()+"]\turl:"+bean.getUrl());
-//			for (Article art : list) {
-//				String url = art.getArticleUrl().replace("bizhi", "6188");
-//				String icon = art.getActicleXmlUrl().replace("bizhi","6188");
-//				System.out.println(" >> url:"+url);
-//				art.setArticleUrl(url);
-//				art.setActicleXmlUrl(icon);
-//				if(articleDao.update(art)){
-//					System.out.println("更新[URL:"+art.getArticleUrl()+"\tNAME:"+art.getTitle()+"]成功");
-//				}
-//			}
-			String webUrl = bean.getUrl().replace("bizhi", "6188");
-			System.out.println(" >> webUrl:"+webUrl);
-			bean.setUrl(webUrl);
-			if(webSiteDao.update(bean)){
-				System.out.println("更新[NAME:"+bean.getName()+"\tURL:"+bean.getUrl()+"]成功");
+			List<Article> list = articleDao.findByWebId(bean.getId(), "FD");
+			System.out.println(" >> name:["+bean.getName()+"]\turl:"+bean.getUrl());
+			for (Article art : list) {
+				if(art.getActicleXmlUrl().startsWith("http://www.6188.comhttp://")){
+					String icon = art.getActicleXmlUrl();
+					art.setActicleXmlUrl(icon.replace("http://www.6188.comhttp://","http://"));
+					if(articleDao.update(art)){
+						System.out.println(" >> "+icon+"更新为:"+art.getActicleXmlUrl()+"\t成功");
+					}
+				}else if(!art.getActicleXmlUrl().startsWith("http://")){
+					String icon = art.getActicleXmlUrl();
+					art.setActicleXmlUrl("http://www.6188.com/"+icon);
+					if(articleDao.update(art)){
+						System.out.println(" >> "+icon+"更新为:"+art.getActicleXmlUrl()+"\t成功");
+					}
+				}
 			}
-			System.out.println("\r\n");
+			
+			
+//			String webUrl = bean.getUrl().replace("bizhi", "6188");
+//			System.out.println(" >> webUrl:"+webUrl);
+//			bean.setUrl(webUrl);
+//			if(webSiteDao.update(bean)){
+//				System.out.println("更新[NAME:"+bean.getName()+"\tURL:"+bean.getUrl()+"]成功");
+//			}
+//			System.out.println("\r\n");
 		}
 	}
 
@@ -867,13 +879,24 @@ public class BIZHIParser {
 				imgBean.getHttpUrl().lastIndexOf("/") + 1,
 				imgBean.getHttpUrl().length());
 		s_fileName = s_fileName.replace(".", "_s.");
+		String length = "0";
+		String bigUrl = null;
 		try {
+			byte[] big = null;
+			bigUrl = imgBean.getHttpUrl().replace("[", URLEncoder.encode("[", "utf-8")).replace("]", URLEncoder.encode("]", "utf-8"));
+//			.replace(" (", URLEncoder.encode(" (", "utf-8"))
+//										 .replace(" )", URLEncoder.encode(" )", "utf-8"));
+			System.out.println(" >> "+bigUrl);
+			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, bigUrl);
+			if(null == big)
+				return false;
+			length = String.valueOf(big.length);
 			bean = new PicfileBean();
 			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH + 
 					StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 					+ imgBean.getArticleId() + File.separator
 					+ fileName.replace(".", "_s."))) == null) {
-				IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH + 
+				IOUtil.createPicFile(imgBean.getImgUrl(), File.separator + PIC_SAVE_PATH + 
 						StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 						+ imgBean.getArticleId()
 						+ File.separator + fileName.replace(".", "_s."));
@@ -883,14 +906,13 @@ public class BIZHIParser {
 					StringUtils.gerDir(String.valueOf(imgBean.getArticleId())) + 
 					imgBean.getArticleId() + File.separator
 					+ fileName)) == null) {
-				IOUtil.createPicFile(imgBean.getHttpUrl(), PIC_SAVE_PATH + 
+				IOUtil.createFile(big, File.separator + PIC_SAVE_PATH + 
 						StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))+ 
 						imgBean.getArticleId()
 						+ File.separator + fileName);
 			}
 			bean.setArticleId(imgBean.getArticleId());
 			bean.setImageId(imgBean.getId());
-//			System.out.println(">> image.title:"+imgBean.getTitle());
 			bean.setTitle(imgBean.getTitle());
 			bean.setSmallName(File.separator + StringUtils.gerDir(String.valueOf(imgBean.getArticleId())) + File.separator + imgBean.getArticleId()
 					+ File.separator + s_fileName);
@@ -898,14 +920,15 @@ public class BIZHIParser {
 					+ File.separator + fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
-				boolean b = picFiledao.insert(bean);
-				if (b) {
-//					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
-//							+ bean.getName()), bean);
-//					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
-//							+ bean.getSmallName()), bean);
-				} else {
-					return false;
+				imgBean.setFileSize(Long.valueOf(length));
+				imgBean.setLink("FD");
+				if(imageDao.update(imgBean)){
+					boolean b = picFiledao.insert(bean);
+					if (b) {
+						System.out.println(" >> 成功:" + imgBean.getId()+"|"+imgBean.getTitle());
+					} else {
+						return false;
+					}
 				}
 			} catch (Exception e) {
 				System.out.println("数据库异常");

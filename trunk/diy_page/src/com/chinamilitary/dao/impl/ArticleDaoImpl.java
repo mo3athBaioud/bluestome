@@ -225,6 +225,62 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 	}
 	
 	/**
+	 * 根据网站ID和网址查找记录
+	 * @param url
+	 * @param webid
+	 * @return
+	 * @throws Exception
+	 */
+	public Article findByUrl(String url,Integer webid) throws Exception{
+		Article bean = null;
+		pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id = ? and d_acticle_url = ? and d_text = 'FD' order by d_web_id limit 1");
+		pstmt.setInt(1, webid);
+		pstmt.setString(2, url);
+		rs = pstmt.executeQuery();
+		while(rs.next()){
+			bean = new Article();
+			bean.setId(rs.getInt("d_id"));
+			bean.setWebId(rs.getInt("d_web_id"));
+			bean.setArticleUrl(rs.getString("d_acticle_url"));
+			bean.setActicleRealUrl(rs.getString("d_article_real_url") == null ? "" : rs.getString("d_article_real_url"));
+			bean.setActicleXmlUrl(rs.getString("d_article_xml_url") == null ? "" : rs.getString("d_article_xml_url"));
+			bean.setText(rs.getString("d_text"));
+			bean.setTitle(rs.getString("d_title"));
+			bean.setIntro(rs.getString("d_intro"));
+			bean.setCreateTime(rs.getDate("d_createtime"));
+		}
+		releaseLink();
+		return bean;
+		
+	}
+	/**
+	 * 根据网站ID和网址查找记录
+	 * @param url
+	 * @param webid
+	 * @return
+	 * @throws Exception
+	 */
+	public Article findByUrl(String url) throws Exception{
+		Article bean = null;
+		pstmt = conn.prepareStatement(QUERY_SQL+" where d_acticle_url = ? and d_text = 'FD' order by d_web_id limit 1");
+		pstmt.setString(1, url);
+		rs = pstmt.executeQuery();
+		while(rs.next()){
+			bean = new Article();
+			bean.setId(rs.getInt("d_id"));
+			bean.setWebId(rs.getInt("d_web_id"));
+			bean.setArticleUrl(rs.getString("d_acticle_url"));
+			bean.setActicleRealUrl(rs.getString("d_article_real_url") == null ? "" : rs.getString("d_article_real_url"));
+			bean.setActicleXmlUrl(rs.getString("d_article_xml_url") == null ? "" : rs.getString("d_article_xml_url"));
+			bean.setText(rs.getString("d_text"));
+			bean.setTitle(rs.getString("d_title"));
+			bean.setIntro(rs.getString("d_intro"));
+			bean.setCreateTime(rs.getDate("d_createtime"));
+		}
+		releaseLink();
+		return bean;
+	}
+	/**
 	 * 查找所有文章地址
 	 * @return
 	 * @throws Exception

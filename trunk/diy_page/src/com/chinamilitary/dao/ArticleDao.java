@@ -52,6 +52,24 @@ public interface ArticleDao extends ICommonDao{
 	 */
 	public List<Article> findByWebId(Integer webId,String text) throws Exception;
 	
+	/**
+	 * 根据网站ID和网址查找记录
+	 * @param url
+	 * @param webid
+	 * @return
+	 * @throws Exception
+	 */
+	Article findByUrl(String url,Integer webid) throws Exception;
+	
+	/**
+	 * 根据网站ID和网址查找记录
+	 * @param url
+	 * @param webid
+	 * @return
+	 * @throws Exception
+	 */
+	Article findByUrl(String url) throws Exception;
+	
 	public List<Article> findShowImg(Integer webId,Integer id) throws Exception;
 	
 	/**

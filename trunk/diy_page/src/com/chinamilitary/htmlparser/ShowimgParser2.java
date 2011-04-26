@@ -288,6 +288,87 @@ public class ShowimgParser2 {
 	}
 	
 	/**
+	 * 获取二级菜单中的链接
+	 * @param bean
+	 * @throws Exception
+	 */
+	public static void getArticleIcon(WebsiteBean bean) throws Exception{
+//		ResultBean result = hasPaging(bean.getUrl(),"id","damulu-page"); //version 1.0
+		ResultBean result = hasPaging(bean.getUrl(),"class","pages");
+		if(result.isBool()){
+			result.getMap();
+			Iterator it = result.getMap().keySet().iterator();
+			while(it.hasNext()){
+				String lkey = (String)it.next();
+				if(null == client.get(lkey)){
+					try{
+				System.out.println("key:"+lkey);
+				LinkBean lb = (LinkBean)result.getMap().get(lkey);
+
+				Parser parser = new Parser();
+				parser.setURL(lb.getLink());
+				
+				// 获取指定ID的DIV内容
+				NodeFilter filter = new NodeClassFilter(Div.class);
+				NodeList list = parser.extractAllNodesThatMatch(filter)
+						.extractAllNodesThatMatch(
+								new HasAttributeFilter("id", "left"));
+				if(list != null && list.size() > 0){
+					Parser p1 = new Parser();
+					p1.setInputHTML(list.toHtml());
+					
+					NodeFilter filter1 = new NodeClassFilter(LinkTag.class);
+					NodeList nodes = p1.extractAllNodesThatMatch(filter1);
+					
+					if(nodes != null && nodes.size() > 0){
+						Article article = null;
+						for(int i=0;i<nodes.size();i++){
+								LinkTag link = (LinkTag)nodes.elementAt(i);
+								if(link.getLink() != null && !link.getLink().equalsIgnoreCase("") && link.getLink().startsWith("/tabulation.php")){
+									String url = URL+link.getLink().replace("/", "");
+									NodeList tmp = link.getChildren();
+									if(tmp != null && tmp.size() > 0){
+										ImageTag imgTag = (ImageTag)tmp.elementAt(0);
+										if(null == client.get(url)){
+											article = new Article();
+											if(imgTag.getImageURL().startsWith("http://")){
+												article.setActicleXmlUrl(imgTag.getImageURL());
+											}else{
+												article.setActicleXmlUrl(URL+imgTag.getImageURL());
+											}
+											article.setArticleUrl(url);
+											article.setTitle(imgTag.getAttribute("alt"));
+											Article atmp = articleDao.findByUrl(article.getArticleUrl(),bean.getId());
+											if(null != atmp){
+												if(atmp.getArticleUrl().equals(article.getArticleUrl()) && atmp.getTitle().equals(article.getTitle())){
+													atmp.setActicleXmlUrl(article.getActicleXmlUrl());
+													if(articleDao.update(atmp)){
+														System.out.println(" >> 更新"+atmp.getId()+".ActicleXmlUrl:"+atmp.getActicleXmlUrl()+"成功!");
+													}
+												}
+											}
+										}
+									}
+									Thread.sleep(50);
+								}
+						}
+					}
+				}
+				}catch(Exception e){
+					client.remove(lkey);
+					log.error(e);
+					e.printStackTrace();
+					continue;
+				}
+			}else{
+				System.out.println(">> 已存在地址["+lkey+"]");
+			}
+				
+						}
+//			for(LinkBean lbean:result.getList()){}
+		}
+	}
+	/**
 	 * 图片页面分页
 	 * @param linkBean
 	 * @return
@@ -770,11 +851,13 @@ public class ShowimgParser2 {
 					}
 				}
 			}
-			b = true;
-			result.setBool(true);
-		}else{
-			result.setBool(b);
 		}
+		LinkBean l1 = null;
+		l1 = new LinkBean();
+		l1.setLink(url);//"htm/"+
+		l1.setName(url);//link.getLinkText()
+		result.put(url, l1);
+		result.setBool(true);
 		return result;
 	}
 	
@@ -959,7 +1042,7 @@ public class ShowimgParser2 {
 		try{
 //			init();
 			
-			index();
+//			index();
 			
 			updateArticleFromSource(36);
 			
@@ -987,10 +1070,13 @@ public class ShowimgParser2 {
 				if (list != null && list.size() > 0) {
 					for (WebsiteBean bean : list) {
 						if(bean != null){
-							List<Article> alist = articleDao.findByWebId(bean.getId(),"NED");//47 48 49 50 51 52 
+							List<Article> alist = articleDao.findByWebId(bean.getId(),"FD");//47 48 49 50 51 52 
 							for(Article article:alist){
 								try{
-									getPicUrl(article);
+									int count = imageDao.findImage(article.getId()).size();
+									if(count == 0){
+										getPicUrl(article);
+									}
 								}catch(Exception e){
 									article.setText("FNFE");
 									articleDao.update(article);
@@ -1008,30 +1094,9 @@ public class ShowimgParser2 {
 				e.printStackTrace();
 			}
 			
-			try{
-				WebsiteBean bean = wesiteDao.findById(36);
-				if(bean != null){
-					List<Article> alist = articleDao.findShowImg(bean.getId());//47 48 49 50 51 52 
-					for(Article article:alist){
-						try{
-							getPicUrl(article);
-						}catch(Exception e){
-							article.setText("FNFE");
-							articleDao.update(article);
-							System.out.println(">> Article["+article.getId()+"],Exception:"+e.getMessage());
-							continue;
-						}finally{
-							
-						}
-					}
-				}
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-
 			imgDownload();
 			
-			
+//			patchIcon();
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
@@ -1039,6 +1104,23 @@ public class ShowimgParser2 {
 		}
 	}
 	
+	private static void patchIcon() throws Exception {
+		try {
+			List<WebsiteBean> lists = wesiteDao.findByParentId(36);
+			System.out.println("查找web菜单："+lists.size());
+			if (lists != null && lists.size() > 0) {
+				for (WebsiteBean bean : lists) {
+					System.out.println("\t"+bean.getName()+"\t"+bean.getUrl());
+					getArticleIcon(bean);
+//					//更新菜单列表时间
+//					wesiteDao.update(bean);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * 更新某网站中的文章数
 	 * @throws Exception
@@ -1078,13 +1160,7 @@ public class ShowimgParser2 {
 			for(int i=0;i<nodes.size();i++){
 				try{
 				LinkTag link = (LinkTag)nodes.elementAt(i);
-//				System.out.println(link.getLinkText()+"|"+link.getLink());
 				if(null != link.getLink() && !link.getLink().equalsIgnoreCase("") && link.getLink().startsWith("http://www.showimg.com/tabulation.php?mid=")){
-//					String url = URL+link.getLink().replace("/", "");
-//					System.out.println(link.getLinkText()+"|"+link.getLink());
-//					NodeList tmp = link.getChildren();
-//					if(tmp != null && tmp.size() > 0){
-//						ImageTag imgTag = (ImageTag)tmp.elementAt(0);
 						if(null == client.get(link.getLink())){
 							if(null != link.getLinkText() && !"".equalsIgnoreCase(link.getLinkText())){
 								article = new Article();
@@ -1173,7 +1249,7 @@ public class ShowimgParser2 {
 					System.out.println(">> 文章["+art.getId()+"|"+art.getTitle()+"]\t下的图片数量"+imgList.size());
 //					ARTICLE_COM_URL = art.getArticleUrl();
 					for (ImageBean img : imgList) {
-						if(img.getStatus() != -1){
+						if(img.getLink().equals("NED")){
 							if (download(img,art.getArticleUrl())) {
 								img.setStatus(-1);
 								img.setLink("FD");
@@ -1226,7 +1302,7 @@ public class ShowimgParser2 {
 			}
 
 			if(s_fileName.toLowerCase().endsWith(".jpg") || s_fileName.toLowerCase().endsWith(".gif") 
-					|| s_fileName.toLowerCase().endsWith(".png")){
+					|| s_fileName.toLowerCase().endsWith(".png") || s_fileName.toLowerCase().endsWith(".jpeg")){
 				//小图
 				if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
 						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
@@ -1242,7 +1318,7 @@ public class ShowimgParser2 {
 				return false;
 			}
 			if(fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".gif") 
-					|| fileName.toLowerCase().endsWith(".png")){
+					|| fileName.toLowerCase().endsWith(".png") || fileName.toLowerCase().endsWith(".jpeg")){
 				//大图
 				if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
 						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))

@@ -866,9 +866,9 @@ public class MilitaryParser {
 
 //			 index();
 
-//			getActicle(D_PARENT_ID); // 5 , 143
+			getActicle(D_PARENT_ID); // 5 , 143
 
-//			getArticleImages();
+			getArticleImages();
 			
 			downloadImages();
 

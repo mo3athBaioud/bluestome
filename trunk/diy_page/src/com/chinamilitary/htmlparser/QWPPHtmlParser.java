@@ -65,9 +65,9 @@ public class QWPPHtmlParser {
 	
 	static int D_PARENT_ID = 148;
 	
-	final static String FILE_SERVER = "O:\\fileserver\\image\\";
+	final static String FILE_SERVER = Constants.FILE_SERVER;
 	
-	public static final String SAVE_DIR = "F:\\qwpp\\";
+	public static final String SAVE_DIR = Constants.FILE_SERVER;
 	
 	private static List<LinkBean> LINKLIST = new ArrayList<LinkBean>();
 	
@@ -208,9 +208,9 @@ public class QWPPHtmlParser {
 							LinkTag select  = (LinkTag)nodes.elementAt(i);
 							String url_ = _URL+select.getLink();
 							if(null == client.get(url_)){
-								if(!HttpClientUtils.validationURL(url_)){
-									continue;
-								}
+//								if(!HttpClientUtils.validationURL(url_)){
+//									continue;
+//								}
 								article = new Article();
 								article.setActicleRealUrl(url_);
 								article.setArticleUrl(url_);
@@ -262,10 +262,10 @@ public class QWPPHtmlParser {
 						for(int i=0;i<nodes.size();i++){
 							LinkTag select  = (LinkTag)nodes.elementAt(i);
 							String url_ = _URL+select.getLink();
-							if(!HttpClientUtils.validationURL(url_)){
-								System.out.println(">> QWPP 连接不可用");
-								continue;
-							}
+//							if(!HttpClientUtils.validationURL(url_)){
+//								System.out.println(">> QWPP 连接不可用");
+//								continue;
+//							}
 							if(null == client.get(url_)){
 								imgBean = new ImageBean();
 //								imgBean.setTitle(title)
@@ -283,7 +283,7 @@ public class QWPPHtmlParser {
 								int iid = imageDao.insert(imgBean);
 								if(iid > 0){
 									client.add(url_, url_);
-									download(_URL+select.getLink(),"");
+//									download(_URL+select.getLink(),"");
 								}
 							}
 						}
@@ -291,7 +291,7 @@ public class QWPPHtmlParser {
 				}
 			}
 		}catch(Exception e){
-			
+			e.printStackTrace();
 		}
 	}
 	
@@ -321,9 +321,9 @@ public class QWPPHtmlParser {
 							LinkTag select  = (LinkTag)nodes.elementAt(i);
 							String url = _URL+select.getLink();
 							if(null == client.get(url)){
-								if(!HttpClientUtils.validationURL(url)){
-									continue;
-								}
+//								if(!HttpClientUtils.validationURL(url)){
+//									continue;
+//								}
 								imgBean = new ImageBean();
 								imgBean.setArticleId(article.getId());
 								imgBean.setHttpUrl(url);
@@ -475,9 +475,9 @@ public class QWPPHtmlParser {
 			
 			update();
 			
-//			movefile();
-			
 			imgDownload();
+			
+//			movefile();
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -491,11 +491,6 @@ public class QWPPHtmlParser {
 			for(WebsiteBean bean:rootURL){
 				System.out.println(">> 解析地址:["+bean.getUrl()+"]");
 				
-//				if(!HttpClientUtils.validationURL(bean.getUrl())){
-//					System.out.println(">> QWPP Catalog URL["+bean.getUrl()+"] NOT OK");
-//					continue;
-//				}
-				
 				ResultBean  result = hasPaging(bean.getUrl(),"class","show_page");
 				for(LinkBean ll : result.getList()){
 					//获取分页连接
@@ -507,10 +502,10 @@ public class QWPPHtmlParser {
 			for(WebsiteBean bean:rootURL){
 				List<Article> list  = articleDao.findShowImg(bean.getId(),"NED",1);
 				for(Article art:list){
-						if(!HttpClientUtils.validationURL(art.getArticleUrl())){
-							System.out.println(">> QWPP Article URL["+bean.getUrl()+"] NOT OK");
-							continue;
-						}
+//						if(!HttpClientUtils.validationURL(art.getArticleUrl())){
+//							System.out.println(">> QWPP Article URL["+bean.getUrl()+"] NOT OK");
+//							continue;
+//						}
 						System.out.println("标题："+art.getTitle() + "\t\t所属类别ID:"+art.getWebId());
 						getPicUrl(art, "id", "piclist2");
 						art.setText("FD");
@@ -529,12 +524,8 @@ public class QWPPHtmlParser {
 					+ website.getUrl());
 			List<Article> artList = articleDao.findByWebId(website.getId(),
 					"FD");
-			System.out.println("文章数量:" + artList.size());
 			for (Article article : artList) {
 				List<ImageBean> list = imageDao.findImage(article.getId());
-				System.out.println(">> 图片数量:[" + article.getTitle() + "["
-						+ article.getId() + "]]" + list.size()
-						+ "\n**************************");
 				if (list.size() == 0) {
 					article.setText("NED");
 					if (articleDao.update(article)) {
@@ -668,7 +659,7 @@ public class QWPPHtmlParser {
 	}
 	
 	static boolean moveFile(PicfileBean bean) {
-		String tmpUrl = "P:\\share\\file\\qwpp\\";
+		String tmpUrl = "F:\\qwpp\\";
 		boolean isBig = false;
 		boolean isSmall = false;
 		int start = bean.getName().lastIndexOf(File.separator)+1;
