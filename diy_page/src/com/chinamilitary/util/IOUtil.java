@@ -164,6 +164,70 @@ public class IOUtil {
 
 	}
 	
+	/**
+	 *获取文件内容
+	 *@param filePath 文件路径
+	 *@param encoding 编码格式
+	 *@param ext 文件扩展名
+	 */
+	public static String readFile(String filePath,String encoding,String ext){
+		File file = null;
+		InputStreamReader read = null;
+		BufferedReader is = null;
+		StringBuffer sb = new StringBuffer();
+		try{
+		 file = new File(filePath);
+		 //判断是否为文件夹
+		 if(file.isDirectory()){
+			 return null;
+		 }else if(file.isFile() && file.getName().endsWith(ext)){ //单个文件且文件名义为文本文件
+			 read = new InputStreamReader(new FileInputStream(file),encoding);
+			 is=new BufferedReader(read);
+			 String line;
+			 while ((line = is.readLine()) != null) {
+				sb.append(line);
+				sb.append("\r\n");
+			 }
+		 }
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 获取当前CLASSPATH下的文件
+	 */
+	public static String readFile(String fileName){
+		InputStreamReader read = null;
+		BufferedReader is = null;
+		StringBuffer sb = new StringBuffer();
+		ClassLoader classLoader=IOUtil.class.getClassLoader(); 
+		try{
+			 read = new InputStreamReader(classLoader.getResourceAsStream(fileName));
+			 is=new BufferedReader(read);
+			 String line;
+			 while ((line = is.readLine()) != null) {
+				sb.append(line);
+				sb.append("\r\n");
+			 }
+		}catch(IOException e){
+			System.err.println(" >> 找不到文件");
+		}catch(Exception e){
+			System.err.println(" >> 异常");
+			e.printStackTrace();
+		}finally{
+			try{
+				if(null != is){
+					is.close();
+				}
+			}catch(Exception e){
+			
+			}
+		}
+		return sb.toString();
+	}
+	
 	public static void main(String[] args){
 		try{
 		System.out.println("Hello World!");

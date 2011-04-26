@@ -11,7 +11,7 @@ import com.chinamilitary.db.CommonDB;
 
 public class WebSiteDaoImpl extends CommonDB implements WebSiteDao {
 	
-	private final static String INSERT_SQL = "insert into tbl_web_site (d_parent_id,d_web_url,d_web_name,d_modifytime) values (?,?,?,current_timestamp) ";
+	private final static String INSERT_SQL = "insert into tbl_web_site (d_parent_id,d_web_url,d_web_name,d_modifytime,d_remarks) values (?,?,?,current_timestamp,?) ";
 	private final static String UPDATE_SQL = "update tbl_web_site set d_parent_id = ?,d_web_url=?,d_web_name=?,d_modifytime=current_timestamp where d_id = ? ";
 	private final static String QUERY_SQL = "select * from tbl_web_site";
 	private final static String COUNT_SQL = "select count(*) from tbl_web_site where d_status = 1";
@@ -57,6 +57,7 @@ public class WebSiteDaoImpl extends CommonDB implements WebSiteDao {
 		pstmt.setInt(1, bean.getParentId());
 		pstmt.setString(2, bean.getUrl());
 		pstmt.setString(3, bean.getName());
+		pstmt.setString(4,bean.getRemarks());
 		count = pstmt.executeUpdate();
 		if(count == 1){
 			b = true;
@@ -169,6 +170,7 @@ public class WebSiteDaoImpl extends CommonDB implements WebSiteDao {
 			bean.setStatus(rs.getInt("d_status"));
 			bean.setModifytime(rs.getDate("d_modifytime"));
 //			bean.setChild(findByParentId(bean.getId()));
+			bean.setRemarks(rs.getString("d_remarks"));
 			list.add(bean);
 		}
 		releaseLink();

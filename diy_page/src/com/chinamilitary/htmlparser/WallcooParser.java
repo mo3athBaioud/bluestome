@@ -889,11 +889,11 @@ public class WallcooParser {
 			//初始化数据到缓存中
 //			init2cache();
 			
-//			update();
+			update();
 			
 			loadImg();
 			
-//			imgDownload();
+			imgDownload();
 			
 			
 			//测试分页
@@ -904,15 +904,117 @@ public class WallcooParser {
 //				}
 //			}
 			
+//			patchIcon();
 			} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	private static void patchIcon() throws Exception {
+
+		List<WebsiteBean> list = wesiteDao.findByParentId(D_PARENT_ID);
+		/**
+		 * 文章获取并入库 List<WebsiteBean> list = wesiteDao.findByParentId(125);
+		 */
+		if (list != null && list.size() > 0) {
+			ResultBean result = null;
+			int i = 0;
+			for (WebsiteBean bean : list) {
+				System.out.println("\t"+bean.getUrl()+"\t"+bean.getName());
+				try{
+					result = hasPaging(bean, "id", "linkid");
+					if (result.isBool()) {
+						List<LinkBean> pageList = result.getList();
+						if (pageList != null && pageList.size() > 0) {
+							for (LinkBean link : pageList) {
+								try {
+									System.out.println(" >> link:"+link.getLink());
+									getIconByURL(link, bean.getId());
+								} catch(Exception e){
+									continue;
+								}
+							}
+						}
+					}
+					i++;
+				}catch(Exception e){
+					System.out.println(">> Exception :"+e.getMessage());
+				}
+			}
+		}
+		}
+	
+	/**
+	 * 获取分类下数据
+	 * 
+	 * @param link
+	 * @param webId
+	 * @throws Exception
+	 */
+	public static void getIconByURL(LinkBean link, int webId) throws Exception {
+		Parser parser = new Parser();
+		parser.setURL(link.getLink());
+		parser.setEncoding("GB2312");
+
+		// 获取指定ID的DIV内容
+		NodeFilter filter = new NodeClassFilter(TableTag.class);
+		NodeList list = parser.extractAllNodesThatMatch(filter)
+				.extractAllNodesThatMatch(new HasAttributeFilter("id", "list"));
+		if (list != null && list.size() > 0) {
+			NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
+			NodeFilter imageFilter = new NodeClassFilter(ImageTag.class);
+			OrFilter lastFilter = new OrFilter();
+			lastFilter
+					.setPredicates(new NodeFilter[] { linkFilter, imageFilter });
+			Parser p2 = new Parser();
+			p2.setInputHTML(list.toHtml());
+			p2.setEncoding("GB2312");
+			NodeList list4 = p2.parse(lastFilter);
+			if (list4 != null || list4.size() > 0) {
+				for (int i = 0; i < list4.size(); i++) {
+					// 地址
+					if (list4.elementAt(i) instanceof LinkTag) {
+						LinkTag nl = (LinkTag) list4.elementAt(i);
+						NodeList cnl = nl.getChildren();
+						if (cnl != null && cnl.size() > 0) {
+							// 小图 可能存在部分图片无法访问，需要判断
+							Article article = null;
+							if (cnl.elementAt(1) instanceof ImageTag) {
+								String url = URL_ + nl.getLink();
+									article = new Article();
+									article.setWebId(webId);
+									article.setArticleUrl(url);
+									ImageTag it = (ImageTag) cnl.elementAt(1);
+									if(null != it){
+										if(it.getImageURL().startsWith("http://")){
+											article.setActicleXmlUrl(it.getImageURL());
+										}else{
+											article.setActicleXmlUrl(URL+it.getImageURL());
+										}
+										article.setTitle(it.getAttribute("alt") == null ? "NT" : it.getAttribute("alt"));
+										Article atmp = articleDao.findByUrl(article.getArticleUrl(), webId);
+										if(null != atmp){
+											if(atmp.getArticleUrl().equals(article.getArticleUrl()) && atmp.getTitle().equals(article.getTitle())){
+												atmp.setActicleXmlUrl(article.getActicleXmlUrl());
+												if(articleDao.update(atmp)){
+													System.out.println(" >> 更新"+atmp.getId()+".ActicleXmlUrl:"+atmp.getActicleXmlUrl()+"成功!");
+												}
+											}
+										}
+									}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+
 	static void loadImg() throws Exception{
 		List<WebsiteBean> webList = wesiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : webList) {
-			List<Article> list = articleDao.findByWebId(bean.getId(), "FD");
+			List<Article> list = articleDao.findByWebId(bean.getId(), "NED");
 			System.out.println(">> 网站["+bean.getName()+"]|"+bean.getUrl()+"还有"+list.size()+"条记录未解析");
 //			if(list.size() > 0){
 				for(Article article:list){
@@ -920,6 +1022,10 @@ public class WallcooParser {
 						int count = articleDao.getCount("select count(*) from tbl_image where d_article_id = "+article.getId());
 						if(count > 0){
 							System.out.println(" >> ["+article.getTitle()+"|"+article.getId()+"]文章下有"+count+"条图片");
+							article.setText("FD");
+							if(!articleDao.update(article)){
+								System.err.println(" >> 站点:["+article.getWebId()+"],更新记录"+article.getTitle()+"失败");
+							}
 							continue;
 						}
 						ResultBean result = hasPagingWithArticleSelectTag(article.getArticleUrl());
@@ -930,6 +1036,7 @@ public class WallcooParser {
 							article.setText("FD");
 						}
 					}catch(Exception e){
+						e.printStackTrace();
 						article.setText("ENED");
 					}finally{
 //						if(articleDao.update(article)){
@@ -947,13 +1054,13 @@ public class WallcooParser {
 		List<WebsiteBean> webList = wesiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : webList) {
 			WebsiteBean website = wesiteDao.findById(bean.getId());
-				List<Article> list = articleDao.findByWebId(website.getId(),"NED");
+				List<Article> list = articleDao.findByWebId(website.getId(),"FD");
 				System.out.println(">> 网站["+bean.getId()+"|"+bean.getName()+"|"+bean.getUrl()+"]\t下文章数量"+list.size());
 				for (Article art : list) {
 					List<ImageBean> imgList = imageDao.findImage(art.getId());
 					System.out.println(">> 文章["+art.getId()+"|"+art.getTitle()+"]\t下的图片数量"+imgList.size());
 					for (ImageBean img : imgList) {
-						if(img.getStatus() != -1){
+						if(img.getLink().equals("NED")){
 							long start = System.currentTimeMillis();
 							if (download(img,art.getArticleUrl())) {
 								img.setStatus(-1);
@@ -1039,19 +1146,22 @@ public class WallcooParser {
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
 				long start = System.currentTimeMillis();
-				//TODO 异步完成数据库入库操作
-				boolean b = picFileDao.insert(bean);
-				if (b) {
-					long end = System.currentTimeMillis();
-					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
-							+ bean.getName()), bean);
-					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
-							+ bean.getSmallName()), bean);
-					System.out.println(">> 记录添加成功,图片文件记录入库耗时:"+(end-start)+"ms\n");
-				} else {
-					long end = System.currentTimeMillis();
-					System.out.println(">> 记录添加失败,图片文件记录入库耗时:"+(end-start)+"ms\n");
-					return false;
+				imgBean.setFileSize(Long.valueOf(length));
+				if(imageDao.update(imgBean)){
+					//TODO 异步完成数据库入库操作
+					boolean b = picFileDao.insert(bean);
+					if (b) {
+						long end = System.currentTimeMillis();
+						client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+								+ bean.getName()), bean);
+						client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+								+ bean.getSmallName()), bean);
+						System.out.println(">> 记录添加成功,图片文件记录入库耗时:"+(end-start)+"ms\n");
+					} else {
+						long end = System.currentTimeMillis();
+						System.out.println(">> 记录添加失败,图片文件记录入库耗时:"+(end-start)+"ms\n");
+						return false;
+					}
 				}
 			} catch (Exception e) {
 				System.out.println("数据库异常");

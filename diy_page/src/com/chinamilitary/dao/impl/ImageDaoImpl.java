@@ -425,8 +425,9 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 		if(key == 1){
 			b = true;
 		}
-		if(pstmt != null)
-			pstmt.close();
+		releaseSLink();
+//		if(pstmt != null)
+//			pstmt.close();
 		return b;
 	}
 

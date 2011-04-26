@@ -159,12 +159,24 @@ public class BIZHIZHANParser {
 		parser.setURL(url);
 
 		// 获取指定ID的DIV内容
-		NodeFilter filter = new NodeClassFilter(Div.class);
+		NodeFilter filter = new NodeClassFilter(SelectTag.class);
 		NodeList list = parser.extractAllNodesThatMatch(filter)
 				.extractAllNodesThatMatch(
-						new HasAttributeFilter("class", "page padding5"));
+						new HasAttributeFilter("name", "sldd"));
 		LinkBean oplink = null;
 		if (list != null && list.size() > 0) {
+//			System.out.println(" >> list.toHtml:"+list.toHtml());
+			SelectTag select = (SelectTag)list.elementAt(0);
+			OptionTag[] options = select.getOptionTags();
+			for(OptionTag option:options){
+				System.out.println(" >> "+option.getOptionText()+"|"+url+option.getValue());
+				oplink = new LinkBean();
+				String url2 = url + option.getValue();
+				oplink.setLink(url + option.getValue());
+				oplink.setName(option.getOptionText());
+				result.put(url2, oplink);
+			}
+			/**
 			Parser p2 = new Parser();
 			p2.setInputHTML(list.elementAt(0).toHtml());
 
@@ -182,13 +194,13 @@ public class BIZHIZHANParser {
 			}
 			b = true;
 			result.setBool(b);
-		}else{
-			oplink = new LinkBean();
-			oplink.setLink(url);
-			oplink.setTitle("Title");
-			result.put(url, oplink);
-			result.setBool(true);
+			**/
 		}
+//		oplink = new LinkBean();
+//		oplink.setLink(url);
+//		oplink.setTitle("Title");
+//		result.put(url, oplink);
+		result.setBool(true);
 		return result;
 	}
 
@@ -220,26 +232,42 @@ public class BIZHIZHANParser {
 				Article article = null;
 				for (int i = 0; i < list3.size(); i++) {
 					LinkTag link = (LinkTag) list3.elementAt(i);
-					String url2 = URL + link.getLink();
-					System.out.println(link.getLinkText() + "|" + url2);
-					if (null == client.get(url2)) {
-						article = new Article();
-						article.setWebId(webId);
-						article.setArticleUrl(url2);
-						article.setTitle(link.getLinkText());
-						article.setText("NED"); // No Execute Download
-						int key = articleDao.insert(article);
-						if (key > 0) {
-//							client.add(url, url);
-							System.out.println("添加" + link.getLinkText()
-									+ ",成功");
-							patchTitle(key);
-						} else {
-							System.out.println("添加" + link.getLinkText()
-									+ "失败,已存在相同标题的内容");
+					NodeList tmp = link.getChildren();
+					if (tmp != null && tmp.size() > 0) {
+						if(tmp.elementAt(0) instanceof ImageTag){
+							article = new Article();
+							ImageTag imgTag = (ImageTag) tmp.elementAt(0);
+							System.out.println(imgTag.getAttribute("alt")
+									+ "|[" + url + "]");
+							if(imgTag.getImageURL().startsWith("http://")){
+								article.setActicleXmlUrl(imgTag.getImageURL());
+							}else{
+								article.setActicleXmlUrl(URL+imgTag.getImageURL());
+							}
+							if(null != imgTag.getAttribute("alt")){
+								article.setTitle(imgTag.getAttribute("alt"));
+							}
+							
+							String url2 = URL + link.getLink();
+							System.out.println(link.getLinkText() + "|" + url2);
+							if (null == client.get(url2)) {
+								article.setWebId(webId);
+								article.setArticleUrl(url2);
+//								article.setTitle(link.getLinkText());
+								article.setText("NED"); // No Execute Download
+								int key = articleDao.insert(article);
+								if (key > 0) {
+									System.out.println("添加" + link.getLinkText()
+											+ ",成功");
+//									patchTitle(key);
+								} else {
+									System.out.println("添加" + link.getLinkText()
+											+ "失败,已存在相同标题的内容");
+								}
+							} else {
+								System.out.println(">> 缓存中存在该图片[" + url2 + "]地址 <<");
+							}
 						}
-					} else {
-						System.out.println(">> 缓存中存在该图片[" + url2 + "]地址 <<");
 					}
 				}
 
@@ -247,6 +275,73 @@ public class BIZHIZHANParser {
 		}
 
 	}
+
+	public static void getArtcileIconByURL(String url, int webId) throws Exception {
+		Parser p1 = new Parser();
+		p1.setURL(url);
+
+		NodeFilter filter = new NodeClassFilter(Div.class);
+		NodeList list = p1.extractAllNodesThatMatch(filter)
+				.extractAllNodesThatMatch(
+						new HasAttributeFilter("class", "list"));
+
+		if (null != list && list.size() > 0) {
+			Parser p2 = new Parser();
+			p2.setInputHTML(list.toHtml());
+
+			NodeFilter filter2 = new NodeClassFilter(CompositeTag.class);
+			NodeList list2 = p2.extractAllNodesThatMatch(filter2)
+					.extractAllNodesThatMatch(
+							new HasAttributeFilter("class", "cont_list"));
+			;
+
+			if (null != list2) {
+				Parser p3 = new Parser();
+				p3.setInputHTML(list2.toHtml());
+
+				NodeFilter filter3 = new NodeClassFilter(LinkTag.class);
+				NodeList list3 = p3.extractAllNodesThatMatch(filter3);
+				Article article = null;
+				for (int i = 0; i < list3.size(); i++) {
+					LinkTag link = (LinkTag) list3.elementAt(i);
+					NodeList tmp = link.getChildren();
+					if (tmp != null && tmp.size() > 0) {
+						if(tmp.elementAt(0) instanceof ImageTag){
+							article = new Article();
+							ImageTag imgTag = (ImageTag) tmp.elementAt(0);
+							System.out.println(imgTag.getAttribute("alt")
+									+ "|[" + url + "]");
+							if(imgTag.getImageURL().startsWith("http://")){
+								article.setActicleXmlUrl(imgTag.getImageURL());
+							}else{
+								article.setActicleXmlUrl(URL+imgTag.getImageURL());
+							}
+							if(null != imgTag.getAttribute("alt")){
+								article.setTitle(imgTag.getAttribute("alt"));
+							}
+							
+							String url2 = URL + link.getLink();
+							article.setWebId(webId);
+							article.setArticleUrl(url2);
+							article.setText("NED"); // No Execute Download
+							Article atmp = articleDao.findByUrl(article.getArticleUrl(),webId);
+							if(null != atmp){
+								if(atmp.getArticleUrl().equals(article.getArticleUrl()) && atmp.getTitle().equals(article.getTitle())){
+									atmp.setActicleXmlUrl(article.getActicleXmlUrl());
+									if(articleDao.update(atmp)){
+										System.out.println(" >> 更新"+atmp.getId()+".ActicleXmlUrl:"+atmp.getActicleXmlUrl()+"成功!");
+									}
+								}
+							}
+						}
+					}
+				}
+
+			}
+		}
+
+	}
+	
 	
 	static boolean getImage(Article article) throws Exception{
 		boolean b = false;
@@ -353,8 +448,8 @@ public class BIZHIZHANParser {
 			oplink = new LinkBean();
 			oplink.setLink(url);
 			result.put(url, oplink);
-			result.setBool(true);
 		}
+		result.setBool(true);
 		return result;
 		}
 
@@ -408,21 +503,39 @@ public class BIZHIZHANParser {
 
 			// getImage("http://www.bizhizhan.com/fzlsjbz/23-1.html");
 			
-			index();
+//			index();
 			
 //			init();
 			
 			update();
-			
+//			
 			image();
-			
+//			
 			downloadImg();
 			
 //			movefile();
 			
-			patchTitle();
+//			patchTitle();
+			
+//			patchIcon();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private static void patchIcon() throws Exception{
+		List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
+		for (WebsiteBean bean : list) {
+			ResultBean result = hasPaging(bean.getUrl());
+			if (result.isBool()) {
+				Iterator it = result.getMap().keySet().iterator();
+				while (it.hasNext()) {
+					String key = (String) it.next();
+					System.out.println("key:" + key);
+					getArtcileIconByURL(key, bean.getId());
+				}
+
+			}
 		}
 	}
 
@@ -507,39 +620,67 @@ public class BIZHIZHANParser {
 		
 		NodeFilter filter = new NodeClassFilter(LinkTag.class);
 		NodeList list = p1.extractAllNodesThatMatch(filter);
-		
 		if(null != list && list.size() > 0){
 			Article article = null;
 			for(int i=0;i<list.size();i++){
+				String wurl = null;
 				LinkTag link = (LinkTag) list.elementAt(i);
-				String url2 = URL + link.getLink();
-				boolean b = validationURL(url2);
-				if(b){
-					if (null == client.get(url2)) {
-						article = new Article();
-						article.setWebId(601);
-						article.setArticleUrl(url2);
-						article.setTitle(link.getLinkText());
-						article.setText("NED"); // No Execute Download
-						int key = articleDao.insert(article);
-						if (key > 0) {
-//							client.add(url2, url2);
-							System.out.println("添加" + link.getLinkText()
-									+ ",成功");
-							if(null == article.getTitle() || "".equals(article.getTitle())){
-								patchTitle(key);
+//				boolean b = validationURL(url2);
+//				if(true){
+//					if (null == client.get(url2)) {
+						if (link != null && link.getChildren().size() > 0) {
+							if(link.getChildren().elementAt(0) instanceof ImageTag){
+								if(!link.getLink().startsWith("http://")){
+									wurl = URL+link.getLink();
+								}else{
+									wurl = link.getLink();
+								}
+								WebsiteBean tmp = webSiteDao.findByUrl(wurl);
+								if(null == tmp){
+									return;
+								}
+								
+								if (!wurl.startsWith(tmp.getUrl()) || !wurl.endsWith(".html")) {
+									System.out.println("[" + wurl + "]不是以"
+											+ tmp.getUrl() + "开始的! 和以 .html结束的");
+									continue;
+								}
+								
+								ImageTag imgTag = (ImageTag) link.getChildren().elementAt(0);
+								article = new Article();
+								article.setWebId(601);
+								if(wurl.startsWith("http://")){
+									article.setArticleUrl(wurl);
+								}else{
+									article.setArticleUrl(URL+wurl);
+								}
+								article.setText("NED"); // No Execute Download
+								if(imgTag.getImageURL().startsWith("http://")){
+									article.setActicleXmlUrl(imgTag.getImageURL());
+								}else{
+									article.setActicleXmlUrl(URL+imgTag.getImageURL());
+								}
+								article.setTitle(imgTag.getAttribute("alt"));
+								int key = articleDao.insert(article);
+								if (key > 0) {
+									System.out.println("添加" + link.getLinkText()
+											+ ",成功");
+//									if(null == article.getTitle() || "".equals(article.getTitle())){
+//										patchTitle(key);
+//									}
+								} else {
+									System.out.println("添加" + link.getLinkText()
+											+ "失败,已存在相同标题的内容");
+								}
 							}
-						} else {
-							System.out.println("添加" + link.getLinkText()
-									+ "失败,已存在相同标题的内容");
 						}
-					} else {
-						System.out.println(">> 缓存中存在该图片[" + url2 + "]地址 <<");
-					}
+//					} else {
+//						System.out.println(">> 缓存中存在该图片[" + url2 + "]地址 <<");
+//					}
 //					System.out.println(">> 地址合法["+url2+"]");
-				}else{
-					System.err.println(">> 地址不合法["+url2+"]");
-				}
+//				}else{
+//					System.err.println(">> 地址不合法["+url2+"]");
+//				}
 			}
 		}
 	}
@@ -549,7 +690,7 @@ public class BIZHIZHANParser {
 	 * @throws Exception
 	 */
 	public static void update() throws Exception{
-		List<WebsiteBean> list = webSiteDao.findByParentId(600);
+		List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : list) {
 			ResultBean result = hasPaging(bean.getUrl());
 			if (result.isBool()) {
@@ -569,7 +710,7 @@ public class BIZHIZHANParser {
 	 * @throws Exception
 	 */
 	static void image() throws Exception{
-		List<WebsiteBean> webList = webSiteDao.findByParentId(600);
+		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for(WebsiteBean bean:webList){
 			List<Article> artlist = articleDao.findByWebId(bean.getId(),"NED");
 			System.out.println("网站["+bean.getId()+"|"+bean.getName()+"|"+bean.getUrl()+"]下的文章数"+artlist.size());
@@ -652,18 +793,22 @@ public class BIZHIZHANParser {
 			bean.setImageId(imgBean.getId());
 			bean.setTitle(imgBean.getTitle());
 			bean.setSmallName(imgBean.getImgUrl());
-			bean.setName(CommonUtil.getDate("") + File.separator
+			bean.setName(File.separator+PIC_SAVE_PATH
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
 					+ imgBean.getArticleId() + File.separator + fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
-				boolean b = picFiledao.insert(bean);
-				if (b) {
-					client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
-							+ bean.getName()), bean);
-					client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
-							+ bean.getSmallName()), bean);
-				} else {
-					return false;
+				imgBean.setFileSize(Long.valueOf(length));
+				if(imageDao.update(imgBean)){
+					boolean b = picFiledao.insert(bean);
+					if (b) {
+						client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+								+ bean.getName()), bean);
+						client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+								+ bean.getSmallName()), bean);
+					} else {
+						return false;
+					}
 				}
 			} catch (Exception e) {
 				System.out.println("数据库异常");
@@ -704,8 +849,8 @@ public class BIZHIZHANParser {
 	}
 	
 	static boolean moveFile(PicfileBean bean) {
-		boolean isBig = false;
-		boolean isSmall = false;
+		boolean isBig = true;
+		boolean isSmall = true;
 		int start = bean.getName().lastIndexOf(File.separator)+1;
 		int smnStart = bean.getSmallName().lastIndexOf(File.separator)+1;
 		String prx = StringUtils.gerDir(String.valueOf(bean.getArticleId()));
@@ -716,23 +861,24 @@ public class BIZHIZHANParser {
 		String target = FILE_SERVER+fileName;
 		String smgTarget = FILE_SERVER + smallFileName;
 		bean.setUrl(FILE_SERVER);
-		if(FileUtils.copyFile(source, target)){
-			System.out.println(">> 大图成功!!!");
-			if(FileUtils.deleteFile(source)){
-				System.out.println(">> 删除源大图["+source+"]成功");
-			}
-			bean.setName(fileName);
-			isBig = true;
-		}
+//		if(FileUtils.copyFile(source, target)){
+//			System.out.println(">> 大图成功!!!");
+//			if(FileUtils.deleteFile(source)){
+//				System.out.println(">> 删除源大图["+source+"]成功");
+//			}
+//			bean.setName(fileName);
+//			isBig = true;
+//		}
+		bean.setName(fileName);
 		
-		if(FileUtils.copyFile(smgSource, smgTarget)){
-			System.out.println(">> 小图成功!!!");
-			if(FileUtils.deleteFile(smgSource)){
-				System.out.println(">> 删除源小图["+smgSource+"]成功");
-			}
-			bean.setSmallName(smallFileName);
-			isSmall = true;
-		}
+//		if(FileUtils.copyFile(smgSource, smgTarget)){
+//			System.out.println(">> 小图成功!!!");
+//			if(FileUtils.deleteFile(smgSource)){
+//				System.out.println(">> 删除源小图["+smgSource+"]成功");
+//			}
+//			isSmall = true;
+//		}
+//		bean.setSmallName(smallFileName);
 		if(isBig){
 			if(isBig || isSmall){
 				try{

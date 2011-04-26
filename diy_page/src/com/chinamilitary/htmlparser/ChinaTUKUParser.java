@@ -262,6 +262,10 @@ public class ChinaTUKUParser {
 							System.out.println(" >> 更新文章["+article.getId()+"|"+article.getTitle()+"]状态为'已完成'状态!");
 							article.setText("FD");
 							articleDao.update(article);
+						}else{
+							System.out.println(" >> 更新文章["+article.getId()+"|"+article.getTitle()+"]状态为'无更新'状态!");
+							article.setText("NNN");
+							articleDao.update(article);
 						}
 					}
 				}
@@ -376,10 +380,8 @@ public class ChinaTUKUParser {
 		try {
 			// patch();
 //			 index();
-//			update2();
-			// processC();
-			
-//			getArticleImages();
+			update2();
+			getArticleImages();
 			
 			downloadImages();
 
@@ -549,11 +551,9 @@ public class ChinaTUKUParser {
 	public static void update2() throws Exception {
 		List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : list) {
-//			System.out.println(" >> bean.id:"+bean.getId());
-			//bean.getId() != 1633 && bean.getId() != 1636 && 
-//			if(bean.getId() != 1633){ //|| bean.getId() == 1636 && bean.getId() == 1644
-//				continue;
-//			}
+			if(bean.getId() == 1636 || bean.getParentId() == 1636 || bean.getId() == 1664 || bean.getParentId() == 1664){ //|| bean.getId() == 1636 && bean.getId() == 1644
+				continue;
+			}
 			switch(bean.getId()){
 				case 1633:
 				case 1636:
@@ -561,10 +561,10 @@ public class ChinaTUKUParser {
 					List<WebsiteBean> child = webSiteDao.findByParentId(bean
 							.getId());
 					for (WebsiteBean tmp : child) {
+						if(tmp.getId() != 1663){
+							continue;
+						}
 						System.out.println(" >> "+tmp.getId());
-//						if(tmp.getId() != 1658){
-//							continue;
-//						}
 						List<WebsiteBean> c2 = webSiteDao.findByParentId(tmp.getId());
 						System.out.println(" >> "+c2.size());
 						if(c2.size() > 0){
@@ -871,9 +871,10 @@ public class ChinaTUKUParser {
 	 * @throws Exception
 	 */
 	static void getArticleImages() throws Exception{
-		List<WebsiteBean> list = webSiteDao.findByParentId(1663);
+		List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : list) {
-			if(bean.getId() != 1664 && bean.getId() != 1665){ //|| bean.getId() == 1636 && bean.getId() == 1644
+			System.out.println(" >> 站点名称["+bean.getName()+"],站点ID["+bean.getId()+"]");
+			if(bean.getId() == 1636 || bean.getParentId() == 1636 || bean.getId() == 1664 || bean.getParentId() == 1664){ //|| bean.getId() == 1636 && bean.getId() == 1644
 				continue;
 			}
 			List<Article> alist = articleDao.findByWebId(bean.getId(), "NED");
@@ -889,9 +890,10 @@ public class ChinaTUKUParser {
 	 * @throws Exception
 	 */
 	static void downloadImages() throws Exception{
-		List<WebsiteBean> list = webSiteDao.findByParentId(1663);
+		List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : list) {
-			if(bean.getId() != 1664 && bean.getId() != 1665){ //|| bean.getId() == 1636 && bean.getId() == 1644
+			System.out.println(" >> 站点名称["+bean.getName()+"],站点ID["+bean.getId()+"]");
+			if(bean.getId() == 1636 || bean.getParentId() == 1636 || bean.getParentId() == 1633 || bean.getId() == 1664 || bean.getParentId() == 1664){ //|| bean.getId() == 1636 && bean.getId() == 1644
 				continue;
 			}
 			List<Article> alist = articleDao.findByWebId(bean.getId(), "FD");
@@ -901,11 +903,6 @@ public class ChinaTUKUParser {
 				for(ImageBean img:mlist){
 					if(img.getLink().equals("NED")){
 					if(imgDownload(img, bean.getId())){
-//						img.setLink("FD");
-//						if (imageDao.update(img)) {
-//							System.out.println(">> 保存图片["
-//									+ img.getHttpUrl() + "]成功");
-//						}
 					}
 					}
 				}
