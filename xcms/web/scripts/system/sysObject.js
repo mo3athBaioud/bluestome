@@ -322,8 +322,8 @@ Ext.onReady(function(){
 						buttonAlign : 'center',
 						minButtonWidth : 60,
 						buttons : [{
-							text : '更新',
-							iconCls:'icon-edit',
+							text : '保存',
+							iconCls:'icon-accept',
 							handler : function(btn) {
 								var frm = Ext.getCmp('update_form').form;
 								if (frm.isValid()) {

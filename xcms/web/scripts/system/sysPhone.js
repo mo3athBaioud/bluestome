@@ -544,7 +544,7 @@ Ext.onReady(function(){
 			buttons:[{
 			  id:'btn_form_add',
 			  iconCls:'icon-accept',
-			  text:'添加',
+			  text:'保存',
 			  handler:function(btn){
 			  	var frm =Ext.getCmp('phone_form').form;
 			  	if(frm.isValid()){

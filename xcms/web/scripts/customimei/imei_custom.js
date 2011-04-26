@@ -245,7 +245,7 @@ Ext.onReady(function(){
 							minButtonWidth : 60,
 							buttons : [{
 								text : '保存',
-								iconCls:'icon-accpet',
+								iconCls:'icon-accept',
 								handler : function(btn) {
 									var frm = Ext.getCmp('add_form').form;
 									if (frm.isValid()) {
@@ -371,7 +371,6 @@ Ext.onReady(function(){
 							//下拉选择框
 							xtype:'combo',
 							fieldLabel : '有效性',
-							id : 'article_useful',
 							hiddenName:'article.useful',
 			                valueField: 'id',
 			                displayField: 'name',
@@ -389,7 +388,6 @@ Ext.onReady(function(){
 							//下拉选择框
 							xtype:'combo',
 							fieldLabel : '状态',
-							id : 'article_status',
 							hiddenName:'article.status',
 			                valueField: 'id',
 			                displayField: 'name',
