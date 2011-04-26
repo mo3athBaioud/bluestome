@@ -442,7 +442,7 @@ Ext.onReady(function(){
 							}
 						}, {
 							text : '取消',
-							buttonAlign : 'center',
+							iconCls:'icon-cancel',
 							handler : function() {
 								Ext.getCmp('update_form').form.reset();
 								var win = Ext.getCmp('update_win');

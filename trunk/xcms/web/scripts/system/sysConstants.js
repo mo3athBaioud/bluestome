@@ -364,7 +364,7 @@ Ext.onReady(function(){
 			minButtonWidth : 60,
 			buttons : [{
 				text : '保存',
-				iconCls:'icon-accpet',
+				iconCls:'icon-accept',
 				handler : function(btn) {
 					var frm = this.ownerCt.form;
 					if (frm.isValid()) {
@@ -491,7 +491,7 @@ Ext.onReady(function(){
 						minButtonWidth : 60,
 						buttons : [{
 							text : '保存',
-							iconCls:'icon-accpet',
+							iconCls:'icon-accept',
 							handler : function(btn) {
 								var frm = this.ownerCt.form;
 								if (frm.isValid()) {

@@ -666,7 +666,8 @@ Ext.onReady(function(){
 				buttonAlign:'center',
 				minButtonWidth:60,
 				buttons:[{
-				  text:'修改',
+				  text:'保存',
+				  iconCls:'icon-accept',
 				  handler:function(btn){
 				  	tree = Ext.getCmp('SysmenuTree');
 					var str = tree.getChecked('id');
@@ -706,11 +707,13 @@ Ext.onReady(function(){
 				  }
 				},{
 					text : '重置',
+					iconCls:'icon-arrow_refresh',
 					handler : function() {
 						this.ownerCt.form.reset();
 					}
 				}, {
 					text : '取消',
+					iconCls:'icon-cancel',
 					handler : function() {
 						var window_role_update = Ext.getCmp('window_role_update');
 						window_role_update.close();

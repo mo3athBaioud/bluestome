@@ -289,8 +289,8 @@ Ext.onReady(function(){
 						buttonAlign : 'center',
 						minButtonWidth : 60,
 						buttons : [{
-							text : '更新',
-							iconCls:'icon-edit',
+							text : '保存',
+							iconCls:'icon-accept',
 							handler : function(btn) {
 								var win = Ext.getCmp('update_win');
 								win.hide();
@@ -310,7 +310,6 @@ Ext.onReady(function(){
 							iconCls:'icon-arrow_refresh',
 							handler : function() {
 								Ext.getCmp('update_form').form.reset();
-//								this.ownerCt.form.reset();
 							}
 						}, {
 							text : '取消',

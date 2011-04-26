@@ -443,7 +443,7 @@ Ext.onReady(function(){
 						minButtonWidth : 60,
 						buttons : [{
 							text : '保存',
-							icon:'icon-accpet',
+							iconCls:'icon-accept',
 							handler : function(btn) {
 								var frm = Ext.getCmp('update_form').form;
 								if (frm.isValid()) {
@@ -462,13 +462,13 @@ Ext.onReady(function(){
 							}
 						}, {
 							text : '重置',
-							icon:'icon-arrow_refresh',
+							iconCls:'icon-arrow_refresh',
 							handler : function() {
 								Ext.getCmp('update_form').form.reset();
 							}
 						}, {
 							text : '取消',
-							icon:'icon-cancel',
+							iconCls:'icon-cancel',
 							handler : function() {
 								Ext.getCmp('update_form').form.reset();
 								var win = Ext.getCmp('update_win');
