@@ -129,6 +129,7 @@ public class TUKUParser {
 		ResultBean result = new ResultBean();
 		Parser parser = new Parser();
 		parser.setURL(url);
+		LinkBean l1 = null;
 		
 		// 获取指定ID的DIV内容
 		NodeFilter filter = new NodeClassFilter(Span.class);
@@ -147,7 +148,6 @@ public class TUKUParser {
 				e.printStackTrace();
 			}
 			for(int i=1;i<count+1;i++){
-				LinkBean l1 = null;
 				if(i>1){
 					link = url+"&Page="+i;
 				}
@@ -168,10 +168,12 @@ public class TUKUParser {
 //				}
 			}
 			b = true;
-			result.setBool(true);
-		}else{
-			result.setBool(b);
 		}
+		l1 = new LinkBean();
+		l1.setLink(url);//"htm/"+
+		l1.setName(url);//link.getLinkText()
+		result.put(url, l1);
+		result.setBool(true);
 		return result;
 	}
 	
@@ -259,6 +261,7 @@ public class TUKUParser {
 								String url = URL + nl.getLink();
 								System.out.print(">> 连接名称:"+it.getAttribute("alt"));
 								System.out.println(">> URL:"+url);
+								String src = it.getImageURL();
 								if(null == client.get(url)){
 									article = new Article();
 									article.setWebId(webId);
@@ -266,6 +269,9 @@ public class TUKUParser {
 									article.setTitle(getTitle(it.getAttribute("alt"),"NT")); //NT:No Title
 									article.setText("NED"); //NED_WALLCOO
 									article.setIntro("");
+									if(null != src){
+										article.setActicleXmlUrl(src);
+									}
 									int key = articleDao.insert(article);
 									if (key > 0) {
 										System.out.print(">> 连接名称:"+it.getAttribute("alt"));
@@ -283,6 +289,73 @@ public class TUKUParser {
 		}
 	}
 
+	/**
+	 * 获取分类下数据
+	 * 
+	 * @param link
+	 * @param webId
+	 * @throws Exception
+	 */
+	public static void getArticleIconByURL(LinkBean link, int webId) throws Exception {
+		Parser parser = new Parser();
+		parser.setURL(link.getLink());
+		parser.setEncoding("UTF-8");
+
+		// 获取指定ID的TableTag内容
+		NodeFilter filter = new NodeClassFilter(TableTag.class);
+		NodeList list = parser.extractAllNodesThatMatch(filter)
+				.extractAllNodesThatMatch(new HasAttributeFilter("id", "DataList1"));
+		if (list != null && list.size() > 0) {
+			NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
+			NodeFilter imageFilter = new NodeClassFilter(ImageTag.class);
+			OrFilter lastFilter = new OrFilter();
+			lastFilter
+					.setPredicates(new NodeFilter[] { linkFilter, imageFilter });
+			Parser p2 = new Parser();
+			p2.setInputHTML(list.toHtml());
+			p2.setEncoding("UTF-8");
+			NodeList list4 = p2.parse(lastFilter);
+			if (list4 != null || list4.size() > 0) {
+				for (int i = 0; i < list4.size(); i++) {
+					// 地址
+					if (list4.elementAt(i) instanceof LinkTag) {
+						LinkTag nl = (LinkTag) list4.elementAt(i);
+						NodeList cnl = nl.getChildren();
+						if (cnl != null && cnl.size() > 0) {
+							// 小图 可能存在部分图片无法访问，需要判断
+							Article article = null;
+							if (cnl.elementAt(0) instanceof ImageTag) {
+								ImageTag it = (ImageTag) cnl.elementAt(0);
+								String url = URL + nl.getLink();
+								System.out.print(">> 连接名称:"+it.getAttribute("alt"));
+								System.out.println(">> URL:"+url);
+								String src = it.getImageURL();
+								article = new Article();
+								article.setWebId(webId);
+								article.setArticleUrl(url);
+								article.setTitle(getTitle(it.getAttribute("alt"),"NT")); //NT:No Title
+								article.setText("NED"); //NED_WALLCOO
+								article.setIntro("");
+								if(null != src){
+									article.setActicleXmlUrl(src);
+								}
+								Article atmp = articleDao.findByUrl(article.getArticleUrl(),webId);
+								if(null != atmp){
+									if(atmp.getArticleUrl().equals(article.getArticleUrl()) && atmp.getTitle().equals(article.getTitle())){
+										atmp.setActicleXmlUrl(article.getActicleXmlUrl());
+										if(articleDao.update(atmp)){
+											System.out.println(" >> 更新"+atmp.getId()+".ActicleXmlUrl:"+atmp.getActicleXmlUrl()+"成功!");
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	/**
 	 * 获取图片地址下数据
 	 * 
@@ -470,7 +543,7 @@ public class TUKUParser {
 								ImageTag it = (ImageTag) cnl.elementAt(0);
 								String url = IMAGE_URL + getImageUrl(nl.getLink());
 								if(null == client.get(url)){
-									length = HttpClientUtils.getHttpHeaderResponse(url,"Content-Length");
+//									length = HttpClientUtils.getHttpHeaderResponse(url,"Content-Length");
 									imgBean = new ImageBean();
 									imgBean.setArticleId(articleId);
 									imgBean.setHttpUrl(url);
@@ -505,7 +578,7 @@ public class TUKUParser {
 							}
 						}
 					}
-					Thread.sleep(1000);
+					Thread.sleep(10);
 				}
 			}
 		}
@@ -548,23 +621,23 @@ public class TUKUParser {
 		try{
 //			catalog(URL);
 			List<WebsiteBean>  webList = webSiteDao.findByParentId(D_PARENT_ID);
-//			for(WebsiteBean bean:webList){
-//				ResultBean result = hasPaging(bean.getUrl(), "id", "lblPageCount");
-//				if(result.isBool()){
-//					Iterator it = result.getMap().keySet().iterator();
-//					while(it.hasNext()){
-//						String key = (String)it.next();
-//						LinkBean link = result.getMap().get(key);
-//						try{
-//							secondURL(link,bean.getId());
-//						}catch(Exception e){
-//							e.printStackTrace();
-//							System.out.println("key:"+key);
-//							continue;
-//						}
-//					}
-//				}
-//			}
+			for(WebsiteBean bean:webList){
+				ResultBean result = hasPaging(bean.getUrl(), "id", "lblPageCount");
+				if(result.isBool()){
+					Iterator it = result.getMap().keySet().iterator();
+					while(it.hasNext()){
+						String key = (String)it.next();
+						LinkBean link = result.getMap().get(key);
+						try{
+							secondURL(link,bean.getId());
+						}catch(Exception e){
+							e.printStackTrace();
+							System.out.println("key:"+key);
+							continue;
+						}
+					}
+				}
+			}
 			
 //			TUKUThread[] thread = new TUKUThread[webList.size()];
 //			for(int i=0;i<webList.size();i++){
@@ -572,14 +645,38 @@ public class TUKUParser {
 //				thread[i] = new TUKUThread(bean.getId());
 //				thread[i].start();
 //			}
+			
 			update();
 			
 //			movefile();
+			
+//			patchIcon();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 	
+	private static void patchIcon() throws Exception {
+		List<WebsiteBean>  webList = webSiteDao.findByParentId(D_PARENT_ID);
+		for(WebsiteBean bean:webList){
+			ResultBean result = hasPaging(bean.getUrl(), "id", "lblPageCount");
+			if(result.isBool()){
+				Iterator it = result.getMap().keySet().iterator();
+				while(it.hasNext()){
+					String key = (String)it.next();
+					LinkBean link = result.getMap().get(key);
+					try{
+						getArticleIconByURL(link, bean.getId());
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println("key:"+key);
+						continue;
+					}
+				}
+			}
+		}
+	}
+
 	static void update() throws Exception{
 		List<WebsiteBean>  webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for(WebsiteBean bean:webList){

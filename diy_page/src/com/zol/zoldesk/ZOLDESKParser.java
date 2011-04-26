@@ -291,9 +291,16 @@ public class ZOLDESKParser {
 							ImageTag imgTag = (ImageTag) tmp.elementAt(0);
 							System.out.println(imgTag.getAttribute("alt")
 									+ "|[" + url + "]");
-							article.setActicleXmlUrl(imgTag.getImageURL());
+							if(imgTag.getImageURL().startsWith("http://")){
+								article.setActicleXmlUrl(imgTag.getImageURL());
+							}else{
+								article.setActicleXmlUrl(URL+imgTag.getImageURL());
+							}
 							article.setTitle(imgTag.getAttribute("alt")); // NT:No
 																			// Title
+						}
+						if(null == article.getTitle() || article.getTitle().equals("")){
+							article.setTitle("NT");
 						}
 						int key = articleDao.insert(article);
 						if (key > 0) {
@@ -400,8 +407,8 @@ public class ZOLDESKParser {
 									imgBean.setTitle("NT:"
 											+ CommonUtil.getDateTimeString());
 							}
-							length = HttpClientUtils.getHttpHeaderResponse(
-									imgSrc, "Content-Length");
+//							length = HttpClientUtils.getHttpHeaderResponse(
+//									imgSrc, "Content-Length");
 							imgBean.setLink("NED");
 							try {
 								size = Integer.parseInt(length);
@@ -620,7 +627,7 @@ public class ZOLDESKParser {
 		try {
 			// catalog(URL);
 			 update();
-//			 vistDesk();
+			 vistDesk();
 //			threadParser();
 			loadImg();
 			imgDownload();
