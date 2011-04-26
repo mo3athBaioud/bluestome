@@ -389,8 +389,12 @@ public class ZHUOKUParser {
 						NodeList tmp = ltmp.getChildren();
 						if (tmp != null && tmp.size() > 0) {
 							ImageTag imgTag = (ImageTag) tmp.elementAt(0);
-							article.setActicleXmlUrl(imgTag.getImageURL());
-							article.setTitle(imgTag.getAttribute("alt"));
+							if(imgTag.getImageURL().startsWith("http://")){
+								article.setActicleXmlUrl(imgTag.getImageURL());
+							}else{
+								article.setActicleXmlUrl(URL+imgTag.getImageURL());
+							}
+							article.setTitle(imgTag.getAttribute("alt") == null ? "NT" : imgTag.getAttribute("alt"));
 						}
 //						System.out.println("*****************Start***************");
 //						System.out.println("ArticleUrl:"+article.getArticleUrl());
@@ -835,7 +839,7 @@ public class ZHUOKUParser {
 					System.out.println(">> 文章["+art.getId()+"|"+art.getTitle()+"]\t下的图片数量"+imgList.size());
 //					ARTICLE_COM_URL = art.getArticleUrl();
 					for (ImageBean img : imgList) {
-						if(img.getStatus() != -1){
+						if(img.getStatus() != -1 || img.getLink().equals("NED")){
 							if (download(img,art.getArticleUrl())) {
 								img.setStatus(-1);
 								img.setLink("FD");

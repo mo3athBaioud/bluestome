@@ -83,8 +83,7 @@ public class TUPIANParser {
 		parser.setEncoding("GB2312");
 		NodeFilter fileter = new NodeClassFilter(Div.class);
 		NodeList list = parser.extractAllNodesThatMatch(fileter)
-				.extractAllNodesThatMatch(
-						new HasAttributeFilter("id", "menu"));
+				.extractAllNodesThatMatch(new HasAttributeFilter("id", "menu"));
 
 		if (null != list && list.size() > 0) {
 			// 主页中的第7个table
@@ -110,10 +109,10 @@ public class TUPIANParser {
 					tmp.setParentId(1000);
 					boolean b = webSiteDao.insert(tmp);
 					if (b) {
-					 client.add(tmp.getUrl(), tmp.getUrl());
-					 System.out.println("成功");
+						client.add(tmp.getUrl(), tmp.getUrl());
+						System.out.println("成功");
 					} else {
-					 System.out.println("失败");
+						System.out.println("失败");
 					}
 				}
 			}
@@ -153,23 +152,25 @@ public class TUPIANParser {
 				String tmp = null;
 				LinkBean l1 = null;
 				int count = list2.size();
-				LinkTag li = (LinkTag) list2.elementAt(count-1);
-				try{
-					if(null != li && null != li.getLinkText()){
+				LinkTag li = (LinkTag) list2.elementAt(count - 1);
+				try {
+					if (null != li && null != li.getLinkText()) {
 						pageno = Integer.valueOf(li.getLinkText());
-						for(int i=1;i<pageno+1;i++){
-							String tmpUrl = url.replace(".htm", "-"+i+".htm");
+						for (int i = 1; i < pageno + 1; i++) {
+							String tmpUrl = url.replace(".htm", "-" + i
+									+ ".htm");
 							l1 = new LinkBean();
 							l1.setLink(tmpUrl);
 							l1.setTitle(tmpUrl);
 							result.put(tmpUrl, l1);
 						}
-					}else{
+					} else {
 						for (int i = 0; i < list2.size(); i++) {
 							LinkTag link2 = (LinkTag) list2.elementAt(i);
 							l1 = new LinkBean();
 							if (!link2.getLink().startsWith("http://")) {
-								String prefix = url.substring(0,url.lastIndexOf("/")+1);
+								String prefix = url.substring(0, url
+										.lastIndexOf("/") + 1);
 								tmp = prefix + link2.getLink();
 							} else {
 								tmp = link2.getLink();
@@ -179,12 +180,13 @@ public class TUPIANParser {
 							result.put(tmp, l1);
 						}
 					}
-				}catch(NumberFormatException e){
+				} catch (NumberFormatException e) {
 					for (int i = 0; i < list2.size(); i++) {
 						LinkTag link2 = (LinkTag) list2.elementAt(i);
 						l1 = new LinkBean();
 						if (!link2.getLink().startsWith("http://")) {
-							String prefix = url.substring(0,url.lastIndexOf("/")+1);
+							String prefix = url.substring(0, url
+									.lastIndexOf("/") + 1);
 							tmp = prefix + link2.getLink();
 						} else {
 							tmp = link2.getLink();
@@ -194,12 +196,12 @@ public class TUPIANParser {
 						result.put(tmp, l1);
 					}
 				}
-			}else{
+			} else {
 				LinkBean l1 = new LinkBean();
 				l1.setLink(url);
 				result.put(url, l1);
 			}
-			
+
 			if (null != p2)
 				p2 = null;
 		}
@@ -264,61 +266,149 @@ public class TUPIANParser {
 	 * @param webId
 	 * @throws Exception
 	 */
-	public static void secondURL(LinkBean link,int webId) throws Exception {
+	public static void secondURL(LinkBean link, int webId) throws Exception {
 		Parser parser = new Parser();
 		parser.setURL(link.getLink());
 		parser.setEncoding("UTF-8");
 
 		// 获取指定ID的TableTag内容
 		NodeFilter filter2 = new NodeClassFilter(Div.class);
-		NodeList list = parser.extractAllNodesThatMatch(filter2).extractAllNodesThatMatch(new HasAttributeFilter("id","photos"));
+		NodeList list = parser.extractAllNodesThatMatch(filter2)
+				.extractAllNodesThatMatch(
+						new HasAttributeFilter("id", "photos"));
 		if (list != null && list.size() > 0) {
-				Article article = null;
-				String url = null;
-//				for (int i = 0; i < list.size(); i++) {
-					Div tmp = (Div)list.elementAt(0);
-					
-					Parser p2 = new Parser();
-					p2.setInputHTML(tmp.toHtml());
-					NodeFilter filter3 = new NodeClassFilter(LinkTag.class);
-					NodeList list2 = p2.extractAllNodesThatMatch(filter3);
-					
-					if(null != tmp && tmp.getChildCount() > 0){
-						for(int i=0;i<list2.size();i++){
-						
-						LinkTag node = (LinkTag)list2.elementAt(i);
-						System.out.println(">> 标题:"+node.getLinkText()+"\t连接:"+node.getLink());
-						
-						if (null == client.get(node.getLink())) {
+			Article article = null;
+			String url = null;
+			// for (int i = 0; i < list.size(); i++) {
+			Div tmp = (Div) list.elementAt(0);
+
+			Parser p2 = new Parser();
+			p2.setInputHTML(tmp.toHtml());
+			NodeFilter filter3 = new NodeClassFilter(LinkTag.class);
+			NodeList list2 = p2.extractAllNodesThatMatch(filter3);
+
+			if (null != tmp && tmp.getChildCount() > 0) {
+				for (int i = 0; i < list2.size(); i++) {
+
+					LinkTag node = (LinkTag) list2.elementAt(i);
+					NodeList ln = node.getChildren();
+					if (ln != null && ln.size() > 0) {
+						if (ln.elementAt(0) instanceof ImageTag) {
+							System.out.println(">> 标题:" + node.getLinkText()
+									+ "\t连接:" + node.getLink());
+
 							article = new Article();
-							article.setTitle(node.getLinkText());
+							ImageTag imgTag = (ImageTag) ln.elementAt(0);
+							System.out.println(imgTag.getAttribute("alt")
+									+ "|[" + url + "]");
+							if (imgTag.getImageURL().startsWith("http://")) {
+								article.setActicleXmlUrl(imgTag.getImageURL());
+							} else {
+								article.setActicleXmlUrl(URL
+										+ imgTag.getImageURL());
+							}
+							if (null != imgTag.getAttribute("alt")) {
+								article.setTitle(imgTag.getAttribute("alt"));
+							}
 							article.setWebId(webId);
-							if(!node.getLink().startsWith("http://")){
-								article.setArticleUrl(URL+node.getLink());
-							}else{
+							if (!node.getLink().startsWith("http://")) {
+								article.setArticleUrl(URL + node.getLink());
+							} else {
 								article.setArticleUrl(node.getLink());
 							}
 							article.setText("NED"); // NED_WALLCOO
 							article.setIntro("NPP[NO Preview Picture]");
-							
+							if(null == article.getTitle() || article.getTitle().equals("")){
+								article.setTitle(node.getLinkText());
+							}
 							int key = articleDao.insert(article);
 							if (key > 0) {
-								System.out.print(node.getLinkText() + "\t|" + url);
-//								client.add(node.getLink(), node.getLink());
+								System.out.print(node.getLinkText() + "\t|"
+										+ url);
 							}
-						} else {
-							System.err.println(">> 已存在相同的内容 [" + node.getLinkText()
-									+ "],"+node.getLink());
-						}
-						
+
 						}
 					}
-//				}
+				}
+			}
+			// }
 		}
 		if (null != parser)
 			parser = null;
 	}
 
+	/**
+	 * 获取分类下数据
+	 * 
+	 * @param link
+	 * @param webId
+	 * @throws Exception
+	 */
+	public static void getIconByURL(LinkBean link, int webId) throws Exception {
+		Parser parser = new Parser();
+		parser.setURL(link.getLink());
+		parser.setEncoding("UTF-8");
+
+		// 获取指定ID的TableTag内容
+		NodeFilter filter2 = new NodeClassFilter(Div.class);
+		NodeList list = parser.extractAllNodesThatMatch(filter2)
+				.extractAllNodesThatMatch(
+						new HasAttributeFilter("id", "photos"));
+		if (list != null && list.size() > 0) {
+			Article article = null;
+			String url = null;
+			// for (int i = 0; i < list.size(); i++) {
+			Div tmp = (Div) list.elementAt(0);
+
+			Parser p2 = new Parser();
+			p2.setInputHTML(tmp.toHtml());
+			NodeFilter filter3 = new NodeClassFilter(LinkTag.class);
+			NodeList list2 = p2.extractAllNodesThatMatch(filter3);
+
+			if (null != tmp && tmp.getChildCount() > 0) {
+				for (int i = 0; i < list2.size(); i++) {
+
+					LinkTag node = (LinkTag) list2.elementAt(i);
+					NodeList ln = node.getChildren();
+					if (ln != null && ln.size() > 0) {
+						if (ln.elementAt(0) instanceof ImageTag) {
+							System.out.println(">> 标题:" + node.getLinkText()
+									+ "\t连接:" + node.getLink());
+							article =  new Article();
+							ImageTag imgTag = (ImageTag) ln.elementAt(0);
+							if (imgTag.getImageURL().startsWith("http://")) {
+								article.setActicleXmlUrl(imgTag.getImageURL());
+							} else {
+								article.setActicleXmlUrl(URL
+										+ imgTag.getImageURL());
+							}
+							if (null != imgTag.getAttribute("alt")) {
+								article.setTitle(imgTag.getAttribute("alt"));
+							}
+							if (!node.getLink().startsWith("http://")) {
+								article.setArticleUrl(URL + node.getLink());
+							} else {
+								article.setArticleUrl(node.getLink());
+							}
+							Article atmp = articleDao.findByUrl(article.getArticleUrl(),webId);
+							if(null != atmp){
+								if(atmp.getArticleUrl().equals(article.getArticleUrl()) && atmp.getTitle().equals(article.getTitle())){
+									atmp.setActicleXmlUrl(article.getActicleXmlUrl());
+									if(articleDao.update(atmp)){
+										System.out.println(" >> 更新"+atmp.getId()+".ActicleXmlUrl:"+atmp.getActicleXmlUrl()+"成功!");
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			// }
+		}
+		if (null != parser)
+			parser = null;
+	}
+	
 	/**
 	 * 获取图片地址下数据
 	 * 
@@ -328,13 +418,12 @@ public class TUPIANParser {
 	 */
 	public static boolean getImage(Article article) throws Exception {
 		boolean b = false;
-		ResultBean result = hasPaging(article.getArticleUrl(), "class",
-				"pages");
+		ResultBean result = hasPaging(article.getArticleUrl(), "class", "pages");
 		if (result.isBool()) {
 			Iterator it = result.getMap().keySet().iterator();
 			while (it.hasNext()) {
 				String key = (String) it.next();
-				System.out.println(" >> key:"+key);
+				System.out.println(" >> key:" + key);
 				b = getImage(key, article.getId());
 			}
 		}
@@ -375,7 +464,7 @@ public class TUPIANParser {
 		}
 		p1 = null;
 	}
-	
+
 	/**
 	 * 获取分类下数据
 	 * 
@@ -390,33 +479,31 @@ public class TUPIANParser {
 		boolean b = true;
 		String length = "0";
 		ImageBean imgBean = null;
-		try{
+		try {
 			p1 = new Parser();
 			p1.setURL(url);
-			
+
 			NodeFilter filter = new NodeClassFilter(CompositeTag.class);
 			NodeList list = p1.extractAllNodesThatMatch(filter)
 					.extractAllNodesThatMatch(
 							new HasAttributeFilter("class", "box"));
-			if(null != list && list.size() > 0){
-				CompositeTag tag = (CompositeTag)list.elementAt(0);
-				if(tag.getChildCount() > 0){
-					if(tag.getChild(1) instanceof LinkTag){
-						LinkTag link = (LinkTag)tag.getChild(1);
-						if(link.getChildCount() > 0){
-							if(link.getChild(0) instanceof ImageTag){
-								ImageTag img = (ImageTag)link.getChild(0);
+			if (null != list && list.size() > 0) {
+				CompositeTag tag = (CompositeTag) list.elementAt(0);
+				if (tag.getChildCount() > 0) {
+					if (tag.getChild(1) instanceof LinkTag) {
+						LinkTag link = (LinkTag) tag.getChild(1);
+						if (link.getChildCount() > 0) {
+							if (link.getChild(0) instanceof ImageTag) {
+								ImageTag img = (ImageTag) link.getChild(0);
 								imgBean = new ImageBean();
 								imgBean.setArticleId(artId);
 								imgBean.setHttpUrl(img.getImageURL());
 								imgBean.setImgUrl(img.getImageURL());
 								if (null != img.getAttribute("alt"))
-									imgBean.setTitle(img
-											.getAttribute("alt"));
+									imgBean.setTitle(img.getAttribute("alt"));
 								else
 									imgBean.setTitle("NT:"
-											+ CommonUtil
-													.getDateTimeString());
+											+ CommonUtil.getDateTimeString());
 								imgBean.setLink("NED");
 								imgBean.setCommentshowurl(link.getLink());
 								try {
@@ -433,8 +520,10 @@ public class TUPIANParser {
 								try {
 									int key = imageDao.insert(imgBean);
 									if (key > 0) {
-										System.out.println(" >> 添加："+imgBean.getTitle()+"成功!");
-										client.add(imgBean.getHttpUrl(), imgBean.getHttpUrl());
+										System.out.println(" >> 添加："
+												+ imgBean.getTitle() + "成功!");
+										client.add(imgBean.getHttpUrl(),
+												imgBean.getHttpUrl());
 									}
 								} catch (Exception e) {
 									b = false;
@@ -444,12 +533,12 @@ public class TUPIANParser {
 					}
 				}
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			if( null != p1)
+		} finally {
+			if (null != p1)
 				p1 = null;
-			if( null != p2)
+			if (null != p2)
 				p2 = null;
 		}
 		return b;
@@ -521,7 +610,8 @@ public class TUPIANParser {
 						if (cnl != null && cnl.size() > 0) {
 							// 小图 可能存在部分图片无法访问，需要判断
 							ImageBean imgBean = null;
-							if (cnl.elementAt(0) instanceof ImageTag) {}
+							if (cnl.elementAt(0) instanceof ImageTag) {
+							}
 						}
 					}
 					Thread.sleep(1000);
@@ -566,16 +656,16 @@ public class TUPIANParser {
 	static void update() throws Exception {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(1000);
 		for (WebsiteBean bean : webList) {
-//			if(bean.getId() != 1623 ){
-//				continue;
-//			}
-			ResultBean result = hasPaging(bean.getUrl()+"index.htm", "class",
-						"pages");
+			// if(bean.getId() != 1623 ){
+			// continue;
+			// }
+			ResultBean result = hasPaging(bean.getUrl() + "index.htm", "class",
+					"pages");
 			if (result.isBool()) {
 				Iterator it = result.getMap().keySet().iterator();
 				while (it.hasNext()) {
 					String key = (String) it.next();
-					System.out.println("分页地址:"+key);
+					System.out.println("分页地址:" + key);
 					LinkBean link = result.getMap().get(key);
 					try {
 						secondURL(link, bean.getId());
@@ -584,7 +674,7 @@ public class TUPIANParser {
 						continue;
 					}
 					/**
-					**/
+					 **/
 				}
 			}
 		}
@@ -593,30 +683,63 @@ public class TUPIANParser {
 	public static void main(String[] args) {
 		// init();
 		try {
-//			 catalog(URL);
-//			 update();
+			// catalog(URL);
+			update();
 			// vistDesk();
-//			loadImg();
+			loadImg();
 			imgDownload();
+			
+//			patchIcon();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private static void patchIcon() throws Exception {
+		List<WebsiteBean> webList = webSiteDao.findByParentId(1000);
+		for (WebsiteBean bean : webList) {
+			// if(bean.getId() != 1623 ){
+			// continue;
+			// }
+			ResultBean result = hasPaging(bean.getUrl() + "index.htm", "class",
+					"pages");
+			if (result.isBool()) {
+				Iterator it = result.getMap().keySet().iterator();
+				while (it.hasNext()) {
+					String key = (String) it.next();
+					System.out.println("分页地址:" + key);
+					LinkBean link = result.getMap().get(key);
+					try {
+						getIconByURL(link, bean.getId());
+					} catch (Exception e) {
+						e.printStackTrace();
+						continue;
+					}
+					/**
+					 **/
+				}
+			}
+		}
+		
 	}
 
 	static void loadImg() throws Exception {
 		// WebsiteBean bean = webSiteDao.findById(702);
 		List<WebsiteBean> webList = webSiteDao.findByParentId(1000);
 		for (WebsiteBean bean : webList) {
-			List<Article> list = articleDao.findByWebId(bean.getId(),"NED");
+			List<Article> list = articleDao.findByWebId(bean.getId(), "NED");
 			for (Article art : list) {
-				int count = imageDao.getCount("select count(*) from tbl_image where d_article_id = "+art.getId());
-				if(count > 0){
+				int count = imageDao
+						.getCount("select count(*) from tbl_image where d_article_id = "
+								+ art.getId());
+				if (count > 0) {
 					continue;
 				}
 				if (getImage(art)) {
 					art.setText("FD");
 					if (articleDao.update(art)) {
-						System.out.println("更新记录[" + art.getTitle() + "]成功\r\n");
+						System.out
+								.println("更新记录[" + art.getTitle() + "]成功\r\n");
 					}
 				}
 			}
@@ -648,7 +771,7 @@ public class TUPIANParser {
 				Article article = null;
 				String url = null;
 				if (null != list2 && list2.size() > 0) {
-					
+
 				}
 			}
 			if (null != parser)
@@ -658,30 +781,33 @@ public class TUPIANParser {
 
 	static void imgDownload() throws Exception {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(1000);
-		for(WebsiteBean website:webList){
-			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
-			List<Article> artList = articleDao.findByWebId(website.getId(), "FD");
-			for(Article article:artList){
+		for (WebsiteBean website : webList) {
+			System.out.println(website.getId() + "|" + website.getName() + "|"
+					+ website.getUrl());
+			List<Article> artList = articleDao.findByWebId(website.getId(),
+					"FD");
+			for (Article article : artList) {
 				List<ImageBean> list = imageDao.findImage(article.getId());
-				if(list.size() == 0){
+				if (list.size() == 0) {
 					article.setText("NED");
-					if(articleDao.update(article)){
+					if (articleDao.update(article)) {
 						System.out.println(">> 更新图片记录数据为0的文章成功");
 					}
-				}else{
-					for(ImageBean bean : list) {
-						if(bean.getLink().equalsIgnoreCase("NED")){
-							if(download(bean)){
+				} else {
+					for (ImageBean bean : list) {
+						if (bean.getLink().equalsIgnoreCase("NED")) {
+							if (download(bean)) {
 								bean.setStatus(1);
 								bean.setLink("FD");
-								if(imageDao.update(bean)){
-									System.out.println(">> 更新图片对象["+bean.getId()+"]成功");
+								if (imageDao.update(bean)) {
+									System.out.println(">> 更新图片对象["
+											+ bean.getId() + "]成功");
 								}
 							}
 						}
 					}
 				}
-		}
+			}
 		}
 	}
 
@@ -697,61 +823,62 @@ public class TUPIANParser {
 		String length = "0";
 		try {
 			byte[] big = null;
-			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, imgBean.getHttpUrl());
-			if(null == big)
+			big = HttpClientUtils.getResponseBodyAsByte(imgBean
+					.getCommentshowurl(), null, imgBean.getHttpUrl());
+			if (null == big)
 				return false;
 			length = String.valueOf(big.length);
-			if(length.equalsIgnoreCase("20261")){
+			if (length.equalsIgnoreCase("20261")) {
 				return false;
 			}
-			if(!imgBean.getImgUrl().equals(imgBean.getHttpUrl())){
-				//小图
+			if (!imgBean.getImgUrl().equals(imgBean.getHttpUrl())) {
+				// 小图
 				if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
-						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-						+ imgBean.getArticleId() + File.separator
-						+ s_fileName)) == null) {
+						+ StringUtils.gerDir(String.valueOf(imgBean
+								.getArticleId())) + imgBean.getArticleId()
+						+ File.separator + s_fileName)) == null) {
 					IOUtil.createPicFile(imgBean.getImgUrl(), PIC_SAVE_PATH
-							+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-							+ imgBean.getArticleId() + File.separator
-							+ s_fileName);
+							+ StringUtils.gerDir(String.valueOf(imgBean
+									.getArticleId())) + imgBean.getArticleId()
+							+ File.separator + s_fileName);
 				}
 			}
-			
-			//大图
+
+			// 大图
 			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
-					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-					+ imgBean.getArticleId() + File.separator
-					+ fileName)) == null) {
+					+ StringUtils
+							.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator + fileName)) == null) {
 				IOUtil.createFile(big, PIC_SAVE_PATH
-						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-						+ imgBean.getArticleId() + File.separator
-						+ fileName);
+						+ StringUtils.gerDir(String.valueOf(imgBean
+								.getArticleId())) + imgBean.getArticleId()
+						+ File.separator + fileName);
 			}
 			bean.setArticleId(imgBean.getArticleId());
 			bean.setImageId(imgBean.getId());
 			bean.setTitle(imgBean.getTitle());
-			if(!imgBean.getImgUrl().equals(imgBean.getHttpUrl())){
+			if (!imgBean.getImgUrl().equals(imgBean.getHttpUrl())) {
 				bean.setSmallName(File.separator
-						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-						+ imgBean.getArticleId() + File.separator
-						+ s_fileName);
-			}else{
+						+ StringUtils.gerDir(String.valueOf(imgBean
+								.getArticleId())) + imgBean.getArticleId()
+						+ File.separator + s_fileName);
+			} else {
 				bean.setSmallName("nopic.jpg");
 			}
 			bean.setName(File.separator
-					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
-					+ imgBean.getArticleId() + File.separator
-					+ fileName);
+					+ StringUtils
+							.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator + fileName);
 			bean.setUrl(PIC_SAVE_PATH);
 			try {
 				imgBean.setFileSize(Long.valueOf(length));
-				if(imageDao.update(imgBean)){
+				if (imageDao.update(imgBean)) {
 					boolean b = picFiledao.insert(bean);
 					if (b) {
-							client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
-									+ bean.getName()), bean);
-							client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
-									+ bean.getSmallName()), bean);
+						client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+								+ bean.getName()), bean);
+						client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+								+ bean.getSmallName()), bean);
 					} else {
 						return false;
 					}
