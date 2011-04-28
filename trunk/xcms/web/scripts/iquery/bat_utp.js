@@ -475,20 +475,42 @@ Ext.onReady(function(){
 	app.text_phone_number = new Ext.form.TextField({
 		name : 'phone_number',
 		width : 150,
-		vtype:'mobile'
-//		,
-//		listeners:{
-//			change:function(obj){
-//				if(!obj.validate()){
-//					alert('输入的参数不合法');
-//				}else{
-//					app.btn_search_code.enable();
-//				}
-//			}
-//		}
+		vtype:'mobile',
+		listeners:{
+			change:function(obj){
+				if(!obj.validate()){
+					Ext.Msg.show({
+						title : '系统提示',
+						msg : '请输入需要查询的手机号码不符合要求！',
+						buttons : Ext.Msg.OK,
+						fn:function(){
+							app.ds_utp.clear();
+						},
+						icon : Ext.MessageBox.ERROR
+					});
+				}else{
+					app.btn_search_code.enable();
+				}
+			}
+		}
 	});
 	
 	app.searchcode = function() {
+		var tac =app.text_tac_code.getValue();
+		var phone =app.text_phone_number.getValue();
+		if((null == tac || '' ==  tac) && (null == phone || '' ==  phone)){
+			Ext.Msg.show({
+				title : '系统提示',
+				msg : '请输入需要查询的手机号码或者TAC码！',
+				buttons : Ext.Msg.OK,
+				fn:function(){
+					app.ds_utp.clear();
+				},
+				icon : Ext.MessageBox.ERROR
+			});
+			return false;
+		}
+
 		/**
 		app.colName = app.search_comb_queyrCol_code.getValue();
 		app.values =app.text_search_code.getValue();
