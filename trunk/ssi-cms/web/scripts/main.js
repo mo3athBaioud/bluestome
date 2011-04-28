@@ -192,6 +192,13 @@ Ext.onReady(function() {
 						autoScroll:true, 
 		                enableDD:false,
 		                containerScroll: true,
+						tools : [{
+							id : 'refresh',
+							handler : function() {
+								var tree = Ext.getCmp('website_tree_id');
+								tree.root.reload()
+							}
+						}],
 						items : [{
 							id:'website_tree_id',
 							xtype : 'treepanel',
