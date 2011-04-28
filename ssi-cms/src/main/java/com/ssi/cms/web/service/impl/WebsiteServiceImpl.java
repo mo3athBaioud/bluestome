@@ -48,6 +48,7 @@ public class WebsiteServiceImpl implements IWebsiteService {
 	public List<Website> findByParentId(Integer id) throws Exception {
 		HashMap map = new HashMap();
 		map.put("parentId", id);
+		map.put("status", 1);
 		return websiteDao.find(map);
 	}
 
@@ -153,8 +154,10 @@ public class WebsiteServiceImpl implements IWebsiteService {
 	//				sb.append("\t\t\t\"href\":\""+request.getContextPath()+"/website/sub.cgi?id="+bean.getId()+"\",\n");
 	//				sb.append("\t\t\t\"hrefTarget\":\"mainFrame\",\n");
 					sb.append("\t\t\t\"icon\":\""+request.getContextPath()+"/images/world_link.png\",\n");
-					sb.append("\t\t\t\"children\":");
-					sb.append(tree2(bean.getChildren(),request));
+//					sb.append("\t\t\t\"children\":");
+//					sb.append(tree2(bean.getChildren(),request));
+					sb.append("\t\t\t\"leaf\":false,\n");
+					sb.append("\t\t\t\"singleClickExpand\":true");
 				}else{
 						sb.append("\t\t\t\"icon\":\""+request.getContextPath()+"/images/html.png\",\n");
 						sb.append("\t\t\t\"leaf\":true,\n");
