@@ -70,6 +70,10 @@ public class WebsiteAction extends BaseAction {
 	public void tree2() throws Exception{
 		response.setCharacterEncoding("UTF-8");
 		try{
+			String node = request.getParameter("node");
+			if(null != node && !"".equals(node)){
+				id = Integer.valueOf(node);
+			}
 			long start = System.currentTimeMillis();
 			if(null == id){
 				websiteList = websiteService.getRootWebSite(webType);
@@ -84,6 +88,23 @@ public class WebsiteAction extends BaseAction {
 				logger.info("父ID["+id+"],执行时间为:"+(end-start)/1000);
 				response.getWriter().print(tree2);
 			}
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.debug(">> WebsiteAction.article" + e);
+			response.getWriter().print("{failure:true,msg:'查询文章发生异常'}");
+		}
+	}
+	
+	public void root2() throws Exception{
+		response.setCharacterEncoding("UTF-8");
+		try{
+			if(null == id){
+				websiteList = websiteService.getRootWebSite(webType);
+			}else{
+				websiteList = websiteService.findByParentId(id);
+			}
+			int count = (websiteList == null?0:websiteList.size());
+			toJson(response, websiteList,count);
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.debug(">> WebsiteAction.article" + e);
