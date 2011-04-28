@@ -63,6 +63,136 @@ Ext.onReady(function(){
 				emptyText : '查询的字段名'
 	});
 	
+//		}, [{name : 'd_id',type : 'int'
+//		}, {name : 'd_article_id',type : 'int'
+//		}, {name : 'd_title',type : 'string'
+//		}, {name : 'd_imgurl_src',type : 'string'
+//		}, {name : 'd_httpurl_src',type : 'string'
+//		}, {name : 'd_commentsuburl',type : 'string'
+//		}, {name : 'd_name',type : 'string'
+//		}, {name : 'd_createtime',type : 'string'
+//		}, {name : 'd_imgurl',type : 'string'
+//		}, {name : 'd_commentshowurl',type : 'string'
+//		}, {name : 'd_link',type : 'string'
+//		}, {name : 'd_time',type : 'string'
+//		}, {name : 'd_orderid',type : 'int'
+	//表单
+	app.imageForm = new Ext.FormPanel({
+		name:'imageForm',
+		labelWidth : 80,
+		labelAlign : 'right',
+		url : 'addcode.action',
+		border : false,
+		baseCls : 'x-plain',
+		bodyStyle : 'padding:5px 5px 0',
+		anchor : '100%',
+		defaults : {
+			width : 233,
+			msgTarget : 'side'
+		},
+		defaultType : 'textfield',
+		items : [
+//		{
+//			fieldLabel : '名称',
+//			name : 'd_name',
+//			maxLength : 50
+//		},
+		{
+			fieldLabel : '标题',
+			name : 'd_title',
+			maxLength : 50
+		}, {
+			fieldLabel : '小图',		
+			name : 'd_imgurl_src',
+			maxLength : 150
+		}, {
+			fieldLabel : '大图',		
+			name : 'd_httpurl_src',
+			maxLength : 150
+		},{
+			fieldLabel : '内容地址',		
+			name : 'd_commentsuburl',
+			maxLength : 150
+		},{
+			fieldLabel : '排序号',
+			name : 'd_orderid',
+			readOnly:true,
+			value:webId
+		},{
+			//下拉选择框
+			xtype:'combo',
+			fieldLabel : '状态',
+			hiddenName:'d_link',
+            valueField: 'id',
+            displayField: 'name',
+            triggerAction:'all',
+            mode: 'local',
+            store: new Ext.data.SimpleStore({
+                fields: ['id','name'],
+                data: [['FD','可用'], ['NED','停用']]
+            }),
+            emptyText : '请选择记录状态!',
+            editable:false,
+			allowBlank : false,
+			maxLength : 20
+		}]
+	});
+	
+	app.win =  new Ext.Window({ 
+			id:'image_window',
+			title : '窗口',
+			iconCls:'icon-edit',
+			width : 450,
+			resizable : false,
+			autoHeight : true,
+			modal : true,
+			closeAction : 'hide',
+			items : [app.imageForm],
+			buttonAlign : 'center',
+			minButtonWidth : 60,
+			buttons : [{
+				text : '保存',
+				iconCls:'icon-accept',
+				handler : function(btn) {
+				}
+			}, {
+				id:'image_form_reset',
+				text : '重置',
+				iconCls:'icon-arrow_refresh_small',
+				handler : function() {
+					app.imageForm.getForm().reset();
+				}
+			}, {
+				text : '取消',
+				iconCls:'icon-cancel',
+				handler : function() {
+					app.win.hide();
+					app.imageForm.getForm().reset();
+				}
+			}]
+	});
+	
+	app.btn_edit = new Ext.Button({
+		text : '编辑',
+		iconCls : 'icon-edit',
+		handler : function(){
+			var record = app.grid.getSelectionModel().getSelected();
+			if(record){
+				app.imageForm.getForm().loadRecord(record);
+				app.win.show();
+				app.win.setTitle('编辑图片信息');
+				Ext.getCmp('image_form_reset').hide();
+			}else{
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '请选择要修改的记录!',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.ERROR
+				});
+			}
+		}
+	});
+	
 	app.btn_search_code = new Ext.Button({
 		text : '查询',
 		iconCls : 'icon-search',
@@ -240,7 +370,7 @@ Ext.onReady(function(){
         },
  		plugins: app.expander,
  		sm:app.sm,
-		tbar : [app.btn_back,'-',app.btn_set_article_icon,'-',app.btn_download_img,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code], //'-',app.btn_search_code
+		tbar : [app.btn_back,'-',app.btn_edit,'-',app.btn_set_article_icon,'-',app.btn_download_img,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code], //'-',app.btn_search_code
 		bbar : app.ptb
 	});
 	
