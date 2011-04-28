@@ -677,7 +677,7 @@
 
     });
     
-     var node_0101090102 = new Ext.tree.TreeNode({
+     var node_0101090103 = new Ext.tree.TreeNode({
 
         text:'租机业务推荐查询',
 
@@ -685,7 +685,27 @@
 
           'click': function(){
 
-             addTab('pages/iquery/rb.html','租机业务推荐查询','0101090102','西安移动终端业务营销系统 -> 数据查询 -> 单项业务数据查询 -> 租机业务推荐查询','application_view_columns.png');
+             addTab('pages/iquery/rb.html','租机业务推荐查询','0101090103','西安移动终端业务营销系统 -> 数据查询 -> 单项业务数据查询 -> 租机业务推荐查询','application_view_columns.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'icon-application_view_columns',
+
+        id:'id_node_0101090103'
+
+    });
+    
+     var node_0101090102 = new Ext.tree.TreeNode({
+
+        text:'数据业务推荐查询',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/iquery/db.html','数据业务推荐查询','0101090102','西安移动终端业务营销系统 -> 业务查询 -> 单项业务数据查询 -> 数据业务推荐查询','application_view_columns.png');
 
            }},
 
@@ -697,15 +717,15 @@
 
     });
     
-     var node_0101090103 = new Ext.tree.TreeNode({
+     var node_0101090104 = new Ext.tree.TreeNode({
 
-        text:'数据业务推荐查询',
+        text:'终端销售推荐查询',
 
         listeners: {
 
           'click': function(){
 
-             addTab('pages/iquery/db.html','数据业务推荐查询','0101090103','西安移动终端业务营销系统 -> 系统管理 -> 统计分析 -> 数据业务推荐查询','application_view_columns.png');
+             addTab('pages/iquery/ts.html','终端销售推荐查询','0101090104','西安移动终端业务营销系统 -> 业务查询 -> 单项业务数据查询 -> 终端销售推荐查询','application_view_columns.png');
 
            }},
 
@@ -713,7 +733,7 @@
 
         iconCls:'icon-application_view_columns',
 
-        id:'id_node_0101090103'
+        id:'id_node_0101090104'
 
     });
     
@@ -754,7 +774,7 @@
 
     });
     
-     var node_0101090202 = new Ext.tree.TreeNode({
+     var node_0101090203 = new Ext.tree.TreeNode({
 
         text:'批量租机业务推荐查询',
 
@@ -762,7 +782,27 @@
 
           'click': function(){
 
-             addTab('pages/iquery/bat_rb.html','租机业务推荐查询','0101090202','西安移动终端业务营销系统 ->系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量租机业务推荐查询','application_view_columns.png');
+             addTab('pages/iquery/bat_rb.html','批量租机业务推荐查询','0101090203','西安移动终端业务营销系统 ->系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量租机业务推荐查询','application_view_columns.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'icon-application_view_columns',
+
+        id:'id_node_0101090203'
+
+    });
+    
+     var node_0101090202 = new Ext.tree.TreeNode({
+
+        text:'批量数据业务推荐查询',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/iquery/bat_db.html','数据业务推荐查询','0101090202','西安移动终端业务营销系统 -> 系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量数据业务推荐查询','application_view_columns.png');
 
            }},
 
@@ -774,15 +814,15 @@
 
     });
     
-     var node_0101090203 = new Ext.tree.TreeNode({
+      var node_0101090204 = new Ext.tree.TreeNode({
 
-        text:'批量数据业务推荐查询',
+        text:'批量终端销售查询',
 
         listeners: {
 
           'click': function(){
 
-             addTab('pages/iquery/bat_db.html','数据业务推荐查询','0101090203','西安移动终端业务营销系统 -> 系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量数据业务推荐查询','application_view_columns.png');
+             addTab('pages/iquery/bat_ts.html','批量终端销售查询','0101090204','西安移动终端业务营销系统 ->系统管理 -> 数据查询 -> 批量业务数据查询 -> 批量终端销售查询','application_view_columns.png');
 
            }},
 
@@ -790,7 +830,7 @@
 
         iconCls:'icon-application_view_columns',
 
-        id:'id_node_0101090203'
+        id:'id_node_0101090204'
 
     });
     
@@ -1150,6 +1190,8 @@
     
     node_01010901.appendChild(node_0101090103);
     
+    node_01010901.appendChild(node_0101090104);
+    
     node_010109.appendChild(node_01010901);
     
     node_01010902.appendChild(node_0101090201);
@@ -1157,6 +1199,8 @@
     node_01010902.appendChild(node_0101090202);
     
     node_01010902.appendChild(node_0101090203);
+    
+    node_01010902.appendChild(node_0101090204);
     
 	node_010109.appendChild(node_01010902);
 	

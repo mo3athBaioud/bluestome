@@ -189,6 +189,16 @@ Ext.onReady(function(){
 	});
 
 	app.searchcode = function() {
+		var values =app.text_search_code.getValue();
+		if(null == values || '' ==  values){
+			Ext.Msg.show({
+				title : '系统提示',
+				msg : '请输入需要查询的手机号码！',
+				buttons : Ext.Msg.OK,
+				icon : Ext.MessageBox.ERROR
+			});
+			return false;
+		}
 		/**
 		app.colName = app.search_comb_queyrCol_code.getValue();
 		app.values =app.text_search_code.getValue();
