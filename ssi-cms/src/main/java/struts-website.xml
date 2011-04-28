@@ -16,6 +16,7 @@
 		<action name="tree2" class="websiteAction" method="tree2" />
 		<action name="toTree" class="websiteAction" method="toTree" />
 		<action name="root" class="websiteAction" method="root" />
+		<action name="root2" class="websiteAction" method="root2" />
 		
 		
 		<action name="update" class="websiteAction" method="update" />
