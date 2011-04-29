@@ -170,6 +170,14 @@ public static String getHttpHeaderResponse(String url,String headerName){
 		try{
 			httpclient = new HttpClient();
 			getMethod = new GetMethod(url);
+			getMethod.setRequestHeader("Accept", "text/html, application/xhtml+xml, */*");
+			getMethod.setRequestHeader("Referer", "https://www.numberingplans.com/?page=plans&sub=imeinr&alpha_2_input=49&current_page=7");
+			getMethod.setRequestHeader("Accept-Language", "zh-CN");
+			getMethod.setRequestHeader("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
+			getMethod.setRequestHeader("Accept-Encoding", "gzip, deflate");
+			getMethod.setRequestHeader("Host", "www.numberingplans.com");
+			getMethod.setRequestHeader("Connection", "Keep-Alive");
+			getMethod.setRequestHeader("Cookie", "__unam=1d4dc77-12f9eb6b102-2184c4c5-3; __utma=94995971.1160867793.1304037864.1304064344.1304069676.3; __utmz=94995971.1304037864.1.1.utmccn=(direct)|utmcsr=(direct)|utmcmd=(none); __qca=P0-792655513-1304037864270; __utmb=94995971; __utmc=94995971; PHPSESSID=5bu9cg5ghqv0c8stl8ouvanu55");
 			int statusCode = httpclient.executeMethod(getMethod);
 			if(statusCode == HttpStatus.SC_OK){
 				value = new String(getMethod.getResponseBody(),"GB2312");
@@ -207,13 +215,13 @@ public static String getHttpHeaderResponse(String url,String headerName){
 //				value = new String(getMethod.getResponseBody(),"gb2312");
 //			}
 			
-			value = getResponseBody("http://car.autohome.com.cn/LeftMenu/List.aspx?typeId=3&isSubPage=0&brandId=0&fctId=0&seriesId=0");
+			value = getResponseBody("http://www.google.com.hk");
 			if(null != value && !"".equalsIgnoreCase(value)){
 //				System.out.println("body:\r"+value);
 			}
 			
-			value = value.replace("document.writeln(\"", "").replace("\");", "");
-			System.out.println(" >> value:"+value);
+//			value = value.replace("document.writeln(\"", "").replace("\");", "");
+//			System.out.println(" >> value:"+value);
 		}catch(Exception e){
 			System.err.println(e);
 		}finally{
