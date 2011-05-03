@@ -335,9 +335,16 @@ Ext.onReady(function(){
     
     app.cm_utp = new Ext.grid.ColumnModel([
 	    expander,
-        {header: "手机号码", width: 100, sortable: true, dataIndex: 'sn'},
-        {header: "品牌", width: 100, sortable: true, dataIndex: 'brand'},
-        {header: "型号", width: 100, sortable: true, dataIndex: 'model'},
+//        {header: "手机号码", width: 100, sortable: true, dataIndex: 'sn'},
+//        {header: "品牌", width: 100, sortable: true, dataIndex: 'brand'},
+//        {header: "型号", width: 100, sortable: true, dataIndex: 'model'},
+//        {header: "TAC", width: 100, sortable: true, dataIndex: 'tac'},
+//        {header: "IMEI", width: 100, sortable: true, dataIndex: 'imei'}
+        {header: "手机号码", width: 100, sortable: true, dataIndex: 'phoneNum'},
+        {header: "品牌", width: 100, sortable: true, dataIndex: 'hsmanName'},
+        {header: "品牌(英文)", width: 100, sortable: true, dataIndex: 'hsmanEnName'},
+        {header: "型号", width: 100, sortable: true, dataIndex: 'hstypeName'},
+        {header: "型号(英文)", width: 100, sortable: true, dataIndex: 'hstypeEnName'},
         {header: "TAC", width: 100, sortable: true, dataIndex: 'tac'},
         {header: "IMEI", width: 100, sortable: true, dataIndex: 'imei'}
     ]);
@@ -496,39 +503,58 @@ Ext.onReady(function(){
 	});
 	
 	app.searchcode = function() {
-		var tac =app.text_tac_code.getValue();
-		var phone =app.text_phone_number.getValue();
-		if((null == tac || '' ==  tac) && (null == phone || '' ==  phone)){
+		var values =app.text_phone_number.getValue();
+		if(null == values || '' ==  values){
 			Ext.Msg.show({
 				title : '系统提示',
-				msg : '请输入需要查询的手机号码或者TAC码！',
+				msg : '请输入需要查询的手机号码！',
+				buttons : Ext.Msg.OK,
+				icon : Ext.MessageBox.ERROR
+			});
+			return false;
+		}
+		
+		/**
+		app.ds_utp.loadData(app.data);
+		var b = vmobile(values);
+		if(!b){
+			Ext.Msg.show({
+				title : '系统提示',
+				msg : '输入的手机号码格式不对，请重新输入!',
 				buttons : Ext.Msg.OK,
 				fn:function(){
-					app.ds_utp.clear();
+					app.ds_utp.removeAll();
 				},
 				icon : Ext.MessageBox.ERROR
 			});
 			return false;
 		}
-
-		/**
-		app.colName = app.search_comb_queyrCol_code.getValue();
-		app.values =app.text_search_code.getValue();
+		**/
 		Ext.Ajax.request({
-			url : '/utp/utp.cgi',
+			url : '/utp/search.cgi',
 			params : {
-				colName : app.colName,
-				value : app.values
+				phonenum : values
 			},
 			success:function(response,option){
 				var obj = Ext.util.JSON.decode(response.responseText);
 				if(obj.success){
-					app.ds_utp.load({params : {start:0,limit:app.limit}}); //,colName:app.colName,value:app.values
+					app.ds_utp_1.load({
+						params : {
+							phonenum : values,
+							start:0,
+							limit:app.limit
+						}
+					});
 				}else{
 					Ext.Msg.show({
 						title : '系统提示',
-						msg : obj.msg,
-						buttons : Ext.Msg.OK,
+						msg : '未查找到您对应的终端，是否立即录入您当前的终端数据？',
+						buttons : Ext.MessageBox.OKCANCEL,
+						fn:function(btn){
+							if(btn == 'ok'){
+								app.add_terminal_win.show();
+							}
+						},
 						icon : Ext.MessageBox.ERROR
 					});
 				}
@@ -536,14 +562,17 @@ Ext.onReady(function(){
             failure:function(){
 				Ext.Msg.show({
 					title : '系统提示',
-					msg : '服务器内部错误',
-					buttons : Ext.Msg.OK,
+					msg : '未查找到您对应的终端，是否立即录入您当前的终端数据？',
+					buttons : Ext.MessageBox.OKCANCEL,
+					fn:function(btn){
+						if(btn == 'ok'){
+							app.add_terminal_win.show();
+						}
+					},
 					icon : Ext.MessageBox.ERROR
 				});
             }
 		});
-		**/
-		app.ds_utp.loadData(app.data);
 	};
 	
 	/**	
@@ -601,6 +630,23 @@ Ext.onReady(function(){
         ]
     });
 	
+	app.ds_utp_1 = new Ext.data.Store({
+		url : '/utp/utp.cgi',
+		baseParams:{},
+		reader : new Ext.data.JsonReader({
+			totalProperty : 'count',
+			root : 'obj'
+		}, [{name : 'phoneNum',type : 'string'
+		}, {name : 'imei',type : 'string'
+		}, {name : 'tac',type : 'string'
+		}, {name : 'hsmanName',type : 'string'
+		}, {name : 'hsmanEnName',type : 'string'
+		}, {name : 'hstypeName',type : 'string'
+		}, {name : 'hstypeEnName',type : 'string'
+		}, {name : 'mms',type : 'string'
+		}])
+	});
+	
 	app.ptb = new Ext.PagingToolbar({
 		pageSize:app.limit,
 		store:app.ds_utp,
@@ -617,7 +663,8 @@ Ext.onReady(function(){
 			msg : '数据加载中...'
 		},
 	    cm: app.cm_utp,
-	    ds: app.ds_utp,
+//	    ds: app.ds_utp,
+		ds:app.ds_utp_1,
 //	    width:850,
 	    height:550,
         autoScroll: true,
@@ -627,7 +674,7 @@ Ext.onReady(function(){
  		plugins: expander,
 		sm:app.sm,
 		//'品牌:',app.hs_brand_combo,'-',app.hs_model_combo,'-',app.hs_mms_combo,'-',app.hs_wap_combo,'-',
-		tbar : [app.btn_terminal_query_components,'-','手机号码：',app.text_phone_number,'-','TAC码：',app.text_tac_code,'-',app.btn_search_code]
+		tbar : [app.btn_terminal_query_components,'-','手机号码：',app.text_phone_number,'-',app.btn_search_code]
 	});
 	
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
@@ -643,3 +690,7 @@ Ext.onReady(function(){
 
     app.grid.render('utp');
 });
+function vmobile(v){
+     var r = /^((\(\d{2,3}\))|(\d{3}\-))?1?[3,5,8]\d{9}$/;
+     return r.test(v);
+}

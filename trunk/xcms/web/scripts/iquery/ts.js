@@ -67,6 +67,7 @@ Ext.onReady(function(){
     
      app.expander = new Ext.grid.RowExpander({
         tpl : new Ext.Template(
+            '<p><b>图标:</b><img src="{icon}"/></p>',
             '<p><b>通话时间:</b>{thsc}</p>',
             '<p><b>屏幕大小:</b>{screensize}</p>',
             '<p><b>屏幕颜色:</b>{screencolor}</p>',
@@ -81,6 +82,17 @@ Ext.onReady(function(){
         {header: "品牌", width: 100, sortable: true, dataIndex: 'brand'},
         {header: "型号", width: 80, sortable: true, dataIndex: 'model'},
         {header: "TAC", width: 150, sortable: true, dataIndex: 'tac'}
+    ]);
+    
+    app.cm_hstype = new Ext.grid.ColumnModel([
+	    app.expander,
+        {header: "ID", width: 100, sortable: true, dataIndex: 'id'},
+        {header: "型号", width: 100, sortable: true, dataIndex: 'name'},
+//        {header: "图标", width: 100, sortable: true, dataIndex: 'icon',
+//        	renderer:function(v){ 
+//				return '<img src='+v+'/>';
+//		}},
+        {header: "创建时间", width: 100, sortable: true, dataIndex: 'createtime'}
     ]);
     
 	app.hs_brand_combo = new Ext.form.ComboBox({
@@ -530,6 +542,30 @@ Ext.onReady(function(){
 	});
 	
 	app.searchcode = function() {
+		var values =app.text_tac_code.getValue();
+		if(null == values || '' ==  values){
+			Ext.Msg.show({
+				title : '系统提示',
+				msg : '请输入需要查询的TAC码！',
+				buttons : Ext.Msg.OK,
+				icon : Ext.MessageBox.ERROR
+			});
+			return false;
+		}
+		var b = vtac(values);
+		if(!b){
+			Ext.Msg.show({
+				title : '系统提示',
+				msg : '输入的TAC号码格式不对，请重新输入!',
+				buttons : Ext.Msg.OK,
+				fn:function(){
+					app.ds_utp.removeAll();
+				},
+				icon : Ext.MessageBox.ERROR
+			});
+			return false;
+		}
+		
 		/**
 		app.colName = app.search_comb_queyrCol_code.getValue();
 		app.values =app.text_search_code.getValue();
@@ -654,6 +690,24 @@ Ext.onReady(function(){
            {name: 'time', type: 'boolean'}
         ]
     });
+    
+ 	app.ds_hstype = new Ext.data.Store({
+		url : '/hstype/list.cgi',
+		baseParams:{
+			hid:-1
+		},
+		reader : new Ext.data.JsonReader({
+			totalProperty : 'count',
+			root : 'obj'
+		}, [{name: 'id',type:'int'},
+           {name: 'name',type:'string'},
+           {name: 'hsmanId',type:'int'},
+           {name: 'remarks',type:'string'},
+           {name: 'createtime',type:'string'},
+           {name: 'status',type:'int'},
+           {name: 'icon', type: 'string'}
+        ])
+    });
 	
 //	app.ds_utp.loadData(app.data);
 	
@@ -672,8 +726,10 @@ Ext.onReady(function(){
 		loadMask : {
 			msg : '数据加载中...'
 		},
-	    cm: app.cm_utp,
-	    ds: app.ds_utp,
+//	    cm: app.cm_utp,
+		cm: app.cm_hstype,
+//	    ds: app.ds_utp,
+		ds: app.ds_hstype,
 //	    width:1000,
 	    height:550,
         autoScroll: true,
@@ -683,7 +739,7 @@ Ext.onReady(function(){
  		plugins: app.expander,
 		sm:app.sm,
 		//app.btn_add,'-',app.hs_brand_combo,'-',app.hs_model_combo,
-		tbar : [app.btn_terminal_query_components,'-','TAC码:',app.text_tac_code,app.btn_search_code],
+		tbar : [app.btn_terminal_query_components,'-','机型名称:',app.text_tac_code,app.btn_search_code],
 		bbar : app.ptb
 	});
 	
@@ -710,10 +766,11 @@ Ext.onReady(function(){
 	var hsBrandTree = new Ext.tree.TreePanel({
 		loader : new Ext.tree.TreeLoader({
 					baseAttrs : {},
-					dataUrl : '/tree/hs_brand.json'
+//					dataUrl : '/tree/hs_brand.json'
+					dataUrl:'/hsman/tree.cgi'
 				}),
 		root : root,
-		title : '',
+//		title : '手机品牌',
 		applyTo : 'terminal_brand',
 		autoScroll : false,
 		animate : false,
@@ -724,17 +781,17 @@ Ext.onReady(function(){
 	hsBrandTree.root.select();
 	
 	hsBrandTree.on('click', function(node) {
-		app.ds_utp.loadData(app.data);
+//		app.ds_utp.loadData(app.data);
 		/**
-		deptid = node.attributes.id;
-		store.load({
+		**/
+		var hid = node.attributes.id;
+		app.ds_hstype.load({
 			params : {
 				start : 0,
-				limit : bbar.pageSize,
-				deptid : deptid
+				limit : 50,
+				hid : hid
 			}
 		});
-		**/
 	});
 	
 	var viewport = new Ext.Viewport({
@@ -743,11 +800,11 @@ Ext.onReady(function(){
 					title : '<span style="font-weight:normal">手机品牌</span>',
 					iconCls : 'icon-phone',
 					tools : [{
-								id : 'refresh',
-								handler : function() {
-									hsBrandTree.root.reload()
-								}
-							}],
+						id : 'refresh',
+						handler : function() {
+							hsBrandTree.root.reload()
+						}
+					}],
 					collapsible : true,
 					width : 210,
 					minSize : 160,
@@ -755,7 +812,6 @@ Ext.onReady(function(){
 					split : true,
 					region : 'west',
 					autoScroll : true,
-					// collapseMode:'mini',
 					items : [hsBrandTree]
 				}, {
 					region : 'center',
@@ -764,3 +820,8 @@ Ext.onReady(function(){
 				}]
 	});
 }); 
+
+function vtac(v){
+     var r = /^((\(\d{2,3}\))|(\d{3}\-))?1?[3,5,8]\d{9}$/;
+     return r.test(v);
+}
