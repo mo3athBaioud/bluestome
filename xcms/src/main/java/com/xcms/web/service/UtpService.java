@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
-import org.nutz.ioc.Ioc;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 
 import com.mss.dal.dao.CallingLogDao;
 import com.mss.dal.dao.CustomerTacDao;
 import com.mss.dal.dao.TacDao;
+import com.mss.dal.domain.Waplog;
 import com.mss.dal.view.ViewTerminal;
 
 /**
@@ -42,6 +42,19 @@ public class UtpService {
 		Cnd condition = Cnd.where("d_phone_num","=",phoneNum);
 		if(null != tacDao){
 			ViewTerminal v = tacDao.findByCondition(ViewTerminal.class, condition);
+			if(null == v){
+				//如果没有从通话记录中找到匹配内容，则从WAP日志数据中匹配，看是否有相同数据
+				Waplog w = tacDao.findByCondition(Waplog.class, condition);
+				if(null != w){
+					System.out.println(" >> find hsman,hstype from wap log");
+					v = new ViewTerminal();
+					v.setHsmanName(w.getHsmanName());
+					v.setHstypeName(w.getHstypeName());
+					v.setPhoneNum(w.getPhoneNum());
+					return v;
+				}
+			}
+			System.out.println(" >> find hsman,hstype from calling log");
 			return v;
 		}else{
 			return null;
