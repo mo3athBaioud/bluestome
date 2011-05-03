@@ -22,7 +22,7 @@ public class LoginServlet extends HttpServlet {
 
 	protected final Log logger = LogFactory.getLog(this.getClass());
 	
-	static String[][] USERS = {{"liyang","liyang123"},{"zhangxiao","zhangxiao123"}};
+	static String[][] USERS = {{"liyang","liyang123"},{"zhangxiao","zhangxiao123"},{"weinan","weinan123"}};
 	/**
 	 * Constructor of the object.
 	 */
@@ -88,6 +88,18 @@ public class LoginServlet extends HttpServlet {
 				return;
 			}else{
 				response.getWriter().print("{failure:true,errorType:'1',msg:'登录失败，["+USERS[1][0]+"]密码不正确'}");
+				return;
+			}
+		}
+		
+		if(name.equals(USERS[2][0])){
+			if(password.equals(USERS[2][1]) ){
+				request.getSession().setAttribute("LOGIN_SESSION_NAME", USERS[2][0]);
+				logger.info(" User["+USERS[2][0]+"] login at "+getStringDate());
+				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/weinan.html'}");
+				return;
+			}else{
+				response.getWriter().print("{failure:true,errorType:'1',msg:'登录失败，["+USERS[2][0]+"]密码不正确'}");
 				return;
 			}
 		}
