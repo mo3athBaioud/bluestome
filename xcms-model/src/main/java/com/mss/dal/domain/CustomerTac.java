@@ -1,11 +1,13 @@
 package com.mss.dal.domain;
 
 import org.nutz.dao.entity.annotation.Column;
+import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
 @Table("tbl_customer_tac")
 public class CustomerTac {
 
+	@Id
 	@Column("d_id")
 	private int id;
 	
