@@ -5,6 +5,20 @@
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
 	<filter>
+		<filter-name>nutz</filter-name>
+		<filter-class>org.nutz.mvc.NutFilter</filter-class>
+		<init-param>
+			<param-name>modules</param-name>
+			<param-value>com.xcms.MainModule</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>nutz</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter>
 		<filter-name>loginCheck</filter-name>
 		<filter-class>com.xcms.filter.LoginFilter</filter-class>
 	</filter>
