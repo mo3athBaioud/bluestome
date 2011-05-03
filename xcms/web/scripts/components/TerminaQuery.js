@@ -54,18 +54,32 @@ TerminalQuery =  Ext.extend(Ext.Window, {
 						                valueField: 'id',
 						                displayField: 'name',
 						                triggerAction:'all',
-						                mode: 'local',
-						                store: new Ext.data.SimpleStore({
-						                    fields: ['id','name'],
-						                    data: [[1,'诺基亚'], [2,'摩托罗拉'],[3,'联想']]
-						                }),
+//						                mode: 'local',
+//						                store: new Ext.data.SimpleStore({
+//						                    fields: ['id','name'],
+//						                    data: [[1,'诺基亚'], [2,'摩托罗拉'],[3,'联想']]
+//						                }),
+										mode:'remote',
+										store:new Ext.data.Store({
+											proxy:new Ext.data.HttpProxy({
+												url:'/hsman/list.cgi'
+											}),
+											reader : new Ext.data.JsonReader({
+												root : 'obj'
+											}, [{name : 'id',type : 'int'},
+												{name : 'name',type : 'string'}
+											])
+										}),
 						                listeners:{
-						                	select:function(){
+						                	select:function(combo,record,index){
 						                		try{
 						                			var parent=Ext.getCmp('hs_model_combo');
 						                			//重载手机型号数据  这个是条件{params:{wiseID:this.value}}
 						                			parent.enable();
-//						                			parent.store.reload();
+													ds_hstype.proxy= new Ext.data.HttpProxy({
+														url: '/hstype/list.cgi?hid=' + combo.value
+													});
+													ds_hstype.load();
 						                		}catch(ex){
 						                			Ext.MessageBox.alert(ex);
 						                		}
@@ -80,20 +94,27 @@ TerminalQuery =  Ext.extend(Ext.Window, {
 					                    disabled:true,
 					                    width:100,
 										hiddenName:'hsmodel',
-//					                    name: 'hsmodel',
 						                valueField: 'id',
 						                displayField: 'name',
 						                triggerAction:'all',
-						                mode: 'local',
-						                store: hs_model_ds,
+//										mode:'remote',
+										mode:'local',
+										store:ds_hstype,
 						                loadingText :'正在请求数据,请稍后',
 						                emptyText : '请选择手机型号!',
 						                editable:false,
 						                listeners:{
-						                	select:function(){
+						                	select:function(combo,record,index){
 						                		try{
-						                			var pic = document.getElementById('terminal_model_pic');
-						                			pic.innerHTML = '<p><img src="http://img5.pcpop.com/ProductImages/Standard/4/4287/004287752.jpg" alt="手机图片"/></p>';
+						                			var url = record.get('icon');
+						                			var hstypeName = record.get('name');
+						                			var tmpPic = document.getElementById('terminal_model_pic');
+						                			tmpPic.innerHTML = '<p style="padding:25px 30px 25px 45px;"><img src="/images/loading32.gif"/></p>';
+													setTimeout(
+														 function() {
+								                			tmpPic.innerHTML = '<p style="padding:25px 30px 25px 45px;"><img src="/images/loading32.gif"/></p>';
+								                			tmpPic.innerHTML = '<p><img src="'+url+'" alt="'+hstypeName+'" width="120" height="90"/></p>';
+													}, 600); 
 						                		}catch(ext){
 						                			Ext.MessageBox.alert(ex);
 						                		}
@@ -534,9 +555,14 @@ TerminalQuery =  Ext.extend(Ext.Window, {
 				  				waitTitle : '请稍候',
 								waitMsg : '正在提交表单数据,请稍候...',
 								success : function(form, action) {
+									Ext.getCmp('hs_model_combo').disable();
 							  		btn.enable();
 									Ext.MessageBox.alert("成功！", action.result.msg,function(){
 										terminalReset();
+										
+										//隐藏终端查询窗口
+										var win = Ext.getCmp('terminal_query_win');
+										win.hide();
 									},this);
 					 				if(null != _cfg.parentId){
 					 					var grid = Ext.getCmp(_cfg.parentId);
@@ -555,6 +581,7 @@ TerminalQuery =  Ext.extend(Ext.Window, {
 								},
 								failure : function(form,action) {
 									btn.enable();
+									Ext.getCmp('hs_model_combo').disable();
 									Ext.Msg.show({
 										title : '错误提示',
 										msg : action.result.msg,
@@ -601,22 +628,48 @@ TerminalQuery =  Ext.extend(Ext.Window, {
 		 			text:'重置',
 		 			iconCls:'icon-arrow_refresh',
 		 			handler:function(){
+		 				Ext.getCmp('hs_model_combo').disable();
 	 					//重置表单数据
 	 					var form = Ext.getCmp('terminal_query_form');
 	 					form.getForm().reset();
 	 					//将手机型号设置为不可选
 	 					Ext.getCmp('hs_model_combo').disable();
+	 					
+	 					terminalReset();
 		 			}
 		 		},{
 		 			text:'取消',
 		 			iconCls:'icon-cancel',
 		 			handler:function(){
+		 				Ext.getCmp('hs_model_combo').disable();
+		 				
 		 				terminalReset();
+		 				
+						//隐藏终端查询窗口
+						var win = Ext.getCmp('terminal_query_win');
+						win.hide();
+					
 		 			}
 		 		}
 		 	]
 		}));
 	}
+});
+
+var ds_hstype = new Ext.data.Store({
+	proxy:new Ext.data.HttpProxy({
+		url:'/hstype/list.cgi'
+	}),
+//	baseParams:{
+//		hid:7
+//	},
+	reader : new Ext.data.JsonReader({
+		root : 'obj'
+	}, [{name : 'id',type : 'int'},
+		{name : 'name',type : 'string'},
+		{name : 'icon',type : 'string'}
+		
+	])
 });
 
 var hs_model_ds = new Ext.data.SimpleStore({
@@ -625,20 +678,17 @@ var hs_model_ds = new Ext.data.SimpleStore({
 });
 
 var terminalReset = function(){
+	
+		//重置图片
+		var pic = document.getElementById('terminal_model_pic');
+		pic.innerHTML = '<p><img src="/images/nopic.jpg" alt="手机图片" width="120"  height="90" /></p>';
+		
 		//重置表单数据
 		Ext.getCmp('terminal_query_form').form.reset();
 		
 		//设置手机型号下拉框不可选
 		if(!Ext.getCmp('hs_model_combo').disable()){
-			alert('terminalReset is not disable');
 			Ext.getCmp('hs_model_combo').disable();
 		}
 		
-		//隐藏终端查询窗口
-		var win = Ext.getCmp('terminal_query_win');
-		win.hide();
-		
-		//重置图片
-		var pic = document.getElementById('terminal_model_pic');
-		pic.innerHTML = '<p><img src="/images/nopic.jpg" alt="手机图片" width="120"  height="90" /></p>';
 }

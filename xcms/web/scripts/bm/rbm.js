@@ -248,37 +248,54 @@ Ext.onReady(function(){
 		defaultType : 'textfield',
 		items : [
 		{
-			//下拉选择框
-			xtype:'combo',
-			fieldLabel : '手机品牌',
-			hiddenName:'brand',
+            xtype:'combo',
+            fieldLabel: '手机品牌',
+			hiddenName:'terminal.hsbrand',
             valueField: 'id',
             displayField: 'name',
             triggerAction:'all',
-            mode: 'local',
-            store: new Ext.data.SimpleStore({
-                fields: ['id','name'],
-                data: [[1,'诺基亚'], [2,'摩托罗拉'],[3,'联想']]
-            }),
-            editable:false,
-			emptyText : '请选择手机品牌!',
-			allowBlank : false
-		},{
-			//下拉选择框
-			xtype:'combo',
-			fieldLabel : '手机型号',
-			hiddenName:'model',
+			mode:'remote',
+			store:new Ext.data.Store({
+				proxy:new Ext.data.HttpProxy({
+					url:'/hsman/list.cgi'
+				}),
+				reader : new Ext.data.JsonReader({
+					root : 'obj'
+				}, [{name : 'id',type : 'int'},
+					{name : 'name',type : 'string'}
+				])
+			}),
+            listeners:{
+            	select:function(combo,record,index){
+            		try{
+            			var parent=Ext.getCmp('hs_model_combo');
+            			//重载手机型号数据  这个是条件{params:{wiseID:this.value}}
+            			parent.enable();
+						ds_hstype.proxy= new Ext.data.HttpProxy({
+							url: '/hstype/list.cgi?hid=' + combo.value
+						});
+						ds_hstype.load();
+            		}catch(ex){
+            			Ext.MessageBox.alert(ex);
+            		}
+            	}
+            },
+            emptyText : '请选择手机品牌!',
+            editable:false
+        },{
+        	id:'hs_model_combo',
+            xtype:'combo',
+            fieldLabel: '手机型号',
+            disabled:true,
+			hiddenName:'hsmodel',
             valueField: 'id',
             displayField: 'name',
             triggerAction:'all',
-            mode: 'local',
-            store: new Ext.data.SimpleStore({
-                fields: ['id','name'],
-                data: [[1,'C7'],[2,'C5'],[3,'5230'],[4,'MB525 Defy'],[5,'ME525'],[6,'XT502'],[7,'S708'],[8,'S710'],[9,'TD80t'],[10,'EX128']]
-            }),
-            editable:false,
-			emptyText : '请选择手机型号!',
-			allowBlank : false
+			mode:'local',
+			store:ds_hstype,
+            loadingText :'正在请求数据,请稍后',
+            emptyText : '请选择手机型号!',
+            editable:false
 		},{
 			//下拉选择框
 			xtype:'combo',
@@ -479,4 +496,18 @@ Ext.onReady(function(){
 	});
 
     app.grid.render('utp');
+});
+
+
+var ds_hstype = new Ext.data.Store({
+	proxy:new Ext.data.HttpProxy({
+		url:'/hstype/list.cgi'
+	}),
+	reader : new Ext.data.JsonReader({
+		root : 'obj'
+	}, [{name : 'id',type : 'int'},
+		{name : 'name',type : 'string'},
+		{name : 'icon',type : 'string'}
+		
+	])
 });
