@@ -230,6 +230,21 @@
 
     });
     
+    var node_010111 = new Ext.tree.TreeNode({
+
+        text:'TAC管理',
+
+        listeners: {
+
+          'click': function(){
+           }},
+
+    	expanded:true,
+
+        id:'id_node_010111'
+
+    });
+    
     var node_01010401 = new Ext.tree.TreeNode({
 
         text:'终端一级数据维护',
@@ -834,6 +849,26 @@
 
     });
     
+      var node_01011101 = new Ext.tree.TreeNode({
+
+        text:'TAC管理',
+
+        listeners: {
+
+          'click': function(){
+
+             addTab('pages/tac/index.html','TAC管理','01011101 ','西安移动终端业务营销系统 ->TAC管理 -> TAC管理','application_view_columns.png');
+
+           }},
+
+    	expanded:false,
+
+        iconCls:'icon-application_view_columns',
+
+        id:'id_node_01011101'
+
+    });
+    
      var node_020110 = new Ext.tree.TreeNode({
         text:'参数管理',
         listeners: {
@@ -1114,6 +1149,8 @@
 
     });
     
+    
+    
 	node_0201.appendChild(node_010102);
 
     node_010104.appendChild(node_01010401);
@@ -1183,6 +1220,10 @@
     node_010108.appendChild(node_01010801);
     
     node_0101.appendChild(node_010109);
+    
+    node_010111.appendChild(node_01011101);
+    
+    node_0101.appendChild(node_010111);
     
     node_01010901.appendChild(node_0101090101);
     
