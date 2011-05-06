@@ -186,7 +186,7 @@
       <text_color></text_color>                               <!-- [text_color] (hex color code) button text color -->
       <text_size>12</text_size>                               <!-- [text_size](Number) button text size -->
       <text>                                                  <!-- [] (text) html tags may be used (supports <b>, <i>, <u>, <font>, <a href="">, <br/>. Enter text between []: <![CDATA[your <b>bold</b> and <i>italic</i> text]]>-->
-        <![CDATA[<b>全量TD终端品牌总体分布图</b>]]>
+        <![CDATA[<b>月新增WIFI终端分布图</b>]]>
       </text>        
     </label>
   </labels>
