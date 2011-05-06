@@ -319,7 +319,7 @@ Ext.onReady(function() {
 				margins : '2 5 5 0',
 				activeItem : 0,
 				border : false,
-				html:'<iframe name="mainFrame" width="98%" height="800" id="mainFrame" frameborder=0 src="pages/websites/website.jsp"></iframe>'					
+				html:'<iframe name="mainFrame" width="98%" height="800" id="mainFrame" frameborder=0 src="pages/alla.jsp"></iframe>'					
 			}]
 		});
 	}, 250);
