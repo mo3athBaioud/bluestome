@@ -10,6 +10,8 @@
 			<result name="success">/pages/articles.jsp</result>
 		</action>
 		
+		<action name="list" class="articleAction" method="list" />
+		
 		<action name="article" class="articleAction" method="article" />
 		
 		<action name="articledoc" class="articleAction" method="articledoc" />
