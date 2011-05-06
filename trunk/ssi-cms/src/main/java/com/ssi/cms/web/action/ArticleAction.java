@@ -54,6 +54,34 @@ public class ArticleAction extends BaseAction {
 	 * 以response方式响应客户端请求
 	 * 
 	 */
+	public void list() throws Exception {
+		response.setCharacterEncoding("UTF-8");
+		limit = (limit == null ? 10 : limit);
+		start = (start == null ? 0 : start);
+		try {
+			articleList = articleService.getPageList(colName, value, start,
+					limit, false, null);
+			if (null != articleList && articleList.size() > 0) {
+				int count = articleService.getCount(colName, value, null);
+				logger.debug(">> ArticleAction.article 查询数据成功");
+				toJson(response, articleList, count);
+			} else {
+				logger.debug(">> ArticleAction.article 未找到条件[" + colName
+						+ "],关键字[" + value + "]的有效数据");
+				response.getWriter().print(
+						"{failure:true,msg:'未找到条件[" + colName + "],关键字["
+								+ value + "]的有效数据'}");
+			}
+		} catch (Exception e) {
+			logger.debug(">> ArticleAction.article" + e);
+			response.getWriter().print("{failure:true,msg:'查询文章发生异常'}");
+		}
+	}
+	
+	/**
+	 * 以response方式响应客户端请求
+	 * 
+	 */
 	public void article() throws Exception {
 		response.setCharacterEncoding("UTF-8");
 		limit = (limit == null ? 10 : limit);
