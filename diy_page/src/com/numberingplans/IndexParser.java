@@ -65,10 +65,11 @@ public class IndexParser {
 				int page = 1;
 				String key = (String)it.next();
 				System.out.println("key:"+key);
-//				if(key.equals("35") || key.equals("99") || key.equals("98") || key.equals("97") || key.equals("44") || key.equals("49") || key.equals("45") || key.equals("91") || 
-//				   key.equals("01") || key.equals("10") || key.equals("30") || key.equals("31") || key.equals("33") || key.equals("51") || key.equals("52")){
-//					continue;
-//				}
+				//key.equals("35") || 
+				if(key.equals("99") || key.equals("98") || key.equals("97") || key.equals("44") || key.equals("49") || key.equals("45") || key.equals("91") || 
+				   key.equals("01") || key.equals("10") || key.equals("30") || key.equals("31") || key.equals("33") || key.equals("51") || key.equals("52")){
+					continue;
+				}
 				if(null != key && !"".equals(key)){
 					if(null == client.get(key)){
 						String value = map.get(key);
@@ -193,8 +194,12 @@ public class IndexParser {
 	public static boolean savePage(String type,String url,int pageNum){
 		String filePath = SAVE_PATH+type+"\\"+type+"_"+pageNum+".html";
 		try{
+			File file = new File(filePath);
+			if(file.exists()){
+				System.err.println(" >> 文件["+file.getAbsolutePath()+"]已存在");
+				return false;
+			}
 			if(null == client.get(url)){
-				File file = new File(filePath);
 				String content = HttpClientUtils.getResponseBody(url);
 				System.out.println(" >> length:"+content.length());
 				if(file.length() == content.length()){
@@ -422,7 +427,7 @@ public class IndexParser {
  * @author bluestome
  *
  */
-class NumberingPlansFile{
+class NumberingPlansFile implements java.io.Serializable {
 	
 	private String url = null;
 	
