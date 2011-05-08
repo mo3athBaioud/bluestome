@@ -46,11 +46,11 @@ public class IndexParser {
 	public static void main(String args[]){
 //		test1();
 //		getKindsTac();
-//		prepare();
-		loopFile(SAVE_PATH);
-		System.out.println(" >> size:"+TAC_MAP.size());
-		TAC_MAP.clear();
-		System.out.println(" >> count:"+TMP_COUNT);
+		prepare();
+//		loopFile(SAVE_PATH);
+//		System.out.println(" >> size:"+TAC_MAP.size());
+//		TAC_MAP.clear();
+//		System.out.println(" >> count:"+TMP_COUNT);
 	}
 	
 	public static void prepare(){
@@ -65,11 +65,16 @@ public class IndexParser {
 				int page = 1;
 				String key = (String)it.next();
 				System.out.println("key:"+key);
+//				if(key.equals("35") || key.equals("99") || key.equals("98") || key.equals("97") || key.equals("44") || key.equals("49") || key.equals("45") || key.equals("91") || 
+//				   key.equals("01") || key.equals("10") || key.equals("30") || key.equals("31") || key.equals("33") || key.equals("51") || key.equals("52")){
+//					continue;
+//				}
 				if(null != key && !"".equals(key)){
 					if(null == client.get(key)){
 						String value = map.get(key);
 						String count = getPageCount(value);
 						page = Integer.valueOf(count);
+						boolean isOk = false;
 						for(int i=1;i<page+1;i++){
 							String url = value+"&current_page="+i;
 							if(null == client.get(url)){
@@ -78,13 +83,13 @@ public class IndexParser {
 								if(b){
 									client.add(url, url);
 								}
-								Thread.sleep(500);
+								Thread.sleep(25000);
 							}
 						}
 						client.add(key, value);
 					}
 				}
-				Thread.sleep(500);
+				Thread.sleep(1000);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -188,24 +193,49 @@ public class IndexParser {
 	public static boolean savePage(String type,String url,int pageNum){
 		String filePath = SAVE_PATH+type+"\\"+type+"_"+pageNum+".html";
 		try{
-			if(null == client.get(filePath)){
+			if(null == client.get(url)){
 				File file = new File(filePath);
-				if(file.exists()){
-					client.add(filePath, filePath);
+				String content = HttpClientUtils.getResponseBody(url);
+				System.out.println(" >> length:"+content.length());
+				if(file.length() == content.length()){
+					System.err.println(" >> 文件一样，不需要更新");
 					return false;
 				}
-				String content = HttpClientUtils.getResponseBody(url);
+				if(content.length() == 11033){
+					return false;
+				}
 				if(null != content && !"".equals(content)){
+					if(!file.exists()){
+						file.getParentFile().mkdir();
+					}
 					IOUtil.createFile(content, SAVE_PATH+type, type+"_"+pageNum+".html", null);
-					client.add(filePath, content);
+					client.add(url, new NumberingPlansFile(url,content.length(),file));
 				}
 				return true;
 			}else{
-				return false;
+				Object obj = client.get(url);
+				NumberingPlansFile npf = (NumberingPlansFile)obj;
+				String content = HttpClientUtils.getResponseBody(url);
+				if(npf.getLength() == content.length()){
+					return false;
+				}
+				if(content.length() == 11033){
+					return false;
+				}
+				if(null != content && !"".equals(content)){
+					if(!npf.getFile().exists()){
+						npf.getFile().getParentFile().mkdir();
+					}
+					IOUtil.createFile(content, SAVE_PATH+type, type+"_"+pageNum+".html", null);
+					client.remove(url);
+					client.add(url, new NumberingPlansFile(url,content.length(),npf.getFile()));
+					return true;
+				}
 			}
 		}catch(Exception e){
 			return false;
 		}
+		return false;
 	}
 	
 	public static void test1(){
@@ -385,4 +415,49 @@ public class IndexParser {
 			e.printStackTrace();
 		}
 	}
+}
+
+/**
+ * 网站文件对象
+ * @author bluestome
+ *
+ */
+class NumberingPlansFile{
+	
+	private String url = null;
+	
+	private int length = 0;
+	
+	private File file = null;
+	
+	public NumberingPlansFile(String url,int length,File file){
+		this.url = url;
+		this.length = length;
+		this.file = file;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+	
 }
