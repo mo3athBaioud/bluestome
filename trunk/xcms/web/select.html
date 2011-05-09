@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>西安移动终端营销系统--导航</title>
+		<link rel="stylesheet" type="text/css" href="/login/login.css" />
+		<link rel=stylesheet type=text/css href="/login/tips.css">
+		<style type="text/css">
+			
+		</style>
+		<link rel="stylesheet" type="text/css" href="/style/index.css" />
+		<script type="text/javascript">
+			function goto(value){
+				var i = parseInt(value);
+				switch(i){
+					case 1:
+						window.location = '/login2.html';
+						break;
+					case 2:
+						window.location = '/login3.html';
+						break;
+					default:
+						alert('您没有选择您所在的地址，请重新选择!');
+						break;	
+				}
+			}
+		</script>
+	</head>
+	<body class="body-bg-user">
+		<table style="margin:280px 100px 50px 150px" width="80%" align="center">
+			<tbody>
+				<!-- 
+				<tr valign="top">
+					<center><caption>移动终端业务营销系统</caption></center>
+				</tr>
+				 -->
+				<tr align="center">
+					<td height="50px" colspan="2">
+						&nbsp;
+					</td>
+				</tr>
+				<tr align="center">
+					<td align="right">
+						请选择地市:
+					</td>
+					<td align="left">
+						<select id="place" onchange="goto(this.value);">
+							<option value="-1">请选择地市</option>
+							<option value="1">西安</option>
+							<option value="2">渭南</option>
+						</select>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</body>
+
+</html>
+
+
