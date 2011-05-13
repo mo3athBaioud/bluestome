@@ -43,4 +43,5 @@ public class TacDao extends BasicDao {
 		Tac tmp = findByCondition(Tac.class, condition);
 		return tmp;
 	}
+	
 }
