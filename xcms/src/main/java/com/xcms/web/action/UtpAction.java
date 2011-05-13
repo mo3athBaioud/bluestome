@@ -14,8 +14,10 @@ import org.nutz.mvc.annotation.Param;
 
 import com.mss.dal.dao.OPlogDao;
 import com.mss.dal.domain.OPlog;
+import com.mss.dal.domain.TmpGprs;
 import com.mss.dal.view.ViewTerminal;
 import com.xcms.common.json.JsonObject;
+import com.xcms.web.service.TmpGprsService;
 import com.xcms.web.service.UtpService;
 
 /**
@@ -33,6 +35,9 @@ public class UtpAction extends BaseAction{
 	
 	@Inject
 	private OPlogDao oPlogDao;
+	
+	@Inject
+	private TmpGprsService tmpGprsService;
 	
 	@At("/search")
 	@Ok("json")
@@ -87,18 +92,39 @@ public class UtpAction extends BaseAction{
 		return json;
 	}
 	
+
 	@At("/gprs")
 	@Ok("json")
-	public JsonObject gprs(@Param("phonenum") String phonenum,@Param("start") int start,@Param("limit") int limit){
-		json = new JsonObject();
-		List<ViewTerminal> list = utpService.search(phonenum, start, limit);
-		if(null != list && list.size() > 0){
-			json.setCount(list.size());
-			json.setObj(list);
-			json.setMsg("已查找到对应的终端数据!");
-		}else{
+	public JsonObject gprs(@Param("phonenum") String phonenum,@Param("start") int start,@Param("limit") int limit,HttpServletRequest request){
+		OPlog op = new OPlog();
+		try{
+			String loginName = (String)request.getSession().getAttribute("LOGIN_SESSION_NAME");
+			if(null != loginName){
+				
+				System.out.println(" >> loginName:"+loginName);
+				op.setName(loginName);
+				op.setOpType("GPRS_QUERY");
+				op.setOpValue(phonenum);
+			}
+			json = new JsonObject();
+			List<TmpGprs> list = tmpGprsService.search(phonenum, start, limit);
+			if(null != list && list.size() > 0){
+				json.setCount(list.size());
+				json.setObj(list);
+				json.setMsg("已查找到对应的终端数据!");
+				op.setOpResult("成功");
+			}else{
+				json.setSuccess(false);
+				json.setMsg("未查找到对应的终端数据!");
+				op.setOpResult("失败");
+			}
+		}catch(Exception e){
 			json.setSuccess(false);
 			json.setMsg("未查找到对应的终端数据!");
+			op.setOpResult("失败");
+		}finally{
+			op = oPlogDao.save(op);	
+			logger.debug(" >> 操作日志添加:"+(op.getId() > 0?"成功":"失败"));
 		}
 		return json;
 	}
@@ -117,6 +143,14 @@ public class UtpAction extends BaseAction{
 
 	public void setOPlogDao(OPlogDao plogDao) {
 		oPlogDao = plogDao;
+	}
+
+	public TmpGprsService getTmpGprsService() {
+		return tmpGprsService;
+	}
+
+	public void setTmpGprsService(TmpGprsService tmpGprsService) {
+		this.tmpGprsService = tmpGprsService;
 	}
 	
 	
