@@ -110,6 +110,11 @@ public class CallingLogDaoTest {
 		System.out.println(" >> list.size："+list.size());
 		System.out.println(" >> offset："+offset);
 	}
+	
+	
+	public void createDate(){
+		StringBuffer sb = new StringBuffer();
+	}
 
 	
 }

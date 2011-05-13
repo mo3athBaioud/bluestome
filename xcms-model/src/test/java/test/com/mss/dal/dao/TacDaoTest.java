@@ -99,6 +99,85 @@ public class TacDaoTest {
 		}
 	}
 
+	public void waplog() throws ClassNotFoundException{
+		if(null != dao){
+			System.out.println(" >> dao is not null");
+			List<String[]> list = IMEIParser.getCSV("wap19.csv");
+			Tac tac = null;
+			int fo = 0;
+			int offset  = 0;
+			for(String[] s:list){
+				tac = new Tac();
+				try{
+					if(null == s[2] || "".equals(s[2])){
+						continue;
+					}
+				}catch(Exception e){
+					continue;
+				}
+				tac.setTac(s[2]);
+				String info = s[3].split("/")[0];
+				info = info.replace("\"", "").replace("_CMCC", "").trim();
+				if(info.startsWith("Nokia")){
+					int start = info.lastIndexOf("a");
+					if(start > 0){
+//						System.out.println(" >> Hsman[Nokia],Hstype["+info.substring(start+1,info.length())+"]");
+						tac.setHsmanName("Nokia");
+						tac.setHstypeName(info.substring(start+1,info.length()));
+					}
+				}else if(info.startsWith("SonyEricsson")){
+					int start = info.lastIndexOf("n");
+					if(start > 0){
+//						System.out.println(" >> Hsman[SonyEricsson],Hstype["+info.substring(start+1,info.length())+"]");
+						tac.setHsmanName("SonyEricsson");
+						tac.setHstypeName(info.substring(start+1,info.length()));
+					}
+				}else{
+					String[] hs = info.split("-");
+					int length = hs.length;
+					if(length < 2){
+						System.out.println(" >> info:"+info);
+					}else{
+						if(length == 2){
+//							System.out.println("Hsman["+hs[0]+"],Hstype["+hs[1]+"]");
+							tac.setHsmanName(hs[0]);
+							tac.setHstypeName(hs[1]);
+						}else if(length == 3){
+//							System.out.println("length 3=Hsman["+hs[0]+"-"+hs[1]+"],Hstype["+hs[2]+"]");
+							tac.setHsmanName(hs[0]+"-"+hs[1]);
+							tac.setHstypeName(hs[2]);
+						}else{
+//							System.out.println(" >> info["+info+"].length"+length);
+							fo++;
+						}
+					}
+					
+				}
+				
+				if(null == tac.getHsmanName() || "".equals(tac.getHsmanName())){
+					continue;
+				}
+				if(null == tac.getHstypeName() || "".equals(tac.getHstypeName())){
+					continue;
+				}
+				Tac tmp = dao.findByCondition(Tac.class, Cnd.where("d_tac", "=", tac.getTac()));
+				if(null == tmp){
+					tac = dao.save(tac);
+//					System.out.println(" >> "+tac.getId());
+					offset++;
+				}else{
+//					System.out.println(" >> 已存在tac["+tmp.getTac()+"]");
+				}
+				/**
+				**/
+			}
+			System.out.println(" >> fo:"+fo);
+			System.out.println(" >> offset:"+offset);
+		}else{
+			System.out.println(" >> dao is null");
+		}
+	}
+	
 	public void test4() throws ClassNotFoundException{
 		List<String[]> list = CvsFileParser.getCSV("employer2_with_imei.csv");
 		
@@ -109,92 +188,66 @@ public class TacDaoTest {
 	public void test3() throws ClassNotFoundException{
 		if(null != dao){
 			System.out.println(" >> dao is not null");
-			List<String[]> list = CvsFileParser.getCSV("employer2_with_imei.csv");
+			List<String[]> list = CvsFileParser.getCSV("imeishuju.csv");
 			int offset = 0;
+			int foffset = 0;
 			Tac tac = null;
 			List<String> outL = new ArrayList<String>();
 			List<Tac> tList = new ArrayList<Tac>();
 			HashMap ok = new HashMap();
 			HashMap failure = new HashMap();
 			HashMap common = new HashMap();
+			String ttac = "";
 			for(String[] s:list){
 				Integer i=1;
 				tac = new Tac();
 				String phoneNum = s[0];
 				String imei = s[1];
-				String ttac = imei.substring(0,8);
-				tac.setTac(ttac);
-//				if(null != common.get(phoneNum)){
-//					Integer c = (Integer)common.get(phoneNum);
-//					c = c+1;
-//					common.put(phoneNum, c);
-//				}else{
-//					common.put(phoneNum, i);
-//				}
+				try{
+					ttac = imei.substring(0,8);
+					tac.setTac(ttac);
+				}catch(Exception e){
+					System.err.println(" >> "+imei);
+					continue;
+				}
 				
 				common.put(phoneNum, s);
 				Tac tmp = dao.findByCondition(Tac.class, Cnd.where("d_tac", "=", ttac));
 				if(null == tmp){
-//					tmp = dao.findByCondition(Tac.class, Cnd.where("substring(d_tac,1,6)", "=", ttac.substring(0,6)));
-//					tmp = dao.findByCondition(Tac.class, Cnd.where("d_tac", "=", ttac.substring(0,6)));
-//					if(null == tmp){
-						failure.put(phoneNum+"_"+imei, tmp);
-//					}else{
-//						ok.put(phoneNum+"_"+imei, tmp);
-//						offset++;
-//					}
+					failure.put(phoneNum, tmp);
+					foffset ++;
 				}else{
-					tList.add(tmp);
-					ok.put(phoneNum+"_"+imei, tmp);
+//					tList.add(tmp);
+					ok.put(phoneNum,tmp);
 					offset++;
 				}
 			}
-			System.out.println(" >> list.size："+list.size());
-			System.out.println(" >> offset："+offset);
-//			System.err.println("未匹配到的数据如下:\r\n");
+			System.out.println(" >> 成功|offset："+offset);
+			System.out.println(" >> 失败|foffset："+foffset);
 			StringBuffer sb = new StringBuffer();
-//			for(String s:outL){
-//				String[] s1 = s.split("_");
-//				sb.append(s1[0]).append(",").append(s1[1]).append("\r\n");
-//			}
-//			System.out.println(sb.toString());
 			System.out.println(" >> 识别的号码数量为:"+ok.size());
 			System.out.println(" >> 未被识别的号码数量为:"+failure.size());
 			System.out.println(" >> 总共的号码数量:"+common.size());
 			
 			
-			/**
-			for(Tac tmp:tList){
-				sb.append(tmp.getHsmanName()).append(",").append(tmp.getHsmanNameEn()).append(",").append(tmp.getHstypeName()).append(",").append(tmp.getHstypeNameEn()).append("\r\n");
-			}
-			**/
-			
-//			Iterator it = ok.keySet().iterator();
-//			while(it.hasNext()){
-//				String key = (String)it.next();
-//				Object obj = ok.get(key) ;
-//				if( null != obj){
-//					String[] t  = key.split("_");
-//					Tac value = (Tac)obj;
-//					System.out.println(" >> 该手机号在成功终端中已经存在:"+t[0]+"|"+t[1]+"|"+value.getHsmanName()+"|"+value.getHsmanNameEn()+"|"+value.getHstypeName()+"|"+value.getHstypeNameEn());
-//					sb.append(t[0]).append(",").append(t[1]).append(",").append(t[1].substring(0,8)).append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append("\r\n");
-//				}
-//			}
-			
-			Iterator it = failure.keySet().iterator();
+			int s = 0;
+			Iterator it = ok.keySet().iterator();
 			while(it.hasNext()){
 				String key = (String)it.next();
-//				Object obj = failure.get(key) ;
-//				if( null != obj){
-					String[] t  = key.split("_");
-//					Tac value = (Tac)obj;
-//					System.out.println(" >> 该手机号在失败终端中已经存在:"+t[0]+"|"+t[1]+"|"+value.getHsmanName()+"|"+value.getHsmanNameEn()+"|"+value.getHstypeName()+"|"+value.getHstypeNameEn());
-					sb.append(t[0]).append(",").append(t[1]).append(",").append(t[1].substring(0,8)).append("\r\n");
-//					append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append("\r\n");
-//				}
+				Object obj = ok.get(key) ;
+//				System.out.println(" >> key:"+key);
+				if( null != obj){
+//					String[] t  = key.split("_");
+					Tac value = (Tac)obj;
+//					System.out.println(" >> 该手机号在成功终端中已经存在:"+key+"|"+value.getHsmanName()+"|"+value.getHsmanNameEn()+"|"+value.getHstypeName()+"|"+value.getHstypeNameEn());
+//					System.out.println(" >> 该手机号在成功终端中已经存在:"+t[0]+"|"+t[1]+"|"+value.getHsmanName()+"|"+value.getHsmanNameEn()+"|"+value.getHstypeName()+"|"+value.getHstypeNameEn());
+//					sb.append(t[0]).append(",").append(t[1]).append(",").append(t[1].substring(0,8)).append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append("\r\n");
+//					sb.append(key).append(",").append(value.getTac()).append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append("\r\n");
+//					t ++;
+				}
 			}
+			System.out.println(" >> s:"+s);
 			
-//			System.out.println(sb.toString());
 			/**
 			common.clear();
 			Iterator it = failure.keySet().iterator();
@@ -212,8 +265,8 @@ public class TacDaoTest {
 				sb.append(key).append(",").append(value[0]).append(",").append(value[1]).append("\r\n");
 			}
 			**/
-			System.out.println(" >> \r\n"+sb.toString());
-			IOUtil.createFile(sb.toString(), "TAC(8位)未识别出的终端数据.csv");
+//			System.out.println(" >> \r\n"+sb.toString());
+//			IOUtil.createFile(sb.toString(), "TAC(8位)识别出的终端数据_2011-05-13.csv");
 		}else{
 			System.out.println(" >> dao is null");
 		}
