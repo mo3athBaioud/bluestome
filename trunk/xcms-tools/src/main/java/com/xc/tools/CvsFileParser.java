@@ -15,11 +15,11 @@ public class CvsFileParser {
 		List<String[]> list = getCSV("employer1_without_imei.csv");
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		for(String[] s:list){
-			map.put(s[0], s);
-			System.out.println();
+			map.put(s[0].trim(), s);
+//			System.out.println();
 		}
-		System.out.println(" >> list.size:"+list.size());
-		System.out.println(" >> map.size:"+map.size());
+		System.out.println(" >> 记录.size:"+list.size());
+		System.out.println(" >> 不重复的号码数量.size:"+map.size());
 	}
 	
 	/**
@@ -38,13 +38,23 @@ public class CvsFileParser {
 	 */
 	public static List<String[]> getCSV(String fileName){
 		List<String[]> list = new ArrayList<String[]>();
+		System.gc();
 		try{
+			Thread.sleep(1000);
+			int u = 100002;
+			int i = 0;
 			String tmp = IOUtil.readFile(FILE_PATH+fileName, "GBK", ".csv");
 			if(null != tmp && !"".equals(tmp)){
 				String[] rows = tmp.split("\r\n");
+				int count = rows.length;
 				for(String row:rows){
-					String[] s = row.split(",");
-					list.add(s);
+					if(i < u ){
+						String[] s = row.replace("\"", "").trim().split(",");
+						list.add(s);
+						i++;
+					}else{
+						break;
+					}
 				}
 			}
 		}catch(Exception e){
