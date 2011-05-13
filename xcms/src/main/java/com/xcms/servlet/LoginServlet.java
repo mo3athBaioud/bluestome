@@ -22,7 +22,8 @@ public class LoginServlet extends HttpServlet {
 
 	protected final Log logger = LogFactory.getLog(this.getClass());
 	
-	static String[][] USERS = {{"liyang","liyang123"},{"zhangxiao","zhangxiao123"},{"weinan","weinan123"}};
+	static String[][] USERS = {{"liyang","liyang123"},{"zhangxiao","zhangxiao123"},{"weinan","weinan123"},{"weinan1","weinan1"},
+							   {"weinan2","weinan2"},{"weinan3","weinan3"},{"weinan5","weinan5"}};
 	/**
 	 * Constructor of the object.
 	 */
@@ -104,6 +105,54 @@ public class LoginServlet extends HttpServlet {
 			}
 		}
 		
+		if(name.equals(USERS[3][0])){
+			if(password.equals(USERS[3][1]) ){
+				request.getSession().setAttribute("LOGIN_SESSION_NAME", USERS[3][0]);
+				logger.info(" User["+USERS[3][0]+"] login at "+getStringDate());
+				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/weinan2.html'}");
+				return;
+			}else{
+				response.getWriter().print("{failure:true,errorType:'1',msg:'登录失败，["+USERS[3][0]+"]密码不正确'}");
+				return;
+			}
+		}
+
+		if(name.equals(USERS[4][0])){
+			if(password.equals(USERS[4][1]) ){
+				request.getSession().setAttribute("LOGIN_SESSION_NAME", USERS[4][0]);
+				logger.info(" User["+USERS[4][0]+"] login at "+getStringDate());
+				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/weinan2.html'}");
+				return;
+			}else{
+				response.getWriter().print("{failure:true,errorType:'1',msg:'登录失败，["+USERS[4][0]+"]密码不正确'}");
+				return;
+			}
+		}
+
+		if(name.equals(USERS[5][0])){
+			if(password.equals(USERS[5][1]) ){
+				request.getSession().setAttribute("LOGIN_SESSION_NAME", USERS[5][0]);
+				logger.info(" User["+USERS[5][0]+"] login at "+getStringDate());
+				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/weinan2.html'}");
+				return;
+			}else{
+				response.getWriter().print("{failure:true,errorType:'1',msg:'登录失败，["+USERS[5][0]+"]密码不正确'}");
+				return;
+			}
+		}
+
+		if(name.equals(USERS[6][0])){
+			if(password.equals(USERS[6][1]) ){
+				request.getSession().setAttribute("LOGIN_SESSION_NAME", USERS[6][0]);
+				logger.info(" User["+USERS[6][0]+"] login at "+getStringDate());
+				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/weinan2.html'}");
+				return;
+			}else{
+				response.getWriter().print("{failure:true,errorType:'1',msg:'登录失败，["+USERS[6][0]+"]密码不正确'}");
+				return;
+			}
+		}
+
 		response.getWriter().print("{failure:true,errorType:'2',msg:'登录失败,无此用户["+name+"]'}");
 		return;
 	}
