@@ -19,6 +19,7 @@ import com.mss.dal.domain.Terminal;
 import com.mss.dal.view.ViewTerminal;
 import com.ssi.common.utils.IOUtil;
 import com.xc.tools.CvsFileParser;
+import com.xc.tools.GoogleSearchTools;
 import com.xc.tools.IMEIParser;
 import com.xc.tools.IndexParser;
 
@@ -98,11 +99,88 @@ public class TacDaoTest {
 			System.out.println(" >> dao is null");
 		}
 	}
+	
+	public void waplogPatch() throws ClassNotFoundException{
+		if(null != dao){
+			System.out.println(" >> dao is not null");
+			List<Tac> tlist = dao.search(Tac.class, Cnd.orderBy().asc("d_id"));
+			int fo = 0;
+			int offset  = 0;
+			for(Tac s:tlist){
+				if(!s.getHsmanName().equals("参照机型名称(英文)")){
+					continue;
+				}
+				if(null == s.getHstypeName() || s.getHstypeName().equals("")){
+					continue;
+				}
+				String info = s.getHstypeName().split("/")[0];
+				info = info.replace("\"", "").replace("_CMCC", "").trim();
+				if(info.startsWith("Nokia")){
+					int start = info.lastIndexOf("a");
+					if(start > 0){
+						s.setHsmanName("Nokia");
+						s.setHsmanNameEn("Nokia");
+						s.setHstypeName(info.substring(start+1,info.length()));
+						s.setHstypeNameEn(info.substring(start+1,info.length()));
+					}
+				}else if(info.startsWith("SonyEricsson")){
+					int start = info.lastIndexOf("n");
+					if(start > 0){
+						s.setHsmanName("SonyEricsson");
+						s.setHsmanNameEn("SonyEricsson");
+						s.setHstypeName(info.substring(start+1,info.length()));
+						s.setHstypeNameEn(info.substring(start+1,info.length()));
+					}
+				}else{
+					String[] hs = info.split("-");
+					int length = hs.length;
+					if(length < 2){
+						System.out.println(" >> info:"+info);
+					}else{
+						if(length == 2){
+							s.setHsmanName(hs[0]);
+							s.setHsmanNameEn(hs[0]);
+							s.setHstypeName(hs[1]);
+							s.setHstypeNameEn(hs[1]);
+						}else if(length == 3){
+							s.setHsmanName(hs[0]+"-"+hs[1]);
+							s.setHsmanNameEn(hs[0]+"-"+hs[1]);
+							s.setHstypeName(hs[2]);
+							s.setHstypeNameEn(hs[2]);
+						}else{
+							fo++;
+						}
+					}
+					
+				}
+				
+				if(null == s.getHsmanName() || "".equals(s.getHsmanName())){
+					continue;
+				}
+				if(null == s.getHstypeName() || "".equals(s.getHstypeName())){
+					continue;
+				}
+				if(dao.update(s)){
+					offset++;
+				}
+//				Tac tmp = dao.findByCondition(Tac.class, Cnd.where("d_tac", "=", tac.getTac()));
+//				if(null == tmp){
+//					tac = dao.save(tac);
+//					offset++;
+//				}
+			}
+			System.out.println(" >> fo:"+fo);
+			System.out.println(" >> offset:"+offset);
+		}else{
+			System.out.println(" >> dao is null");
+		}
+	}
 
 	public void waplog() throws ClassNotFoundException{
 		if(null != dao){
 			System.out.println(" >> dao is not null");
 			List<String[]> list = IMEIParser.getCSV("wap19.csv");
+			List<Tac> tlist = dao.search(Tac.class, Cnd.orderBy().asc("d_id"));
 			Tac tac = null;
 			int fo = 0;
 			int offset  = 0;
@@ -121,17 +199,17 @@ public class TacDaoTest {
 				if(info.startsWith("Nokia")){
 					int start = info.lastIndexOf("a");
 					if(start > 0){
-//						System.out.println(" >> Hsman[Nokia],Hstype["+info.substring(start+1,info.length())+"]");
 						tac.setHsmanName("Nokia");
 						tac.setHstypeName(info.substring(start+1,info.length()));
 					}
 				}else if(info.startsWith("SonyEricsson")){
 					int start = info.lastIndexOf("n");
 					if(start > 0){
-//						System.out.println(" >> Hsman[SonyEricsson],Hstype["+info.substring(start+1,info.length())+"]");
 						tac.setHsmanName("SonyEricsson");
 						tac.setHstypeName(info.substring(start+1,info.length()));
 					}
+				}else if(info.startsWith("OPPO")){
+					
 				}else{
 					String[] hs = info.split("-");
 					int length = hs.length;
@@ -139,15 +217,12 @@ public class TacDaoTest {
 						System.out.println(" >> info:"+info);
 					}else{
 						if(length == 2){
-//							System.out.println("Hsman["+hs[0]+"],Hstype["+hs[1]+"]");
 							tac.setHsmanName(hs[0]);
 							tac.setHstypeName(hs[1]);
 						}else if(length == 3){
-//							System.out.println("length 3=Hsman["+hs[0]+"-"+hs[1]+"],Hstype["+hs[2]+"]");
 							tac.setHsmanName(hs[0]+"-"+hs[1]);
 							tac.setHstypeName(hs[2]);
 						}else{
-//							System.out.println(" >> info["+info+"].length"+length);
 							fo++;
 						}
 					}
@@ -168,8 +243,6 @@ public class TacDaoTest {
 				}else{
 //					System.out.println(" >> 已存在tac["+tmp.getTac()+"]");
 				}
-				/**
-				**/
 			}
 			System.out.println(" >> fo:"+fo);
 			System.out.println(" >> offset:"+offset);
@@ -184,7 +257,6 @@ public class TacDaoTest {
 		
 	}
 
-	@Test
 	public void test3() throws ClassNotFoundException{
 		if(null != dao){
 			System.out.println(" >> dao is not null");
@@ -211,14 +283,14 @@ public class TacDaoTest {
 					continue;
 				}
 				
-				common.put(phoneNum, s);
+//				common.put(phoneNum, s);
 				Tac tmp = dao.findByCondition(Tac.class, Cnd.where("d_tac", "=", ttac));
 				if(null == tmp){
-					failure.put(phoneNum, tmp);
+//					failure.put(phoneNum+"_"+imei, tmp);
 					foffset ++;
 				}else{
 //					tList.add(tmp);
-					ok.put(phoneNum,tmp);
+//					ok.put(phoneNum+"_"+imei,tmp);
 					offset++;
 				}
 			}
@@ -237,39 +309,80 @@ public class TacDaoTest {
 				Object obj = ok.get(key) ;
 //				System.out.println(" >> key:"+key);
 				if( null != obj){
-//					String[] t  = key.split("_");
+					String[] t  = key.split("_");
 					Tac value = (Tac)obj;
 //					System.out.println(" >> 该手机号在成功终端中已经存在:"+key+"|"+value.getHsmanName()+"|"+value.getHsmanNameEn()+"|"+value.getHstypeName()+"|"+value.getHstypeNameEn());
 //					System.out.println(" >> 该手机号在成功终端中已经存在:"+t[0]+"|"+t[1]+"|"+value.getHsmanName()+"|"+value.getHsmanNameEn()+"|"+value.getHstypeName()+"|"+value.getHstypeNameEn());
-//					sb.append(t[0]).append(",").append(t[1]).append(",").append(t[1].substring(0,8)).append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append("\r\n");
+					sb.append(t[0]).append(",").append(t[1]).append(",").append(t[1].substring(0,8)).append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append("\r\n");
 //					sb.append(key).append(",").append(value.getTac()).append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append("\r\n");
 //					t ++;
 				}
 			}
 			System.out.println(" >> s:"+s);
 			
-			/**
-			common.clear();
-			Iterator it = failure.keySet().iterator();
-			while(it.hasNext()){
-				String key = (String)it.next();
-				String[] value = (String[])failure.get(key);
-//				System.out.println(" >> 未被识别的手机号码:"+key+"|"+value[0]+"|"+value[1]);
-				sb.append(key).append(",").append(value[1]).append(",").append(value[1].substring(0,8)).append("\r\n");
-			}
-			HashMap bt = new HashMap();
-			Iterator its = common.keySet().iterator();
-			while(its.hasNext()){
-				String key = (String)its.next();
-				String[] value = (String[])common.get(key);
-				sb.append(key).append(",").append(value[0]).append(",").append(value[1]).append("\r\n");
-			}
-			**/
-//			System.out.println(" >> \r\n"+sb.toString());
-//			IOUtil.createFile(sb.toString(), "TAC(8位)识别出的终端数据_2011-05-13.csv");
+			IOUtil.createFile(sb.toString(), "TAC(8位)识别出的终端数据_2011-05-14.csv");
 		}else{
 			System.out.println(" >> dao is null");
 		}
+	}
+	
+	@Test
+	public void t20110514() throws Exception{
+		List<String[]> list = CvsFileParser.getCSV("input_2011-05-14.csv");
+		StringBuffer sb = new StringBuffer();
+		int i = 0;
+		HashMap  map = new HashMap();
+		for(String[] s:list){
+			sb.append(s[0]).append(",").append(s[1]).append(",").append(s[2]).append(",").append(s[3]).append(",").append(s[4]).append(",").append(s[5]).append(",").append(s[6]).append(",");
+			String tac = s[2];
+			if(null != tac && !"".equals(tac)){
+				Tac tmp = dao.findByCondition(Tac.class, Cnd.where("d_tac", "=", tac));
+				try{
+					if(null != tmp.getHsmanName()){
+						map.put(tmp.getHstypeName(), tmp);
+					}else{
+						map.put(tmp.getHstypeNameEn(), tmp);
+					}
+//						System.out.println(" >> "+tmp.getHsmanName()+"|"+tmp.getHstypeName());
+//						if(GoogleSearchTools.process(tmp.getHsmanName(), tmp.getHstypeName())){
+//							System.out.println(" >> 支持GPRS");
+//							sb.append("支持");
+//							i++;
+//						}else{
+//							sb.append("不支持");
+//						}
+//					}else{
+//						System.out.println(" >> "+tmp.getHsmanNameEn()+"|"+tmp.getHstypeNameEn());
+//						if(GoogleSearchTools.process(tmp.getHsmanNameEn(), tmp.getHstypeNameEn())){
+//							System.out.println(">> 支持GPRS");
+//							sb.append("支持");
+//							i++;
+//						}else{
+//							sb.append("不支持");
+//						}
+//					}
+				}catch(Exception e){
+					sb.append("不支持");
+				}
+//				Thread.sleep(50);
+			}
+//			sb.append("\r\n");
+		}
+		Iterator it = map.keySet().iterator();
+		while(it.hasNext()){
+			String key = (String)it.next();
+			Object obj = map.get(key) ;
+//			System.out.println(" >> key:"+key);
+			if( null != obj){
+				Tac value = (Tac)obj;
+				System.out.println(" >> 该手机号在成功终端中已经存在:"+key+"|"+value.getHsmanName()+"|"+value.getHsmanNameEn()+"|"+value.getHstypeName()+"|"+value.getHstypeNameEn());
+			}
+		}
+//		System.out.println(sb.toString());
+//		IOUtil.createFile(sb.toString(), "2011-05-13-1052.csv");
+		System.out.println(" >> 机型数量:"+map.size());
+		
+		System.gc();
 	}
 	
 	public void test2(){

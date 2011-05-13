@@ -84,7 +84,8 @@ public class CallingLogDaoTest {
 	@Test
 	public void test3() throws ClassNotFoundException{
 		System.out.println(" >> dao is not null");
-		List<String[]> list = CvsFileParser.getCSV("employer2_with_imei.csv");
+		List<String[]> list = CvsFileParser.getCSV("imeishuju3.csv");
+//		List<String[]> list = CvsFileParser.getCSV("employer2_with_imei.csv");
 		int offset = 0;
 		CallingLog data = null;
 		for(String[] s:list){
@@ -93,14 +94,19 @@ public class CallingLogDaoTest {
 			data = new CallingLog();
 			data.setImei(imei);
 			data.setPhoneNum(s[0]);
-			String tac = imei.substring(0,8);
-			data.setTac(tac);
+			try{
+				String tac = imei.substring(0,8);
+				data.setTac(tac);
+			}catch(Exception e){
+				System.err.println(" >> imei:"+imei);
+				continue;
+			}
 			
 			System.out.println(Json.toJson(data));
 			
 			CallingLog tmp = cmdataDAO.findByCondition(CallingLog.class, Cnd.where("d_imei", "=", imei).and("d_phone_num", "=", data.getPhoneNum()));
 			if(null == tmp){
-//				data = cmdataDAO.save(data);
+				data = cmdataDAO.save(data);
 				System.out.println(" >> 新增:"+data.getId());
 			}else{
 				System.out.println(" >> 已存在tac["+tmp.getTac()+"]");
