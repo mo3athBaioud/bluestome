@@ -96,8 +96,9 @@ Ext.onReady(function(){
     });
     
     app.cm_utp = new Ext.grid.ColumnModel([
-	    expander,
-        {header: "手机号码", width: 100, sortable: true, dataIndex: 'phoneNum'},
+//	    expander,
+		app.sm,
+        {header: "手机号码1", width: 100, sortable: true, dataIndex: 'phoneNum'},
         {header: "品牌", width: 100, sortable: true, dataIndex: 'hsmanName'},
         {header: "品牌(英文)", width: 100, sortable: true, dataIndex: 'hsmanEnName',renderer:function(v){
         	if(null == v || '' == v){
@@ -114,7 +115,15 @@ Ext.onReady(function(){
         		return '<font color="blue">'+v+'</font>';
         	}
         }},
-//        {header: "TAC", width: 100, sortable: true, dataIndex: 'tac'},
+        {header: "GPRS", width: 100, sortable: true, dataIndex: 'gprs',renderer:function(v){
+        	if(v == 0){
+        		return '<font color="red">不支持</font>';
+        	}else if(v == 1){
+        		return '<font color="blue">支持</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
         {header: "IMEI", width: 100, sortable: true, dataIndex: 'imei'}
     ]);
     
@@ -258,7 +267,7 @@ Ext.onReady(function(){
 								msg : '非常感谢您的参与！',
 								buttons : Ext.Msg.OK,
 								fn:function(){
-									app.ds_utp.loadData(app.data);
+									app.ds_utp_1.loadData(app.data);
 								},
 								icon : Ext.MessageBox.INFO
 							});
@@ -328,7 +337,7 @@ Ext.onReady(function(){
 				msg : '输入的手机号码格式不对，请重新输入!',
 				buttons : Ext.Msg.OK,
 				fn:function(){
-					app.ds_utp.removeAll();
+					app.ds_utp_1.removeAll();
 				},
 				icon : Ext.MessageBox.ERROR
 			});
@@ -351,9 +360,11 @@ Ext.onReady(function(){
 		}
 		**/
 		Ext.Ajax.request({
-			url : '/utp/search.cgi',
+			url : '/utp/gprs.cgi',
 			params : {
-				phonenum : values
+				phonenum : values,
+				start:0,
+				limit:app.limit
 			},
 			success:function(response,option){
 				var obj = Ext.util.JSON.decode(response.responseText);
@@ -424,11 +435,11 @@ Ext.onReady(function(){
 		}, {name : 'imei',type : 'string'
 		}, {name : 'tac',type : 'string'
 		}, {name : 'hsmanName',type : 'string'
-		}, {name : 'hsmanEnName',type : 'string'
 		}, {name : 'hstypeName',type : 'string'
-		}, {name : 'hstypeEnName',type : 'string'
-		}, {name : 'mms',type : 'string'
 		}, {name : 'gprs',type : 'int'
+		}, {name : 'rbit',type:'string'
+		}, {name : 'createtime',type:'string'
+		}, {name : 'id',type:'int'
 		}])
 	});
 	/**	
@@ -447,7 +458,7 @@ Ext.onReady(function(){
     
 	app.ptb = new Ext.PagingToolbar({
 		pageSize:app.limit,
-		store:app.ds_utp,
+		store:app.ds_utp_1,
 		displayInfo:true,
 		displayMsg:'第 {0} - {1} 条  共 {2} 条',
 		emptyMsg:'没有记录'
