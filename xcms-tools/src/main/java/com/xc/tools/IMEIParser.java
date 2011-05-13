@@ -9,7 +9,8 @@ public class IMEIParser {
 	static String FILE_PATH = "E:\\5.SELF\\6.西安\\data\\";
 	
 	public static void main(String args[]){
-		List<String[]> list = getCSV("IMEI终端型号统计.csv");
+//		List<String[]> list = getCSV("IMEI终端型号统计.csv");
+		List<String[]> list = getCSV("imeishuju.csv");
 		for(String[] s:list){
 			for(String t:s){
 				System.out.println("t:"+t);
@@ -46,4 +47,5 @@ public class IMEIParser {
 		}
 		return list;
 	}
+	
 }
