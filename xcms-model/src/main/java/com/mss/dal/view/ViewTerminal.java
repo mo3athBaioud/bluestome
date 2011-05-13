@@ -29,6 +29,8 @@ public class ViewTerminal {
 	
 	private String mms = "支持";
 	
+	private int gprs = 1;
+	
 	public String getHsmanName() {
 		return hsmanName;
 	}
@@ -91,6 +93,14 @@ public class ViewTerminal {
 
 	public void setMms(String mms) {
 		this.mms = mms;
+	}
+
+	public int getGprs() {
+		return gprs;
+	}
+
+	public void setGprs(int gprs) {
+		this.gprs = gprs;
 	}
 	
 	
