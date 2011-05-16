@@ -95,7 +95,8 @@ public class UtpAction extends BaseAction{
 
 	@At("/gprs")
 	@Ok("json")
-	public JsonObject gprs(@Param("phonenum") String phonenum,@Param("start") int start,@Param("limit") int limit,HttpServletRequest request){
+	public JsonObject gprs(@Param("phonenum") String phonenum,@Param("loginname") String loginname,@Param("start") int start,@Param("limit") int limit,HttpServletRequest request){
+		System.out.println(" >> from page loginname:"+loginname);
 		OPlog op = new OPlog();
 		try{
 			String loginName = (String)request.getSession().getAttribute("LOGIN_SESSION_NAME");
@@ -107,7 +108,7 @@ public class UtpAction extends BaseAction{
 				op.setOpValue(phonenum);
 			}
 			json = new JsonObject();
-			List<TmpGprs> list = tmpGprsService.search(phonenum, start, limit);
+			List<TmpGprs> list = tmpGprsService.search(phonenum,loginName,start, limit);
 			if(null != list && list.size() > 0){
 				json.setCount(list.size());
 				json.setObj(list);
