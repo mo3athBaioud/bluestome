@@ -63,11 +63,11 @@ public class TmpGprsService {
 			condition = Cnd.where("d_phone_number","=",phonenum);
 			if(null != loginName && !"".equals(loginName)){
 				if(loginName.equals("weinan1")){
-					condition.and("d_id","<","2367");
+					condition.and("d_id","<","2368");
 				}else if(loginName.equals("weinan2")){
-					condition.and("d_id",">","2367").and("d_id","<","4735");
+					condition.and("d_id",">","2367").and("d_id","<","4736");
 				}else if(loginName.equals("weinan3")){
-					condition.and("d_id",">","4735").and("d_id","<","7102");
+					condition.and("d_id",">","4735").and("d_id","<","7103");
 				}else if(loginName.equals("weinan5")){
 					condition.and("d_id",">","7102");
 				}
