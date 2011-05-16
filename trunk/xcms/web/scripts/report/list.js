@@ -359,7 +359,17 @@ Ext.onReady(function(){
 		handler : function(){
 			Ext.Msg.confirm('提示', '你确定需要导出数据吗?', function(btn) {
 				if (btn == 'yes') {
-					window.location.href = '/pages/report/file/list.xls';
+					if(loginname == 'weinan1'){
+						window.location.href = '/pages/report/file/weinan1.xls';
+					}else if(loginname == 'weinan2'){
+						window.location.href = '/pages/report/file/weinan2.xls';
+					}else if(loginname == 'weinan3'){
+						window.location.href = '/pages/report/file/weinan3.xls';
+					}else if(loginname == 'weinan5'){
+						window.location.href = '/pages/report/file/weinan5.xls';
+					}else{
+						window.location.href = '/pages/report/file/list.xls';
+					}
 				}
 			});
 		}
