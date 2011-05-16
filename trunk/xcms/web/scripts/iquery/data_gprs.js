@@ -115,11 +115,11 @@ Ext.onReady(function(){
         		return '<font color="blue">'+v+'</font>';
         	}
         }},
-        {header: "GPRS", width: 100, sortable: true, dataIndex: 'gprs',renderer:function(v){
+        {header: "GPRS", width: 150, sortable: true, dataIndex: 'gprs',renderer:function(v){
         	if(v == 0){
         		return '<font color="red">不支持</font>';
         	}else if(v == 1){
-        		return '<font color="blue">支持</font>';
+        		return '<font color="blue">支持[五元GPRS套餐]</font>';
         	}else{
         		return '<font color="yellow">未知</font>';
         	}
@@ -363,6 +363,7 @@ Ext.onReady(function(){
 			url : '/utp/gprs.cgi',
 			params : {
 				phonenum : values,
+				loginname :loginName,
 				start:0,
 				limit:app.limit
 			},
@@ -372,6 +373,7 @@ Ext.onReady(function(){
 					app.ds_utp_1.load({
 						params : {
 							phonenum : values,
+							loginname :loginName,
 							start:0,
 							limit:app.limit
 						}
