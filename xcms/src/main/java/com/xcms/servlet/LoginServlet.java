@@ -109,7 +109,7 @@ public class LoginServlet extends HttpServlet {
 			if(password.equals(USERS[3][1]) ){
 				request.getSession().setAttribute("LOGIN_SESSION_NAME", USERS[3][0]);
 				logger.info(" User["+USERS[3][0]+"] login at "+getStringDate());
-				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/weinan2.html'}");
+				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/weinan2.jsp'}");
 				return;
 			}else{
 				response.getWriter().print("{failure:true,errorType:'1',msg:'登录失败，["+USERS[3][0]+"]密码不正确'}");
@@ -121,7 +121,7 @@ public class LoginServlet extends HttpServlet {
 			if(password.equals(USERS[4][1]) ){
 				request.getSession().setAttribute("LOGIN_SESSION_NAME", USERS[4][0]);
 				logger.info(" User["+USERS[4][0]+"] login at "+getStringDate());
-				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/weinan2.html'}");
+				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/weinan2.jsp'}");
 				return;
 			}else{
 				response.getWriter().print("{failure:true,errorType:'1',msg:'登录失败，["+USERS[4][0]+"]密码不正确'}");
@@ -133,7 +133,7 @@ public class LoginServlet extends HttpServlet {
 			if(password.equals(USERS[5][1]) ){
 				request.getSession().setAttribute("LOGIN_SESSION_NAME", USERS[5][0]);
 				logger.info(" User["+USERS[5][0]+"] login at "+getStringDate());
-				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/weinan2.html'}");
+				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/weinan2.jsp'}");
 				return;
 			}else{
 				response.getWriter().print("{failure:true,errorType:'1',msg:'登录失败，["+USERS[5][0]+"]密码不正确'}");
@@ -145,7 +145,7 @@ public class LoginServlet extends HttpServlet {
 			if(password.equals(USERS[6][1]) ){
 				request.getSession().setAttribute("LOGIN_SESSION_NAME", USERS[6][0]);
 				logger.info(" User["+USERS[6][0]+"] login at "+getStringDate());
-				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/weinan2.html'}");
+				response.getWriter().print("{success:true,msg:'登录成功',url:'"+request.getContextPath()+"/weinan2.jsp'}");
 				return;
 			}else{
 				response.getWriter().print("{failure:true,errorType:'1',msg:'登录失败，["+USERS[6][0]+"]密码不正确'}");
