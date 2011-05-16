@@ -50,6 +50,40 @@ public class TmpGprsService {
 		
 	}
 	
+	/**
+	 * 分页查询
+	 * @param phonenum
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	public List<TmpGprs> search(String phonenum,String loginName,int start,int limit) throws Exception{
+		Cnd condition = null;
+		if(null != phonenum && !"".equals(phonenum)){
+			condition = Cnd.where("d_phone_number","=",phonenum);
+			if(null != loginName && !"".equals(loginName)){
+				if(loginName.equals("weinan1")){
+					condition.and("d_id","<","2367");
+				}else if(loginName.equals("weinan2")){
+					condition.and("d_id",">","2367").and("d_id","<","4735");
+				}else if(loginName.equals("weinan3")){
+					condition.and("d_id",">","4735").and("d_id","<","7102");
+				}else if(loginName.equals("weinan5")){
+					condition.and("d_id",">","7102");
+				}
+			}
+			
+			start = start/limit+1;
+			if(start == 0){
+				start = 1;
+			}
+			List<TmpGprs> list = tmpGprsDao.searchByPage(TmpGprs.class, condition, start, limit);
+			return list;
+		}else{
+			return null;
+		}
+	}
+	
 	public Dao getDao() {
 		return dao;
 	}
