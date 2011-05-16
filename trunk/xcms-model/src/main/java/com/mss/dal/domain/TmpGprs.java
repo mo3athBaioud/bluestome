@@ -6,7 +6,7 @@ import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
-@Table("tbl_tmp_gprs1")
+@Table("tbl_tmp_gprs3")
 public class TmpGprs implements java.io.Serializable{
 
 	/**
