@@ -1,5 +1,7 @@
 package com.xc.tools;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,12 +24,29 @@ import org.htmlparser.tags.TableTag;
 import org.htmlparser.tags.TitleTag;
 import org.htmlparser.util.NodeList;
 
+import com.ssi.common.utils.HttpClientUtils;
+
 public class TerminalParser {
 
 	public static void main(String args[]) {
 		// 非智能 http://product.pcpop.com/000276716/Detail.html
 		// 智能 http://product.pcpop.com/000163063/Detail.html
-		getTerminalInfo("http://product.pcpop.com/000163063/Detail.html");
+//		getTerminalInfo("http://product.pcpop.com/000163063/Detail.html");
+		String google = "http://www.google.com.hk/search?hl=zh-CN&newwindow=1&safe=strict&q={1}&oq={2}&aq=f&aqi=&aql=&gs_sm=s&gs_upl=894552l897672l0l2l2l0l0l0l0l0l0l";
+		try {
+			String s = URLEncoder.encode("摩托罗拉C115","UTF-8");
+			System.out.println(" >> s:"+s);
+			google = google.replace("{1}", "摩托罗拉C115").replace("{2}", "摩托罗拉C115");
+			System.out.println(" >> google:"+google);
+			byte[] b = HttpClientUtils.getResponseBodyAsByte(google, null, google);
+			if(b.length > 0){
+				String body  = new String(b);
+				System.out.println("body:"+body);
+			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
