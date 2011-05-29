@@ -51,7 +51,7 @@ public class MessageSender extends JmsGatewaySupport {
 	}
 
 	/**
-	 * 发送HTML对象
+	 * 发送Table对象
 	 * @param html
 	 */
 	public void sendObjectMsg(final Table table){
@@ -62,6 +62,8 @@ public class MessageSender extends JmsGatewaySupport {
 	
 				public Message createMessage(Session session) throws JMSException {
 					message = session.createObjectMessage(table);
+					message.setJMSType("JMS_ACTIVEMQ_OBJECT");
+					message.setJMSTimestamp(System.currentTimeMillis());
 					return message;
 				}
 			});
