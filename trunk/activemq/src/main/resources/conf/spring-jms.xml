@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:conf/log4j.properties</value>
+				<value>classpath:conf/apmgt.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- ####################################### -->
+	<!--          JMS Spring Beans               -->
+	<!-- ####################################### -->
+
+	<!-- Jms ConnectionFactory -->
+	<bean id="connectionFactory"
+		class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${jms.brokerURL}" />
+	</bean>
+
+	<!-- Spring JMS SimpleConverter -->
+	<bean id="simpleConverter"
+		class="org.springframework.jms.support.converter.SimpleMessageConverter" />
+
+	<!-- JMS Queue Template -->
+	<bean id="jmsTemplate"
+		class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="timeToLive" value="${jms.timeToLive}" />
+		<property name="defaultDestinationName"
+			value="${jms.destinationName.cmpp}" />
+		<property name="messageConverter" ref="messageConverter" />
+		<property name="receiveTimeout" value="${jms.receiveTimeout}" />
+	</bean>
+
+	<!-- Message Converter -->
+	<bean id="messageConverter"
+		class="com.bluestome.activemq.converter.ApmgtMessageConverter">
+		<property name="converter">
+			<ref local="simpleConverter" />
+		</property>
+	</bean>
+
+	<!-- Message porducer -->
+	<bean id="producer"
+		class="com.bluestome.activemq.listener.impl.DefaultApmgtMessageProducer">
+		<property name="jmsTemplate" ref="jmsTemplate" />
+	</bean>
+
+	<!-- this is the Message Driven POJO (MDP) -->
+	<bean id="messageListener"
+		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<constructor-arg>
+			<bean
+				class="com.bluestome.activemq.listener.impl.DefaultApmgtMessageListener" />
+		</constructor-arg>
+		<property name="defaultListenerMethod" value="onMessage" />
+		<property name="messageConverter" ref="messageConverter" />
+	</bean>
+
+	<!-- and this is the attendant message listener container -->
+	<bean id="listenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="destinationName"
+			value="${jms.destinationName.cmpp}" />
+		<!-- 
+		<property name="messageSelector" value="${jms.messageSelector}" />
+		 -->
+		<property name="messageListener" ref="messageListener" />
+	</bean>
+</beans>
