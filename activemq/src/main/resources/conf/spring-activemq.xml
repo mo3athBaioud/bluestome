@@ -3,10 +3,23 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation=" 
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
-        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<!-- 
+				<value>classpath:conf/log4j.properties</value>
+				 -->
+			</list>
+		</property>
+	</bean>
+
 	<bean id="dest" class="org.apache.activemq.command.ActiveMQQueue">
-		<constructor-arg value="myDest"></constructor-arg>
+		<constructor-arg value="htmlsource"></constructor-arg>
 	</bean>
 
 	<bean id="connectionFactory"
@@ -20,4 +33,24 @@
 		</property>
 	</bean>
 
+	<bean id="jmsTemplate"
+		class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory"></property>
+		<property name="defaultDestination" ref="dest"></property>
+	</bean>
+
+	<bean id="messageReceiver" class="com.bo.impl.MessageReceiver">
+		<property name="jmsTemplate" ref="jmsTemplate"></property>
+	</bean>
+
+	<bean id="messageSender" class="com.bo.impl.MessageSender">
+		<property name="jmsTemplate" ref="jmsTemplate"></property>
+	</bean>
+
+	<bean id="messageReceiveThread" class="com.bo.MessageReceiverThread"
+		init-method="start" destroy-method="stop">
+		<property name="messageReceiver">
+			<ref bean="messageReceiver" />
+		</property>
+	</bean>
 </beans>

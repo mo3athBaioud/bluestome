@@ -15,4 +15,8 @@
 	<bean id="messageReceiver" class="com.bo.impl.MessageReceiver">
 		<property name="jmsTemplate" ref="jmsTemplate"></property>
 	</bean>
+
+	<bean id="messageSender" class="com.bo.impl.MessageSender">
+		<property name="jmsTemplate" ref="jmsTemplate"></property>
+	</bean>
 </beans>
