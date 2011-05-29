@@ -28,14 +28,10 @@ public class TestMessageReceiver {
 		}
 	}
 
-	public void getTextMsg() {
-		messageReceiver.receiverTextMsg();
-	}
-
 	@Test
 	public void getObjectMsg(){
 		for(int i=0;i<2000;i++){
-			messageReceiver.receiverObjectMsg();
+			messageReceiver.receiverMsg();
 		}
 	}
 }
