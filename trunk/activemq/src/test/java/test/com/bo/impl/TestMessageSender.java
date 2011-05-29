@@ -20,7 +20,7 @@ public class TestMessageSender {
 	
 	@Before
 	public void init() {
-		ctx = new ClassPathXmlApplicationContext("conf/spring-*.xml");
+		ctx = new ClassPathXmlApplicationContext("conf/spring-activemq.xml");
 		messageSender = (MessageSender) ctx.getBean("messageSender");
 		messageReceiver = (MessageReceiver)ctx.getBean("messageReceiver");
 	}
@@ -39,29 +39,36 @@ public class TestMessageSender {
 	}
 	
 	public void sentTextMsg() {
-		messageSender.sendTextMsg("这个世界真的很无奈！");
+		for(int i=0;i<100;i++){
+			messageSender.sendTextMsg("这个世界["+i+"]真的很无奈！");
+		}
 	}
 	
 	public void getTextMsg() {
-		messageReceiver.receiverTextMsg();
+		messageReceiver.receiverMsg();
 	}
 
 	@Test
 	public void sendObjectMsg(){
+		try{
 		Html html = null;
 		Table table = null;
-		for(int i=0;i<1000;i++){
-			html = new Html(String.valueOf(i),"Html.body."+String.valueOf(i));
-			messageSender.sendObjectMsg(html);
+		for(int i=0;i<50000;i++){
+//			html = new Html(String.valueOf(i),"Html.body."+String.valueOf(i));
+//			messageSender.sendObjectMsg(html);
+			System.out.println(" >>>>>> i:"+i);
 			table = new Table("Table_"+String.valueOf(i));
 			messageSender.sendObjectMsg(table);
+			Thread.sleep(10);
+		}
+		}catch(Exception e){
+			System.out.println(e);
 		}
 	}
 
-	@Test
 	public void getObjectMsg(){
 		for(int i=0;i<2000;i++){
-			messageReceiver.receiverObjectMsg();
+			messageReceiver.receiverMsg();
 		}
 	}
 
