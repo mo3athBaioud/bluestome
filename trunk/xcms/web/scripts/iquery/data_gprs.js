@@ -98,7 +98,7 @@ Ext.onReady(function(){
     app.cm_utp = new Ext.grid.ColumnModel([
 //	    expander,
 		app.sm,
-        {header: "手机号码1", width: 100, sortable: true, dataIndex: 'phoneNum'},
+        {header: "手机号码", width: 100, sortable: true, dataIndex: 'phoneNumber'},
         {header: "品牌", width: 100, sortable: true, dataIndex: 'hsmanName'},
         {header: "品牌(英文)", width: 100, sortable: true, dataIndex: 'hsmanEnName',renderer:function(v){
         	if(null == v || '' == v){
@@ -433,7 +433,7 @@ Ext.onReady(function(){
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'count',
 			root : 'obj'
-		}, [{name : 'phoneNum',type : 'string'
+		}, [{name : 'phoneNumber',type : 'string'
 		}, {name : 'imei',type : 'string'
 		}, {name : 'tac',type : 'string'
 		}, {name : 'hsmanName',type : 'string'
