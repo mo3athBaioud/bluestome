@@ -20,6 +20,7 @@ import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.visitors.HtmlPage;
 
+import com.activemq.impl.MessageSender;
 import com.chinamilitary.bean.ArticleDoc;
 import com.chinamilitary.bean.LinkBean;
 import com.chinamilitary.bean.WebsiteBean;
@@ -27,6 +28,7 @@ import com.chinamilitary.dao.ArticleDocDao;
 import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.factory.DAOFactory;
 import com.chinamilitary.memcache.MemcacheClient;
+import com.spring.ContextInit;
 import com.thread.RequestRecordThread;
 import com.thread.ResourceQueneInsert;
 import com.thread.ResourceQueneUpdate;
@@ -48,6 +50,9 @@ public class PCPOPHtmlParser {
 	static MemcacheClient client = MemcacheClient.getInstance();
 	
 	final static String PCPOP="WEB_PCPOP";
+	
+	private static MessageSender messageSender = (MessageSender)ContextInit.getInstance().getBean("messageSender");
+
 	
 	/**
 	 * 获取分类链接
@@ -342,7 +347,7 @@ public class PCPOPHtmlParser {
 			
 		process();
 		
-		processAuthor();
+//		processAuthor();
 			
 //		processWithDoc();
 			
@@ -450,6 +455,7 @@ public class PCPOPHtmlParser {
 		ArticleDoc doc = null;
 		while (it.hasNext()) {
 			String key1 = (String) it.next();
+			System.out.println(" >> key1:"+key1);
 			if(null == client.get(getKey(key1))){
 				LinkBean link = (LinkBean) LINKHASH.get(key1);
 				doc = new ArticleDoc();
@@ -457,13 +463,16 @@ public class PCPOPHtmlParser {
 				doc.setUrl(link.getLink());
 				doc.setWebId(webid);
 //				ResourceQueneInsert.getInstance().setElement(doc);
-				int id = articleDocDao.insert(doc);
-				if(id > 0){
-					doc.setId(id);
-					doc.setStatus(1);
-					client.add(getKey(doc.getUrl()), doc);
-//					System.out.println("Memcached now store this object");
+				if(null != messageSender){
+					messageSender.sendObjectMsg(doc);
 				}
+//				int id = articleDocDao.insert(doc);
+//				if(id > 0){
+//					doc.setId(id);
+//					doc.setStatus(1);
+//					client.add(getKey(doc.getUrl()), doc);
+//					System.out.println("Memcached now store this object");
+//				}
 				
 //				if(!(id>0)){
 //					System.out.println("失败，\t链接名称：" + link.getName() + "\n链接地址："+ link.getLink());
