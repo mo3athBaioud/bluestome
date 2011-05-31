@@ -1,5 +1,7 @@
 package com.bo.impl;
 
+import java.io.Serializable;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
@@ -63,6 +65,26 @@ public class MessageSender extends JmsGatewaySupport {
 				public Message createMessage(Session session) throws JMSException {
 					message = session.createObjectMessage(table);
 					message.setJMSType("JMS_ACTIVEMQ_OBJECT");
+					message.setJMSTimestamp(System.currentTimeMillis());
+					return message;
+				}
+			});
+		}
+	}
+	
+	/**
+	 * 发送一个序列化对象
+	 * @param serial 序列化对象
+	 */
+	public void sendObjectMsg(final Serializable serial){
+		if(null != serial){
+			this.getJmsTemplate().send(new MessageCreator() {
+				// 这里创建了一个 message 对象,然后可以对该对象进行 各种属性的定义
+				private Message message;
+	
+				public Message createMessage(Session session) throws JMSException {
+					message = session.createObjectMessage(serial);
+					message.setJMSType("JMS_SERIALIZABLE_OBJECT");
 					message.setJMSTimestamp(System.currentTimeMillis());
 					return message;
 				}
