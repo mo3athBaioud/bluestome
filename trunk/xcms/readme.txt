@@ -171,9 +171,9 @@ SAMSUNG
 目的是让移动明白，我们这个系统覆盖的范围。
 
 区域码:
-蒲城：e0e7
-大荔：e0ea
-临渭区：e0e1
+蒲城：e0e7 -> weinan3
+大荔：e0ea -> weinan5
+临渭区：e0e1 -> weinan1|weinan2
 
 2011-05-26
 1.检查weinan5中相同机型下的数据出现不同的GPRS支持的属性。要特别注意weinan5中的数据。
