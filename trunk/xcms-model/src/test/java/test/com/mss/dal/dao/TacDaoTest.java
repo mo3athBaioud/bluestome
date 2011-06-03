@@ -257,10 +257,11 @@ public class TacDaoTest {
 		
 	}
 
+	@Test
 	public void test3() throws ClassNotFoundException{
 		if(null != dao){
 			System.out.println(" >> dao is not null");
-			List<String[]> list = CvsFileParser.getCSV("imeishuju.csv");
+			List<String[]> list = CvsFileParser.getCSV("2011-06-03_GPRS.csv");
 			int offset = 0;
 			int foffset = 0;
 			Tac tac = null;
@@ -274,7 +275,8 @@ public class TacDaoTest {
 				Integer i=1;
 				tac = new Tac();
 				String phoneNum = s[0];
-				String imei = s[1];
+				String uid = s[2];
+				String imei = s[4];
 				try{
 					ttac = imei.substring(0,8);
 					tac.setTac(ttac);
@@ -290,7 +292,7 @@ public class TacDaoTest {
 					foffset ++;
 				}else{
 //					tList.add(tmp);
-//					ok.put(phoneNum+"_"+imei,tmp);
+					ok.put(phoneNum+"_"+imei+"_"+uid,tmp);
 					offset++;
 				}
 			}
@@ -313,20 +315,19 @@ public class TacDaoTest {
 					Tac value = (Tac)obj;
 //					System.out.println(" >> 该手机号在成功终端中已经存在:"+key+"|"+value.getHsmanName()+"|"+value.getHsmanNameEn()+"|"+value.getHstypeName()+"|"+value.getHstypeNameEn());
 //					System.out.println(" >> 该手机号在成功终端中已经存在:"+t[0]+"|"+t[1]+"|"+value.getHsmanName()+"|"+value.getHsmanNameEn()+"|"+value.getHstypeName()+"|"+value.getHstypeNameEn());
-					sb.append(t[0]).append(",").append(t[1]).append(",").append(t[1].substring(0,8)).append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append("\r\n");
+					sb.append(t[2]).append(",").append(t[0]).append(",").append(t[1]).append(",").append(t[1].substring(0,8)).append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append(",").append(1).append("\r\n");
 //					sb.append(key).append(",").append(value.getTac()).append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append("\r\n");
 //					t ++;
 				}
 			}
 			System.out.println(" >> s:"+s);
 			
-			IOUtil.createFile(sb.toString(), "TAC(8位)识别出的终端数据_2011-05-14.csv");
+			IOUtil.createFile(sb.toString(), "TAC(8位)识别出的终端数据_2011-06-03.csv");
 		}else{
 			System.out.println(" >> dao is null");
 		}
 	}
 	
-	@Test
 	public void t20110514() throws Exception{
 		List<String[]> list = CvsFileParser.getCSV("input_2011-05-14.csv");
 		StringBuffer sb = new StringBuffer();
