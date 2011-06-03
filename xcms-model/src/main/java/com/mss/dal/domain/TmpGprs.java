@@ -7,6 +7,8 @@ import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
 @Table("tbl_tmp_gprs3")
+//@Table("tbl_tmp_gprs_pucheng")
+//@Table("tbl_tmp_gprs_dali")
 public class TmpGprs implements java.io.Serializable{
 
 	/**
@@ -44,6 +46,9 @@ public class TmpGprs implements java.io.Serializable{
 	
 	@Column("d_status")
 	private int status;
+	
+	@Column("d_uid")
+	private String uid;
 
 	public Date getCreatetime() {
 		return createtime;
@@ -123,6 +128,14 @@ public class TmpGprs implements java.io.Serializable{
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 	
