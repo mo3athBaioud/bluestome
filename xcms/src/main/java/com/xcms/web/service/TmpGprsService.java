@@ -60,18 +60,18 @@ public class TmpGprsService {
 	public List<TmpGprs> search(String phonenum,String loginName,int start,int limit) throws Exception{
 		Cnd condition = null;
 		if(null != phonenum && !"".equals(phonenum)){
-			condition = Cnd.where("d_phone_number","=",phonenum);
-			if(null != loginName && !"".equals(loginName)){
-				if(loginName.equals("weinan1")){
-					condition.and("d_id","<","2368");
-				}else if(loginName.equals("weinan2")){
-					condition.and("d_id",">","2367").and("d_id","<","4736");
-				}else if(loginName.equals("weinan3")){
-					condition.and("d_id",">","4735").and("d_id","<","7103");
-				}else if(loginName.equals("weinan5")){
-					condition.and("d_id",">","7102");
-				}
-			}
+			condition = Cnd.where("d_phone_number","=",phonenum).and("d_uid","=",loginName.replace("weinan2", "weinan1"));
+//			if(null != loginName && !"".equals(loginName)){
+//				if(loginName.equals("weinan1")){
+//					condition.and("d_id","<","2368");
+//				}else if(loginName.equals("weinan2")){
+//					condition.and("d_id",">","2367").and("d_id","<","4736");
+//				}else if(loginName.equals("weinan3")){
+//					condition.and("d_id",">","4735").and("d_id","<","7103");
+//				}else if(loginName.equals("weinan5")){
+//					condition.and("d_id",">","7102");
+//				}
+//			}
 			
 			start = start/limit+1;
 			if(start == 0){
