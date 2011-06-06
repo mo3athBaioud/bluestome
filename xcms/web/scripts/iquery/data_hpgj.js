@@ -52,50 +52,6 @@ Ext.onReady(function(){
 	}]);
     **/
     
-    /**
-    var expander = new Ext.grid.RowExpander({
-        tpl : new Ext.Template(
-			 '<tpl for=".">',
-			 '<table>' +
-			 '<tr><td>' +
-			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
-			 '<tr><td><b>优先等级1</b></td></tr>' +
-			 '<tr align="left"><td>' +
-			 '<ul>' +
-			 '<li>飞信[<font color="blue">使用</font>]</li>' +
-			 '<li>移动MM[<font color="blue">使用</font>]</li> ' +
-			 '<li><b>手机阅读[<font color="red">未使用</font>]</b></li>' +
-			 '</ul>' +
-			 '</td></tr>' +
-			 '</table> '+
-			 '</td><td>' +
-			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
-			 '<tr><td><b>优先等级2</b></td></tr>' +
-			 '<tr align="left"><td>' +
-			 '<ul>' +
-			 '<li>淘乐汇[<font color="blue">使用</font>]</li> 	'+
-			 '<li>手机报[<font color="blue">使用</font>]</li>' +
-			 '<li><b>号谱管家[<font color="red">未使用</font>]</b></li>' +
-			 '</ul>' +
-			 '</td></tr>' +
-			 '</table>' +
-			 '</td><td>' +
-			 '<table align="left" class="list" cellspacing="1" cellpadding="0" width="100%" border="0">' +
-			 '<tr><td><b>优先等级3</b></td></tr>' +
-			 '<tr align="left"><td>' +
-			 '<ul>'+
-			 '<li><b>可视电话[<font color="red">未使用</font>]</b></li>' +
-			 '<li><b>彩信相册[<font color="red">未使用</font>]</b></li>' +
-			 '<li><b>移动秘书[<font color="red">未使用</font>]</b></li>'+
-			 '</ul>' +
-			 '</td></tr>' +
-			 '</table>' +
-			 '</td></tr>' +
-			 '</table>',
-			 '</tpl>',
-			 '<div class="x-clear"></div>')
-    });
-    **/ 
     var expander = new Ext.grid.RowExpander({
         tpl : new Ext.Template(
 			 '<tpl for=".">',
@@ -112,8 +68,8 @@ Ext.onReady(function(){
     });
     
     app.cm_utp = new Ext.grid.ColumnModel([
-	    expander,
-//		app.sm,
+//	    expander,
+		app.sm,
         {header: "手机号码", width: 100, sortable: true, dataIndex: 'phoneNumber'},
         {header: "品牌", width: 100, sortable: true, dataIndex: 'hsmanName'},
         {header: "品牌(英文)", width: 100, sortable: true, dataIndex: 'hsmanEnName',renderer:function(v){
@@ -444,7 +400,7 @@ Ext.onReady(function(){
 	});
 	
 	app.ds_utp_1 = new Ext.data.Store({
-		url : '/utp/gprs.cgi',
+		url : '/utp/hpgj.cgi',
 		baseParams:{},
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'count',
@@ -457,6 +413,9 @@ Ext.onReady(function(){
 		}, {name : 'gprs',type : 'int'
 		}, {name : 'rbit',type:'string'
 		}, {name : 'createtime',type:'string'
+		}, {name : 'recommdation',type:'string'
+		}, {name : 'bcode',type:'string'
+		}, {name : 'uid',type:'string'
 		}, {name : 'id',type:'int'
 		}])
 	});
