@@ -15,9 +15,11 @@ import org.nutz.mvc.annotation.Param;
 import com.mss.dal.dao.OPlogDao;
 import com.mss.dal.domain.OPlog;
 import com.mss.dal.domain.TmpGprs;
+import com.mss.dal.domain.TmpHpgj;
 import com.mss.dal.view.ViewTerminal;
 import com.xcms.common.json.JsonObject;
 import com.xcms.web.service.TmpGprsService;
+import com.xcms.web.service.TmpHpgjService;
 import com.xcms.web.service.UtpService;
 
 /**
@@ -38,6 +40,9 @@ public class UtpAction extends BaseAction{
 	
 	@Inject
 	private TmpGprsService tmpGprsService;
+	
+	@Inject
+	private TmpHpgjService tmpHpgjService;
 	
 	@At("/search")
 	@Ok("json")
@@ -109,6 +114,44 @@ public class UtpAction extends BaseAction{
 			}
 			json = new JsonObject();
 			List<TmpGprs> list = tmpGprsService.search(phonenum,loginName,start, limit);
+			if(null != list && list.size() > 0){
+				json.setCount(list.size());
+				json.setObj(list);
+				json.setMsg("已查找到对应的终端数据!");
+				op.setOpResult("成功");
+			}else{
+				json.setSuccess(false);
+				json.setMsg("未查找到对应的终端数据!");
+				op.setOpResult("失败");
+			}
+		}catch(Exception e){
+			json.setSuccess(false);
+			json.setMsg("未查找到对应的终端数据!");
+			op.setOpResult("失败");
+		}finally{
+			op = oPlogDao.save(op);	
+			logger.debug(" >> 操作日志添加:"+(op.getId() > 0?"成功":"失败"));
+		}
+		return json;
+	}
+	
+	@At("/hpgj")
+	@Ok("json")
+	public JsonObject hpgj(@Param("phonenum") String phonenum,@Param("loginname") String loginname,@Param("start") int start,@Param("limit") int limit,HttpServletRequest request){
+		System.out.println(" >> from page loginname:"+loginname);
+		OPlog op = new OPlog();
+		try{
+			String loginName = (String)request.getSession().getAttribute("LOGIN_SESSION_NAME");
+			if(null != loginName){
+				
+				System.out.println(" >> loginName:"+loginName);
+				op.setName(loginName);
+				op.setOpType("HPGJ_QUERY");
+				op.setOpValue(phonenum);
+//				op.setOpResult(request.getRemoteAddr());
+			}
+			json = new JsonObject();
+			List<TmpHpgj> list = tmpHpgjService.search(phonenum,loginName,start, limit);
 			if(null != list && list.size() > 0){
 				json.setCount(list.size());
 				json.setObj(list);
