@@ -23,7 +23,7 @@ import com.xc.tools.GoogleSearchTools;
 import com.xc.tools.IMEIParser;
 import com.xc.tools.IndexParser;
 
-public class TacDaoTest {
+public class TacDao2Test {
 	
 	private TacDao dao;
 	
