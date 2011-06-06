@@ -6,10 +6,15 @@ import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
-@Table("tbl_tmp_gprs3")
+/**
+ * 号谱管家表
+ * @author bluestome
+ *
+ */
+@Table("tbl_tmp_hpgj")
 //@Table("tbl_tmp_gprs_pucheng")
 //@Table("tbl_tmp_gprs_dali")
-public class TmpGprs implements java.io.Serializable{
+public class TmpHpgj implements java.io.Serializable{
 
 	/**
 	 * 
