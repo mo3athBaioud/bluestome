@@ -807,6 +807,17 @@
  	});
 
 
+  	var node_0101090114 = new Ext.tree.TreeNode({
+ 		text:'号谱管家推荐查询',
+ 		listeners: {
+ 		'click': function(){
+ 		  addTab('pages/iquery/data/14.jsp','号谱管家推荐查询','0101090114','渭南移动终端业务营销系统 -> 数据查询 -> 数据业务查询 -> 号谱管家推荐查询','application_view_columns.png');
+ 		}},
+ 		expanded:false,
+ 		iconCls:'icon-application_view_columns',
+ 		id:'id_node_0101090114'
+ 	});
+ 	
      var node_01010902 = new Ext.tree.TreeNode({
 
         text:'终端销售子系统',
@@ -1506,10 +1517,10 @@
 	node_01010602.appendChild(node_0101060211);
 	node_01010602.appendChild(node_0101060212);
 	node_01010602.appendChild(node_0101060213);
-	**/    
     node_0101.appendChild(node_010106);
     node_010106.appendChild(node_01010602);
 	node_01010602.appendChild(node_0101060206);
+	**/    
     node_0101.appendChild(node_010109);
 //    node_01010901.appendChild(node_0101090101);
 //    node_01010901.appendChild(node_0101090102);
@@ -1517,6 +1528,7 @@
 //    node_01010901.appendChild(node_0101090104);
 //    node_01010901.appendChild(node_0101090105);
     node_01010901.appendChild(node_0101090106);
+    node_01010901.appendChild(node_0101090114);
 //    node_01010901.appendChild(node_0101090107);
 //    node_01010901.appendChild(node_0101090108);
 //    node_01010901.appendChild(node_0101090109);
