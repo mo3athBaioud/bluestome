@@ -1,6 +1,10 @@
 package com.bluestome.activemq.message;
 
+import java.util.UUID;
+
 public class MessageHeader {
+	
+	private String tid;
 	/**
 	 * 消息ID
 	 */
@@ -27,6 +31,7 @@ public class MessageHeader {
 	private String sendPerson;
 
 	public MessageHeader() {
+		this.tid = UUID.randomUUID().toString();
 		this.id = System.currentTimeMillis();
 	}
 
@@ -69,4 +74,14 @@ public class MessageHeader {
 	public void setType(int type) {
 		this.type = type;
 	}
+
+	public final String getTid() {
+		return tid;
+	}
+
+	public final void setTid(String tid) {
+		this.tid = tid;
+	}
+	
+	
 }
