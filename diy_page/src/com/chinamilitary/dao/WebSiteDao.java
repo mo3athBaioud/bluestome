@@ -13,7 +13,7 @@ public interface WebSiteDao extends ICommonDao{
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean insert(WebsiteBean bean) throws Exception;
+	boolean insert(WebsiteBean bean) throws Exception;
 	
 	/**
 	 * 修改网站记录
@@ -21,14 +21,14 @@ public interface WebSiteDao extends ICommonDao{
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean update(WebsiteBean bean) throws Exception;
+	boolean update(WebsiteBean bean) throws Exception;
 	
 	/**
 	 * 查找所有记录
 	 * @return
 	 * @throws Exception
 	 */
-	public List<WebsiteBean> findAll() throws Exception;
+	List<WebsiteBean> findAll() throws Exception;
 	
 	/**
 	 * 根据ID查找记录
@@ -36,7 +36,7 @@ public interface WebSiteDao extends ICommonDao{
 	 * @return
 	 * @throws Exception
 	 */
-	public WebsiteBean findById(Integer id) throws Exception;
+	WebsiteBean findById(Integer id) throws Exception;
 	
 	/**
 	 * 根据ID查找记录
@@ -44,7 +44,7 @@ public interface WebSiteDao extends ICommonDao{
 	 * @return
 	 * @throws Exception
 	 */
-	public List<WebsiteBean> findByParentId(Integer id) throws Exception;
+	List<WebsiteBean> findByParentId(Integer id) throws Exception;
 	
 	/**
 	 * 根据站点URL查找web对象
