@@ -17,8 +17,9 @@ public class WebsiteBean implements Serializable {
 	private String name;
 	private Date createtme;
 	private Date modifytime;
-	private Integer status;
+	private Integer status = 1;
 	private String remarks = null;
+	private String lastModifyTime = null;
 	private List<WebsiteBean> child = new ArrayList<WebsiteBean>();
 	
 	public WebsiteBean(){
@@ -94,6 +95,14 @@ public class WebsiteBean implements Serializable {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public String getLastModifyTime() {
+		return lastModifyTime;
+	}
+
+	public  void setLastModifyTime(String lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
 	}
 	
 	
