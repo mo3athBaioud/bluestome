@@ -236,4 +236,26 @@ public class IOUtil {
 			e.printStackTrace();
 		}
 	}
+
+	public static void createFile(String content, String filePath, String fileName, Object object) {
+		String savePath = filePath+"\\"+fileName;
+		File file = null;
+		OutputStream out = null;
+		try{
+			try{
+				file = new File(savePath);
+				if(file.exists()){
+					return;
+				}
+				out = new BufferedOutputStream(new FileOutputStream(file),1024);
+				out.write(content.getBytes(), 0, content.getBytes().length);
+				out.close();
+			}finally{
+				if(out != null)
+					out.close();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 }
