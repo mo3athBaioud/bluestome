@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
@@ -148,14 +149,21 @@ public class HttpClientUtils {
 	 * @return
 	 */
 	public static String getHttpHeaderResponse(String url, String headerName) {
-		String result = "0";
+		String result = "";
 		try {
 			httpclient = new HttpClient();
 			getMethod = new GetMethod(url);
 
 			int statusCode = httpclient.executeMethod(getMethod);
 			if (statusCode == HttpStatus.SC_OK) {
-				result = getMethod.getResponseHeader(headerName).getValue();
+				Header[] headers = getMethod.getResponseHeaders();
+				for (Header header : headers) {
+//					System.out.println(header.getName()+":"+header.getValue());
+					if(headerName.equals(header.getName())){
+						 result = header.getValue();
+						 break;
+					}
+				}
 			}
 		} catch (Exception e) {
 			System.err.println(e);
@@ -320,15 +328,7 @@ public class HttpClientUtils {
 		try {
 			httpclient = new HttpClient();
 			getMethod = new GetMethod(url);
-
 			getMethod.setRequestHeader("Referer", referUrl);
-			// getMethod.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows;
-			// U; Windows NT 6.1; zh-CN; rv:1.9.2.8) Gecko/20100722
-			// Firefox/3.6.8");
-			// getMethod.setRequestHeader("Cookie", "rtime=2;
-			// ltime=1282990509523;
-			// cnzz_eid=5808015-1282816593-http%3A//www.tuku.cn/;
-			// virtualwall=vsid=0c8cafa6001de309645c11edffa3aa43");
 			int statusCode = httpclient.executeMethod(getMethod);
 			if (statusCode != HttpStatus.SC_OK) {
 				System.err.println("地址[" + url + "],状态码[" + statusCode + "]");
@@ -345,19 +345,36 @@ public class HttpClientUtils {
 				httpclient = null;
 		}
 	}
+	
+	/**
+	 * 获取页面的最后修改时间
+	 * @param url
+	 * @return
+	 */
+	public static String getLastModifiedByUrl(String url){
+		String value = null;
+		try{
+			String time = getHttpHeaderResponse(url, "Last-Modified");
+			Date date = DateUtils.parserDate(time);
+			value = DateUtils.formatDate(date, DateUtils.FULL_STANDARD_PATTERN2);
+		}catch(Exception e){
+			e.printStackTrace();
+		}		
+		return value;
+	}
 
 	public static void main(String args[]) {
 		String url = "http://www.showimg.com/other/jingxuan20101102/big/jingxuan003[1].jpg";
 		try {
-			 url = url.replace("[", URLEncoder.encode("[", "utf-8")).replace("]", URLEncoder.encode("]", "utf-8"));
-			 System.out.println("url:"+url);
-			 if(null == url)
-				 return;
-			 byte[] value2 = getResponseBodyAsByte(null,
-			 null,url);
-			 if(null != value2){
-			 System.out.println("未增加破解防盗链引用文件长度:"+value2.length);
-			 }
+//			 url = url.replace("[", URLEncoder.encode("[", "utf-8")).replace("]", URLEncoder.encode("]", "utf-8"));
+//			 System.out.println("url:"+url);
+//			 if(null == url)
+//				 return;
+//			 byte[] value2 = getResponseBodyAsByte(null,
+//			 null,url);
+//			 if(null != value2){
+//			 System.out.println("未增加破解防盗链引用文件长度:"+value2.length);
+//			 }
 			//			
 			// long start = System.currentTimeMillis();
 			// byte[] value =
@@ -379,6 +396,12 @@ public class HttpClientUtils {
 //					"http://www.china.com/zh_cn/", "Content-Length");
 //			System.out.println("网页长度：" + length);
 			// System.out.println("isTRUE:"+urlValidation("http://www.bizhi.com/wallpaper/1150_2.html"));
+			
+			//Last-Modified
+			String time = getHttpHeaderResponse("http://www.bizhizhan.com/", "Last-Modified");
+			System.out.println(" >> ora:"+time);
+			Date date = DateUtils.parserDate(time);
+			System.out.println(" >> time:"+DateUtils.formatDate(date, DateUtils.FULL_STANDARD_PATTERN2));
 		} catch (Exception e) {
 			System.err.println(e);
 		} finally {
