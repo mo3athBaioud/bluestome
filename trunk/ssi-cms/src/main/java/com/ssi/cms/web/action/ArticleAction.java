@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ssi.cms.web.service.ArticleDocIService;
@@ -37,9 +36,9 @@ public class ArticleAction extends BaseAction {
 	
 	private Article article;
 
-	private Integer id;
+	private Integer[] ids;
 	
-	private Integer[]  ids;
+	private Integer id;
 
 	public String showArticle() {
 		try {
@@ -132,10 +131,10 @@ public class ArticleAction extends BaseAction {
 		start = (start == null ? 0 : start);
 		try {
 			if (null == id) {
-				articleDocList = articleDocService.getPageList(colName, value,
-						page.getStart(), page.getLimit(), false, null);
-				if (null != articleDocList && articleDocList.size() > 0) {
-					int count = articleDocService.getCount(colName, value, id);
+				int count = articleDocService.getCount(colName, value, id);
+				if (count > 0) {
+					articleDocList = articleDocService.getPageList(colName, value,
+							page.getStart(), page.getLimit(), false, null);
 					logger.debug(">> ArticleAction.articleDoc 查询数据成功");
 					toArticleDocJson(response, articleDocList, count);
 				} else {
@@ -146,10 +145,10 @@ public class ArticleAction extends BaseAction {
 									+ value + "]的有效数据'}");
 				}
 			} else {
-				articleDocList = articleDocService.getPageList(colName, value,
-						start, limit, false, id);
-				if (null != articleDocList && articleDocList.size() > 0) {
-					int count = articleDocService.getCount(colName, value, id);
+				int count = articleDocService.getCount(colName, value, id);
+				if (count > 0) {
+					articleDocList = articleDocService.getPageList(colName, value,
+							start, limit, false, id);
 					logger.debug(">> ArticleAction.articleDoc 查询数据成功 总数："
 							+ count);
 					toArticleDocJson(response, articleDocList, count);
@@ -337,14 +336,6 @@ public class ArticleAction extends BaseAction {
 		this.articleDocList = articleDocList;
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public ArticleDocIService getArticleDocService() {
 		return articleDocService;
 	}
@@ -417,9 +408,6 @@ public class ArticleAction extends BaseAction {
 		out.print(buffer.toString());
 		out.close();
 	}
-	
-	
-	
 
 	public IArticleService getArticleService() {
 		return articleService;
@@ -429,20 +417,28 @@ public class ArticleAction extends BaseAction {
 		this.articleService = articleService;
 	}
 
-	public Integer[] getIds() {
-		return ids;
-	}
-
-	public void setIds(Integer[] ids) {
-		this.ids = ids;
-	}
-
 	public ImageIService getImageService() {
 		return imageService;
 	}
 
 	public void setImageService(ImageIService imageService) {
 		this.imageService = imageService;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer[] getIds() {
+		return ids;
+	}
+
+	public void setIds(Integer[] ids) {
+		this.ids = ids;
 	}
 
 	
