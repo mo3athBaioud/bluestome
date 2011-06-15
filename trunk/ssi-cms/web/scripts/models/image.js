@@ -34,8 +34,12 @@ Ext.onReady(function(){
     app.cm_image = new Ext.grid.ColumnModel([
     	app.expander, 
         {id:'ID',header: "ID", width:100,sortable: true, dataIndex: 'd_id'},
-        {header: "标题", sortable: true, width:250,dataIndex: 'd_title'},
-        {header: "图片名称", sortable: true, dataIndex: 'd_name'},
+        {header: "标题", sortable: true, width:180,dataIndex: 'd_title'},
+        {header: "图片大小", sortable: true, dataIndex: 'd_filesize',
+        	renderer : function(value) {
+				return (value%1024)+'KB';
+			}
+        },
         {header: "状态", sortable: true, width:100,dataIndex: 'd_link'},
         {header: "创建时间", sortable: true,width:150,dataIndex: 'd_createtime'}
     ]);
@@ -326,6 +330,7 @@ Ext.onReady(function(){
 		}, {name : 'd_link',type : 'string'
 		}, {name : 'd_time',type : 'string'
 		}, {name : 'd_orderid',type : 'int'
+		}, {name : 'd_filesize',type : 'int'
 		}])
 	});
 	
