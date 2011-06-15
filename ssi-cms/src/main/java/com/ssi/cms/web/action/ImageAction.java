@@ -159,6 +159,7 @@ public class ImageAction extends BaseAction {
 			json.put("d_orderid", image.getOrderId());
 			json.put("d_time", image.getTime());
 			json.put("d_title", image.getTitle());
+			json.put("d_filesize", image.getSize());
 			jsonArr.add(json);
 		}
     	buffer.append(jsonArr.toString()).append("}");
