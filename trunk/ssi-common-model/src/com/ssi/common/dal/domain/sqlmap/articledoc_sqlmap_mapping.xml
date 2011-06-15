@@ -27,13 +27,13 @@
 				t.d_web_id = #webId#
 			</isNotEmpty>
 			<isNotEmpty property="title" prepend="and">
-				t.d_title = #title#
+				t.d_title like concat('%',#title#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="url" prepend="and">
 				t.d_url = #url#
 			</isNotEmpty>
 			<isNotEmpty property="author" prepend="and">
-				t.d_author = #author#
+				t.d_author like concat('%',#author#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="grade" prepend="and">
 				t.d_grade = #grade#
@@ -42,7 +42,7 @@
 				t.d_tag = #tag#
 			</isNotEmpty>
 			<isNotEmpty property="status" prepend="and">
-				t.d_status = #status#
+				t.d_status = $status$
 			</isNotEmpty>
 			<isNotEmpty property="createTime" prepend="and">
 				t.d_createtime = #createTime#
@@ -105,13 +105,13 @@
 				t.d_web_id = #webId#
 			</isNotEmpty>
 			<isNotEmpty property="title" prepend="and">
-				t.d_title = #title#
+				t.d_title like concat('%',#title#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="url" prepend="and">
 				t.d_url = #url#
 			</isNotEmpty>
 			<isNotEmpty property="author" prepend="and">
-				t.d_author = #author#
+				t.d_author like concat('%',#author#,'%')
 			</isNotEmpty>
 			<isNotEmpty property="grade" prepend="and">
 				t.d_grade = #grade#
@@ -120,7 +120,7 @@
 				t.d_tag = #tag#
 			</isNotEmpty>
 			<isNotEmpty property="status" prepend="and">
-				t.d_status = #status#
+				t.d_status = $status$
 			</isNotEmpty>
 			<isNotEmpty property="createTime" prepend="and">
 				t.d_createtime = #createTime#
