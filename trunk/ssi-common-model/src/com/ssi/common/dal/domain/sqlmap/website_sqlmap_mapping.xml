@@ -79,8 +79,13 @@
 			<isNotEmpty property="type" prepend="and">
 				t.d_web_type = #type#
 			</isNotEmpty>
+			<!-- 
 			<isNotEmpty property="url" prepend="and">
 				t.d_web_url like concat('%',#url#,'%')
+			</isNotEmpty>
+			 -->
+			<isNotEmpty property="url" prepend="and">
+				t.d_web_url = #url#
 			</isNotEmpty>
 			<isNotEmpty property="name" prepend="and">
 				t.d_web_name like concat('%',#name#,'%')
