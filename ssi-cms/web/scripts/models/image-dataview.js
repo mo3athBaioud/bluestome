@@ -69,7 +69,7 @@
 	        }
 	    }); //store
 	    //style="width:100px;height:100px" 
-	    var tpl = new Ext.XTemplate('<tpl for=".">', '<div class="thumb-wrap" id="{id}">', '<div class="thumb"><table qtip="{tips} border="0"><tr><td align="center" valign="middle">', '<img qtip="{tips}" alt="{tips}" class="thumb-img" src="{imgUrl}" onerror="nofind()">', '</td></tr></table></div>','</div>','</tpl>', '<div class="x-clear"></div>');//tpl
+	    var tpl = new Ext.XTemplate('<tpl for=".">', '<div class="thumb-wrap" id="{id}">', '<div class="thumb"><table qtip="{tips} border="0"><tr><td align="center" valign="middle">', '<img qtip="{tips}" alt="{tips}" class="thumb-img" src="{imgUrl}" onerror="imgErr(this);">', '</td></tr></table></div>','</div>','</tpl>', '<div class="x-clear"></div>');//tpl
 	    var dataView = new Ext.DataView({
 	        store: store,
 	        height:600,
@@ -434,4 +434,14 @@
 		var img = document.getElementsByTagName("img")
 		img.src="images/loading32.gif";
 		img.onerror = null;
+	}
+	
+	/**
+	 * 图片载入失败时调用的方法
+	 * <img onError="imgErr(this)" />
+	 */
+	function imgErr(img)
+	{
+		  img.src = project+'/resources/images/default/s.gif';
+		  img.qtip = '载入图片失败!';
 	}
