@@ -1,0 +1,13 @@
+[
+	{
+		"text":"移动营业厅",
+		"icon":"/images/house.png",
+		"leaf":true,
+		"id":"01"
+	},{
+		"text":"机关单位",
+		"icon":"/images/house.png",
+		"leaf":true,
+		"id":"02"
+	}
+]

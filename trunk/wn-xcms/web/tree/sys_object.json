@@ -1,0 +1,13 @@
+[
+	{
+		"text":"业务数据库",
+		"icon":"/images/database.png",
+		"leaf":true,
+		"id":"01"
+	},{
+		"text":"日志数据库",
+		"icon":"/images/database.png",
+		"leaf":true,
+		"id":"02"
+	}
+]

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pie>
+  <slice title="临渭区" pull_out="true">1790</slice>
+  <slice title="韩城">858</slice>
+  <slice title="华阴">1152</slice>
+  <slice title="华县" alpha="50">1308</slice>
+  <slice title="潼关">1506</slice>
+  <slice title="大荔">3766</slice>
+  <slice title="蒲城">1944</slice>
+  <slice title="澄城">3455</slice>
+  <slice title="白水">16085</slice>
+  <slice title="合阳">490</slice>
+  <slice title="富平">858</slice>
+</pie>

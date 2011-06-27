@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pie>
+  <slice title="中兴	ZTE-C S160" pull_out="true">16497</slice>
+  <slice title="华为	HW-C2827">11979</slice>
+  <slice title="中兴	ZTE-CS100">7673</slice>
+  <slice title="三星	SCH-B309" alpha="50">6674</slice>
+  <slice title="华为	HW-C2829">4807</slice>
+  <slice title="华为	HW-HUAWEI C8500">4409</slice>
+  <slice title="中兴	ZTE-CS189">4333</slice>
+  <slice title="中兴	ZTE-C N600">4276</slice>
+  <slice title="华为	HW-C2809">3387</slice>
+  <slice title="深圳广信	GX-CF100">2686</slice>
+</pie>

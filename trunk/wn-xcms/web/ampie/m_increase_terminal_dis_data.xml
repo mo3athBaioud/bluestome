@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pie>
+  <slice title="未央区" pull_out="true">16573</slice>
+  <slice title="莲湖区">6717</slice>
+  <slice title="新城区">11253</slice>
+  <slice title="碑林区">8539</slice>
+  <slice title="雁塔区">7495</slice>
+  <slice title="灞桥区">16093</slice>
+  <slice title="阎良区">6956</slice>
+  <slice title="临潼区">19692</slice>
+  <slice title="长安区">66297</slice>
+  <slice title="蓝田县">7495</slice>
+  <slice title="周至县">16093</slice>
+  <slice title="户县">3325</slice>
+  <slice title="高陵县">4321</slice>
+</pie>
