@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pie>
+  <slice title="临渭区" pull_out="true">1790</slice>
+  <slice title="韩城">858</slice>
+  <slice title="华阴">1152</slice>
+  <slice title="华县" alpha="50">1308</slice>
+  <slice title="潼关">1506</slice>
+  <slice title="大荔">3766</slice>
+  <slice title="蒲城">1944</slice>
+  <slice title="澄城">3455</slice>
+  <slice title="白水">16085</slice>
+  <slice title="合阳">490</slice>
+  <slice title="富平">858</slice>
+</pie>
+<!-- 
+		<value xid="0">未央区 </value>
+		<value xid="1">莲湖区 </value>
+		<value xid="2">新城区</value>
+		<value xid="3">碑林区</value>
+		<value xid="4">灞桥区</value>
+		<value xid="5">雁塔区</value>
+		<value xid="6">阎良区</value>
+		<value xid="7">临潼区</value>
+		<value xid="8">长安区</value>
+		<value xid="9">蓝田县</value>
+		<value xid="10">周至县</value>
+		<value xid="11">户县</value>
+		<value xid="12">高陵县</value>
+		
+		<value xid="0">595</value>
+		<value xid="1">226</value>
+		<value xid="2">423</value>
+		<value xid="3">483</value>
+		<value xid="4">625</value>
+		<value xid="5">1142</value>
+		<value xid="6">717</value>
+		<value xid="7">1911</value>
+		<value xid="8">7463</value>
+		<value xid="9">288</value>
+		<value xid="10">595</value>
+		<value xid="11">226</value>
+		<value xid="12">423</value>
+ -->

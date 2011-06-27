@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pie>
+  <slice title="未央区" pull_out="true">595</slice>
+  <slice title="莲湖区">226</slice>
+  <slice title="新城区">423</slice>
+  <slice title="碑林区" alpha="50">483</slice>
+  <slice title="雁塔区">625</slice>
+  <slice title="灞桥区">1142</slice>
+  <slice title="阎良区">717</slice>
+  <slice title="临潼区">1911</slice>
+  <slice title="长安区">7463</slice>
+  <slice title="蓝田县">288</slice>
+  <slice title="周至县">595</slice>
+  <slice title="户县">226</slice>
+  <slice title="高陵县">423</slice>
+</pie>
+<!-- 
+		<value xid="0">未央区 </value>
+		<value xid="1">莲湖区 </value>
+		<value xid="2">新城区</value>
+		<value xid="3">碑林区</value>
+		<value xid="4">灞桥区</value>
+		<value xid="5">雁塔区</value>
+		<value xid="6">阎良区</value>
+		<value xid="7">临潼区</value>
+		<value xid="8">长安区</value>
+		<value xid="9">蓝田县</value>
+		<value xid="10">周至县</value>
+		<value xid="11">户县</value>
+		<value xid="12">高陵县</value>
+		
+		<value xid="0">595</value>
+		<value xid="1">226</value>
+		<value xid="2">423</value>
+		<value xid="3">483</value>
+		<value xid="4">625</value>
+		<value xid="5">1142</value>
+		<value xid="6">717</value>
+		<value xid="7">1911</value>
+		<value xid="8">7463</value>
+		<value xid="9">288</value>
+		<value xid="10">595</value>
+		<value xid="11">226</value>
+		<value xid="12">423</value>
+ -->

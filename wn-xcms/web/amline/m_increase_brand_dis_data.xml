@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chart>
+  <!--<message><![CDATA[You can broadcast any message to chart from data XML file]]></message> -->
+	<series>
+		<value xid="0">中兴	ZTE-C S160</value>
+		<value xid="1">华为	HW-C2827</value>
+		<value xid="2">中兴	ZTE-CS100</value>
+		<value xid="3">三星	SCH-B309</value>
+		<value xid="4">华为	HW-C2829</value>
+		<value xid="5">中兴	ZTE-CS189</value>
+		<value xid="6">华为	HW-HUAWEI C8500</value>
+		<value xid="7">中兴	ZTE-C N600</value>
+		<value xid="8">华为	HW-C2809</value>
+		<value xid="9">深圳广信	GX-CF100</value>
+	</series>
+	<graphs>
+		<graph gid="1">
+			<value xid="0">16497</value>
+			<value xid="1">11979</value>
+			<value xid="2">7673</value>
+			<value xid="3">6674</value>
+			<value xid="4">4807</value>
+			<value xid="5">4409</value>
+			<value xid="6">4333</value>
+			<value xid="7">4276</value>
+			<value xid="8">3387</value>
+			<value xid="9">2686</value>
+		</graph>
+	</graphs>
+</chart>

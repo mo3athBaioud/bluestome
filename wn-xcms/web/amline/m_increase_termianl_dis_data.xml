@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chart>
+  <!--<message><![CDATA[You can broadcast any message to chart from data XML file]]></message> -->
+	<series>
+		<value xid="0">未央区 </value>
+		<value xid="1">莲湖区 </value>
+		<value xid="2">新城区</value>
+		<value xid="3">碑林区</value>
+		<value xid="4">灞桥区</value>
+		<value xid="5">雁塔区</value>
+		<value xid="6">阎良区</value>
+		<value xid="7">临潼区</value>
+		<value xid="8">长安区</value>
+		<value xid="9">蓝田县</value>
+		<value xid="10">周至县</value>
+		<value xid="11">户县</value>
+		<value xid="12">高陵县</value>
+	</series>
+	<graphs>
+		<graph gid="1">
+			<value xid="0">16573</value>
+			<value xid="1">6717</value>
+			<value xid="2">11253</value>
+			<value xid="3">8539</value>
+			<value xid="4">7495</value>
+			<value xid="5">16093</value>
+			<value xid="6">6956</value>
+			<value xid="7">19692</value>
+			<value xid="8">66297</value>
+			<value xid="9">7495</value>
+			<value xid="10">16093</value>
+			<value xid="11">6956</value>
+			<value xid="12">3325</value>
+		</graph>
+	</graphs>
+</chart>

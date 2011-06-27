@@ -1,0 +1,65 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>月新增智能终端情况分布表</title>
+		<link href="/style/default/common.css" rel="stylesheet"
+			type="text/css">
+		<link href="/style/default/form.css" rel="stylesheet" type="text/css">
+		<link href="/style/default/list.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="/ampie/swfobject.js"></script>
+		<script type="text/javascript"
+			src="/scripts/common/datetimeSelect.js"></script>
+		<script type="text/javascript">
+		    //导出报表为Excel
+		    function export2Excel(){
+			    window.location.href = '/pages/report/file/8.xls';
+		    }
+		</script>
+	</head>
+	<body>
+		<FORM name=form1 action="#" method="post" >
+			<TABLE class="form" cellspacing="0" cellpadding="0" id="tbData"
+				width="90%">
+				<TR>
+					<TD rowspan=4></TD>
+					<TD rowspan=4></TD>
+					<TD rowspan=4></TD>
+				</TR>
+				<TR>
+					<TD id="startdate_tip">
+						<FONT face="">起止时间：</FONT>
+						<input type="text" name="startdate" styleClass="input"
+							onclick="setYearPeriod(1950,2050);setAutoExpandYearPeriod(true);setDay(this);"
+							value="2011-04-01" />
+						<font color="red">*</font>
+					</TD>
+					<TD id="enddate_tip">
+						<FONT face="">结束时间: </FONT>
+						<input type="text" name="enddate" styleClass="input"
+							onclick="setYearPeriod(1950,2050);setAutoExpandYearPeriod(true);setDay(this);"
+							value="" />
+					</TD>
+					<TD colspan="2">
+						<input id=submit type=submit value="查询" class="button">
+						<input type="button" value="导出到Excel" onclick="export2Excel();"
+							class="button">
+					</TD>
+				</TR>
+			</TABLE>
+		</FORM>
+		<div id="flashcontent">
+			<strong>请更新您的FLASH播放器</strong>
+		</div>
+		<script type="text/javascript">
+		// <![CDATA[
+		var so = new SWFObject("/ampie/ampie.swf", "ampie", "800", "450", "8", "#FFFFFF");
+		so.addVariable("path", "/ampie/");
+		so.addVariable("wmode","transparent");
+		// you can set two or more different settings files here (separated by commas)
+		so.addVariable("settings_file", encodeURIComponent("/ampie/a_increase_smarttermianl_dis_settings.xml"));
+		so.addVariable("data_file", encodeURIComponent("/ampie/m_increase_smarttermianl_dis_data.xml"));
+		so.write("flashcontent");
+		// ]]>
+	</script>
+	</body>
+</html>
