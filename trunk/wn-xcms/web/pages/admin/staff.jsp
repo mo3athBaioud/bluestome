@@ -54,6 +54,7 @@
 		<script type="text/javascript" src="${ctx}/scripts/admin/staff.js"></script>
 		<script type="text/javascript">
 			var name = '员工管理';
+			var project = '${ctx}';
 		</script>
 	</head>
 	<body>
