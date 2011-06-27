@@ -211,3 +211,56 @@ SAMSUNG
 1.登录界面不能有选择，直接是渭南系统登录。
 2.权限分配系统。
   员工与区位码匹配，只能查询到对应区位码的数据。
+  设计区局表和渠道表关系表，然后就是员工与渠道关系表
+  [员工表]
+  create table tbl_staff(
+	  d_id  int(4) not null AUTO_INCREMENT,
+	  d_username varchar(16) not null,
+	  d_password varchar(16) not null,
+	  d_mobile varchar(11),
+	  d_officephone varchar(13) not null,
+	  d_channel_code varchar(50) not null,
+	  d_status int(4) default 1,
+	  d_createtime timestamp default current_timestamp,
+	  PRIMARY KEY (d_id),
+	  UNIQUE INDEX tbl_staff_username (d_username)
+  );
+  
+  [渠道表]
+  create table tbl_channel(
+	  d_channel_code varchar(50) not null,
+	  d_channel_name varchar(50) not null,
+	  d_address varchar(128),
+	  d_status int(4) default 1,
+	  d_bdcode varchar(50) not null,
+	  d_createtime timestamp default current_timestamp,
+	  UNIQUE INDEX tbl_channel_code (d_channel_code)
+  );
+  
+  [业务区]
+  create table tbl_bdistrict(
+	  d_code varchar(50) NOT NULL,
+	  d_name varchar(50) NOT NULL,
+	  d_parent_code varchar(50) DEFAULT '0000',
+	  d_description varchar(256),
+	  d_status int(4) default 1,
+	  d_createtime timestamp default current_timestamp,
+	  UNIQUE INDEX tbl_bdistrict_code (d_code)
+  );
+  
+  渠道编码，业务区，营业厅名称
+  
+  
+  业务区表 代表某个县区
+  
+  一个营业厅只有一个渠道编码，一个营业厅只有一个工号。
+  工号 -> 渠道编码 -> 业务区 -> 地市
+  所属数据需要
+  
+  2011-06-26
+  IMEI不显示在前台。
+  
+  
+  
+  健云网络
+  jack.zhang@gmail.com
