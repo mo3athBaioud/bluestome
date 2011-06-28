@@ -38,29 +38,35 @@ public class LoginAction extends BaseAction {
 		Staff sta = staffService.findByName(username);
 		json = new JsonObject();
 		if(null != sta){
-			if(sta.getPassword().equals(password)){
-				String ip = request.getRemoteAddr();
-				String sessionName = ip + "_" + Constants.USERSESSION;
-				userSession = new UserSession();
-				userSession.setUsid(UUID.randomUUID().toString());
-				userSession.setStaff(sta);
-				Channel tmp = staffService.findByChannelCode(sta.getChannelcode());
-				if(null != tmp){
-					userSession.setChannel(tmp);
-					BDistrict bd = staffService.findByCode(tmp.getBdcode());
-					if(null != bd){
-						userSession.setBdistrict(bd);
-						request.getSession().setAttribute(sessionName, userSession);
-						logger.debug(" >> Session Set");
+			if(sta.getStatus() == 1){
+				if(sta.getPassword().equals(password)){
+					String ip = request.getRemoteAddr();
+					String sessionName = ip + "_" + Constants.USERSESSION;
+					userSession = new UserSession();
+					userSession.setUsid(UUID.randomUUID().toString());
+					userSession.setStaff(sta);
+					Channel tmp = staffService.findByChannelCode(sta.getChannelcode());
+					if(null != tmp){
+						userSession.setChannel(tmp);
+						BDistrict bd = staffService.findByCode(tmp.getBdcode());
+						if(null != bd){
+							userSession.setBdistrict(bd);
+							request.getSession().setAttribute(sessionName, userSession);
+							logger.debug(" >> Session Set");
+						}
 					}
+					//TODO 获取区局数据
+					json.setSuccess(true);
+					//设置用户属性到SESSION
+				}else{
+					json.setSuccess(false);
+					//TODO 密码不正确
+					json.setMsg("您输入的密码不正确!");
 				}
-				//TODO 获取区局数据
-				json.setSuccess(true);
-				//设置用户属性到SESSION
 			}else{
 				json.setSuccess(false);
-				//TODO 密码不正确
-				json.setMsg("您输入的密码不正确!");
+				//TODO 用户不存在
+				json.setMsg("您输入的用户["+username+"]被禁用，请与相关管理部门联系!");
 			}
 		}else{
 			json.setSuccess(false);

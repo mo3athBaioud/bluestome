@@ -57,13 +57,18 @@ public class StaffAction extends BaseAction {
 	public JsonObject list(@Param("colName") String colName,@Param("value") String value,@Param("start") int start,@Param("limit") int limit){
 		json = new JsonObject();
 		int count = staffService.getCount(colName,value);
-		List<Staff> list =  staffService.search(colName,value,start, limit);
-		logger.debug(" >> count:"+count);
-		if(null != list && list.size() > 0){
-			json.setCount(count);
-			json.setObj(list);
+		if(count > 0){
+			List<Staff> list =  staffService.search(colName,value,start, limit);
+			logger.debug(" >> count:"+count);
+			if(null != list && list.size() > 0){
+				json.setCount(count);
+				json.setObj(list);
+			}else{
+				json.setSuccess(false);
+			}
 		}else{
 			json.setSuccess(false);
+			json.setMsg("未查询到用户名为["+value+"]的用户");
 		}
 		return json;
 	}
@@ -155,6 +160,64 @@ public class StaffAction extends BaseAction {
 		return json;
 	}
 
+	/**
+	 * 启用员工
+	 * @param id
+	 * @return
+	 */
+	@At("/enable")
+	@Ok("json")
+	public JsonObject enable(@Param("id") Integer[] ids,HttpServletRequest request){
+		json = new JsonObject();
+		boolean isOk = true;
+		try{
+			for(Integer id:ids){
+				if(!staffService.enable(id)){
+					isOk = false;
+					break;
+				}
+			}
+			json.setSuccess(isOk);
+			if(isOk){
+				json.setMsg("启用员工成功!");
+			}else{
+				json.setMsg("启用员工失败!");
+			}
+		}catch(Exception e){
+			logger.error(e);
+		}
+		return json;
+	}
+	
+	/**
+	 * 禁用员工
+	 * @param id
+	 * @return
+	 */
+	@At("/disable")
+	@Ok("json")
+	public JsonObject disable(@Param("id") Integer[] ids,HttpServletRequest request){
+		json = new JsonObject();
+		boolean isOk = true;
+		try{
+			for(Integer id:ids){
+				if(!staffService.disable(id)){
+					isOk = false;
+					break;
+				}
+			}
+			json.setSuccess(isOk);
+			if(isOk){
+				json.setMsg("禁用员工成功!");
+			}else{
+				json.setMsg("禁用员工失败!");
+			}
+		}catch(Exception e){
+			logger.error(e);
+		}
+		return json;
+	}
+	
 	public StaffService getStaffService() {
 		return staffService;
 	}
