@@ -107,38 +107,52 @@ Ext.onReady(function(){
 		defaultType : 'textfield',
 		items : [
 			{
-				fieldLabel : '员工名',
-				name : 'staff.username',
+				xtype:'hidden',
+				fieldLabel : 'ID',
+				name : 'id',
 				allowBlank : false
-			},{
+			},
+			{
+				fieldLabel : '员工名',
+				name : 'username',
+				allowBlank : false
+			},
+			{
 				fieldLabel:'密码',
 				id:'pwd',
 				name:'newPwd',
 				inputType:'password',
 				vtype:'safe',
-				allowBlank:false,
+//				allowBlank:false,
 				maxLength:20
-			}, {
+			},
+			 {
 				fieldLabel:'确认密码',
 				inputType:'password',
-				name:'staff.password',
-				allowBlank:false,
+				name:'password',
+//				allowBlank:false,
 				vtype:'password',
 				initialPassField: 'pwd', // 要比较的另外一个的组件的id
 				maxLength:20
-			},{
+			},
+//			{
+//			 	xtype:'hidden',
+//				name:'password',
+//				allowBlank:false
+//			},
+			{
 				fieldLabel : '手机号码',
-				name : 'staff.mobile',
+				name : 'mobile',
 				allowBlank : false
 			},{
 				fieldLabel : '办公室号码',
-				name : 'staff.officephone',
+				name : 'officephone',
 				allowBlank : false
 			},{
 				//下拉选择框
 				xtype:'combo',
 				fieldLabel : '所属业务区',
-				hiddenName:'status',
+				hiddenName:'bdistrict',
 		        valueField: 'id',
 		        displayField: 'name',
 		        triggerAction:'all',
@@ -154,7 +168,7 @@ Ext.onReady(function(){
 				//下拉选择框
 				xtype:'combo',
 				fieldLabel : '所属渠道',
-				hiddenName:'staff.channelcode',
+				hiddenName:'channelcode',
 		        valueField: 'id',
 		        displayField: 'name',
 		        triggerAction:'all',
@@ -192,7 +206,7 @@ Ext.onReady(function(){
 				handler : function(btn) {
 					var frm = Ext.getCmp('add_form').form;
 					if (frm.isValid()) {
-						var dnfield = frm.findField('staff.username');
+						var dnfield = frm.findField('username');
 						frm.submit({
 							waitTitle : '请稍候',
 							waitMsg : '正在提交表单数据,请稍候...',
@@ -203,7 +217,13 @@ Ext.onReady(function(){
 									buttons : Ext.Msg.OK,
 									fn:function(){
 										frm.reset();
-										app.ds_data.load({params : {start : 0,limit : app.limit}});
+										app.ds_data.load({params : {
+											start : 0,
+											limit : app.limit,
+											colName : app.colName,
+											value : app.values
+											}
+										});
 										btn.enable();
 										var win = Ext.getCmp('add_win');
 										win.hide();
@@ -223,17 +243,14 @@ Ext.onReady(function(){
 					}
 				}
 			}, {
-				id:'dbm_form_reset',
-				buttonAlign : 'center',
+				id:'data_form_reset',
 				text : '重置',
 				iconCls:'icon-arrow_refresh_small',
 				handler : function() {
 					Ext.getCmp('add_form').form.reset();
 				}
 			}, {
-				id:'dbm_form_cancel',
-				iconCls:'icon-delete',
-				buttonAlign : 'center',
+				iconCls:'icon-cancel',
 				text : '取消',
 				handler : function() {
 					Ext.getCmp('add_form').form.reset();
@@ -251,7 +268,7 @@ Ext.onReady(function(){
 		resizable : false,
 		autoHeight : true,
 		modal : true,
-		closeAction : 'close',
+		closeAction : 'hide',
 		animCollapse : true,
 		pageY : 20,
 		pageX : document.body.clientWidth / 2 - 420 / 2,
@@ -265,11 +282,11 @@ Ext.onReady(function(){
 	app.btn_add = new Ext.Button({
 		text : '添加员工',
 		iconCls:'icon-user_add',
-		disabled:true,
+		disabled:false,
 		handler : function(){
 			app.add_win.show();
-			app.add_win.setTitle("添加员工");
-			Ext.getCmp('dbm_form_reset').show();
+			app.add_win.setTitle("添加");
+			Ext.getCmp('data_form_reset').show();
 		}
 	});
 	
@@ -282,7 +299,7 @@ Ext.onReady(function(){
 			if(records.length == 0 ){
 				Ext.Msg.show({
 					title : '提示',
-					msg:'请选择需要删除的记录',
+					msg:'请选择需要禁用的员工',
 					buttons : Ext.Msg.OK,
 					icon : Ext.Msg.ERROR
 				});
@@ -294,7 +311,7 @@ Ext.onReady(function(){
 				Ext.Msg.confirm('提示', '你确定禁用所选记录?', function(btn) {
 					if (btn == 'yes') {
 						Ext.Ajax.request({
-							url : project+'/staff/delete.cgi',
+							url : project+'/staff/disable.cgi',
 							params : {
 								id : ids
 							},
@@ -342,14 +359,85 @@ Ext.onReady(function(){
 		iconCls:'icon-accept',
 		disabled:true,
 		handler : function(){
-			Ext.Msg.show({
-				title : '提示',
-				msg : '该功能正在开发!',
-				buttons : Ext.Msg.OK,
-				icon : Ext.Msg.INFO
-			});
-		}
+			var records = app.grid.getSelectionModel().getSelections();
+			if(records.length == 0 ){
+				Ext.Msg.show({
+					title : '提示',
+					msg:'请选择需要启用的员工',
+					buttons : Ext.Msg.OK,
+					icon : Ext.Msg.ERROR
+				});
+			}else{
+				var ids = [];
+				for(i = 0;i < records.length;i++){
+					ids.push(records[i].get('id'));
+				}
+				Ext.Msg.confirm('提示', '你确定启用用所选记录?', function(btn) {
+					if (btn == 'yes') {
+						Ext.Ajax.request({
+							url : project+'/staff/enable.cgi',
+							params : {
+								id : ids
+							},
+							success:function(response,option){
+								var obj = Ext.util.JSON.decode(response.responseText);
+								if(obj.success){
+									Ext.Msg.show({
+										title : '提示',
+										msg:obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.INFO
+									});
+									app.ds_data.load({
+										params:{
+											start:0,
+											limit : app.limit
+										}
+									});
+								}else{
+									Ext.Msg.show({
+										title : '提示',
+										msg : obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.ERROR
+									});
+								}
+							},
+			                failure:function(response,option){
+								Ext.Msg.show({
+									title : '提示',
+									msg : '系统发生错误!',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.ERROR
+								});
+			                }
+						});
+					}
+				});
+			}}
 	});
+	
+    app.btn_update = new Ext.Button({
+		text : '修改',
+		iconCls : 'icon-edit',
+		disabled:true,
+		handler : function(){
+			if(app.grid.getSelectionModel().getSelected()){
+				Ext.getCmp('data_form_reset').hide();
+ 				var record = app.grid.getSelectionModel().getSelected();
+				app.data_form.getForm().loadRecord(record);
+				app.add_win.show();
+				app.add_win.setTitle("修改员工信息");
+			}else{
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '请选择需要修改的数据业务!',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.ERROR
+				});
+			}
+		}
+	}); 
 	
 	app.text_search_code = new Ext.form.TextField({
 		name : 'textSearchcode',
@@ -376,7 +464,14 @@ Ext.onReady(function(){
 			success:function(response,option){
 				var obj = Ext.util.JSON.decode(response.responseText);
 				if(obj.success){
-					app.ds_data.load({params : {start:0,limit:app.limit}}); //,colName:app.colName,value:app.values
+					app.ds_data.load({
+						params : {
+							start : 0,
+							limit : app.limit,
+							colName : app.colName,
+							value : app.values
+						}
+					});
 				}else{
 	             	Ext.MessageBox.alert('提示',obj.msg);
 				}
@@ -453,7 +548,7 @@ Ext.onReady(function(){
 	    height:500,
         autoScroll: true,
 		sm:app.sm,
-		tbar : [app.btn_detail,'-',app.btn_add,'-',app.btn_disable,'-',app.btn_enable,'-','请输入员工名:',app.text_search_code,'-',app.btn_search_code],
+		tbar : [app.btn_detail,'-',app.btn_add,'-',app.btn_disable,'-',app.btn_enable,'-',app.btn_update,'-','请输入员工名:',app.text_search_code,'-',app.btn_search_code],
 		bbar : app.ptb
 	});
 	
@@ -479,13 +574,15 @@ Ext.onReady(function(){
 				if(grid.getSelectionModel().isSelected(rowIndex)){
 					app.btn_disable.enable();
 					app.btn_enable.enable();
-					app.btn_add.enable();
+					app.btn_add.disable();
 					app.btn_detail.enable();
+					app.btn_update.enable();
 				}else{
 					app.btn_disable.disable();
 					app.btn_enable.disable();
-					app.btn_add.disable();
+					app.btn_add.enable();
 					app.btn_detail.disable();
+					app.btn_update.disable();
 				}
 	});
 	
