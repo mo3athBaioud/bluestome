@@ -80,7 +80,7 @@ public class StaffService {
 		Staff sta = null;
 		Cnd condition = null;
 		try{
-			condition = Cnd.where("d_username", "=", username).and("d_status", "=", "1");
+			condition = Cnd.where("d_username", "=", username); //.and("d_status", "=", "1")
 			sta = staffDao.findByCondition(Staff.class, condition);
 		}catch(Exception e){
 			log.error(e);
@@ -156,6 +156,57 @@ public class StaffService {
 			log.error(e);
 			return false;
 		}
+	}
+	
+	/**
+	 * 启用员工
+	 * @param id
+	 * @return
+	 */
+	public boolean enable(Integer id){
+		boolean b = false;
+		try{
+			Staff staff = findById(id);
+			if(null != staff){
+				if(staff.getStatus() != 1){
+					staff.setStatus(1);
+					b = update(staff);
+				}
+			}
+		}catch(Exception e){
+			log.error(e);
+		}
+		return b;
+	}
+	
+	/**
+	 * 启用员工
+	 * @param id
+	 * @return
+	 */
+	public boolean disable(Integer id){
+		boolean b = false;
+		try{
+			Staff staff = findById(id);
+			if(null != staff){
+				if(staff.getStatus() != 0){
+					staff.setStatus(0);
+					b = update(staff);
+				}
+			}
+		}catch(Exception e){
+			log.error(e);
+		}
+		return b;
+	}
+	
+	/**
+	 * 根据员工ID查找记录
+	 * @param id
+	 * @return
+	 */
+	public Staff findById(Integer id){
+		return staffDao.find(id, Staff.class);
 	}
 	
 	/**
