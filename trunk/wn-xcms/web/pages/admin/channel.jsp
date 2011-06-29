@@ -54,6 +54,7 @@
 		<script type="text/javascript" src="${ctx}/scripts/admin/channel.js"></script>
 		<script type="text/javascript">
 			var name = '渠道管理';
+			var project = '${ctx}';
 		</script>
 	</head>
 	<body>

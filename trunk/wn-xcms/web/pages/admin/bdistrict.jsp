@@ -54,6 +54,7 @@
 		<script type="text/javascript" src="${ctx}/scripts/admin/bdistrict.js"></script>
 		<script type="text/javascript">
 			var name = '业务区管理';
+			var project = '${ctx}';
 		</script>
 	</head>
 	<body>
