@@ -2,6 +2,8 @@ package com.xcms.web.action;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.nutz.ioc.annotation.InjectName;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -28,14 +30,24 @@ public class BDistrictAction extends BaseAction {
 	 */
 	@At("/add")
 	@Ok("json")
-	public JsonObject insert(@Param("::bdistrict.") BDistrict bdistrict){
+	public JsonObject insert(@Param("::bdistrict.") BDistrict bdistrict,HttpServletRequest request){
 		json = new JsonObject();
-		if(bDistrictService.add(bdistrict)){
-			json.setSuccess(true);
-			json.setMsg("添加业务区数据成功");
+		if(null != request.getParameter("action") && "edit".equals(request.getParameter("action"))){
+			if(bDistrictService.update(bdistrict)){
+				json.setSuccess(true);
+				json.setMsg("编辑业务区数据成功");
+			}else{
+				json.setSuccess(false);
+				json.setMsg("编辑业务区数据失败,是否存在相同业务区代码!");
+			}
 		}else{
-			json.setSuccess(false);
-			json.setMsg("添加业务区数据失败,是否存在相同用户名!");
+			if(bDistrictService.add(bdistrict)){
+				json.setSuccess(true);
+				json.setMsg("添加业务区数据成功");
+			}else{
+				json.setSuccess(false);
+				json.setMsg("添加业务区数据失败,是否存在相同业务区代码!");
+			}
 		}
 		return json;
 	}
