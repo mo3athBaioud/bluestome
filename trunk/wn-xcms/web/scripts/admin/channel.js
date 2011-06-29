@@ -7,7 +7,7 @@ Ext.onReady(function(){
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
     Ext.QuickTips.init();
 	app.limit = 15;
-	app.colName = "";
+	app.colName = "channlename";
 	app.values = "";
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
@@ -88,26 +88,199 @@ Ext.onReady(function(){
 //		disabled:true,
 		iconCls : 'icon-search',
 		handler : function(){
-			Ext.Msg.show({
-				title : '提示',
-				msg : '该功能正在开发!',
-				buttons : Ext.Msg.OK,
-				icon : Ext.Msg.INFO
-			});
+			app.searchcode();
 		}
 	});
+	
+	app.data_form = new Ext.FormPanel({
+		id:'add_form',
+		labelWidth : 80,
+		labelAlign : 'right',
+		border : false,
+		baseCls : 'x-plain',
+		bodyStyle : 'padding:5px 5px 0',
+		anchor : '100%',
+		url : project+'/channel/add.cgi',
+		defaults : {
+			width : 300,
+			msgTarget : 'side'
+		},
+		defaultType : 'textfield',
+		items : [
+			{
+				xtype:'hidden',
+				name : 'action',
+				value:'add',
+			},{
+				fieldLabel : '渠道代码',
+				name : 'channel.channelcode',
+				allowBlank : false
+			},{
+				fieldLabel : '渠道名称',
+				name : 'channel.channlename',
+				allowBlank : false
+			},{
+				xtype: 'textarea',
+				fieldLabel : '渠道地址',
+				name : 'channel.address'
+			},{
+				//下拉框
+				xtype:'combo',
+				fieldLabel : '所属业务区',
+                mode:'remote',
+				store:new Ext.data.Store({
+					proxy:new Ext.data.HttpProxy({
+						url:project+'/bdistrict/list.cgi?start=0&limit=100&colName=parentcode&value=0000'
+					}),
+					reader : new Ext.data.JsonReader({
+						root : 'obj'
+					}, [{name : 'code',type : 'string'},
+						{name : 'name',type : 'string'}
+					])
+				}),
+				selectOnFocus:true,
+				triggerAction:'all',
+				hiddenName:'channel.bdcode',
+                valueField: "code",
+                displayField: "name",
+                blankText: '请选择所属业务区',
+                emptyText: '请选择所属业务区',
+                editable:true,
+				allowBlank : false
+			},{
+				//下拉选择框
+				xtype:'combo',
+				fieldLabel : '状态',
+				hiddenName:'channel.status',
+		        valueField: 'id',
+		        displayField: 'name',
+		        triggerAction:'all',
+		        mode: 'local',
+		        store: new Ext.data.SimpleStore({
+		            fields: ['id','name'],
+		            data: [[1,'可用'],[0,'不可用']]
+		        }),
+	            editable:false,
+				emptyText : '请选择业务状态!',
+				allowBlank : false
+			}],
+			buttonAlign : 'center',
+			minButtonWidth : 60,
+			buttons : [{
+				id:'dbm_form_save',
+				text : '保存',
+				iconCls:'icon-accept',
+				handler : function(btn) {
+					var frm = Ext.getCmp('add_form').form;
+					if (frm.isValid()) {
+						var dnfield = frm.findField('channel.channelcode');
+						frm.submit({
+							waitTitle : '请稍候',
+							waitMsg : '正在提交表单数据,请稍候...',
+							success : function(form, action) {
+					 			Ext.Msg.show({
+									title : '系统提示',
+									msg : action.result.msg,
+									buttons : Ext.Msg.OK,
+									fn:function(){
+										frm.reset();
+										app.ds_data.load({params : {
+											start : 0,
+											limit : app.limit,
+											colName : app.colName,
+											value : app.values
+											}
+										});
+										btn.enable();
+										var win = Ext.getCmp('add_win');
+										win.hide();
+									},
+									icon : Ext.MessageBox.INFO
+								});
+							},
+							failure : function(){
+								Ext.Msg.show({
+									title : '错误提示',
+									msg : '"' + dnfield.getValue() + '" ' + '名称可能已经存在或者您没有添加数据的权限!',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.ERROR
+								})
+							}
+						})
+					}
+				}
+			}, {
+				id:'data_form_reset',
+				text : '重置',
+				iconCls:'icon-arrow_refresh_small',
+				handler : function() {
+					Ext.getCmp('add_form').form.reset();
+				}
+			}, {
+				iconCls:'icon-cancel',
+				text : '取消',
+				handler : function() {
+					app.data_form.getForm().reset();
+					var win = Ext.getCmp('add_win');
+					win.hide();
+				}
+			}]
+	});
+	
+	app.add_win = new Ext.Window({
+		id:'add_win',
+		title:'窗口',
+		iconCls:'icon-add',
+		width : 500,
+		resizable : false,
+		autoHeight : true,
+		modal : true,
+		closeAction : 'hide',
+		animCollapse : true,
+		pageY : 20,
+		pageX : document.body.clientWidth / 2 - 420 / 2,
+		animateTarget : Ext.getBody(),
+		constrain : true,
+		items : [
+			app.data_form
+		]
+	});	
 	
 	app.btn_add = new Ext.Button({
 		text : '添加',
 		iconCls:'icon-add',
+		handler : function(){
+			app.data_form.getForm().reset();
+			app.add_win.show();
+			app.add_win.setTitle("添加渠道");
+			Ext.getCmp('data_form_reset').show();
+		}
+	});
+	
+   app.btn_update = new Ext.Button({
+		text : '修改',
+		iconCls : 'icon-edit',
 		disabled:true,
 		handler : function(){
-			Ext.Msg.show({
-				title : '提示',
-				msg : '该功能正在开发!',
-				buttons : Ext.Msg.OK,
-				icon : Ext.Msg.INFO
-			});
+			if(app.grid.getSelectionModel().getSelected()){
+				Ext.getCmp('data_form_reset').hide();
+ 				app.record = app.grid.getSelectionModel().getSelected();
+ 				app.data_form.getForm().findField('action').setValue('edit');
+ 				app.data_form.getForm().findField('channel.channelcode').setValue(app.record.get('channelcode'));
+ 				app.data_form.getForm().findField('channel.channlename').setValue(app.record.get('channlename'));
+ 				app.data_form.getForm().findField('channel.status').setValue(app.record.get('status'));
+// 				app.data_form.getForm().findField('channel.bdcode').setValue(app.record.get('bdcode'));
+ 				app.data_form.getForm().findField('channel.address').setValue(app.record.get('address'));
+				app.add_win.show();
+				app.add_win.setTitle("修改渠道");
+			}else{
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '请选择需要修改的数据业务!',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.ERROR
+				});
+			}
 		}
 	});
 	
@@ -151,6 +324,37 @@ Ext.onReady(function(){
 		}
 	});
 
+	app.searchcode = function() {
+		app.values =app.text_search_code.getValue();
+		Ext.Ajax.request({
+			url : project+'/channel/list.cgi',
+			params : {
+				start : 0,
+				limit : app.limit,
+				colName : app.colName,
+				value : app.values
+			},
+			success:function(response,option){
+				var obj = Ext.util.JSON.decode(response.responseText);
+				if(obj.success){
+					app.ds_data.load({
+						params : {
+							start : 0,
+							limit : app.limit,
+							colName : app.colName,
+							value : app.values
+						}
+					});
+				}else{
+	             	Ext.MessageBox.alert('提示',obj.msg);
+				}
+			},
+            failure:function(){
+             	Ext.MessageBox.alert('提示','服务器内部错误');
+            }
+		})
+	};
+	
 	app.text_phone_number = new Ext.form.TextField({
 		name : 'phone_number',
 		width : 150,
@@ -200,7 +404,8 @@ Ext.onReady(function(){
 	    height:500,
         autoScroll: true,
 		sm:app.sm,
-		tbar : [app.btn_detail,'-',app.btn_add,'-',app.btn_disable,'-',app.btn_enable,'-','请输入渠道名称:',app.text_search_code,'-',app.btn_search_code],
+		//app.btn_detail,app.btn_disable,'-',app.btn_enable,'-',
+		tbar : ['-',app.btn_add,'-',app.btn_update,'-','请输入渠道名称:',app.text_search_code,'-',app.btn_search_code],
 		bbar : app.ptb
 	});
 	
@@ -224,15 +429,17 @@ Ext.onReady(function(){
 	 */
 	app.grid.addListener('rowclick',function(grid, rowIndex){
 				if(grid.getSelectionModel().isSelected(rowIndex)){
-					app.btn_disable.enable();
-					app.btn_enable.enable();
-					app.btn_add.enable();
-					app.btn_detail.enable();
+//					app.btn_disable.enable();
+//					app.btn_enable.enable();
+//					app.btn_add.enable();
+//					app.btn_detail.enable();
+					app.btn_update.enable();
 				}else{
-					app.btn_disable.disable();
-					app.btn_enable.disable();
-					app.btn_add.disable();
-					app.btn_detail.disable();
+//					app.btn_disable.disable();
+//					app.btn_enable.disable();
+//					app.btn_add.disable();
+//					app.btn_detail.disable();
+					app.btn_update.disable();
 				}
 	});
 	

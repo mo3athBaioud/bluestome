@@ -91,6 +91,23 @@ Ext.onReady(function(){
 		}
 	});
 	
+	/**
+	 * 渠道下拉框
+	 */
+	app.channel_combo_store = new Ext.data.Store({
+		proxy: new Ext.data.HttpProxy({
+                        //这里是参数可以顺便写,这个数据源是在第一个下拉框select的时候load的
+			url: project+'/channel/list.cgi?start=0&limit=100'
+		}),
+		reader: new Ext.data.JsonReader({
+		root: 'obj',
+		id: 'id'
+		}, [
+			{name: 'code', mapping: 'channelcode'},
+			{name: 'name', mapping: 'channlename'}
+		])
+	}); 
+	
 	app.data_form = new Ext.FormPanel({
 		id:'add_form',
 		labelWidth : 80,
@@ -109,12 +126,12 @@ Ext.onReady(function(){
 			{
 				xtype:'hidden',
 				fieldLabel : 'ID',
-				name : 'id',
+				name : 'staff.id',
 				allowBlank : false
 			},
 			{
 				fieldLabel : '员工名',
-				name : 'username',
+				name : 'staff.username',
 				allowBlank : false
 			},
 			{
@@ -123,60 +140,65 @@ Ext.onReady(function(){
 				name:'newPwd',
 				inputType:'password',
 				vtype:'safe',
-//				allowBlank:false,
 				maxLength:20
 			},
 			 {
 				fieldLabel:'确认密码',
 				inputType:'password',
-				name:'password',
-//				allowBlank:false,
+				name:'staff.password',
 				vtype:'password',
 				initialPassField: 'pwd', // 要比较的另外一个的组件的id
 				maxLength:20
 			},
-//			{
-//			 	xtype:'hidden',
-//				name:'password',
-//				allowBlank:false
-//			},
 			{
 				fieldLabel : '手机号码',
-				name : 'mobile',
+				name : 'staff.mobile',
 				allowBlank : false
 			},{
 				fieldLabel : '办公室号码',
-				name : 'officephone',
+				name : 'staff.officephone',
 				allowBlank : false
 			},{
-				//下拉选择框
+				//下拉框
 				xtype:'combo',
 				fieldLabel : '所属业务区',
-				hiddenName:'bdistrict',
-		        valueField: 'id',
-		        displayField: 'name',
-		        triggerAction:'all',
-		        mode: 'local',
-		        store: new Ext.data.SimpleStore({
-		            fields: ['id','name'],
-		            data: [['E0E1','临渭区'],['E0E7','蒲城'],['E0EA','大荔']]
-		        }),
-	            editable:false,
-				emptyText : '请选择所属业务区!',
-				allowBlank : false
-			},{
+                mode:'remote',
+				store:new Ext.data.Store({
+					proxy:new Ext.data.HttpProxy({ 
+						url:project+'/bdistrict/list.cgi?start=0&limit=100'
+					}),
+					reader : new Ext.data.JsonReader({
+						root : 'obj'
+					}, [{name : 'code',type : 'string'},
+						{name : 'name',type : 'string'}
+					])
+				}),
+				selectOnFocus:true,
+				triggerAction:'all',
+                valueField: "code",
+                displayField: "name",
+                blankText: '请选择所属业务区',
+                emptyText: '请选择所属业务区',
+                editable:false,
+				allowBlank : false,
+				listeners:{  
+					select : function(combo, record,index){
+						app.channel_combo_store.proxy= new Ext.data.HttpProxy({url:project+'/channel/list.cgi?start=0&limit=100&colName=bdcode&value='+combo.value});
+	 					app.channel_combo_store.load(); 
+					}
+				}
+			},
+			{
+				id:'channel_combo',
 				//下拉选择框
 				xtype:'combo',
 				fieldLabel : '所属渠道',
-				hiddenName:'channelcode',
-		        valueField: 'id',
+				hiddenName:'staff.channelcode',
+		        valueField: 'code',
 		        displayField: 'name',
 		        triggerAction:'all',
 		        mode: 'local',
-		        store: new Ext.data.SimpleStore({
-		            fields: ['id','name'],
-		            data: [['E0E7A0A1','中山路营业2厅']]
-		        }),
+				store:app.channel_combo_store,
 	            editable:false,
 				emptyText : '请选择所属渠道!',
 				allowBlank : false
@@ -184,7 +206,7 @@ Ext.onReady(function(){
 				//下拉选择框
 				xtype:'combo',
 				fieldLabel : '状态',
-				hiddenName:'status',
+				hiddenName:'staff.status',
 		        valueField: 'id',
 		        displayField: 'name',
 		        triggerAction:'all',
@@ -253,7 +275,7 @@ Ext.onReady(function(){
 				iconCls:'icon-cancel',
 				text : '取消',
 				handler : function() {
-					Ext.getCmp('add_form').form.reset();
+					app.data_form.getForm().reset();
 					var win = Ext.getCmp('add_win');
 					win.hide();
 				}
@@ -284,6 +306,7 @@ Ext.onReady(function(){
 		iconCls:'icon-user_add',
 		disabled:false,
 		handler : function(){
+			app.data_form.getForm().reset();
 			app.add_win.show();
 			app.add_win.setTitle("添加");
 			Ext.getCmp('data_form_reset').show();
@@ -424,8 +447,14 @@ Ext.onReady(function(){
 		handler : function(){
 			if(app.grid.getSelectionModel().getSelected()){
 				Ext.getCmp('data_form_reset').hide();
- 				var record = app.grid.getSelectionModel().getSelected();
-				app.data_form.getForm().loadRecord(record);
+ 				app.record = app.grid.getSelectionModel().getSelected();
+ 				app.data_form.getForm().findField('staff.id').setValue(app.record.get('id'));
+ 				app.data_form.getForm().findField('staff.username').setValue(app.record.get('username'));
+ 				app.data_form.getForm().findField('staff.password').setValue(app.record.get('password'));
+ 				app.data_form.getForm().findField('staff.mobile').setValue(app.record.get('mobile'));
+ 				app.data_form.getForm().findField('staff.officephone').setValue(app.record.get('officephone'));
+ 				app.data_form.getForm().findField('staff.channelcode').setValue(app.record.get('channelcode'));
+ 				app.data_form.getForm().findField('staff.status').setValue(app.record.get('status'));
 				app.add_win.show();
 				app.add_win.setTitle("修改员工信息");
 			}else{
@@ -548,7 +577,8 @@ Ext.onReady(function(){
 	    height:500,
         autoScroll: true,
 		sm:app.sm,
-		tbar : [app.btn_detail,'-',app.btn_add,'-',app.btn_disable,'-',app.btn_enable,'-',app.btn_update,'-','请输入员工名:',app.text_search_code,'-',app.btn_search_code],
+		//app.btn_detail,'-','-',app.btn_update,
+		tbar : [app.btn_add,'-',app.btn_disable,'-',app.btn_enable,'-',app.btn_update,'-','请输入员工名:',app.text_search_code,'-',app.btn_search_code],
 		bbar : app.ptb
 	});
 	
