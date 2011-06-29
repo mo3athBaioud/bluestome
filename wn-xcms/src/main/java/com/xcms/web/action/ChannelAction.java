@@ -2,6 +2,8 @@ package com.xcms.web.action;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.nutz.ioc.annotation.InjectName;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -28,14 +30,24 @@ public class ChannelAction extends BaseAction {
 	 */
 	@At("/add")
 	@Ok("json")
-	public JsonObject insert(@Param("::channel.") Channel channel){
+	public JsonObject insert(@Param("::channel.") Channel channel,HttpServletRequest request){
 		json = new JsonObject();
-		if(channelService.add(channel)){
-			json.setSuccess(true);
-			json.setMsg("添加渠道数据成功");
+		if(null != request.getParameter("action") && "edit".equals(request.getParameter("action"))){
+			if(channelService.update(channel)){
+				json.setSuccess(true);
+				json.setMsg("编辑渠道数据成功");
+			}else{
+				json.setSuccess(false);
+				json.setMsg("编辑渠道数据失败,是否存在相同渠道代码!");
+			}
 		}else{
-			json.setSuccess(false);
-			json.setMsg("添加渠道数据失败,是否存在相同用户名!");
+			if(channelService.add(channel)){
+				json.setSuccess(true);
+				json.setMsg("添加渠道数据成功");
+			}else{
+				json.setSuccess(false);
+				json.setMsg("添加渠道数据失败,是否存在相同渠道代码!");
+			}
 		}
 		return json;
 	}
