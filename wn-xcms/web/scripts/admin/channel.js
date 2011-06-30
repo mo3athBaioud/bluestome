@@ -130,7 +130,7 @@ Ext.onReady(function(){
                 mode:'remote',
 				store:new Ext.data.Store({
 					proxy:new Ext.data.HttpProxy({
-						url:project+'/bdistrict/list.cgi?start=0&limit=100&colName=parentcode&value=0000'
+						url:project+'/bdistrict/bdlist.cgi?start=0&limit=100&colName=d_parent_code&value=0000'
 					}),
 					reader : new Ext.data.JsonReader({
 						root : 'obj'
