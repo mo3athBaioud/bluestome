@@ -79,7 +79,7 @@ Ext.onReady(function() {
             {header: '内容', width: 200, sortable: true, dataIndex: 'contents'},
             {header: '时间', width: 150, sortable: true, dataIndex: 'times'}
         ],
-		tools: tools,
+//		tools: tools,
         collapsible: true,
         animCollapse: false,
         closable:false,
@@ -113,7 +113,7 @@ Ext.onReady(function() {
 			        collapsible: true,
 			        animCollapse: false,
 			        closable:false,
-			        tools: tools,
+//			        tools: tools,
 			        bodyStyle:'padding:10px',
                     items:[
 			    		{
