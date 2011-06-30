@@ -77,7 +77,31 @@ public class ChannelAction extends BaseAction {
 	}
 	
 	/**
-	 * 修改个人信息
+	 * 查询渠道数据
+	 * @param colName
+	 * @param value
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	@At("/chlist")
+	@Ok("json")
+	public JsonObject chlist(@Param("colName") String colName,@Param("value") String value,@Param("start") int start,@Param("limit") int limit){
+		json = new JsonObject();
+		int count = channelService.getchListCount(colName,value);
+		List<Channel> list =  channelService.chlist(colName,value,start, limit);
+		logger.debug(" >> count:"+count);
+		if(null != list && list.size() > 0){
+			json.setCount(count);
+			json.setObj(list);
+		}else{
+			json.setSuccess(false);
+		}
+		return json;
+	}
+	
+	/**
+	 * 修改通道信息
 	 * @param channel
 	 * @return
 	 */
@@ -106,6 +130,64 @@ public class ChannelAction extends BaseAction {
 				json.setMsg("删除渠道数据成功!");
 			}else{
 				json.setMsg("删除渠道数据失败!");
+			}
+		}catch(Exception e){
+			logger.error(e);
+		}
+		return json;
+	}
+	
+	/**
+	 * 启用渠道
+	 * @param id
+	 * @return
+	 */
+	@At("/enable")
+	@Ok("json")
+	public JsonObject enable(@Param("code") String[] codes,HttpServletRequest request){
+		json = new JsonObject();
+		boolean isOk = true;
+		try{
+			for(String code:codes){
+				if(!channelService.enable(code)){
+					isOk = false;
+					break;
+				}
+			}
+			json.setSuccess(isOk);
+			if(isOk){
+				json.setMsg("启用渠道成功!");
+			}else{
+				json.setMsg("启用渠道失败!");
+			}
+		}catch(Exception e){
+			logger.error(e);
+		}
+		return json;
+	}
+	
+	/**
+	 * 禁用渠道
+	 * @param id
+	 * @return
+	 */
+	@At("/disable")
+	@Ok("json")
+	public JsonObject disable(@Param("code") String[] codes,HttpServletRequest request){
+		json = new JsonObject();
+		boolean isOk = true;
+		try{
+			for(String code:codes){
+				if(!channelService.disable(code)){
+					isOk = false;
+					break;
+				}
+			}
+			json.setSuccess(isOk);
+			if(isOk){
+				json.setMsg("禁用渠道成功!");
+			}else{
+				json.setMsg("禁用渠道失败!");
 			}
 		}catch(Exception e){
 			logger.error(e);
