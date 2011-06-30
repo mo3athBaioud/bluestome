@@ -66,7 +66,7 @@ Ext.onReady(function(){
         	}
         }},
         {header: "渠道代码", width: 100, sortable: true, dataIndex: 'channelcode'},
-        {header: "创建时间", width: 120, sortable: true, dataIndex: 'createtime'}
+        {header: "创建时间", width: 130, sortable: true, dataIndex: 'createtime'}
     ]);
     
 	app.btn_detail = new Ext.Button({
@@ -580,6 +580,7 @@ Ext.onReady(function(){
 	    cm: app.cm_data,
 		ds: app.ds_data,
 	    height:500,
+//	    width:800,
         autoScroll: true,
 		sm:app.sm,
 		//app.btn_detail,'-','-',app.btn_update,

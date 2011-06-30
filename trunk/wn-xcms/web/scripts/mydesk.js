@@ -1,3 +1,4 @@
+var app = {};
 Ext.onReady(function() {
 	Ext.QuickTips.init();
 	Ext.BLANK_IMAGE_URL = '/resource/image/ext/s.gif';
@@ -89,8 +90,260 @@ Ext.onReady(function() {
         tbar : [btn_del,'-','请输入查询内容:','-',text_search,'-',btn_search]
     });	
 	
-//    var panel = new Ext.ux.Portal({
-	  var panel = new Ext.Panel({
+	/**
+	 * 渠道下拉框
+	 */
+	app.channel_combo_store = new Ext.data.Store({
+		proxy: new Ext.data.HttpProxy({
+                        //这里是参数可以顺便写,这个数据源是在第一个下拉框select的时候load的
+			url: project+'/channel/list.cgi?start=0&limit=100'
+		}),
+		reader: new Ext.data.JsonReader({
+		root: 'obj',
+		id: 'id'
+		}, [
+			{name: 'code', mapping: 'channelcode'},
+			{name: 'name', mapping: 'channlename'}
+		])
+	}); 
+	
+	app.data_form = new Ext.FormPanel({
+		id:'add_form',
+		labelWidth : 80,
+		labelAlign : 'right',
+		border : false,
+		baseCls : 'x-plain',
+		bodyStyle : 'padding:5px 5px 0',
+		anchor : '100%',
+		url : project+'/staff/add.cgi',
+		defaults : {
+			width : 300,
+			msgTarget : 'side'
+		},
+		defaultType : 'textfield',
+		items : [
+			{
+				xtype:'hidden',
+				name : 'staff.id',
+				allowBlank : false,
+				value:uid
+			},{
+				fieldLabel : '员工名',
+				name : 'staff.username',
+				allowBlank : false,
+				readOnly:true,
+				maxLength:16,
+				value:username
+			},{
+				fieldLabel : '手机号码',
+				name : 'staff.mobile',
+				allowBlank : false,
+				maxLength:11,
+				value:mobile
+			},{
+				fieldLabel : '办公室号码',
+				name : 'staff.officephone',
+				allowBlank : false,
+				maxLength : 12,
+				value:phone
+			}],
+			buttonAlign : 'center',
+			minButtonWidth : 60,
+			buttons : [{
+				id:'dbm_form_save',
+				text : '保存',
+				iconCls:'icon-accept',
+				handler : function(btn) {
+					var frm = Ext.getCmp('add_form').form;
+					if (frm.isValid()) {
+						var dnfield = frm.findField('username');
+						frm.submit({
+							waitTitle : '请稍候',
+							waitMsg : '正在提交表单数据,请稍候...',
+							success : function(form, action) {
+								Ext.Msg.confirm('提示', '信息已修改成功,系统将强制退出并且请您重新登录!', function(btn) {
+									Ext.Ajax.request({
+										url : project+'/servlet/LogoutServlet',
+										success : function() {
+											window.parent.location = project+'/login3.jsp';
+										},
+										failure : function() {
+											Ext.Msg.show({
+												title : '提示',
+												msg : '退出系统失败!',
+												icon : Ext.Msg.ERROR,
+												buttons : Ext.Msg.OK
+											});
+										}
+									});
+								});
+							},
+							failure : function(){
+								Ext.Msg.show({
+									title : '错误提示',
+									msg : '"' + dnfield.getValue() + '" ' + '名称可能已经存在或者您没有添加数据的权限!',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.ERROR
+								})
+							}
+						})
+					}
+				}
+			}, {
+				id:'data_form_reset',
+				text : '重置',
+				iconCls:'icon-arrow_refresh_small',
+				handler : function() {
+					Ext.getCmp('add_form').form.reset();
+				}
+			}, {
+				iconCls:'icon-cancel',
+				text : '取消',
+				handler : function() {
+					app.data_form.getForm().reset();
+					var win = Ext.getCmp('add_win');
+					win.hide();
+				}
+			}]
+	});
+	
+	app.add_win = new Ext.Window({
+		id:'add_win',
+		title:'窗口',
+		iconCls:'icon-add',
+		width : 500,
+		resizable : false,
+		autoHeight : true,
+		modal : true,
+		closeAction : 'hide',
+		animCollapse : true,
+		pageY : 20,
+		pageX : document.body.clientWidth / 2 - 420 / 2,
+		animateTarget : Ext.getBody(),
+		constrain : true,
+		items : [
+			app.data_form
+		]
+	});	
+	
+
+	var modpwd_win = new Ext.Window({
+		id:'modityPwd_window',
+		title : '修改密码',
+		width : 300,
+		height : 150,
+		resizable : false,
+		modal : true,
+		closeAction : 'hide',
+		animCollapse : true,
+		pageY : 20,
+		pageX : document.body.clientWidth / 2 - 420 / 2,
+		animateTarget : Ext.getBody(),
+		constrain : true,
+		items:[
+			new Ext.FormPanel({
+			id:'passwordForm',
+			labelWidth : 70,
+			labelAlign : 'right',
+			url : project+'/staff/mp.cgi',
+			border : false,
+			baseCls : 'x-plain',
+			bodyStyle : 'padding:5px 5px 0',
+			defaults : {
+				anchor : '80%',
+				msgTarget : 'side'
+			},
+			defaultType : 'textfield',
+			items : [
+				{
+					fieldLabel : '原始密码',
+					id : 'npassword',
+					name : 'oldPwd',
+					inputType : 'password',
+					vtype:'safe',
+					allowBlank:false,
+					maxLength : 50
+				}, {
+					fieldLabel:'密码',
+					id:'pwd',
+					name:'newPwd',
+					inputType:'password',
+					vtype:'safe',
+					allowBlank:false,
+					maxLength:20
+				}, {
+					fieldLabel:'确认密码',
+					inputType:'password',
+					name:'confirmPwd',
+					allowBlank:false,
+					vtype:'password',
+					initialPassField: 'pwd', // 要比较的另外一个的组件的id
+					maxLength:20
+				}										
+			],
+			buttonAlign : 'center',
+			minButtonWidth : 60,
+			buttons : [{
+				text : '修改密码',
+				handler : function(btn) {
+					var frm = Ext.getCmp('passwordForm').form;
+					if (frm.isValid()) {
+						frm.submit({
+							waitTitle : '请稍候',
+							waitMsg : '正在提交表单数据,请稍候...',
+							success : function(form, action) {
+									var modityPwd_window = Ext.getCmp('modityPwd_window');
+									frm.reset();
+									modityPwd_window.close();
+									//退出系统
+									Ext.Msg.confirm('提示', '密码已修改成功，是否重新登录?', function(btn) {
+										if ('yes' == btn) {
+											Ext.Ajax.request({
+												url : project+'/servlet/LogoutServlet',
+												success : function() {
+													window.parent.location = project+'/login3.jsp';
+												},
+												failure : function() {
+													Ext.Msg.show({
+														title : '提示',
+														msg : '退出系统失败!',
+														icon : Ext.Msg.ERROR,
+														buttons : Ext.Msg.OK
+													});
+												}
+											});
+										}
+									});
+							},
+							failure : function(form,action) {
+								Ext.Msg.show({
+									title : '提示',
+									msg : action.result.msg,
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.ERROR
+							})
+							}
+						})
+					}
+					}
+			}, {
+				text : '重置密码',
+				handler : function() {
+					var form = Ext.getCmp('passwordForm').getForm();
+					form.reset();
+				}
+			}, {
+				text : '取消修改',
+				handler : function() {
+					Ext.getCmp('passwordForm').form.reset();
+					Ext.getCmp('modityPwd_window').hide();
+				}
+			}]										
+		})
+		]
+	});
+
+  var panel = new Ext.Panel({
         id:'main-panel',
         baseCls:'x-plain',
         renderTo: 'mydesk',
@@ -126,7 +379,10 @@ Ext.onReady(function() {
 				                	iconCls : 'icon-user_edit',
 				                	text:'修改信息',
 				                	handler:function(){
-				                		Ext.MessageBox.alert('提示','"修改信息"正在开发!');
+										app.add_win.show();
+										app.add_win.setTitle("修改个人信息");
+										Ext.getCmp('data_form_reset').show();
+//				                		Ext.MessageBox.alert('提示','"修改信息"正在开发!');
 	                				}
 			                	}
 			                ]
@@ -140,127 +396,7 @@ Ext.onReady(function() {
 				                	iconCls : 'icon-edit',
 				                	text:'修改密码',
 				                	handler:function(){
-										new Ext.Window({
-											id:'modityPwd_window',
-											title : '修改密码',
-											width : 300,
-											height : 150,
-											resizable : false,
-											modal : true,
-											closeAction : 'close',
-											items:[
-												new Ext.FormPanel({
-												id:'passwordForm',
-												labelWidth : 70,
-												labelAlign : 'right',
-												url : project+'/staff/mp.cgi',
-												border : false,
-												baseCls : 'x-plain',
-												bodyStyle : 'padding:5px 5px 0',
-												defaults : {
-													anchor : '80%',
-													msgTarget : 'side'
-												},
-												defaultType : 'textfield',
-												items : [
-													{
-														fieldLabel : '原始密码',
-														id : 'npassword',
-														name : 'oldPwd',
-														inputType : 'password',
-														vtype:'safe',
-														allowBlank:false,
-														maxLength : 50
-													}, {
-														fieldLabel:'密码',
-														id:'pwd',
-														name:'newPwd',
-														inputType:'password',
-														vtype:'safe',
-														allowBlank:false,
-														maxLength:20
-													}, {
-														fieldLabel:'确认密码',
-														inputType:'password',
-														name:'confirmPwd',
-														allowBlank:false,
-														vtype:'password',
-														initialPassField: 'pwd', // 要比较的另外一个的组件的id
-														maxLength:20
-													}										
-												],
-												buttonAlign : 'center',
-												minButtonWidth : 60,
-												buttons : [{
-													text : '修改密码',
-													handler : function(btn) {
-														/**
-														if (Ext.getCmp('passwordForm').form.isValid()) {
-															Ext.Msg.show({
-																title : '提示',
-																msg : '修改密码成功!',
-																buttons : Ext.Msg.OK,
-																icon : Ext.Msg.INFO
-															});
-														}else{
-															alert('No');
-														}
-														**/
-														var frm = Ext.getCmp('passwordForm').form;
-														if (frm.isValid()) {
-															frm.submit({
-																waitTitle : '请稍候',
-																waitMsg : '正在提交表单数据,请稍候...',
-																success : function(form, action) {
-																		var modityPwd_window = Ext.getCmp('modityPwd_window');
-																		frm.reset();
-																		modityPwd_window.close();
-																		//退出系统
-																		Ext.Msg.confirm('提示', '密码已修改成功，是否重新登录?', function(btn) {
-																			if ('yes' == btn) {
-																				Ext.Ajax.request({
-																					url : project+'/servlet/LogoutServlet',
-																					success : function() {
-																						window.parent.location = project+'/login3.jsp';
-																					},
-																					failure : function() {
-																						Ext.Msg.show({
-																							title : '提示',
-																							msg : '退出系统失败!',
-																							icon : Ext.Msg.ERROR,
-																							buttons : Ext.Msg.OK
-																						});
-																					}
-																				});
-																			}
-																		});
-																},
-																failure : function(form,action) {
-																	Ext.Msg.show({
-																		title : '提示',
-																		msg : action.result.msg,
-																		buttons : Ext.Msg.OK,
-																		icon : Ext.Msg.ERROR
-																})
-																}
-															})
-														}
-														}
-												}, {
-													text : '重置密码',
-													handler : function() {
-														var form = Ext.getCmp('passwordForm').getForm();
-														form.reset();
-													}
-												}, {
-													text : '取消修改',
-													handler : function() {
-														Ext.getCmp('modityPwd_window').close();
-													}
-												}]										
-											})
-											]
-										}).show();
+				                		modpwd_win.show();
 									}
 		                		}
 			                ]
