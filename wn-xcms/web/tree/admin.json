@@ -1,0 +1,24 @@
+[
+	{
+			"text":"账号管理",
+			"id":"01",
+			"href":"pages/admin/staff.jsp",
+			"leaf":true,
+			"icon":"images/html.png",
+			"hrefTarget":"center1"
+	},{
+			"text":"渠道管理",
+			"id":"02",
+			"href":"pages/admin/channel.jsp",
+			"leaf":true,
+			"icon":"images/html.png",
+			"hrefTarget":"center2"
+	},{
+			"text":"业务区管理",
+			"id":"03",
+			"href":"pages/admin/bdistrict.jsp",
+			"leaf":true,
+			"icon":"images/html.png",
+			"hrefTarget":"mainFrame"
+	}
+]
