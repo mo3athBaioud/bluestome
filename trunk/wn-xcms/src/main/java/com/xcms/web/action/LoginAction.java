@@ -57,7 +57,13 @@ public class LoginAction extends BaseAction {
 					}
 					//TODO 获取区局数据
 					json.setSuccess(true);
-					//设置用户属性到SESSION
+					if(sta.getUsername().equals("admin")){
+						//设置用户属性到SESSION
+						json.setMsg(request.getContextPath()+"admin.jsp");
+					}else{
+						//设置用户属性到SESSION
+						json.setMsg(request.getContextPath()+"index.jsp");
+					}
 				}else{
 					json.setSuccess(false);
 					//TODO 密码不正确
