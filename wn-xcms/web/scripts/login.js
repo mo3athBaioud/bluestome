@@ -194,7 +194,8 @@ Ext.onReady(function() {
 								success : function(form, action) {
 									var loginResult = action.result.success;
 //									window.location.href = action.result.url;
-									window.location.href = '/weinan2.jsp';
+//									window.location.href = '/index.jsp';
+									window.location.href = action.result.msg;
 								},
 								failure : function(form, action) {
 									var errmsg = action.result.msg;

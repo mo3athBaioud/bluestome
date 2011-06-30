@@ -66,7 +66,7 @@ Ext.onReady(function(){
         		return '<font color="yellow">未知</font>';
         	}
         }},
-        {header: "创建时间", width: 100, sortable: true, dataIndex: 'createtime'}
+        {header: "创建时间", width: 130, sortable: true, dataIndex: 'createtime'}
     ]);
     
 	app.btn_detail = new Ext.Button({

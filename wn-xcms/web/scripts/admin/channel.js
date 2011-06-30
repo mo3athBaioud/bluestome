@@ -54,9 +54,9 @@ Ext.onReady(function(){
     app.cm_data = new Ext.grid.ColumnModel([
 		app.sm,
         {header: "渠道代码", width: 100, sortable: true, dataIndex: 'channelcode'},
-        {header: "渠道名称", width: 100, sortable: true, dataIndex: 'channlename'},
-        {header: "渠道地址", width: 100, sortable: true, dataIndex: 'address'},
-        {header: "渠道状态", width: 150, sortable: true, dataIndex: 'status',renderer:function(v){
+        {header: "渠道名称", width: 150, sortable: true, dataIndex: 'channlename'},
+        {header: "渠道地址", width: 150, sortable: true, dataIndex: 'address'},
+        {header: "渠道状态", width: 100, sortable: true, dataIndex: 'status',renderer:function(v){
         	if(v == 0){
         		return '<font color="red">不可用</font>';
         	}else if(v == 1){
@@ -66,7 +66,7 @@ Ext.onReady(function(){
         	}
         }},
         {header: "业务区代码", width: 100, sortable: true, dataIndex: 'bdcode'},
-        {header: "创建时间", width: 120, sortable: true, dataIndex: 'createtime'}
+        {header: "创建时间", width: 130, sortable: true, dataIndex: 'createtime'}
     ]);
     
 	app.btn_detail = new Ext.Button({
