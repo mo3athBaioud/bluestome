@@ -101,16 +101,13 @@
 								<td class="login-fix-1" style="position:relative;">
 									<div id="hello-win" class="x-hidden">
 										<div id="hello-tabs">
-											<!-- 
-											<h1>西安移动终端支撑系统</h1>
-											 -->
 											<img border="0" width="450" height="70"
 												src="${ctx}/resource/image/weinan_login_log.png" />
 										</div>
 									</div>
 									<div id="aboutDiv" class="x-hidden"
 										style='color: black; padding-left: 10px; padding-top: 10px; font-size: 12px'>
-										西安移动终端营销系统
+										渭南移动终端营销系统
 										<br>
 										<br>
 										版权所有 &copy 2011 西安泰讯信息技术有限公司
