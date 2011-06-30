@@ -77,6 +77,30 @@ public class BDistrictAction extends BaseAction {
 	}
 	
 	/**
+	 * 查询业务区数据
+	 * @param colName
+	 * @param value
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	@At("/bdlist")
+	@Ok("json")
+	public JsonObject bdlist(@Param("colName") String colName,@Param("value") String value,@Param("start") int start,@Param("limit") int limit){
+		json = new JsonObject();
+		int count = bDistrictService.getbdListCount(colName,value);
+		List<BDistrict> list =  bDistrictService.bdlist(colName,value,start, limit);
+		logger.debug(" >> count:"+count);
+		if(null != list && list.size() > 0){
+			json.setCount(count);
+			json.setObj(list);
+		}else{
+			json.setSuccess(false);
+		}
+		return json;
+	}
+	
+	/**
 	 * 修改个人信息
 	 * @param bdistrict
 	 * @return
@@ -106,6 +130,64 @@ public class BDistrictAction extends BaseAction {
 				json.setMsg("删除业务区数据成功!");
 			}else{
 				json.setMsg("删除业务区数据失败!");
+			}
+		}catch(Exception e){
+			logger.error(e);
+		}
+		return json;
+	}
+	
+	/**
+	 * 启用业务区
+	 * @param id
+	 * @return
+	 */
+	@At("/enable")
+	@Ok("json")
+	public JsonObject enable(@Param("code") String[] codes,HttpServletRequest request){
+		json = new JsonObject();
+		boolean isOk = true;
+		try{
+			for(String code:codes){
+				if(!bDistrictService.enable(code)){
+					isOk = false;
+					break;
+				}
+			}
+			json.setSuccess(isOk);
+			if(isOk){
+				json.setMsg("启用渠道成功!");
+			}else{
+				json.setMsg("启用渠道失败!");
+			}
+		}catch(Exception e){
+			logger.error(e);
+		}
+		return json;
+	}
+	
+	/**
+	 * 禁用业务区
+	 * @param id
+	 * @return
+	 */
+	@At("/disable")
+	@Ok("json")
+	public JsonObject disable(@Param("code") String[] codes,HttpServletRequest request){
+		json = new JsonObject();
+		boolean isOk = true;
+		try{
+			for(String code:codes){
+				if(!bDistrictService.disable(code)){
+					isOk = false;
+					break;
+				}
+			}
+			json.setSuccess(isOk);
+			if(isOk){
+				json.setMsg("禁用渠道成功!");
+			}else{
+				json.setMsg("禁用渠道失败!");
 			}
 		}catch(Exception e){
 			logger.error(e);

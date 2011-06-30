@@ -14,6 +14,7 @@ import org.nutz.ioc.loader.annotation.IocBean;
 
 import com.mss.dal.dao.BDistrictDao;
 import com.mss.dal.domain.BDistrict;
+import com.mss.dal.domain.Channel;
 
 @IocBean
 @InjectName
@@ -65,11 +66,12 @@ public class BDistrictService {
 	 * @param code
 	 * @return
 	 */
-	public BDistrict findByChannelCode(String code){
+	public BDistrict findByCode(String code){
 		BDistrict BDistrict = null;
 		Cnd condition = null;
 		try{
-			condition = Cnd.where("d_channel_code", "=", code).and("d_status", "=", "1");
+			//.and("d_status", "=", "1")
+			condition = Cnd.where("d_code", "=", code);
 			BDistrict = bDistrictDao.findByCondition(BDistrict.class, condition);
 		}catch(Exception e){
 			log.error(e);
@@ -88,6 +90,39 @@ public class BDistrictService {
 		}catch(Exception e){
 			return false;
 		}
+	}
+	
+	/**
+	 * 获取总记录数
+	 * @return
+	 */
+	public int getbdListCount(String colName,String value){
+		Condition  cnd = null;
+		if(null != colName && !"".equals(colName)){
+			cnd = Cnd.where(colName, "=", value).and("status","=","1");
+		}
+		return bDistrictDao.searchCount(BDistrict.class, cnd);
+	}
+	
+	/**
+	 * 可用的渠道列表
+	 * @param phonenum
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	public List<BDistrict> bdlist(String colName,String value,int start,int limit){
+		Condition  cnd = null;
+		if(null != colName && !"".equals(colName)){
+			cnd = Cnd.where(colName, "=", value).and("status", "=", "1");
+		}
+		start = start/limit+1;
+		if(start == 0){
+			start = 1;
+		}
+		Pager pager = dao.createPager(start, limit);
+		List<BDistrict> list =  dao.query(BDistrict.class, cnd, pager);
+		return list;
 	}
 	
 	/**
@@ -118,5 +153,48 @@ public class BDistrictService {
 			return false;
 		}
 	}
+	
+	/**
+	 * 启用业务区
+	 * @param id
+	 * @return
+	 */
+	public boolean enable(String code){
+		boolean b = false;
+		try{
+			BDistrict bdistrict = findByCode(code);
+			if(null != bdistrict){
+				if(bdistrict.getStatus() != 1){
+					bdistrict.setStatus(1);
+					b = update(bdistrict);
+				}
+			}
+		}catch(Exception e){
+			log.error(e);
+		}
+		return b;
+	}
+	
+	/**
+	 * 禁用业务区
+	 * @param id
+	 * @return
+	 */
+	public boolean disable(String code){
+		boolean b = false;
+		try{
+			BDistrict bdistrict = findByCode(code);
+			if(null != bdistrict){
+				if(bdistrict.getStatus() != 0){
+					bdistrict.setStatus(0);
+					b = update(bdistrict);
+				}
+			}
+		}catch(Exception e){
+			log.error(e);
+		}
+		return b;
+	}
+	
 	
 }
