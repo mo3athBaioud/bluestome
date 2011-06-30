@@ -182,9 +182,14 @@ Ext.onReady(function(){
                 editable:false,
 				allowBlank : false,
 				listeners:{  
-					select : function(combo, record,index){
-						app.channel_combo_store.proxy= new Ext.data.HttpProxy({url:project+'/channel/list.cgi?start=0&limit=100&colName=bdcode&value='+combo.value});
-	 					app.channel_combo_store.load(); 
+					select : function(combo,record,index){
+						//首先清理当前store下的数据
+						app.channel_combo_store.removeAll();
+//						app.channel_combo_store.clear();
+						//根据选择的父节点值,到渠道表中查找数据
+						app.channel_combo_store.proxy= new Ext.data.HttpProxy({url:project+'/channel/chlist.cgi?start=0&limit=100&colName=bdcode&value='+combo.value});
+						//重载新载入的数据
+	 					app.channel_combo_store.reload();
 					}
 				}
 			},

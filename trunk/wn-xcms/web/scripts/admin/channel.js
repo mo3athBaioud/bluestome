@@ -289,13 +289,62 @@ Ext.onReady(function(){
 		iconCls:'icon-disable',
 		disabled:true,
 		handler : function(){
-			Ext.Msg.show({
-				title : '提示',
-				msg : '该功能正在开发!',
-				buttons : Ext.Msg.OK,
-				icon : Ext.Msg.INFO
-			});
-		}
+			var records = app.grid.getSelectionModel().getSelections();
+			if(records.length == 0 ){
+				Ext.Msg.show({
+					title : '提示',
+					msg:'请选择需要禁用的渠道',
+					buttons : Ext.Msg.OK,
+					icon : Ext.Msg.ERROR
+				});
+			}else{
+				var ids = [];
+				for(i = 0;i < records.length;i++){
+					ids.push(records[i].get('channelcode'));
+				}
+				Ext.Msg.confirm('提示', '你确定禁用用所选记录?', function(btn) {
+					if (btn == 'yes') {
+						Ext.Ajax.request({
+							url : project+'/channel/disable.cgi',
+							params : {
+								code : ids
+							},
+							success:function(response,option){
+								var obj = Ext.util.JSON.decode(response.responseText);
+								if(obj.success){
+									Ext.Msg.show({
+										title : '提示',
+										msg:obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.INFO
+									});
+									app.ds_data.load({
+										params:{
+											start:0,
+											limit : app.limit
+										}
+									});
+								}else{
+									Ext.Msg.show({
+										title : '提示',
+										msg : obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.ERROR
+									});
+								}
+							},
+			                failure:function(response,option){
+								Ext.Msg.show({
+									title : '提示',
+									msg : '系统发生错误!',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.ERROR
+								});
+			                }
+						});
+					}
+				});
+			}}
 	});
 	
 	app.btn_enable = new Ext.Button({
@@ -303,13 +352,63 @@ Ext.onReady(function(){
 		iconCls:'icon-accept',
 		disabled:true,
 		handler : function(){
-			Ext.Msg.show({
-				title : '提示',
-				msg : '该功能正在开发!',
-				buttons : Ext.Msg.OK,
-				icon : Ext.Msg.INFO
-			});
-		}
+			var records = app.grid.getSelectionModel().getSelections();
+			if(records.length == 0 ){
+				Ext.Msg.show({
+					title : '提示',
+					msg:'请选择需要启用的渠道',
+					buttons : Ext.Msg.OK,
+					icon : Ext.Msg.ERROR
+				});
+			}else{
+				var ids = [];
+				for(i = 0;i < records.length;i++){
+					ids.push(records[i].get('channelcode'));
+				}
+				Ext.Msg.confirm('提示', '你确定启用用所选记录?', function(btn) {
+					if (btn == 'yes') {
+						Ext.Ajax.request({
+							url : project+'/channel/enable.cgi',
+							params : {
+								code : ids
+							},
+							success:function(response,option){
+								var obj = Ext.util.JSON.decode(response.responseText);
+								if(obj.success){
+									Ext.Msg.show({
+										title : '提示',
+										msg:obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.INFO
+									});
+									app.ds_data.load({
+										params:{
+											start:0,
+											limit : app.limit
+										}
+									});
+								}else{
+									Ext.Msg.show({
+										title : '提示',
+										msg : obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.ERROR
+									});
+								}
+							},
+			                failure:function(response,option){
+								Ext.Msg.show({
+									title : '提示',
+									msg : '系统发生错误!',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.ERROR
+								});
+			                }
+						});
+					}
+				});
+			}
+			}
 	});
 	
 	app.text_search_code = new Ext.form.TextField({
@@ -405,7 +504,7 @@ Ext.onReady(function(){
         autoScroll: true,
 		sm:app.sm,
 		//app.btn_detail,app.btn_disable,'-',app.btn_enable,'-',
-		tbar : ['-',app.btn_add,'-',app.btn_update,'-','请输入渠道名称:',app.text_search_code,'-',app.btn_search_code],
+		tbar : ['-',app.btn_add,'-',app.btn_update,'-',app.btn_disable,'-',app.btn_enable,'-','请输入渠道名称:',app.text_search_code,'-',app.btn_search_code],
 		bbar : app.ptb
 	});
 	
@@ -429,14 +528,14 @@ Ext.onReady(function(){
 	 */
 	app.grid.addListener('rowclick',function(grid, rowIndex){
 				if(grid.getSelectionModel().isSelected(rowIndex)){
-//					app.btn_disable.enable();
-//					app.btn_enable.enable();
+					app.btn_disable.enable();
+					app.btn_enable.enable();
 //					app.btn_add.enable();
 //					app.btn_detail.enable();
 					app.btn_update.enable();
 				}else{
-//					app.btn_disable.disable();
-//					app.btn_enable.disable();
+					app.btn_disable.disable();
+					app.btn_enable.disable();
 //					app.btn_add.disable();
 //					app.btn_detail.disable();
 					app.btn_update.disable();
