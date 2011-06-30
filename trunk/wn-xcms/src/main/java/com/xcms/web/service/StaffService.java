@@ -129,11 +129,16 @@ public class StaffService {
 	 */
 	public boolean add(Staff staff){
 		try{
-			staff = staffDao.save(staff);
-			if(staff.getId() > 0){
-				return true;
+			if(null != staff.getId() && staff.getId() > 0){
+				log.debug("update staff");
+				return update(staff);
 			}else{
-				return false;
+				staff = staffDao.save(staff);
+				if(staff.getId() > 0){
+					return true;
+				}else{
+					return false;
+				}
 			}
 		}catch(Exception e){
 			return false;
@@ -180,7 +185,7 @@ public class StaffService {
 	}
 	
 	/**
-	 * 启用员工
+	 * 禁用员工
 	 * @param id
 	 * @return
 	 */
