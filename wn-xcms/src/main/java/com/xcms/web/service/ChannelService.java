@@ -15,6 +15,7 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import com.mss.dal.dao.ChannelDao;
 import com.mss.dal.domain.Channel;
 import com.mss.dal.domain.Channel;
+import com.mss.dal.domain.Staff;
 
 @IocBean
 @InjectName
@@ -70,6 +71,39 @@ public class ChannelService {
 	}
 
 	/**
+	 * 获取总记录数
+	 * @return
+	 */
+	public int getchListCount(String colName,String value){
+		Condition  cnd = null;
+		if(null != colName && !"".equals(colName)){
+			cnd = Cnd.where(colName, "=", value).and("status","=","1");
+		}
+		return channelDao.searchCount(Channel.class, cnd);
+	}
+	
+	/**
+	 * 可用的渠道列表
+	 * @param phonenum
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	public List<Channel> chlist(String colName,String value,int start,int limit){
+		Condition  cnd = null;
+		if(null != colName && !"".equals(colName)){
+			cnd = Cnd.where(colName, "=", value).and("status", "=", "1");
+		}
+		start = start/limit+1;
+		if(start == 0){
+			start = 1;
+		}
+		Pager pager = dao.createPager(start, limit);
+		List<Channel> list =  dao.query(Channel.class, cnd, pager);
+		return list;
+	}
+	
+	/**
 	 * 根据渠道编码获取渠道对象
 	 * @param code
 	 * @return
@@ -78,7 +112,8 @@ public class ChannelService {
 		Channel channel = null;
 		Cnd condition = null;
 		try{
-			condition = Cnd.where("d_channel_code", "=", code).and("d_status", "=", "1");
+			//.and("d_status", "=", "1")
+			condition = Cnd.where("d_channel_code", "=", code);
 			channel = channelDao.findByCondition(Channel.class, condition);
 		}catch(Exception e){
 			log.error(e);
@@ -126,6 +161,48 @@ public class ChannelService {
 			log.error(e);
 			return false;
 		}
+	}
+
+	/**
+	 * 启用渠道
+	 * @param id
+	 * @return
+	 */
+	public boolean enable(String code){
+		boolean b = false;
+		try{
+			Channel channel = findByChannelCode(code);
+			if(null != channel){
+				if(channel.getStatus() != 1){
+					channel.setStatus(1);
+					b = update(channel);
+				}
+			}
+		}catch(Exception e){
+			log.error(e);
+		}
+		return b;
+	}
+	
+	/**
+	 * 禁用渠道
+	 * @param id
+	 * @return
+	 */
+	public boolean disable(String code){
+		boolean b = false;
+		try{
+			Channel channel = findByChannelCode(code);
+			if(null != channel){
+				if(channel.getStatus() != 0){
+					channel.setStatus(0);
+					b = update(channel);
+				}
+			}
+		}catch(Exception e){
+			log.error(e);
+		}
+		return b;
 	}
 	
 }
