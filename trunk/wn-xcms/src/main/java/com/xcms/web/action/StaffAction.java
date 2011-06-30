@@ -34,12 +34,17 @@ public class StaffAction extends BaseAction {
 	@Ok("json")
 	public JsonObject insert(@Param("::staff.") Staff staff){
 		json = new JsonObject();
-		if(staffService.add(staff)){
-			json.setSuccess(true);
-			json.setMsg("添加员工成功");
-		}else{
+		try{
+			if(staffService.add(staff)){
+				json.setSuccess(true);
+				json.setMsg("添加员工成功");
+			}else{
+				json.setSuccess(false);
+				json.setMsg("添加员工失败,是否存在相同用户名!");
+			}
+		}catch(Exception e){
 			json.setSuccess(false);
-			json.setMsg("添加员工失败,是否存在相同用户名!");
+			json.setMsg("添加员工失败,提示信息["+e.getMessage()+"]!");
 		}
 		return json;
 	}

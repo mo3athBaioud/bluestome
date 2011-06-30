@@ -65,7 +65,7 @@ public class LoginAction extends BaseAction {
 				}
 			}else{
 				json.setSuccess(false);
-				//TODO 用户不存在
+				//TODO 用户被禁用
 				json.setMsg("您输入的用户["+username+"]被禁用，请与相关管理部门联系!");
 			}
 		}else{
