@@ -1,4 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ include file="/commons/taglibs.jsp" %>
+<%@ include file="/session.jsp" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 	<head>
@@ -25,6 +27,10 @@
 		<script type="text/javascript" src="${ctx}/scripts/common/validation.js"></script>	
 		<script type="text/javascript">
 		    	var project = '${ctx}';
+		    	var uid = '<%=us.getStaff().getId()%>';
+		    	var mobile = '<%=us.getStaff().getMobile()%>';
+		    	var phone = '<%=us.getStaff().getOfficephone()%>';
+		    	var username = '<%=loginName%>';
 		</script>
 		<div id="mydesk"></div>
 		<div id="mydesk-grid"></div>

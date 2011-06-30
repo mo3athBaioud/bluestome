@@ -2,6 +2,7 @@
 <%@ page import="com.xcms.common.Constants" %>
 <%@ page import="com.xcms.UserSession" %>
 <%
+	UserSession us = null;
 	String loginName = "weinan";
 	String deptName = "渭南移动";
 	String bdName = "渭南区局";
@@ -10,7 +11,7 @@
 	String sessionName = ip + "_" + Constants.USERSESSION;
 	Object obj  = request.getSession().getAttribute(sessionName);
 	if(null != obj){
-		UserSession us = (UserSession)obj;
+		us = (UserSession)obj;
 		loginName = us.getStaff().getUsername();
 		deptName = us.getChannel().getChannlename();
 		bdName = us.getBdistrict().getName();
