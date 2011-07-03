@@ -260,3 +260,103 @@ SAMSUNG
   
   健云网络
   jack.zhang@gmail.com
+  
+  
+  2011-07-02
+  终端基本参数：
+  1.GPRS  数据业务： 查找是否有GPRS字眼
+  2.WAP   WAP浏览器：查找是否有WAP字眼
+  3.智能手机  手机类型： 查找是否存在智能手机字眼.
+  4.操作系统  操作系统： 查找操作系统名称.
+  5.WIFI      WLAN功能：查找是否有WIFI.
+  思考:
+      智能手机: 是否支持GPRS,WAP业务。
+  2011-07-03
+  1.业务数据导入，
+    如果导入的数据已经存在系统中，此数据不导入，如果导入的数据不存在系统中，并且是换机用户。
+    此时，删除系统中原有的终端数据。导入新的终端数据。
+  2.业务查询显示字段
+    用户号码，支持业务情况，支持业务形式，查询次数
+
+    用户号码，厂商，机型，IMEI,支持业务情况，支持业务形式，查询次数
+
+ 2011-07-03
+ [终端属性表]
+  create table tbl_terminal_property(
+	  d_id  int(4) not null AUTO_INCREMENT,
+	  d_hsman varchar(32) not null,
+	  d_hstype varchar(32) not null,
+	  d_gprs int(4) default 0,
+	  d_wap int(4) default 0,
+	  d_smartphone int(4) default 0,
+	  d_os int(4) default 0,
+	  d_wifi int(4) default 0,
+	  d_createtime timestamp default current_timestamp,
+	  PRIMARY KEY (d_id)
+ );
+
+【16业务表】
+ create table tbl_bussiness_{id}(
+	  d_id  int(4) not null AUTO_INCREMENT,
+	  d_phonenum varchar(11) not null,
+	  d_hsman varchar(32),
+	  d_hstype varchar(32),
+	  d_imei varchar(16),
+	  d_support int(4) default 0,
+	  d_support_type int(4) default 0,
+	  PRIMARY KEY (d_id)
+ );
+
+【单一业务表】通过TYPE来区分每个业务
+CREATE TABLE `tbl_bussiness` (
+	`d_id` INT(4) NOT NULL AUTO_INCREMENT,
+	`d_btype` INT(4) NOT NULL,
+	`d_phonenum` VARCHAR(11) NOT NULL,
+	`d_hsman` VARCHAR(32) NULL DEFAULT NULL,
+	`d_hstype` VARCHAR(32) NULL DEFAULT NULL,
+	`d_imei` VARCHAR(16) NULL DEFAULT NULL,
+	`d_support` INT(4) NULL DEFAULT '0',
+	`d_support_type` INT(4) NULL DEFAULT '0',
+	PRIMARY KEY (`d_id`),
+	INDEX `IDX_BTYPE_PHONENUM` (`d_btype`, `d_phonenum`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB;
+
+【日志表】
+CREATE TABLE `tbl_oplog` (
+	`d_id` INT(4) NOT NULL AUTO_INCREMENT ,
+	`d_uid` INT(4) NOT NULL COMMENT '员工ID',
+	`d_phonenum` VARCHAR(11) NOT NULL COMMENT '号码',
+	`d_phonenum_bdistrict` VARCHAR(11) NOT NULL COMMENT '号码所属业务区',
+	`d_btype` VARCHAR(32) NULL DEFAULT NULL COMMENT '业务类型',
+	`d_loginname` VARCHAR(32) NOT NULL COMMENT '工号',
+	`d_loginname_bdistrict` VARCHAR(32) NOT NULL COMMENT '员工所属业务去',
+	`d_createtime` timestamp default current_timestamp,
+	PRIMARY KEY (`d_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB;
+
+
+日志导出功能，可以提供时间区间的选择。
+
+定义16类业务的业务ID
+1.无线音乐高级俱乐部会员
+2.139邮箱
+3.飞信会员
+4.号簿管家
+5.全曲下载
+6.手机报
+7.手机视频
+8.手机阅读
+9.手机游戏
+10.手机电视
+11.移动MM
+12.GPRS流量包
+13.彩信包
+14.手机支付
+15.WIFI
+16.手机地图
+
+
