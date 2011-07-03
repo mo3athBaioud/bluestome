@@ -5,12 +5,15 @@
 <html>
 	<head>
 		<meta content="text/html; charset=UTF-8" http-equiv="content-type">
-		<title>号谱管家推荐查询</title>
+		<title>终端属性管理</title>
+		<link rel="stylesheet" type="text/css"
+			href="${ctx}/resources/css/ext-all.css" />
+		<link rel="stylesheet" type="text/css"
+			href="${ctx}/style/upload-icon.css" />
+		<link rel="stylesheet" type="text/css"
+			href="${ctx}/style/upload-dialog.css" />
 		<link rel="stylesheet" type="text/css"
 			href="${ctx}/style/index.css" />
-		<link href="${ctx}/style/default/common.css" rel="stylesheet" type="text/css">
-		<link href="${ctx}/style/default/form.css" rel="stylesheet" type="text/css">
-		<link href="${ctx}/style/default/list.css" rel="stylesheet" type="text/css">
 		<style type="text/css">
 	    html, body {
 	        font:normal 12px verdana;
@@ -23,12 +26,15 @@
 	    p {
 	        margin:5px;
 	    }
-	    td{
-			font-family:宋体;
-			line-height:17pt;
-			font-size:12pt;
+	    .settings {
+	        background-image:url(${ctx}/images/icons/fam/folder_wrench.png);
+	    }
+	    .nav {
+	        background-image:url(${ctx}/images/icons/fam/folder_go.png);
 	    }
 	    </style>
+		<link rel="stylesheet" type="text/css"
+			href="${ctx}/resource/css/ext_icon.css" />
 		<link rel="stylesheet" type="text/css"
 			href="${ctx}/resource/theme/default/resources/css/ext-all.css" />
 		<script type="text/javascript"
@@ -44,16 +50,17 @@
 		<script type="text/javascript" src="${ctx}/scripts/common/swfupload.js"></script>
 		<script type="text/javascript" src="${ctx}/scripts/common/UploadDialog.js"></script>
 		<script type="text/javascript" src="${ctx}/scripts/common/RowExpander.js"></script>
+		<script type="text/javascript" src="${ctx}/scripts/common/examples.js"></script>
 		<script type="text/javascript"
 			src="${ctx}/scripts/common/validation.js"></script>
-		<script type="text/javascript" src="${ctx}/scripts/common/examples.js"></script>
-		<script type="text/javascript" src="${ctx}/scripts/iquery/data_hpgj.js"></script>
+		<script type="text/javascript" src="${ctx}/scripts/components/TerminaQuery.js"></script>
+		<script type="text/javascript" src="${ctx}/scripts/terminal/terminal-property.js"></script>
 		<script type="text/javascript">
-			var name = '号谱管家推荐查询';
-			var loginName = '<%=loginName%>';
+			var project = '${ctx}';
+			var name = '终端属性管理';
 		</script>
 	</head>
 	<body>
-			<div id="utp"></div>
+			<div id="terminal-property"></div>
 	</body>
 </html>

@@ -16,5 +16,15 @@
 		deptName = us.getChannel().getChannlename();
 		bdName = us.getBdistrict().getName();
 		bdcode = us.getBdistrict().getCode();
+	}else{
+	%>
+	<script type="text/javascript">
+	<!--
+		alert('会话超时，请重新登录!');
+		window.location.href = 	'<%=request.getContextPath()%>/login3.jsp';	
+	//-->
+	</script>
+	<%
+//		request.getRequestDispatcher("/error.jsp").forward(request,response);
 	}
  %>

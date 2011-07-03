@@ -1,6 +1,6 @@
 var app = {};
 Ext.onReady(function(){
-  	Ext.BLANK_IMAGE_URL = '/resource/image/ext/s.gif';
+  	Ext.BLANK_IMAGE_URL = project+'/resource/image/ext/s.gif';
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
     Ext.QuickTips.init();
 	app.limit = 15;
@@ -326,7 +326,7 @@ Ext.onReady(function(){
 		app.colName = app.search_comb_queyrCol_code.getValue();
 		app.values =app.text_search_code.getValue();
 		Ext.Ajax.request({
-			url : '/tac/list.cgi',
+			url : project+'/tac/list.cgi',
 			params : {
 				start:0,
 				limit:app.limit,
@@ -393,7 +393,7 @@ Ext.onReady(function(){
 		labelAlign : 'right',
 		border : false,
 		baseCls : 'x-plain',
-		url : '/tac/add.cgi',
+		url : project+'/tac/add.cgi',
 		bodyStyle : 'padding:5px 5px 0',
 		anchor : '100%',
 		defaults : {
@@ -525,7 +525,7 @@ Ext.onReady(function(){
 	});
 	
 	app.ds_utp_1 = new Ext.data.Store({
-		url : '/tac/list.cgi',
+		url : project+'/tac/list.cgi',
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'count',
 			root : 'obj'

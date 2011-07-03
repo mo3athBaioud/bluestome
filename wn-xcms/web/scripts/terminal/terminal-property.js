@@ -1,13 +1,13 @@
 /**
- * 渠道管理
+ * 员工管理
  */
 var app = {};
 Ext.onReady(function(){
   	Ext.BLANK_IMAGE_URL = project+'/resource/image/ext/s.gif';
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
     Ext.QuickTips.init();
-	app.limit = 15;
-	app.colName = "d_channel_name";
+	app.limit = 20;
+	app.colName = "d_hsman";
 	app.values = "";
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
@@ -51,21 +51,63 @@ Ext.onReady(function(){
 	}]);
     **/
     
+    // align="center" valign="middle"
+//    var expander = new Ext.grid.RowExpander({
+//        tpl : new Ext.Template(
+//         )
+//    });
+    
     app.cm_data = new Ext.grid.ColumnModel([
 		app.sm,
-        {header: "渠道代码", width: 100, sortable: true, dataIndex: 'channelcode'},
-        {header: "渠道名称", width: 150, sortable: true, dataIndex: 'channlename'},
-        {header: "渠道地址", width: 150, sortable: true, dataIndex: 'address'},
-        {header: "渠道状态", width: 100, sortable: true, dataIndex: 'status',renderer:function(v){
+        {header: "厂商", width: 100, sortable: true, dataIndex: 'hsman'},
+        {header: "厂商(英文)", width: 100, sortable: true, dataIndex: 'hsmanen'},
+        {header: "机型", width: 100, sortable: true, dataIndex: 'hstype'},
+        {header: "机型(英文)", width: 100, sortable: true, dataIndex: 'hstypeen'},
+        {header: "GPRS", width: 150, sortable: true, dataIndex: 'gprs',renderer:function(v){
         	if(v == 0){
-        		return '<font color="red">不可用</font>';
+        		return '<font color="red">不支持</font>';
         	}else if(v == 1){
-        		return '<font color="blue">可用</font>';
+        		return '<font color="blue">支持</font>';
         	}else{
         		return '<font color="yellow">未知</font>';
         	}
         }},
-        {header: "业务区代码", width: 100, sortable: true, dataIndex: 'bdcode'},
+        {header: "WAP", width: 150, sortable: true, dataIndex: 'wap',renderer:function(v){
+        	if(v == 0){
+        		return '<font color="red">不支持</font>';
+        	}else if(v == 1){
+        		return '<font color="blue">支持</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
+        {header: "智能手机", width: 150, sortable: true, dataIndex: 'smartphone',renderer:function(v){
+        	if(v == 0){
+        		return '<font color="red">不支持</font>';
+        	}else if(v == 1){
+        		return '<font color="blue">支持</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
+        {header: "操作系统", width: 150, sortable: true, dataIndex: 'os',renderer:function(v){
+        	if(v == 0){
+        		return '<font color="red">不支持</font>';
+        	}else if(v == 1){
+        		return '<font color="blue">支持</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
+        {header: "WIFI", width: 150, sortable: true, dataIndex: 'wifi',renderer:function(v){
+        	if(v == 0){
+        		return '<font color="red">不支持</font>';
+        	}else if(v == 1){
+        		return '<font color="blue">支持</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
         {header: "创建时间", width: 130, sortable: true, dataIndex: 'createtime'}
     ]);
     
@@ -78,9 +120,10 @@ Ext.onReady(function(){
 				mode:'local',
 				store : new Ext.data.SimpleStore({
 					data : [
-							['d_channel_name', '渠道名称'],
-							['d_channel_code', '渠道代码'],
-							['d_bdcode','业务区代码']
+							['d_hsman', '厂商'],
+							['d_hsman_en', '厂商(英文)'],
+							['d_hstype', '机型'],
+							['d_hstype_en', '机型(英文)']
 				    ],
 					fields : ['id', 'name']
 				}),	
@@ -92,7 +135,7 @@ Ext.onReady(function(){
 	});
 	
 	app.btn_detail = new Ext.Button({
-		text : '详情',
+		text : '员工详情',
 		disabled:true,
 		iconCls : 'icon-application_view_detail',
 		handler : function(){
@@ -107,7 +150,6 @@ Ext.onReady(function(){
     
 	app.btn_search_code = new Ext.Button({
 		text : '查询',
-//		disabled:true,
 		iconCls : 'icon-search',
 		handler : function(){
 			app.searchcode();
@@ -122,7 +164,7 @@ Ext.onReady(function(){
 		baseCls : 'x-plain',
 		bodyStyle : 'padding:5px 5px 0',
 		anchor : '100%',
-		url : project+'/channel/add.cgi',
+		url : project+'/terminalproperty/add.cgi',
 		defaults : {
 			width : 300,
 			msgTarget : 'side'
@@ -131,56 +173,107 @@ Ext.onReady(function(){
 		items : [
 			{
 				xtype:'hidden',
-				name : 'action',
-				value:'add'
-			},{
-				fieldLabel : '渠道代码',
-				name : 'channel.channelcode',
+				fieldLabel : 'ID',
+				name : 'object.id',
 				allowBlank : false
-			},{
-				fieldLabel : '渠道名称',
-				name : 'channel.channlename',
-				allowBlank : false
-			},{
-				xtype: 'textarea',
-				fieldLabel : '渠道地址',
-				name : 'channel.address'
-			},{
-				//下拉框
-				xtype:'combo',
-				fieldLabel : '所属业务区',
-                mode:'remote',
-				store:new Ext.data.Store({
-					proxy:new Ext.data.HttpProxy({
-						url:project+'/bdistrict/bdlist.cgi?start=0&limit=100&colName=d_parent_code&value=0000'
-					}),
-					reader : new Ext.data.JsonReader({
-						root : 'obj'
-					}, [{name : 'code',type : 'string'},
-						{name : 'name',type : 'string'}
-					])
-				}),
-				selectOnFocus:true,
-				triggerAction:'all',
-				hiddenName:'channel.bdcode',
-                valueField: "code",
-                displayField: "name",
-                blankText: '请选择所属业务区',
-                emptyText: '请选择所属业务区',
-                editable:true,
-				allowBlank : false
+			},
+			{
+				fieldLabel : '厂商',
+				name : 'object.hsman',
+				allowBlank : false,
+				maxLength:50
+			},
+			{
+				fieldLabel : '厂商(英文)',
+				name : 'object.hsmanen',
+				maxLength:50
+			},
+			 {
+				fieldLabel : '机型',
+				name : 'object.hstype',
+				allowBlank : false,
+				maxLength:50
+			},
+			{
+				fieldLabel : '机型(英文)',
+				name : 'object.hstypeen',
+				maxLength:50
 			},{
 				//下拉选择框
 				xtype:'combo',
-				fieldLabel : '状态',
-				hiddenName:'channel.status',
+				fieldLabel : 'GPRS',
+				hiddenName:'object.gprs',
 		        valueField: 'id',
 		        displayField: 'name',
 		        triggerAction:'all',
 		        mode: 'local',
 		        store: new Ext.data.SimpleStore({
 		            fields: ['id','name'],
-		            data: [[1,'可用'],[0,'不可用']]
+		            data: [[1,'支持'],[0,'不支持']]
+		        }),
+	            editable:false,
+				emptyText : '请选择业务状态!',
+				allowBlank : false
+			},{
+				//下拉选择框
+				xtype:'combo',
+				fieldLabel : 'WAP',
+				hiddenName:'object.wap',
+		        valueField: 'id',
+		        displayField: 'name',
+		        triggerAction:'all',
+		        mode: 'local',
+		        store: new Ext.data.SimpleStore({
+		            fields: ['id','name'],
+		            data: [[1,'支持'],[0,'不支持']]
+		        }),
+	            editable:false,
+				emptyText : '请选择业务状态!',
+				allowBlank : false
+			},{
+				//下拉选择框
+				xtype:'combo',
+				fieldLabel : '智能手机',
+				hiddenName:'object.smartphone',
+		        valueField: 'id',
+		        displayField: 'name',
+		        triggerAction:'all',
+		        mode: 'local',
+		        store: new Ext.data.SimpleStore({
+		            fields: ['id','name'],
+		            data: [[1,'支持'],[0,'不支持']]
+		        }),
+	            editable:false,
+				emptyText : '请选择业务状态!',
+				allowBlank : false
+			},{
+				//下拉选择框
+				xtype:'combo',
+				fieldLabel : '操作系统',
+				hiddenName:'object.os',
+		        valueField: 'id',
+		        displayField: 'name',
+		        triggerAction:'all',
+		        mode: 'local',
+		        store: new Ext.data.SimpleStore({
+		            fields: ['id','name'],
+		            data: [[1,'支持'],[0,'不支持']]
+		        }),
+	            editable:false,
+				emptyText : '请选择业务状态!',
+				allowBlank : false
+			},{
+				//下拉选择框
+				xtype:'combo',
+				fieldLabel : 'WIFI',
+				hiddenName:'object.wifi',
+		        valueField: 'id',
+		        displayField: 'name',
+		        triggerAction:'all',
+		        mode: 'local',
+		        store: new Ext.data.SimpleStore({
+		            fields: ['id','name'],
+		            data: [[1,'支持'],[0,'不支持']]
 		        }),
 	            editable:false,
 				emptyText : '请选择业务状态!',
@@ -195,14 +288,14 @@ Ext.onReady(function(){
 				handler : function(btn) {
 					var frm = Ext.getCmp('add_form').form;
 					if (frm.isValid()) {
-						var dnfield = frm.findField('channel.channelcode');
+						var dnfield = frm.findField('username');
 						frm.submit({
 							waitTitle : '请稍候',
 							waitMsg : '正在提交表单数据,请稍候...',
 							success : function(form, action) {
 					 			Ext.Msg.show({
 									title : '系统提示',
-									msg : action.result.msg,
+									msg : '添加成功!',
 									buttons : Ext.Msg.OK,
 									fn:function(){
 										frm.reset();
@@ -269,45 +362,19 @@ Ext.onReady(function(){
 	});	
 	
 	app.btn_add = new Ext.Button({
-		text : '添加',
-		iconCls:'icon-add',
+		text : '添加员工',
+		iconCls:'icon-user_add',
+		disabled:false,
 		handler : function(){
 			app.data_form.getForm().reset();
 			app.add_win.show();
-			app.add_win.setTitle("添加渠道");
+			app.add_win.setTitle("添加");
 			Ext.getCmp('data_form_reset').show();
 		}
 	});
 	
-   app.btn_update = new Ext.Button({
-		text : '修改',
-		iconCls : 'icon-edit',
-		disabled:true,
-		handler : function(){
-			if(app.grid.getSelectionModel().getSelected()){
-				Ext.getCmp('data_form_reset').hide();
- 				app.record = app.grid.getSelectionModel().getSelected();
- 				app.data_form.getForm().findField('action').setValue('edit');
- 				app.data_form.getForm().findField('channel.channelcode').setValue(app.record.get('channelcode'));
- 				app.data_form.getForm().findField('channel.channlename').setValue(app.record.get('channlename'));
- 				app.data_form.getForm().findField('channel.status').setValue(app.record.get('status'));
-// 				app.data_form.getForm().findField('channel.bdcode').setValue(app.record.get('bdcode'));
- 				app.data_form.getForm().findField('channel.address').setValue(app.record.get('address'));
-				app.add_win.show();
-				app.add_win.setTitle("修改渠道");
-			}else{
-				Ext.Msg.show({
-					title : '系统提示',
-					msg : '请选择需要修改的数据业务!',
-					buttons : Ext.Msg.OK,
-					icon : Ext.MessageBox.ERROR
-				});
-			}
-		}
-	});
-	
 	app.btn_disable = new Ext.Button({
-		text : '禁用',
+		text : '禁用员工',
 		iconCls:'icon-disable',
 		disabled:true,
 		handler : function(){
@@ -315,21 +382,85 @@ Ext.onReady(function(){
 			if(records.length == 0 ){
 				Ext.Msg.show({
 					title : '提示',
-					msg:'请选择需要禁用的渠道',
+					msg:'请选择需要禁用的员工',
 					buttons : Ext.Msg.OK,
 					icon : Ext.Msg.ERROR
 				});
 			}else{
 				var ids = [];
 				for(i = 0;i < records.length;i++){
-					ids.push(records[i].get('channelcode'));
+					ids.push(records[i].get('id'));
 				}
-				Ext.Msg.confirm('提示', '你确定禁用用所选记录?', function(btn) {
+				Ext.Msg.confirm('提示', '你确定禁用所选记录?', function(btn) {
 					if (btn == 'yes') {
 						Ext.Ajax.request({
-							url : project+'/channel/disable.cgi',
+							url : project+'/terminalproperty/disable.cgi',
 							params : {
-								code : ids
+								id : ids
+							},
+							success:function(response,option){
+								var obj = Ext.util.JSON.decode(response.responseText);
+								if(obj.success){
+									Ext.Msg.show({
+										title : '提示',
+										msg:obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.INFO
+									});
+									app.ds_data.load({
+										params:{
+											start:0,
+											limit : app.limit
+										}
+									});
+								}else{
+									Ext.Msg.show({
+										title : '提示',
+										msg : obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.ERROR
+									});
+								}
+							},
+			                failure:function(response,option){
+								Ext.Msg.show({
+									title : '提示',
+									msg : '系统发生错误!',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.ERROR
+								});
+			                }
+						});
+					}
+				});
+			}
+		}
+	});
+	
+	app.btn_enable = new Ext.Button({
+		text : '启用员工',
+		iconCls:'icon-accept',
+		disabled:true,
+		handler : function(){
+			var records = app.grid.getSelectionModel().getSelections();
+			if(records.length == 0 ){
+				Ext.Msg.show({
+					title : '提示',
+					msg:'请选择需要启用的员工',
+					buttons : Ext.Msg.OK,
+					icon : Ext.Msg.ERROR
+				});
+			}else{
+				var ids = [];
+				for(i = 0;i < records.length;i++){
+					ids.push(records[i].get('id'));
+				}
+				Ext.Msg.confirm('提示', '你确定启用用所选记录?', function(btn) {
+					if (btn == 'yes') {
+						Ext.Ajax.request({
+							url : project+'/terminalproperty/enable.cgi',
+							params : {
+								id : ids
 							},
 							success:function(response,option){
 								var obj = Ext.util.JSON.decode(response.responseText);
@@ -369,69 +500,36 @@ Ext.onReady(function(){
 			}}
 	});
 	
-	app.btn_enable = new Ext.Button({
-		text : '启用',
-		iconCls:'icon-accept',
+    app.btn_update = new Ext.Button({
+		text : '修改',
+		iconCls : 'icon-edit',
 		disabled:true,
 		handler : function(){
-			var records = app.grid.getSelectionModel().getSelections();
-			if(records.length == 0 ){
-				Ext.Msg.show({
-					title : '提示',
-					msg:'请选择需要启用的渠道',
-					buttons : Ext.Msg.OK,
-					icon : Ext.Msg.ERROR
-				});
+			if(app.grid.getSelectionModel().getSelected()){
+				Ext.getCmp('data_form_reset').hide();
+ 				app.record = app.grid.getSelectionModel().getSelected();
+ 				app.data_form.getForm().findField('object.id').setValue(app.record.get('id'));
+ 				app.data_form.getForm().findField('object.hsman').setValue(app.record.get('hsman'));
+ 				app.data_form.getForm().findField('object.hsmanen').setValue(app.record.get('hsmanen'));
+ 				app.data_form.getForm().findField('object.hstype').setValue(app.record.get('hstype'));
+ 				app.data_form.getForm().findField('object.hstypeen').setValue(app.record.get('hstypeen'));
+ 				app.data_form.getForm().findField('object.gprs').setValue(app.record.get('gprs'));
+ 				app.data_form.getForm().findField('object.wap').setValue(app.record.get('wap'));
+ 				app.data_form.getForm().findField('object.smartphone').setValue(app.record.get('smartphone'));
+ 				app.data_form.getForm().findField('object.os').setValue(app.record.get('os'));
+ 				app.data_form.getForm().findField('object.wifi').setValue(app.record.get('wifi'));
+				app.add_win.show();
+				app.add_win.setTitle("修改终端属性信息");
 			}else{
-				var ids = [];
-				for(i = 0;i < records.length;i++){
-					ids.push(records[i].get('channelcode'));
-				}
-				Ext.Msg.confirm('提示', '你确定启用用所选记录?', function(btn) {
-					if (btn == 'yes') {
-						Ext.Ajax.request({
-							url : project+'/channel/enable.cgi',
-							params : {
-								code : ids
-							},
-							success:function(response,option){
-								var obj = Ext.util.JSON.decode(response.responseText);
-								if(obj.success){
-									Ext.Msg.show({
-										title : '提示',
-										msg:obj.msg,
-										buttons : Ext.Msg.OK,
-										icon : Ext.Msg.INFO
-									});
-									app.ds_data.load({
-										params:{
-											start:0,
-											limit : app.limit
-										}
-									});
-								}else{
-									Ext.Msg.show({
-										title : '提示',
-										msg : obj.msg,
-										buttons : Ext.Msg.OK,
-										icon : Ext.Msg.ERROR
-									});
-								}
-							},
-			                failure:function(response,option){
-								Ext.Msg.show({
-									title : '提示',
-									msg : '系统发生错误!',
-									buttons : Ext.Msg.OK,
-									icon : Ext.Msg.ERROR
-								});
-			                }
-						});
-					}
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '请选择需要修改的终端!',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.ERROR
 				});
 			}
-			}
-	});
+		}
+	}); 
 	
 	app.text_search_code = new Ext.form.TextField({
 		name : 'textSearchcode',
@@ -447,9 +545,9 @@ Ext.onReady(function(){
 
 	app.searchcode = function() {
 		app.colName = app.search_comb_queyrCol_code.getValue();
-		app.values  = app.text_search_code.getValue();
+		app.values =app.text_search_code.getValue();
 		Ext.Ajax.request({
-			url : project+'/channel/list.cgi',
+			url : project+'/terminalproperty/list.cgi',
 			params : {
 				start : 0,
 				limit : app.limit,
@@ -485,26 +583,46 @@ Ext.onReady(function(){
 	});
 	
 	app.ds_data = new Ext.data.Store({
-		url : project+'/channel/list.cgi',
+		url : project+'/terminalproperty/list.cgi',
 		baseParams:{},
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'count',
 			root : 'obj'
-		}, [{name : 'bdcode',type : 'string'
-		}, {name : 'status',type : 'string'
-		}, {name : 'address',type : 'string'
-		}, {name : 'channelcode',type : 'string'
-		}, {name : 'channlename',type : 'string'
+		}, [{name : 'hsman',type : 'string'
+		}, {name : 'hsmanen',type : 'string'
+		}, {name : 'hstype',type : 'string'
+		}, {name : 'hstypeen',type : 'string'
+		}, {name : 'gprs',type : 'int'
+		}, {name : 'wap',type : 'int'
+		}, {name : 'smartphone',type : 'int'
+		}, {name : 'os',type : 'int'
+		}, {name : 'wifi',type:'int'
 		}, {name : 'createtime',type:'string'
+		}, {name : 'id',type:'int'
 		}])
 	});
 	
 	app.ds_data.load({
 		params : {
 			start : 0,
-			limit : app.limit
+			limit : app.limit,
+			colName : app.colName,
+			value : app.values
 		}
 	});
+	
+	app.ds_data.on('beforeload',function(){
+		Ext.apply(
+			this.baseParams,{
+				start : 0,
+				limit : app.limit,
+				colName : app.colName,
+				value : app.values
+	        }   
+	 	);   
+	});
+	/**
+	**/  
 	
 	app.ptb = new Ext.PagingToolbar({
 		pageSize:app.limit,
@@ -524,10 +642,11 @@ Ext.onReady(function(){
 	    cm: app.cm_data,
 		ds: app.ds_data,
 	    height:500,
+//	    width:800,
         autoScroll: true,
 		sm:app.sm,
-		//app.btn_detail,app.btn_disable,'-',app.btn_enable,'-','请输入渠道名称:'
-		tbar : ['-',app.btn_add,'-',app.btn_update,'-',app.btn_disable,'-',app.btn_enable,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code],
+		//app.btn_detail,'-','-',app.btn_update,'请输入员工名:',app.btn_add,'-',app.btn_disable,'-',app.btn_enable,'-',
+		tbar : [app.btn_update,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code],
 		bbar : app.ptb
 	});
 	
@@ -550,38 +669,20 @@ Ext.onReady(function(){
 	 * 记录单击事件
 	 */
 	app.grid.addListener('rowclick',function(grid, rowIndex){
-				if(grid.getSelectionModel().isSelected(rowIndex)){
-					app.btn_disable.enable();
-					app.btn_enable.enable();
-//					app.btn_add.enable();
-//					app.btn_detail.enable();
-					app.btn_update.enable();
-				}else{
-					app.btn_disable.disable();
-					app.btn_enable.disable();
-//					app.btn_add.disable();
-//					app.btn_detail.disable();
-					app.btn_update.disable();
-				}
+		if(grid.getSelectionModel().isSelected(rowIndex)){
+			app.btn_disable.enable();
+			app.btn_enable.enable();
+			app.btn_add.disable();
+			app.btn_detail.enable();
+			app.btn_update.enable();
+		}else{
+			app.btn_disable.disable();
+			app.btn_enable.disable();
+			app.btn_add.enable();
+			app.btn_detail.disable();
+			app.btn_update.disable();
+		}
 	});
 	
-    app.grid.render('staff');
+    app.grid.render('terminal-property');
 });
-
-var ds_hstype = new Ext.data.Store({
-	proxy:new Ext.data.HttpProxy({
-		url:'/hstype/list.cgi'
-	}),
-	reader : new Ext.data.JsonReader({
-		root : 'obj'
-	}, [{name : 'id',type : 'int'},
-		{name : 'name',type : 'string'},
-		{name : 'icon',type : 'string'}
-		
-	])
-});
-
-function vmobile(v){
-     var r = /^((\(\d{2,3}\))|(\d{3}\-))?1?[3,5,8]\d{9}$/;
-     return r.test(v);
-}

@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="${ctx}/resource/extjs3.1/ux/ux-all.js"></script>
 		<link rel="stylesheet" type="text/css" href="${ctx}/resource/extjs3.1/ux/css/ux-all.css" />
 		<script type="text/javascript">
+		  var project = '${ctx}';
 		  var webContext = '';
 		
 		  var runMode = '1';
@@ -85,9 +86,9 @@
 		
 		</script>
 	</head>
-	<script type="text/javascript" src="/scripts/theme.js"></script>
+	<script type="text/javascript" src="${ctx}/scripts/theme.js"></script>
 	<script type="text/javascript"
-		src="/resource/commonjs/extTabCloseMenu.js"></script>
+		src="${ctx}/resource/commonjs/extTabCloseMenu.js"></script>
 	<!-- onunload="unonloadTheme();" -->
 	<body onload="onloadTheme();">
 		<div id="themeTreeDiv" class="x-hidden"></div>
@@ -647,10 +648,10 @@
     });
 
  	var node_0101090101 = new Ext.tree.TreeNode({
- 		text:'全网（手机报-短信）推荐查询',
+ 		text:'无线音乐高级俱乐部会员推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/1.html','全网（手机报-短信）推荐查询','0101090101','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 全网（手机报-短信）推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=1','无线音乐高级俱乐部会员推荐查询','0101090101','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 无线音乐高级俱乐部会员','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -658,10 +659,10 @@
  	});
 
  	var node_0101090102 = new Ext.tree.TreeNode({
- 		text:'全网（手机报-彩信）推荐查询',
+ 		text:'139邮箱推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/2.html','全网（手机报-彩信）推荐查询','0101090102','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 全网（手机报-彩信）推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=2','139邮箱推荐查询','0101090102','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 139邮箱推荐查询','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -669,10 +670,10 @@
  	});
 
  	var node_0101090103 = new Ext.tree.TreeNode({
- 		text:'号簿管家推荐查询',
+ 		text:'飞信会员推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/3.html','号簿管家推荐查询','0101090103','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 号簿管家推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=3','飞信会员推荐查询','0101090103','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 飞信会员推荐查询','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -680,10 +681,10 @@
  	});
 
  	var node_0101090104 = new Ext.tree.TreeNode({
- 		text:'手机地图推荐查询',
+ 		text:'号簿管家推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/4.html','手机地图推荐查询','0101090104','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 手机地图推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=4','号簿管家推荐查询','0101090104','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 号簿管家推荐查询','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -691,10 +692,10 @@
  	});
 
  	var node_0101090105 = new Ext.tree.TreeNode({
- 		text:'铃音盒推荐查询',
+ 		text:'全曲下载推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/5.html','铃音盒推荐查询','0101090105','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 铃音盒推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=5','全曲下载查询','0101090105','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 全曲下载推荐查询','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -702,10 +703,10 @@
  	});
 
  	var node_0101090106 = new Ext.tree.TreeNode({
- 		text:'GPRS流量包推荐查询',
+ 		text:'手机报推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/6.jsp','GPRS流量包推荐查询','0101090106','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> GPRS流量包推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=6','手机报推荐查询','0101090106','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 手机报推荐查询','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -713,10 +714,10 @@
  	});
 
  	var node_0101090107 = new Ext.tree.TreeNode({
- 		text:'手机支付推荐查询',
+ 		text:'手机视频推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/7.html','手机支付推荐查询','0101090107','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 手机支付推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=7','手机视频推荐查询','0101090107','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 手机视频推荐查询','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -724,10 +725,10 @@
  	});
 
  	var node_0101090108 = new Ext.tree.TreeNode({
- 		text:'MM推荐查询',
+ 		text:'手机阅读推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/8.html','MM推荐查询','0101090108','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> MM推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=8','手机阅读推荐查询','0101090108','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 手机阅读推荐查询','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -735,10 +736,10 @@
  	});
 
  	var node_0101090109 = new Ext.tree.TreeNode({
- 		text:'飞信推荐查询',
+ 		text:'手机游戏推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/9.html','飞信推荐查询','0101090109','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 飞信推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=9','手机游戏推荐查询','0101090109','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 手机游戏推荐查询','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -746,10 +747,10 @@
  	});
 
  	var node_0101090110 = new Ext.tree.TreeNode({
- 		text:'手机阅读推荐查询',
+ 		text:'手机电视推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/10.html','手机阅读推荐查询','0101090110','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 手机阅读推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=10','手机电视推荐查询','0101090110','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 手机电视推荐查询','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -757,10 +758,10 @@
  	});
 
  	var node_0101090111 = new Ext.tree.TreeNode({
- 		text:'139邮箱推荐查询',
+ 		text:'移动MM推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/11.html','139邮箱推荐查询','0101090111','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 139邮箱推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=11','移动MM推荐查询','0101090111','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 移动MM推荐查询','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -768,10 +769,10 @@
  	});
 
  	var node_0101090112 = new Ext.tree.TreeNode({
- 		text:'WIFI推荐查询',
+ 		text:'GPRS流量包推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/12.html','WIFI推荐查询','0101090112','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> WIFI推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=12','GPRS流量包推荐查询','0101090112','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> GPRS流量包推荐查询','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -779,10 +780,10 @@
  	});
 
  	var node_0101090113 = new Ext.tree.TreeNode({
- 		text:'手机电视推荐查询',
+ 		text:'彩信包推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/13.html','手机电视推荐查询','0101090113','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 手机电视推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=13','彩信包推荐查询','0101090113','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 彩信包推荐查询','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -791,14 +792,36 @@
 
 
   	var node_0101090114 = new Ext.tree.TreeNode({
- 		text:'号谱管家推荐查询',
+ 		text:'手机支付推荐查询',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/iquery/data/14.jsp','号谱管家推荐查询','0101090114','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 号谱管家推荐查询','application_view_columns.png');
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=14','手机支付推荐查询','0101090114','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 手机支付推荐查询','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
  		id:'id_node_0101090114'
+ 	});
+ 	
+  	var node_0101090115 = new Ext.tree.TreeNode({
+ 		text:'WIFI推荐查询',
+ 		listeners: {
+ 		'click': function(){
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=15','WIFI推荐查询','0101090115','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> WIFI推荐查询','application_view_columns.png');
+ 		}},
+ 		expanded:false,
+ 		iconCls:'icon-application_view_columns',
+ 		id:'id_node_0101090115'
+ 	});
+ 	
+  	var node_0101090116 = new Ext.tree.TreeNode({
+ 		text:'手机地图推荐查询',
+ 		listeners: {
+ 		'click': function(){
+ 		  addTab(project+'/pages/iquery/data.jsp?btype=16','手机地图推荐查询','0101090116','渭南移动终端业务营销系统 -> 业务查询 -> 数据业务查询 -> 手机地图推荐查询','application_view_columns.png');
+ 		}},
+ 		expanded:false,
+ 		iconCls:'icon-application_view_columns',
+ 		id:'id_node_0101090116'
  	});
  	
      var node_01010902 = new Ext.tree.TreeNode({
@@ -1505,20 +1528,22 @@
 	node_01010602.appendChild(node_0101060206);
 	**/    
     node_0101.appendChild(node_010109);
-//    node_01010901.appendChild(node_0101090101);
-//    node_01010901.appendChild(node_0101090102);
-//    node_01010901.appendChild(node_0101090103);
-//    node_01010901.appendChild(node_0101090104);
-//    node_01010901.appendChild(node_0101090105);
+    node_01010901.appendChild(node_0101090101);
+    node_01010901.appendChild(node_0101090102);
+    node_01010901.appendChild(node_0101090103);
+    node_01010901.appendChild(node_0101090104);
+    node_01010901.appendChild(node_0101090105);
     node_01010901.appendChild(node_0101090106);
+    node_01010901.appendChild(node_0101090107);
+    node_01010901.appendChild(node_0101090108);
+    node_01010901.appendChild(node_0101090109);
+    node_01010901.appendChild(node_0101090110);
+    node_01010901.appendChild(node_0101090111);
+    node_01010901.appendChild(node_0101090112);
+    node_01010901.appendChild(node_0101090113);
     node_01010901.appendChild(node_0101090114);
-//    node_01010901.appendChild(node_0101090107);
-//    node_01010901.appendChild(node_0101090108);
-//    node_01010901.appendChild(node_0101090109);
-//    node_01010901.appendChild(node_0101090110);
-//    node_01010901.appendChild(node_0101090111);
-//    node_01010901.appendChild(node_0101090112);
-//    node_01010901.appendChild(node_0101090113);
+    node_01010901.appendChild(node_0101090115);
+    node_01010901.appendChild(node_0101090116);
     node_010109.appendChild(node_01010901);
     
     /**

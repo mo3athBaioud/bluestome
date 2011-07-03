@@ -39,7 +39,7 @@ Ext.onReady(function() {
 					Ext.Msg.confirm('提示', '你确退出系统吗?', function(btn) {
 						if (btn == 'yes') {
 							Ext.Ajax.request({
-								url : '/servlet/LogoutServlet',
+								url : project+'/servlet/LogoutServlet',
 								params : {
 								},
 								success:function(response,option){
@@ -56,7 +56,7 @@ Ext.onReady(function() {
 											icon : Ext.MessageBox.INFO
 										});
 										**/
-										window.location.href = '/login3.jsp';
+										window.location.href = project+'/login3.jsp';
 									}else{
 										Ext.Msg.show({
 											title : '系统提示',
@@ -135,7 +135,7 @@ Ext.onReady(function() {
 			themeTree.on('click', function(node) {
 						var theme = node.attributes.theme;
 						var o = document.getElementById('previewDiv');
-						o.innerHTML = '<img src="./resource/image/theme/' + theme + '.jpg" />';
+						o.innerHTML = '<img src="'+project+'/resource/image/theme/' + theme + '.jpg" />';
 			});
 
 			var previewPanel = new Ext.Panel({
@@ -209,7 +209,7 @@ Ext.onReady(function() {
 					}
 				}
 				var o = document.getElementById('previewDiv');
-				o.innerHTML = '<img src="./resource/image/theme/' + default_theme + '.jpg" />';
+				o.innerHTML = '<img src="'+project+'/resource/image/theme/' + default_theme + '.jpg" />';
 				themeWindow.show();
 
 			}
