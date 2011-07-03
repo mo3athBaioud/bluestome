@@ -29,7 +29,7 @@ public class BDistrict implements Serializable {
 	private String name;
 	
 	@Column("d_parent_code")
-	private String parentcode;
+	private String parentcode = "0000";
 	
 	@Column("d_description")
 	private String description;
