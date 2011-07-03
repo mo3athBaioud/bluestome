@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta content="text/html; charset=UTF-8" http-equiv="content-type">
-		<title>号谱管家推荐查询</title>
+		<title>业务数据导入</title>
 		<link rel="stylesheet" type="text/css"
 			href="${ctx}/style/index.css" />
 		<link href="${ctx}/style/default/common.css" rel="stylesheet" type="text/css">
@@ -28,16 +28,20 @@
 			line-height:17pt;
 			font-size:12pt;
 	    }
+	    .icon-disable {
+			background-image: url(${ctx}/images/disable.png) !important;
+		}
+	    
 	    </style>
 		<link rel="stylesheet" type="text/css"
 			href="${ctx}/resource/theme/default/resources/css/ext-all.css" />
+		<link rel="stylesheet" type="text/css" href="${ctx}/resource/extjs3.1/ux/fileuploadfield/css/fileuploadfield.css" />
 		<script type="text/javascript"
 			src="${ctx}/resource/extjs3.1/adapter/ext/ext-base.js"></script>
 		<script type="text/javascript" src="${ctx}/resource/extjs3.1/ext-all.js"></script>
 		<script type="text/javascript"
 			src="${ctx}/resource/commonjs/ext-lang-zh_CN.js"></script>
 		<script type="text/javascript" src="${ctx}/resource/commonjs/eredg4.js"></script>
-		<link rel="stylesheet" type="text/css" href="${ctx}/resource/css/eredg4.css" />
 		<script type="text/javascript" src="${ctx}/resource/extjs3.1/ux/ux-all.js"></script>
 		<link rel="stylesheet" type="text/css"
 			href="${ctx}/resource/extjs3.1/ux/css/ux-all.css" />
@@ -47,13 +51,27 @@
 		<script type="text/javascript"
 			src="${ctx}/scripts/common/validation.js"></script>
 		<script type="text/javascript" src="${ctx}/scripts/common/examples.js"></script>
-		<script type="text/javascript" src="${ctx}/scripts/iquery/data_hpgj.js"></script>
+		<script type="text/javascript" src="${ctx}/resource/extjs3.1/ux/fileuploadfield/FileUploadField.js"></script>
+		<script type="text/javascript" src="${ctx}/scripts/admin/import.js"></script>
+		<!-- 
+		 -->
 		<script type="text/javascript">
-			var name = '号谱管家推荐查询';
-			var loginName = '<%=loginName%>';
+			var name = '业务数据导入';
+			var project = '${ctx}';
 		</script>
 	</head>
 	<body>
-			<div id="utp"></div>
+			<table align="center" width="90%" height="100%">
+				<tr valign="middle">
+					<div id="import" align="center" style="padding:100px;"></div>
+				</tr>
+			</table>
+			<!-- 
+			 <table align="center">
+			 	<center>
+			 		<a href="#">上传</a>
+			 	</center>
+			 </table>
+			 -->
 	</body>
 </html>

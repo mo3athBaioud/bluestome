@@ -187,7 +187,7 @@ Ext.onReady(function() {
 			function login() {
 				if (Ext.getCmp('loginForm').form.isValid()) {
 					Ext.getCmp('loginForm').form.submit({
-								url : '/login.cgi',
+								url : project+'/login.cgi',
 								waitTitle : '提示',
 								method : 'POST',
 								waitMsg : '正在验证您的身份,请稍候.....',

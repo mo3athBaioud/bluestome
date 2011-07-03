@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta content="text/html; charset=UTF-8" http-equiv="content-type">
-		<title>号谱管家推荐查询</title>
+		<title>全网（手机报-彩信）推荐查询</title>
 		<link rel="stylesheet" type="text/css"
 			href="${ctx}/style/index.css" />
 		<link href="${ctx}/style/default/common.css" rel="stylesheet" type="text/css">
@@ -47,10 +47,9 @@
 		<script type="text/javascript"
 			src="${ctx}/scripts/common/validation.js"></script>
 		<script type="text/javascript" src="${ctx}/scripts/common/examples.js"></script>
-		<script type="text/javascript" src="${ctx}/scripts/iquery/data_hpgj.js"></script>
+		<script type="text/javascript" src="${ctx}/scripts/iquery/data.js"></script>
 		<script type="text/javascript">
 			var name = '号谱管家推荐查询';
-			var loginName = '<%=loginName%>';
 		</script>
 	</head>
 	<body>

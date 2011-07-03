@@ -55,6 +55,7 @@
 			src="${ctx}/resource/commonjs/ext-lang-zh_CN.js"></script>
 		<script type="text/javascript" src="${ctx}/scripts/login.js"></script>
 		<script type="text/javascript">
+			var project = '${ctx}';
 			function formSubmit(){
 			    if(typeof(g_documentComplete) == "undefined" || g_documentComplete == 0)
 			    {

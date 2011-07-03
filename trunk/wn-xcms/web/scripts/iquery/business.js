@@ -4,7 +4,7 @@ Ext.onReady(function(){
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
     Ext.QuickTips.init();
 	app.limit = 15;
-	app.colName = "";
+	app.colName = "d_phonenum";
 	app.values = "";
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
@@ -337,25 +337,87 @@ Ext.onReady(function(){
     app.cm_utp = new Ext.grid.ColumnModel([
 //	    expander,
 		app.sm,
-        {header: "手机号码", width: 100, sortable: true, dataIndex: 'phoneNum'},
-        {header: "品牌", width: 100, sortable: true, dataIndex: 'hsmanName'},
-        {header: "品牌(英文)", width: 100, sortable: true, dataIndex: 'hsmanEnName',renderer:function(v){
-        	if(null == v || '' == v){
-        		return '<font color="red">暂无英文名</font>';
+        {header: "手机号码", width: 100, sortable: true, dataIndex: 'phonenum'},
+        {header: "业务类型", width: 100, sortable: true, dataIndex: 'btype',renderer:function(v){
+			var x = parseInt(v);
+			switch(x){
+				case 1:
+					name = '无线音乐高级俱乐部会员';
+					break;
+				case 2:
+					name = '139邮箱';
+					break;
+				case 3:
+					name = '飞信会员';
+					break;
+				case 4:
+					name = '号簿管家';
+					break;
+				case 5:
+					name = '全曲下载';
+					break;
+				case 6:
+					name = '手机报';
+					break;
+				case 7:
+					name = '手机视频';
+					break;
+				case 8:
+					name = '手机阅读';
+					break;
+				case 9:
+					name = '手机游戏';
+					break;
+				case 10:
+					name = '手机电视';
+					break;
+				case 11:
+					name = '移动MM';
+					break;
+				case 12:
+					name = 'GPRS流量包';
+					break;
+				case 13:
+					name = '彩信包';
+					break;
+				case 14:
+					name = '手机支付';
+					break;
+				case 15:
+					name = 'WIFI';
+					break;
+				case 16:
+					name = '手机地图';
+					break;
+				default:
+					name = '默认';
+					break;
+			}
+        		return '<font color="blue">'+name+'</font>';
+        }},
+        {header: "品牌", width: 100, sortable: true, dataIndex: 'hsman'},
+        {header: "型号", width: 100, sortable: true, dataIndex: 'hstype'},
+        {header: "IMEI", width: 100, sortable: true, dataIndex: 'imei'},
+        {header: "业务是否支持", width: 100, sortable: true, dataIndex: 'support',renderer:function(v){
+        	if(v == 0){
+        		return '<font color="red">不支持</font>';
+        	}else if(v == 1){
+        		return '<font color="blue">支持</font>';
         	}else{
-        		return '<font color="blue">'+v+'</font>';
+        		return '<font color="yellow">未知</font>';
         	}
         }},
-        {header: "型号", width: 100, sortable: true, dataIndex: 'hstypeName'},
-        {header: "型号(英文)", width: 100, sortable: true, dataIndex: 'hstypeEnName',renderer:function(v){
-        	if(null == v || '' == v){
-        		return '<font color="red">暂无英文名</font>';
+        {header: "业务形式", width: 100, sortable: true, dataIndex: 'suuporttype',renderer:function(v){
+        	if(v == 1){
+        		return '<font color="green">短信</font>';
+        	}else if(v == 2){
+        		return '<font color="green">WAP网站</font>';
+        	}else if(v == 3){
+        		return '<font color="green">客户端</font>';
         	}else{
-        		return '<font color="blue">'+v+'</font>';
+        		return '<font color="red">未知</font>';
         	}
-        }},
-//        {header: "TAC", width: 100, sortable: true, dataIndex: 'tac'},
-        {header: "IMEI", width: 100, sortable: true, dataIndex: 'imei'}
+        }}
     ]);
     
 	app.btn_search_code = new Ext.Button({
@@ -591,21 +653,32 @@ Ext.onReady(function(){
 		}
 		**/
 		Ext.Ajax.request({
-			url : '/utp/search.cgi',
+			url : project+'/bussiness/list.cgi?btype='+btype,
 			params : {
-				phonenum : values
+				colName : app.colName,
+				value: values,
+				start:0,
+				limit:app.limit
 			},
 			success:function(response,option){
 				var obj = Ext.util.JSON.decode(response.responseText);
 				if(obj.success){
 					app.ds_utp_1.load({
 						params : {
-							phonenum : values,
+							colName :app.colName,
+							value:values,
 							start:0,
 							limit:app.limit
 						}
-					}); //,colName:app.colName,value:app.values
+					});
 				}else{
+					Ext.Msg.show({
+						title:'系统提示',
+						msg:'暂未查询到该号码['+values+']数据！',
+						buttons : Ext.MessageBox.OKCANCEL,
+						icon:Ext.MessageBox.ERROR
+					});
+					/**
 					Ext.Msg.show({
 						title : '系统提示',
 						msg : '未查找到您对应的终端，是否立即录入您当前的终端数据？',
@@ -617,9 +690,17 @@ Ext.onReady(function(){
 						},
 						icon : Ext.MessageBox.ERROR
 					});
+					**/ 
 				}
 			},
             failure:function(){
+				Ext.Msg.show({
+					title:'系统提示',
+					msg:'暂未查询到该号码['+values+']数据！',
+					buttons : Ext.MessageBox.OKCANCEL,
+					icon:Ext.MessageBox.ERROR
+				});
+            	/**
 				Ext.Msg.show({
 					title : '系统提示',
 					msg : '未查找到您对应的终端，是否立即录入您当前的终端数据？',
@@ -631,13 +712,13 @@ Ext.onReady(function(){
 					},
 					icon : Ext.MessageBox.ERROR
 				});
+				**/ 
             }
 		});
-//		app.ds_utp.loadData(app.data);
 	};
 	
 	app.ds_utp = new Ext.data.Store({
-		url : project + '/utp/utp.cgi',
+		url : project + '/bussiness/list.cgi',
 		baseParams:{},
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'count',
@@ -655,19 +736,19 @@ Ext.onReady(function(){
 	});
 	
 	app.ds_utp_1 = new Ext.data.Store({
-		url : project + '/utp/utp.cgi',
+		url : project + '/bussiness/list.cgi?btype='+btype,
 		baseParams:{},
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'count',
 			root : 'obj'
-		}, [{name : 'phoneNum',type : 'string'
+		}, [{name : 'phonenum',type : 'string'
+		}, {name : 'btype',type : 'string'
+		}, {name : 'hsman',type : 'string'
+		}, {name : 'hstype',type : 'string'
 		}, {name : 'imei',type : 'string'
-		}, {name : 'tac',type : 'string'
-		}, {name : 'hsmanName',type : 'string'
-		}, {name : 'hsmanEnName',type : 'string'
-		}, {name : 'hstypeName',type : 'string'
-		}, {name : 'hstypeEnName',type : 'string'
-		}, {name : 'mms',type : 'string'
+		}, {name : 'support',type : 'int'
+		}, {name : 'suuporttype',type : 'int'
+		}, {name : 'id',type : 'int'
 		}])
 	});
 	/**	

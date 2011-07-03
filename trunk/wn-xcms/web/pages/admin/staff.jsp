@@ -49,7 +49,7 @@
 		<script type="text/javascript" src="${ctx}/scripts/common/UploadDialog.js"></script>
 		<script type="text/javascript" src="${ctx}/scripts/common/RowExpander.js"></script>
 		<script type="text/javascript"
-			src="/scripts/common/validation.js"></script>
+			src="${ctx}/scripts/common/validation.js"></script>
 		<script type="text/javascript" src="${ctx}/scripts/common/examples.js"></script>
 		<script type="text/javascript" src="${ctx}/scripts/admin/staff.js"></script>
 		<script type="text/javascript">

@@ -3,7 +3,7 @@
  */
 var app = {};
 Ext.onReady(function(){
-  	Ext.BLANK_IMAGE_URL = '/resource/image/ext/s.gif';
+  	Ext.BLANK_IMAGE_URL = project+'/resource/image/ext/s.gif';
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
     Ext.QuickTips.init();
 	app.limit = 15;
@@ -53,7 +53,7 @@ Ext.onReady(function(){
     
     app.cm_data = new Ext.grid.ColumnModel([
 		app.sm,
-        {header: "用户名", width: 100, sortable: true, dataIndex: 'username'},
+        {header: "工号", width: 100, sortable: true, dataIndex: 'username'},
         {header: "手机号码", width: 100, sortable: true, dataIndex: 'mobile'},
         {header: "办公室号码", width: 100, sortable: true, dataIndex: 'officephone'},
         {header: "用户状态", width: 150, sortable: true, dataIndex: 'status',renderer:function(v){
@@ -69,6 +69,27 @@ Ext.onReady(function(){
         {header: "创建时间", width: 130, sortable: true, dataIndex: 'createtime'}
     ]);
     
+	app.search_comb_queyrCol_code = new Ext.form.ComboBox({
+				fieldLabel : '查询条件',
+				id : 'column',
+				hiddenName : 'colName',
+				valueField : 'id',
+				displayField : 'name',
+				mode:'local',
+				store : new Ext.data.SimpleStore({
+					data : [
+							['d_username', '用户名'],
+							['d_channel_code', '渠道代码']
+				    ],
+					fields : ['id', 'name']
+				}),	
+				selectOnFocus : true,
+				editable : false,
+				allowBlank : true,
+				triggerAction : 'all',
+				emptyText : '查询的字段名'
+	});
+	
 	app.btn_detail = new Ext.Button({
 		text : '员工详情',
 		disabled:true,
@@ -130,9 +151,11 @@ Ext.onReady(function(){
 				allowBlank : false
 			},
 			{
-				fieldLabel : '员工名',
+				fieldLabel : '工号',
 				name : 'staff.username',
-				allowBlank : false
+				allowBlank : false,
+				vtype:'beta',
+				maxLength:50
 			},
 			{
 				fieldLabel:'密码',
@@ -207,6 +230,14 @@ Ext.onReady(function(){
 	            editable:false,
 				emptyText : '请选择所属渠道!',
 				allowBlank : false
+				/**,
+				listeners:{
+					select:function(combo,record,index){
+						Ext.getCmp('username').setValue('');
+						Ext.getCmp('username').setValue(combo.getValue());
+					}
+				}
+				**/
 			},{
 				//下拉选择框
 				xtype:'combo',
@@ -486,6 +517,7 @@ Ext.onReady(function(){
 	});
 
 	app.searchcode = function() {
+		app.colName = app.search_comb_queyrCol_code.getValue();
 		app.values =app.text_search_code.getValue();
 		Ext.Ajax.request({
 			url : project+'/staff/list.cgi',
@@ -524,7 +556,7 @@ Ext.onReady(function(){
 	});
 	
 	app.ds_data = new Ext.data.Store({
-		url : '/staff/list.cgi',
+		url : project+'/staff/list.cgi',
 		baseParams:{},
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'count',
@@ -549,7 +581,6 @@ Ext.onReady(function(){
 		}
 	});
 	
-	/**
 	app.ds_data.on('beforeload',function(){
 		Ext.apply(
 			this.baseParams,{
@@ -560,7 +591,6 @@ Ext.onReady(function(){
 	        }   
 	 	);   
 	});
-	**/  
 	
 	app.ptb = new Ext.PagingToolbar({
 		pageSize:app.limit,
@@ -583,8 +613,8 @@ Ext.onReady(function(){
 //	    width:800,
         autoScroll: true,
 		sm:app.sm,
-		//app.btn_detail,'-','-',app.btn_update,
-		tbar : [app.btn_add,'-',app.btn_disable,'-',app.btn_enable,'-',app.btn_update,'-','请输入员工名:',app.text_search_code,'-',app.btn_search_code],
+		//app.btn_detail,'-','-',app.btn_update,'请输入员工名:',
+		tbar : [app.btn_add,'-',app.btn_disable,'-',app.btn_enable,'-',app.btn_update,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code],
 		bbar : app.ptb
 	});
 	

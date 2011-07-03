@@ -3,7 +3,7 @@
  */
 var app = {};
 Ext.onReady(function(){
-  	Ext.BLANK_IMAGE_URL = '/resource/image/ext/s.gif';
+  	Ext.BLANK_IMAGE_URL = project+'/resource/image/ext/s.gif';
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
     Ext.QuickTips.init();
 	app.limit = 15;
@@ -69,6 +69,27 @@ Ext.onReady(function(){
         {header: "创建时间", width: 130, sortable: true, dataIndex: 'createtime'}
     ]);
     
+	app.search_comb_queyrCol_code = new Ext.form.ComboBox({
+				fieldLabel : '查询条件',
+				id : 'column',
+				hiddenName : 'colName',
+				valueField : 'id',
+				displayField : 'name',
+				mode:'local',
+				store : new Ext.data.SimpleStore({
+					data : [
+							['d_name', '业务区名称'],
+							['d_code', '业务区代码']
+				    ],
+					fields : ['id', 'name']
+				}),	
+				selectOnFocus : true,
+				editable : false,
+				allowBlank : true,
+				triggerAction : 'all',
+				emptyText : '查询的字段名'
+	});
+	
 	app.btn_detail = new Ext.Button({
 		text : '业务区详情',
 		disabled:true,
@@ -109,7 +130,7 @@ Ext.onReady(function(){
 			{
 				xtype:'hidden',
 				name : 'action',
-				value:'add',
+				value:'add'
 			},{
 				fieldLabel : '业务区代码',
 				name : 'bdistrict.code',
@@ -423,6 +444,7 @@ Ext.onReady(function(){
 	});
 
 	app.searchcode = function() {
+		app.colName = app.search_comb_queyrCol_code.getValue();
 		app.values =app.text_search_code.getValue();
 		Ext.Ajax.request({
 			url : project+'/bdistrict/list.cgi',
@@ -461,7 +483,7 @@ Ext.onReady(function(){
 	});
 	
 	app.ds_data = new Ext.data.Store({
-		url : '/bdistrict/list.cgi',
+		url : project+'/bdistrict/list.cgi',
 		baseParams:{},
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'count',
@@ -502,8 +524,8 @@ Ext.onReady(function(){
 	    height:500,
         autoScroll: true,
 		sm:app.sm,
-		//app.btn_detail,'-',app.btn_disable,'-',app.btn_enable,'-',
-		tbar : [app.btn_add,'-',app.btn_update,'-',app.btn_disable,'-',app.btn_enable,'-','请输入业务区名称:',app.text_search_code,'-',app.btn_search_code],
+		//app.btn_detail,'-',app.btn_disable,'-',app.btn_enable,'-','请输入业务区名称:',
+		tbar : [app.btn_add,'-',app.btn_update,'-',app.btn_disable,'-',app.btn_enable,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code],
 		bbar : app.ptb
 	});
 	

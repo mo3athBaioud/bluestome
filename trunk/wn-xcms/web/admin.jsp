@@ -19,8 +19,8 @@
 		<script type="text/javascript" src="${ctx}/resource/extjs3.1/ux/ux-all.js"></script>
 		<link rel="stylesheet" type="text/css" href="${ctx}/resource/extjs3.1/ux/css/ux-all.css" />
 		<script type="text/javascript">
+		  var project = '${ctx}';
 		  var webContext = '';
-		
 		  var runMode = '1';
 		
 		  Ext.QuickTips.init();
@@ -85,9 +85,9 @@
 		
 		</script>
 	</head>
-	<script type="text/javascript" src="/scripts/theme.js"></script>
+	<script type="text/javascript" src="${ctx}/scripts/theme.js"></script>
 	<script type="text/javascript"
-		src="/resource/commonjs/extTabCloseMenu.js"></script>
+		src="${ctx}//resource/commonjs/extTabCloseMenu.js"></script>
 	<!-- onunload="unonloadTheme();" -->
 	<body onload="onloadTheme();">
 		<div id="themeTreeDiv" class="x-hidden"></div>
@@ -152,7 +152,7 @@
  		text:'员工管理',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/admin/staff.jsp','员工管理','0101090101','渭南移动终端业务营销系统 -> 系统管理 -> 员工管理 -> 员工管理','application_view_columns.png');
+ 		  addTab(project+'/pages/admin/staff.jsp','员工管理','0101090101','渭南移动终端业务营销系统 -> 系统管理 -> 员工管理 -> 员工管理','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -163,7 +163,7 @@
  		text:'渠道管理',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/admin/channel.jsp','渠道管理','0101090102','渭南移动终端业务营销系统 -> 系统管理 -> 员工管理 -> 渠道管理','application_view_columns.png');
+ 		  addTab(project+'/pages/admin/channel.jsp','渠道管理','0101090102','渭南移动终端业务营销系统 -> 系统管理 -> 员工管理 -> 渠道管理','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
@@ -174,17 +174,72 @@
  		text:'业务区管理',
  		listeners: {
  		'click': function(){
- 		  addTab('pages/admin/bdistrict.jsp','渠道管理','0101090103','渭南移动终端业务营销系统 -> 系统管理 -> 员工管理 -> 业务区管理','application_view_columns.png');
+ 		  addTab(project+'/pages/admin/bdistrict.jsp','业务区管理','0101090103','渭南移动终端业务营销系统 -> 系统管理 -> 员工管理 -> 业务区管理','application_view_columns.png');
  		}},
  		expanded:false,
  		iconCls:'icon-application_view_columns',
  		id:'id_node_0101090103'
  	});
  	
+    var node_01010902 = new Ext.tree.TreeNode({
+
+        text:'终端管理',
+
+        listeners: {
+
+          'click': function(){
+           }},
+
+    	expanded:false,
+
+        iconCls:'icon-magnifier',
+
+        id:'id_node_01010902'
+
+    });
+    
+  	var node_0101090201 = new Ext.tree.TreeNode({
+ 		text:'TAC管理',
+ 		listeners: {
+ 		'click': function(){
+ 		  addTab(project+'/pages/tac/index.jsp','TAC管理','0101090201','渭南移动终端业务营销系统 -> 系统管理 -> 终端管理 -> TAC管理','application_view_columns.png');
+ 		}},
+ 		expanded:false,
+ 		iconCls:'icon-application_view_columns',
+ 		id:'id_node_0101090201'
+ 	});
+ 	
+  	var node_0101090202 = new Ext.tree.TreeNode({
+ 		text:'终端属性管理',
+ 		listeners: {
+ 		'click': function(){
+ 		  addTab(project+'/pages/terminal/terminal-property.jsp','终端属性管理','0101090202','渭南移动终端业务营销系统 -> 系统管理 -> 终端管理 -> 终端属性管理','application_view_columns.png');
+ 		}},
+ 		expanded:false,
+ 		iconCls:'icon-application_view_columns',
+ 		id:'id_node_0101090202'
+ 	});
+ 	
+  	var node_0101090203 = new Ext.tree.TreeNode({
+ 		text:'业务数据导入',
+ 		listeners: {
+ 		'click': function(){
+ 		  addTab(project+'/pages/admin/import.jsp','业务数据导入','0101090203','渭南移动终端业务营销系统 -> 系统管理 -> 终端管理 -> 业务数据导入','application_view_columns.png');
+ 		}},
+ 		expanded:false,
+ 		iconCls:'icon-application_view_columns',
+ 		id:'id_node_0101090203'
+ 	});
+ 	
+    node_01010902.appendChild(node_0101090203);
+    node_01010902.appendChild(node_0101090202);
+    node_01010902.appendChild(node_0101090201);
+    
     node_01010901.appendChild(node_0101090101);
     node_01010901.appendChild(node_0101090102);
     node_01010901.appendChild(node_0101090103);
     node_010109.appendChild(node_01010901);
+    node_010109.appendChild(node_01010902);
     node_0101.appendChild(node_010109);
     
     var treePanel_0101 = new Ext.tree.TreePanel({

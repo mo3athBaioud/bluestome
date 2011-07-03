@@ -1,11 +1,10 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ include file="/commons/taglibs.jsp" %>
 <%@ include file="/session.jsp" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 	<head>
 		<meta content="text/html; charset=UTF-8" http-equiv="content-type">
-		<title>号谱管家推荐查询</title>
+		<title>TAC管理</title>
 		<link rel="stylesheet" type="text/css"
 			href="${ctx}/style/index.css" />
 		<link href="${ctx}/style/default/common.css" rel="stylesheet" type="text/css">
@@ -47,10 +46,9 @@
 		<script type="text/javascript"
 			src="${ctx}/scripts/common/validation.js"></script>
 		<script type="text/javascript" src="${ctx}/scripts/common/examples.js"></script>
-		<script type="text/javascript" src="${ctx}/scripts/iquery/data_hpgj.js"></script>
+		<script type="text/javascript" src="${ctx}/scripts/tac/tac.js"></script>
 		<script type="text/javascript">
-			var name = '号谱管家推荐查询';
-			var loginName = '<%=loginName%>';
+			var project = '${ctx}';
 		</script>
 	</head>
 	<body>
