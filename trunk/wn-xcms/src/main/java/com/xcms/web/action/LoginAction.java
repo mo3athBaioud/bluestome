@@ -59,10 +59,10 @@ public class LoginAction extends BaseAction {
 					json.setSuccess(true);
 					if(sta.getUsername().equals("admin")){
 						//设置用户属性到SESSION
-						json.setMsg(request.getContextPath()+"admin.jsp");
+						json.setMsg(request.getContextPath()+"/admin.jsp");
 					}else{
 						//设置用户属性到SESSION
-						json.setMsg(request.getContextPath()+"index.jsp");
+						json.setMsg(request.getContextPath()+"/index.jsp");
 					}
 				}else{
 					json.setSuccess(false);

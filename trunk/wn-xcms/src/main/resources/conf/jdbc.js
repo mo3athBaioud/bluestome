@@ -11,7 +11,7 @@ var jdbc = {
                 },
                 fields : {
                         driverClassName : 'com.mysql.jdbc.Driver',
-                        url : 'jdbc:mysql://127.0.0.1:3306/xcms?useUnicode=true&characterEncoding=UTF-8',
+                        url : 'jdbc:mysql://127.0.0.1:3306/wnxcms?useUnicode=true&characterEncoding=UTF-8',
                         username : 'root',
                         password : '123456'
                 }
@@ -31,7 +31,7 @@ var jdbc = {
                 },
                 fields : {
                         driverClassName : 'com.mysql.jdbc.Driver',
-                        url : 'jdbc:mysql://127.0.0.1:3306/xcms?useUnicode=true&characterEncoding=UTF-8',
+                        url : 'jdbc:mysql://127.0.0.1:3306/wnxcms?useUnicode=true&characterEncoding=UTF-8',
                         username : 'root',
                         password : '123456'
                 }
