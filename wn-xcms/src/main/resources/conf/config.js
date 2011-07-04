@@ -21,5 +21,12 @@ var config = {
 	    type : 'org.nutz.mvc.upload.UploadAdaptor',
 	    singleton : false,
 	    args : [ { refer : 'uploadFileContext' } ] 
+	},
+	// 读取配置文件
+	config : {
+		type : "org.nutz.ioc.impl.PropertiesProxy",
+		fields : {
+			paths : ["config.properties"]
+		}
 	}
 }
