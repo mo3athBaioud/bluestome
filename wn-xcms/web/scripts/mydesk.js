@@ -2,6 +2,9 @@ var app = {};
 Ext.onReady(function() {
 	Ext.QuickTips.init();
 	Ext.BLANK_IMAGE_URL = '/resource/image/ext/s.gif';
+	app.limit = 20;
+	app.colName = "d_loginname"; //d_phonenum
+	app.values = "";
 	
      var tools = [{
         id:'gear',
@@ -26,6 +29,24 @@ Ext.onReady(function() {
     	['<p><font color="green">系统消息</font></p>','终端数据最近已更新...','2011-04-01 12:00:00']
     ];
     
+	var ds_data = new Ext.data.Store({
+		url : project + '/noplog/list.cgi?loginName='+username+'',
+		baseParams:{},
+		reader : new Ext.data.JsonReader({
+			totalProperty : 'count',
+			root : 'obj'
+		}, [{name : 'phonenum',type : 'string'
+		}, {name : 'btype',type : 'string'
+		}, {name : 'loginname',type : 'string'
+		}, {name : 'loginnameBDistrict',type : 'string'
+		}, {name : 'phonenumBDistrict',type : 'string'
+		}, {name : 'result',type : 'int'
+		}, {name : 'createtime',type : 'string'
+		}, {name : 'id',type : 'int'
+		}, {name : 'uid',type : 'int'
+		}])
+	});
+
     var store = new Ext.data.ArrayStore({
         fields: [
            {name: 'title'},
@@ -34,8 +55,25 @@ Ext.onReady(function() {
         ]
     });
     
-	store.loadData(data);
+	ds_data.load({
+		params : {
+			start : 0,
+			limit : app.limit,
+			colName : app.colName,
+			value : username
+		}
+	});
 	
+	ds_data.on('beforeload',function(){
+		Ext.apply(
+			this.baseParams,{
+				start : 0,
+				limit : app.limit,
+				colName : app.colName,
+				value : username
+	        }   
+	 	);   
+	});
 	var btn_del = new Ext.Button({
 		text : '删除',
 		iconCls : 'icon-del',
@@ -65,8 +103,8 @@ Ext.onReady(function() {
 	});
 	
 	var ptb = new Ext.PagingToolbar({
-		pageSize:10,
-		store:store,
+		pageSize:app.limit,
+		store:ds_data,
 		displayInfo:true,
 		displayMsg:'第 {0} - {1} 条  共 {2} 条',
 		emptyMsg:'没有记录'
@@ -74,17 +112,76 @@ Ext.onReady(function() {
 	
     var grid = 	new Ext.grid.GridPanel({
     	title: '<img align="TOP" class="IEPNG" src="/images/comments.png"/>系统消息',
-        store: store,
+        store: ds_data,
         columns: [
-            {id:'title',header: '标题', width: 100, sortable: true, dataIndex: 'title'},
-            {header: '内容', width: 200, sortable: true, dataIndex: 'contents'},
-            {header: '时间', width: 150, sortable: true, dataIndex: 'times'}
+            {id:'title',header: '号码', width: 100, sortable: true, dataIndex: 'phonenum'},
+            {header: '号码业务区', width: 100, sortable: true, dataIndex: 'phonenumBDistrict'},
+            {header: '登录名', width: 100, sortable: true, dataIndex: 'loginname'},
+            {header: '时间', width: 150, sortable: true, dataIndex: 'createtime'},
+        	{header: "业务类型", width: 100, sortable: true, dataIndex: 'btype',renderer:function(v){
+				var x = parseInt(v);
+				switch(x){
+					case 1:
+						name = '无线音乐高级俱乐部会员';
+						break;
+					case 2:
+						name = '139邮箱';
+						break;
+					case 3:
+						name = '飞信会员';
+						break;
+					case 4:
+						name = '号簿管家';
+						break;
+					case 5:
+						name = '全曲下载';
+						break;
+					case 6:
+						name = '手机报';
+						break;
+					case 7:
+						name = '手机视频';
+						break;
+					case 8:
+						name = '手机阅读';
+						break;
+					case 9:
+						name = '手机游戏';
+						break;
+					case 10:
+						name = '手机电视';
+						break;
+					case 11:
+						name = '移动MM';
+						break;
+					case 12:
+						name = 'GPRS流量包';
+						break;
+					case 13:
+						name = '彩信包';
+						break;
+					case 14:
+						name = '手机支付';
+						break;
+					case 15:
+						name = 'WIFI';
+						break;
+					case 16:
+						name = '手机地图';
+						break;
+					default:
+						name = '默认';
+						break;
+				}
+        		return '<font color="blue">'+name+'</font>';
+        	}}
         ],
 //		tools: tools,
         collapsible: true,
         animCollapse: false,
         closable:false,
-        height:220,
+        height:350,
+        width:600,
         autoScroll: true,
         bbar : ptb,
         tbar : [btn_del,'-','请输入查询内容:','-',text_search,'-',btn_search]
