@@ -311,6 +311,7 @@ SAMSUNG
 CREATE TABLE `tbl_bussiness` (
 	`d_id` INT(4) NOT NULL AUTO_INCREMENT,
 	`d_btype` INT(4) NOT NULL,
+	`d_bdistrict` VARCHAR(15) NOT NULL COMMENT '业务区',
 	`d_phonenum` VARCHAR(11) NOT NULL,
 	`d_hsman` VARCHAR(32) NULL DEFAULT NULL,
 	`d_hstype` VARCHAR(32) NULL DEFAULT NULL,
@@ -318,13 +319,14 @@ CREATE TABLE `tbl_bussiness` (
 	`d_support` INT(4) NULL DEFAULT '0',
 	`d_support_type` INT(4) NULL DEFAULT '0',
 	PRIMARY KEY (`d_id`),
-	INDEX `IDX_BTYPE_PHONENUM` (`d_btype`, `d_phonenum`)
+	INDEX `IDX_BTYPE_PHONENUM` (`d_btype`, `d_phonenum`),
+	UNIQUE INDEX `d_btype_d_phonenum` (`d_btype`, `d_phonenum`, `d_imei`)
 )
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB;
 
 【日志表】
-CREATE TABLE `tbl_oplog` (
+CREATE TABLE `tbl_noplog` (
 	`d_id` INT(4) NOT NULL AUTO_INCREMENT ,
 	`d_uid` INT(4) NOT NULL COMMENT '员工ID',
 	`d_phonenum` VARCHAR(11) NOT NULL COMMENT '号码',
@@ -332,12 +334,31 @@ CREATE TABLE `tbl_oplog` (
 	`d_btype` VARCHAR(32) NULL DEFAULT NULL COMMENT '业务类型',
 	`d_loginname` VARCHAR(32) NOT NULL COMMENT '工号',
 	`d_loginname_bdistrict` VARCHAR(32) NOT NULL COMMENT '员工所属业务去',
-	`d_createtime` timestamp default current_timestamp,
+	`d_createtime` timestamp default current_timestamp COMMENT '查询时间',
+	`d_result` int(4) default 0 COMMENT '查询结果',
 	PRIMARY KEY (`d_id`)
 )
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB;
 
+【终端核心表】
+CREATE TABLE `tbl_terminal_core` (
+	`d_id` INT(4) NOT NULL AUTO_INCREMENT ,
+	`d_hsman` VARCHAR(32) NOT NULL COMMENT '厂商',
+	`d_hsman_ch` VARCHAR(32) NOT NULL COMMENT '厂商(中文)',
+	`d_hstype` VARCHAR(32) NOT NULL COMMENT '机型',
+	`d_hstype_ch` VARCHAR(32) NOT NULL COMMENT '机型(中文)',
+	`d_tac` VARCHAR(8) NOT NULL COMMENT 'TAC码',
+	`d_gprs` int(4) default 0 COMMENT '是否支持GPRS',
+	`d_wap` int(4) default 0 COMMENT '是否支持WAP',
+	`d_smartphone` int(4) default 0 COMMENT '是否智能手机',
+	`d_os` int(4) default 0 COMMENT '是否有操作系统',
+	`d_wifi` int(4) default 0 COMMENT '是否支持WIFI',
+	`d_createtime` timestamp default current_timestamp COMMENT '创建时间',
+	PRIMARY KEY (`d_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB;
 
 日志导出功能，可以提供时间区间的选择。
 
@@ -359,4 +380,20 @@ ENGINE=InnoDB;
 15.WIFI
 16.手机地图
 
+--数据库脚本
+select distinct trim(lower(d_hsman_name_en)) as name from tbl_tac where trim(lower(d_hsman_name_en)) = 'alcatel';
+select distinct lower(d_hsman) as name from tbl_terminal_property;
+select distinct b.d_hsman,b.d_hstype,a.d_tac,b.d_gprs,b.d_wap,b.d_smartphone,b.d_os,b.d_wifi from tbl_tac a, tbl_terminal_property b where trim(lower(a.d_hsman_name_en)) = trim(lower(b.d_hsman));
 
+2011-07-04
+1.终端数据适配
+
+2.业务数据导入
+  导入流程
+  业务导入数据格式:
+  业务区,号码,厂商,机型,IMEI,业务是否支持,业务支持类型
+  'E0E1','15800371329','魅族','M8','354707041147044',1,1
+
+缺少对核心数据的管理。 需要有对应的页面来支撑。
+终端识别功能未完成。
+终端匹配功能未完成。
