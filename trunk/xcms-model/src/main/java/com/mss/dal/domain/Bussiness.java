@@ -19,6 +19,9 @@ public class Bussiness implements Serializable {
 	@Column("d_id")
 	private Integer id;
 	
+	@Column("d_bdistrict")
+	private String bdistrict;
+	
 	@Column("d_phonenum")
 	private String phonenum;
 	
@@ -114,6 +117,14 @@ public class Bussiness implements Serializable {
 
 	public void setSuuporttype(Integer suuporttype) {
 		this.suuporttype = suuporttype;
+	}
+
+	public String getBdistrict() {
+		return bdistrict;
+	}
+
+	public void setBdistrict(String bdistrict) {
+		this.bdistrict = bdistrict;
 	}
 	
 	
