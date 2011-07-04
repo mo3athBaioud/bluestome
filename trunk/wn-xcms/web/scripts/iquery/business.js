@@ -718,7 +718,7 @@ Ext.onReady(function(){
 	};
 	
 	app.ds_utp = new Ext.data.Store({
-		url : project + '/bussiness/list.cgi',
+		url : project + '/bussiness/search.cgi',
 		baseParams:{},
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'count',
@@ -736,7 +736,7 @@ Ext.onReady(function(){
 	});
 	
 	app.ds_utp_1 = new Ext.data.Store({
-		url : project + '/bussiness/list.cgi?btype='+btype,
+		url : project + '/bussiness/search.cgi?btype='+btype,
 		baseParams:{},
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'count',
