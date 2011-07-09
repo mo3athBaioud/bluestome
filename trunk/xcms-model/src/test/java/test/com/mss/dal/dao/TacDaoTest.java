@@ -46,6 +46,7 @@ public class TacDaoTest {
 		dao = ioc.get(TacDao.class,"tacDao");
 	}
 
+	@Test
 	public void find() {
 		String tac = "01058001";
 		int c = 0;
@@ -257,7 +258,6 @@ public class TacDaoTest {
 		
 	}
 
-	@Test
 	public void test3() throws ClassNotFoundException{
 		if(null != dao){
 			System.out.println(" >> dao is not null");
