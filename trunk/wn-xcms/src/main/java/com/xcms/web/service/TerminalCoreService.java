@@ -15,6 +15,7 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 
 import com.mss.dal.dao.TerminalCoreDao;
+import com.mss.dal.domain.Bussiness;
 import com.mss.dal.domain.TerminalCore;
 
 @IocBean
@@ -63,7 +64,8 @@ public class TerminalCoreService {
 		try{
 			cnd = Cnd.where("d_tac", "=", core.getTac());
 			if(core.getId() > 0){
-				b = terminalCoreDao.update(TerminalCore.class, Chain.from(core), cnd);
+//				b = terminalCoreDao.update(TerminalCore.class, Chain.from(core), cnd);
+				b = terminalCoreDao.update(core);
 			}
 		}catch(Exception e){
 			log.error("TerminalCoreService.update.Exception:"+e);
@@ -122,6 +124,34 @@ public class TerminalCoreService {
 			c = 1;
 		}
 		return c;
+	}
+	
+	/**
+	 * 适配对象
+	 * @param strs
+	 * @param btype
+	 * @return
+	 */
+	public TerminalCore adapter(String[] strs){
+		TerminalCore tc = null;
+		try{
+			if(strs.length == 10){
+				tc = new TerminalCore();
+				tc.setTac(strs[0]);
+				tc.setHsman(strs[1]);
+				tc.setHsmanch(strs[2]);
+				tc.setHstype(strs[3]);
+				tc.setHstypech(strs[4]);
+				tc.setGprs(Integer.valueOf(strs[5]));
+				tc.setOs(Integer.valueOf(strs[6]));
+				tc.setSmartphone(Integer.valueOf(strs[7]));
+				tc.setWap(Integer.valueOf(strs[8]));
+				tc.setWifi(Integer.valueOf(strs[9]));
+			}
+		}catch(Exception e){
+			log.error(" >> BussinessService.adapter.exception:"+e);
+		}
+		return tc;
 	}
 	
 	public TerminalCoreDao getTerminalCoreDao() {

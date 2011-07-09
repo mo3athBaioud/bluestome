@@ -51,10 +51,10 @@ public class LoginAction extends BaseAction {
 						BDistrict bd = staffService.findByCode(tmp.getBdcode());
 						if(null != bd){
 							userSession.setBdistrict(bd);
-							request.getSession().setAttribute(sessionName, userSession);
 							logger.debug(" >> Session Set");
 						}
 					}
+					request.getSession().setAttribute(sessionName, userSession);
 					//TODO 获取区局数据
 					json.setSuccess(true);
 					if(sta.getUsername().equals("admin")){
