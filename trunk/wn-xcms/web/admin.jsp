@@ -148,6 +148,27 @@
 
     });
 
+    var node_01010903 = new Ext.tree.TreeNode({
+        text:'日志管理',
+        listeners: {
+          'click': function(){
+           }},
+    	expanded:false,
+        iconCls:'icon-text_linespacing',
+        id:'id_node_01010903'
+    });
+    
+  	var node_0101090301 = new Ext.tree.TreeNode({
+ 		text:'日志管理',
+ 		listeners: {
+ 		'click': function(){
+ 		  addTab(project+'/pages/admin/noplog.jsp','日志管理','0101090301','渭南移动终端业务营销系统 -> 系统管理 -> 日志管理 -> 日志管理','application_view_columns.png');
+ 		}},
+ 		expanded:false,
+ 		iconCls:'icon-text_linespacing',
+ 		id:'id_node_0101090301'
+ 	});
+ 	
   	var node_0101090101 = new Ext.tree.TreeNode({
  		text:'员工管理',
  		listeners: {
@@ -231,6 +252,20 @@
  		id:'id_node_0101090203'
  	});
  	
+  	var node_0101090204 = new Ext.tree.TreeNode({
+ 		text:'终端核心库管理',
+ 		listeners: {
+ 		'click': function(){
+ 		  addTab(project+'/pages/terminal/terminal-core.jsp','终端核心库管理','0101090204','渭南移动终端业务营销系统 -> 系统管理 -> 终端管理 -> 终端核心库管理','application_view_columns.png');
+ 		}},
+ 		expanded:false,
+ 		iconCls:'icon-application_view_columns',
+ 		id:'id_node_0101090204'
+ 	});
+ 	
+    node_01010903.appendChild(node_0101090301);
+ 	
+    node_01010902.appendChild(node_0101090204);
     node_01010902.appendChild(node_0101090203);
     node_01010902.appendChild(node_0101090202);
     node_01010902.appendChild(node_0101090201);
@@ -238,34 +273,24 @@
     node_01010901.appendChild(node_0101090101);
     node_01010901.appendChild(node_0101090102);
     node_01010901.appendChild(node_0101090103);
+    
+    node_010109.appendChild(node_01010903);
     node_010109.appendChild(node_01010901);
     node_010109.appendChild(node_01010902);
     node_0101.appendChild(node_010109);
     
     var treePanel_0101 = new Ext.tree.TreePanel({
-
        autoHeight:false,
-
        autoWidth:false,
-
        autoScroll:false,
-
        animate:false,
-
        rootVisible:false,
-
        useArrows:true,
-
        title:'',
-
        border: false,
-
        containerScroll:true,
-
        applyTo:'div.card.0101',
-
        root:node_0101
-
     });
     
 	});
