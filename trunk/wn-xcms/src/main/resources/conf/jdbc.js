@@ -4,16 +4,27 @@
 var jdbc = {
 		/* 定义业务库 */
 		dataSource : {
-                type : "org.apache.commons.dbcp.BasicDataSource",
-//				type: "com.mchange.v2.c3p0.ComboPooledDataSource",
+//                type : "org.apache.commons.dbcp.BasicDataSource",
+				type: "com.mchange.v2.c3p0.ComboPooledDataSource",
                 events : {
                         depose : 'close'
                 },
+                /**
                 fields : {
                         driverClassName : 'com.mysql.jdbc.Driver',
                         url : 'jdbc:mysql://127.0.0.1:3306/wnxcms?useUnicode=true&characterEncoding=UTF-8',
                         username : 'root',
                         password : '123456'
+                }
+                **/
+                fields : {
+                        driverClass : 'com.mysql.jdbc.Driver',
+                        jdbcUrl : 'jdbc:mysql://127.0.0.1:3306/wnxcms?useUnicode=true&characterEncoding=UTF-8',
+                        user : 'root',
+                        password : '123456',
+                        minPoolSize:5,
+                        maxIdleTime:150,
+                        initialPoolSize:10
                 }
         },
         /* 定义NutDao */
@@ -25,15 +36,27 @@ var jdbc = {
         },
         /* 定义日志库 */
 		logdataSource : {
-                type : "org.apache.commons.dbcp.BasicDataSource",
+//                type : "org.apache.commons.dbcp.BasicDataSource",
+				type: "com.mchange.v2.c3p0.ComboPooledDataSource",
                 events : {
                         depose : 'close'
                 },
+                /**
                 fields : {
                         driverClassName : 'com.mysql.jdbc.Driver',
                         url : 'jdbc:mysql://127.0.0.1:3306/wnxcms?useUnicode=true&characterEncoding=UTF-8',
                         username : 'root',
                         password : '123456'
+                }
+                **/
+                fields : {
+                        driverClass : 'com.mysql.jdbc.Driver',
+                        jdbcUrl : 'jdbc:mysql://127.0.0.1:3306/wnxcms?useUnicode=true&characterEncoding=UTF-8',
+                        user : 'root',
+                        password : '123456',
+                        minPoolSize:5,
+                        maxIdleTime:150,
+                        initialPoolSize:10
                 }
         },        
         /* 定义日志NutDao */
