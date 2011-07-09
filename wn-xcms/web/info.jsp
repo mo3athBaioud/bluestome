@@ -5,9 +5,9 @@
 <html>
 	<head>
 		<title>我的工作台2</title>
+		<link rel="stylesheet" type="text/css" href="${ctx}/style/index.css" />
 		<link rel="stylesheet" type="text/css" href="${ctx}/resource/css/ext_icon.css" />
 		<link rel="stylesheet" type="text/css" href="${ctx}/resource/theme/default/resources/css/ext-all.css" />
-		<link rel="stylesheet" type="text/css" href="${ctx}/style/index.css" />
 		<style type="text/css">
 		    html, body {
 		        font:normal 12px verdana;

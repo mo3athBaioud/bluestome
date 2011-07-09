@@ -12,10 +12,16 @@
 	Object obj  = request.getSession().getAttribute(sessionName);
 	if(null != obj){
 		us = (UserSession)obj;
-		loginName = us.getStaff().getUsername();
-		deptName = us.getChannel().getChannlename();
-		bdName = us.getBdistrict().getName();
-		bdcode = us.getBdistrict().getCode();
+		if(null != us.getStaff()){
+			loginName = us.getStaff().getUsername();
+		}
+		if(null != us.getChannel()){
+			deptName = us.getChannel().getChannlename();
+		}
+		if(null != us.getBdistrict()){
+			bdName = us.getBdistrict().getName();
+			bdcode = us.getBdistrict().getCode();
+		}
 	}else{
 	%>
 	<script type="text/javascript">
