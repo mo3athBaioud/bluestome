@@ -179,6 +179,7 @@ Ext.onReady(function(){
         {header: "厂商名称(英文)", width: 100, sortable: true, dataIndex: 'hsmanNameEn'},
         {header: "机型名称", width: 100, sortable: true, dataIndex: 'hstypeName'},
         {header: "机型名称(英文)", width: 100, sortable: true, dataIndex: 'hstypeNameEn'},
+        /**
         {header: "状态", width: 80, sortable: true, dataIndex: 'status',renderer:function(v){
         	var x = parseInt(v);
         	switch(x){
@@ -190,19 +191,21 @@ Ext.onReady(function(){
         			return '<font color="yellow">未知</font>';
         	}
         }},
-        {header: "创建时间", width: 100, sortable: true, dataIndex: 'createtime'},
-        {header: "修改时间", width: 100, sortable: true, dataIndex: 'modifytime'}
+        **/
+        {header: "创建时间", width: 100, sortable: true, dataIndex: 'createtime'}
+//        {header: "修改时间", width: 100, sortable: true, dataIndex: 'modifytime'}
     ]);
     
 	app.btn_add = new Ext.Button({
 		text : '新增',
 		iconCls : 'icon-add',
 		handler : function(){
+			app.dbm_form.getForm().reset();
 			app.add_win.show();
 			app.add_win.setTitle("添加");
 			Ext.getCmp('dbm_form_reset').show();
 			var tacForm = Ext.getCmp('form_add_tac');
-			tac.enable();
+			tacForm.enable();
 		}
 	});
 	
@@ -226,22 +229,18 @@ Ext.onReady(function(){
 			if(app.grid.getSelectionModel().getSelected()){
 				Ext.getCmp('dbm_form_reset').hide();
  				var record = app.grid.getSelectionModel().getSelected();
-				app.dbm_form.getForm().loadRecord(record);
-				app.add_win.show();
-				app.add_win.setTitle("修改租数据业务");
+ 				app.dbm_form.getForm().findField('action').setValue('edit');
+ 				app.dbm_form.getForm().findField('tac.id').setValue(record.get('id'));
+ 				app.dbm_form.getForm().findField('tac.tac').setValue(record.get('tac'));
+ 				app.dbm_form.getForm().findField('tac.hsmanName').setValue(record.get('hsmanName'));
+ 				app.dbm_form.getForm().findField('tac.hsmanNameEn').setValue(record.get('hsmanNameEn'));
+ 				app.dbm_form.getForm().findField('tac.hstypeName').setValue(record.get('hstypeName'));
+ 				app.dbm_form.getForm().findField('tac.hstypeNameEn').setValue(record.get('hstypeNameEn'));
+ 				app.dbm_form.getForm().findField('tac.status').setValue(record.get('status'));
 				var tacForm = Ext.getCmp('form_add_tac');
-				tac.disable();
-				/**
-					Ext.Msg.show({
-						title : '系统提示',
-						msg : '需要弹出显示数据业务详情的窗口！',
-						buttons : Ext.Msg.OK,
-						fn:function(){
-							app.ds_utp.loadData(app.data);
-						},
-						icon : Ext.MessageBox.INFO
-					});
-				**/ 
+				tacForm.disable();
+				app.add_win.show();
+				app.add_win.setTitle("修改终端属性");
 			}else{
 				Ext.Msg.show({
 					title : '系统提示',
@@ -389,40 +388,50 @@ Ext.onReady(function(){
 	
 	app.dbm_form = new Ext.FormPanel({
 		id:'add_form',
-		labelWidth : 80,
-		labelAlign : 'right',
+		labelWidth : 100,
+		labelAlign : 'left',
 		border : false,
 		baseCls : 'x-plain',
 		url : project+'/tac/add.cgi',
 		bodyStyle : 'padding:5px 5px 0',
 		anchor : '100%',
 		defaults : {
-			width : 300,
+			width : 250,
 			msgTarget : 'side'
 		},
 		defaultType : 'textfield',
 		items : [
-			{
+			{ 
+				xtype:'hidden',
+				name : 'action',
+				allowBlank : false,
+				value:'add'
+			},{ 
+				xtype:'hidden',
+				name : 'tac.id',
+				allowBlank : false
+			},{
 				id:'form_add_tac',
 				fieldLabel : 'TAC',
 				name : 'tac.tac',
-				allowBlank : false
+				allowBlank : false,
+				maxLength:10
 			},{
 				fieldLabel : '厂商名称',
 				name : 'tac.hsmanName',
-				allowBlank : false
+				maxLength:64
 			},{
 				fieldLabel : '厂商名称(英文)',
 				name : 'tac.hsmanNameEn',
-				allowBlank : false
+				maxLength:64
 			},{
 				fieldLabel : '机型名称',
 				name : 'tac.hstypeName',
-				allowBlank : false
+				maxLength:64
 			},{
 				fieldLabel : '机型名称(英文)',
 				name : 'tac.hstypeNameEn',
-				allowBlank : false
+				maxLength:64
 			},{
 				//下拉选择框
 				xtype:'combo',
@@ -458,7 +467,7 @@ Ext.onReady(function(){
 								win.hide();
 								Ext.Msg.show({
 									title : '系统提示',
-									msg : action.msg,
+									msg : action.result.msg,
 									buttons : Ext.Msg.OK,
 									fn:function(){
 										app.ds_utp_1.load({params : {start : 0,limit : app.limit}});
@@ -469,7 +478,7 @@ Ext.onReady(function(){
 							failure : function(form, action) {
 								Ext.Msg.show({
 									title : '错误提示',
-									msg : action.msg,
+									msg : action.result.msg,
 									buttons : Ext.Msg.OK,
 									icon : Ext.Msg.ERROR
 								})
@@ -491,7 +500,7 @@ Ext.onReady(function(){
 				buttonAlign : 'center',
 				text : '取消',
 				handler : function() {
-					Ext.getCmp('add_form').form.reset();
+					app.dbm_form.getForm().reset();
 					var win = Ext.getCmp('add_win');
 					win.hide();
 				}
@@ -593,7 +602,8 @@ Ext.onReady(function(){
         },
  		plugins: expander,
 		sm:app.sm,
-		tbar : [app.btn_add,'-',app.btn_update,'-',app.btn_disable,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code],
+		//app.btn_disable,'-',
+		tbar : [app.btn_add,'-',app.btn_update,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code],
 		bbar : app.ptb
 	});
 	

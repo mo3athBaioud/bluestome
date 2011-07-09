@@ -27,6 +27,9 @@ Ext.onReady(function(){
             allowBlank: false,
             msgTarget: 'side'
         },
+         viewConfig: {
+            forceFit:true
+        },
         items: [
         {
 			//下拉选择框
@@ -85,11 +88,6 @@ Ext.onReady(function(){
 						}
 	                });
                 }
-            }
-        },{
-            text: '取消',
-            handler: function(){
-                fp.getForm().reset();
             }
         }]
     });

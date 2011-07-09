@@ -523,6 +523,9 @@ Ext.onReady(function(){
 		ds: app.ds_data,
 	    height:500,
         autoScroll: true,
+        viewConfig: {
+            forceFit:true
+        },
 		sm:app.sm,
 		//app.btn_detail,'-',app.btn_disable,'-',app.btn_enable,'-','请输入业务区名称:',
 		tbar : [app.btn_add,'-',app.btn_update,'-',app.btn_disable,'-',app.btn_enable,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code],
