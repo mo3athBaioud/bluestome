@@ -1,9 +1,9 @@
 var app = {};
 Ext.onReady(function() {
 	Ext.QuickTips.init();
-	Ext.BLANK_IMAGE_URL = '/resource/image/ext/s.gif';
+	Ext.BLANK_IMAGE_URL = project+'/resource/image/ext/s.gif';
 	app.limit = 20;
-	app.colName = "d_loginname"; //d_phonenum
+	app.colName = ""; //d_phonenum,d_loginname
 	app.values = "";
 	
      var tools = [{
@@ -30,7 +30,7 @@ Ext.onReady(function() {
     ];
     
 	var ds_data = new Ext.data.Store({
-		url : project + '/noplog/list.cgi?loginName='+username+'',
+		url : project + '/noplog/list.cgi?loginName='+username,
 		baseParams:{},
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'count',
@@ -74,6 +74,71 @@ Ext.onReady(function() {
 	        }   
 	 	);   
 	});
+	var search_comb_queyrCol_code = new Ext.form.ComboBox({
+		fieldLabel : '查询条件',
+		id : 'column',
+		hiddenName : 'colName',
+		valueField : 'id',
+		displayField : 'name',
+		mode:'local',
+		store : new Ext.data.SimpleStore({
+			data : [
+					['d_phonenum', '手机号码'],
+					['d_phonenum_bdistrict','号码业务区代码)'],
+					['d_loginname','登录名/员工号'],
+					['d_loginname_bdistrict','登录名所属业务区']
+		    ],
+			fields : ['id', 'name']
+		}),	
+		selectOnFocus : true,
+		editable : false,
+		allowBlank : true,
+		triggerAction : 'all',
+		emptyText : '查询的字段名'
+	});
+	
+	var searchcode = function() {
+			app.colName = search_comb_queyrCol_code.getValue();
+			app.values = text_search.getValue();
+			Ext.Ajax.request({
+				url : project + '/noplog/list.cgi?loginName='+username,
+				params : {
+					start:0,
+					limit:app.limit,
+					colName : app.colName,
+					value : app.values
+				},
+				success:function(response,option){
+					var obj = Ext.util.JSON.decode(response.responseText);
+					if(obj.success){
+						ds_data.load({
+							params : {
+								start:0,
+								limit:app.limit,
+								colName : app.colName,
+								value : app.values
+							}
+						});
+					}else{
+						Ext.Msg.show({
+							title : '系统提示',
+							msg : obj.msg,
+							buttons : Ext.Msg.OK,
+							icon : Ext.MessageBox.ERROR
+						});
+					}
+				},
+		        failure:function(){
+					Ext.Msg.show({
+						title : '系统提示',
+						msg : '服务器内部错误',
+						buttons : Ext.Msg.OK,
+						icon : Ext.MessageBox.ERROR
+					});
+		        }
+		});
+	}
+		
 	var btn_del = new Ext.Button({
 		text : '删除',
 		iconCls : 'icon-del',
@@ -86,7 +151,7 @@ Ext.onReady(function() {
 		text : '查询',
 		iconCls : 'icon-search',
 		handler : function(){
-			Ext.Msg.alert('提示', '此功能正在开发!');
+			searchcode();
 		}
 	});
 	
@@ -96,7 +161,7 @@ Ext.onReady(function() {
 		listeners : {
 			'specialkey' : function(field, e) {
 				if (e.getKey() == Ext.EventObject.ENTER) {
-					Ext.Msg.alert('提示', '此功能正在开发!');
+					searchcode();
 				}
 			}
 		}
@@ -111,7 +176,7 @@ Ext.onReady(function() {
 	});
 	
     var grid = 	new Ext.grid.GridPanel({
-    	title: '<img align="TOP" class="IEPNG" src="/images/comments.png"/>系统消息',
+    	title: '<img align="TOP" class="IEPNG" src="'+project+'/images/comments.png"/>系统消息',
         store: ds_data,
         columns: [
             {id:'title',header: '号码', width: 100, sortable: true, dataIndex: 'phonenum'},
@@ -184,7 +249,8 @@ Ext.onReady(function() {
         width:600,
         autoScroll: true,
         bbar : ptb,
-        tbar : [btn_del,'-','请输入查询内容:','-',text_search,'-',btn_search]
+        //btn_del,'-',
+        tbar : [search_comb_queyrCol_code,'-',text_search,'-',btn_search]
     });	
 	
 	/**
@@ -458,7 +524,7 @@ Ext.onReady(function() {
                 items:[
                 {
                 	columnWidth:.5,
-                    title: '<p><img align="TOP" class="IEPNG" src="/images/vcard.png"/>我的信息<p>',
+                    title: '<p><img align="TOP" class="IEPNG" src="'+project+'/images/vcard.png"/>我的信息<p>',
                     width:200,
 			        collapsible: true,
 			        animCollapse: false,

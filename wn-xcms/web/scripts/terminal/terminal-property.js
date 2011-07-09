@@ -641,9 +641,12 @@ Ext.onReady(function(){
 		},
 	    cm: app.cm_data,
 		ds: app.ds_data,
-	    height:500,
+	    height:450,
 //	    width:800,
         autoScroll: true,
+        viewConfig: {
+            forceFit:true
+        },
 		sm:app.sm,
 		//app.btn_detail,'-','-',app.btn_update,'请输入员工名:',app.btn_add,'-',app.btn_disable,'-',app.btn_enable,'-',
 		tbar : [app.btn_update,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code],

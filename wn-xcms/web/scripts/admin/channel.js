@@ -146,6 +146,7 @@ Ext.onReady(function(){
 				fieldLabel : '渠道地址',
 				name : 'channel.address'
 			},{
+				id:'bdistrict_combo',
 				//下拉框
 				xtype:'combo',
 				fieldLabel : '所属业务区',
@@ -525,6 +526,9 @@ Ext.onReady(function(){
 		ds: app.ds_data,
 	    height:500,
         autoScroll: true,
+        viewConfig: {
+            forceFit:true
+        },
 		sm:app.sm,
 		//app.btn_detail,app.btn_disable,'-',app.btn_enable,'-','请输入渠道名称:'
 		tbar : ['-',app.btn_add,'-',app.btn_update,'-',app.btn_disable,'-',app.btn_enable,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code],

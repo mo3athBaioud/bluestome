@@ -6,8 +6,8 @@ Ext.onReady(function(){
   	Ext.BLANK_IMAGE_URL = project+'/resource/image/ext/s.gif';
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
     Ext.QuickTips.init();
-	app.limit = 15;
-	app.colName = "d_username";
+	app.limit = 20;
+	app.colName = "d_hsman";
 	app.values = "";
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
@@ -51,21 +51,74 @@ Ext.onReady(function(){
 	}]);
     **/
     
+    app.expander = new Ext.grid.RowExpander({
+        tpl : new Ext.Template(
+			 '<tpl for=".">',
+			 '<p>',
+			 '业务介绍:<br/>GPRS即"通用分组无线业务"（General Packet Radio Service的英文简称），' +
+			 '是现有GSM网络上开通的一种新型的分组数据传输技术。具有"永远在线"、"自如切换"、"高速传送"等优点，它能全面提升移动数据通信服务，' +
+			 '使"移动梦网"服务更丰富、功能更强大，给客户的生活和工作带来更多便捷与实惠。上网速度约50－70Kbps，最高理论值为171.2Kbps。',
+			 '</p>',
+			 '<p>',
+			 '<img src="http://image.c114.net/0901150.gif" alt="套餐列表"/>',
+			 '</p>',
+			 '</tpl>',
+			 '<div class="x-clear"></div>')
+    });
+    
     app.cm_data = new Ext.grid.ColumnModel([
 		app.sm,
-        {header: "工号", width: 100, sortable: true, dataIndex: 'username'},
-        {header: "手机号码", width: 100, sortable: true, dataIndex: 'mobile'},
-        {header: "办公室号码", width: 100, sortable: true, dataIndex: 'officephone'},
-        {header: "用户状态", width: 150, sortable: true, dataIndex: 'status',renderer:function(v){
+        {header: "ID", width: 100, sortable: true, dataIndex: 'id'},
+        {header:'TAC',width:100,sortable:true,dataIndex:'tac'},
+        {header: "厂商", width: 100, sortable: true, dataIndex: 'hsman'},
+        {header: "厂商(中文)", width: 100, sortable: true, dataIndex: 'hsmanch'},
+        {header: "机型", width: 100, sortable: true, dataIndex: 'hstype'},
+        {header: "机型(中文)", width: 100, sortable: true, dataIndex: 'hstypech'},
+        {header: "GPRS", width: 120, sortable: true, dataIndex: 'gprs',renderer:function(v){
         	if(v == 0){
-        		return '<font color="red">不可用</font>';
+        		return '<font color="red">不支持</font>';
         	}else if(v == 1){
-        		return '<font color="blue">可用</font>';
+        		return '<font color="blue">支持</font>';
         	}else{
         		return '<font color="yellow">未知</font>';
         	}
         }},
-        {header: "渠道代码", width: 100, sortable: true, dataIndex: 'channelcode'},
+        {header: "WAP", width: 120, sortable: true, dataIndex: 'wap',renderer:function(v){
+        	if(v == 0){
+        		return '<font color="red">不支持</font>';
+        	}else if(v == 1){
+        		return '<font color="blue">支持</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
+        {header: "智能手机", width: 120, sortable: true, dataIndex: 'smartphone',renderer:function(v){
+        	if(v == 0){
+        		return '<font color="red">不支持</font>';
+        	}else if(v == 1){
+        		return '<font color="blue">支持</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
+        {header: "操作系统", width: 120, sortable: true, dataIndex: 'os',renderer:function(v){
+        	if(v == 0){
+        		return '<font color="red">不支持</font>';
+        	}else if(v == 1){
+        		return '<font color="blue">支持</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
+        {header: "WIFI", width: 120, sortable: true, dataIndex: 'wifi',renderer:function(v){
+        	if(v == 0){
+        		return '<font color="red">不支持</font>';
+        	}else if(v == 1){
+        		return '<font color="blue">支持</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
         {header: "创建时间", width: 130, sortable: true, dataIndex: 'createtime'}
     ]);
     
@@ -78,8 +131,11 @@ Ext.onReady(function(){
 				mode:'local',
 				store : new Ext.data.SimpleStore({
 					data : [
-							['d_username', '用户名'],
-							['d_channel_code', '渠道代码']
+							['d_tac', 'TAC'],
+							['d_hsman', '厂商'],
+							['d_hsman_ch', '厂商(中文)'],
+							['d_hstype', '机型'],
+							['d_hstype_ch', '机型(中文)']
 				    ],
 					fields : ['id', 'name']
 				}),	
@@ -89,6 +145,18 @@ Ext.onReady(function(){
 				triggerAction : 'all',
 				emptyText : '查询的字段名'
 	});
+	
+    /**
+	app.btn_add = new Ext.Button({
+		text : '新增',
+		iconCls : 'icon-add',
+		handler : function(){
+			app.add_win.show();
+			app.add_win.setTitle("添加");
+			Ext.getCmp('data_form_reset').show();
+		}
+	});
+	**/ 
 	
 	app.btn_detail = new Ext.Button({
 		text : '员工详情',
@@ -112,23 +180,6 @@ Ext.onReady(function(){
 		}
 	});
 	
-	/**
-	 * 渠道下拉框
-	 */
-	app.channel_combo_store = new Ext.data.Store({
-		proxy: new Ext.data.HttpProxy({
-                        //这里是参数可以顺便写,这个数据源是在第一个下拉框select的时候load的
-			url: project+'/channel/list.cgi?start=0&limit=100'
-		}),
-		reader: new Ext.data.JsonReader({
-		root: 'obj',
-		id: 'id'
-		}, [
-			{name: 'code', mapping: 'channelcode'},
-			{name: 'name', mapping: 'channlename'}
-		])
-	}); 
-	
 	app.data_form = new Ext.FormPanel({
 		id:'add_form',
 		labelWidth : 80,
@@ -137,7 +188,7 @@ Ext.onReady(function(){
 		baseCls : 'x-plain',
 		bodyStyle : 'padding:5px 5px 0',
 		anchor : '100%',
-		url : project+'/staff/add.cgi',
+		url : project+'/tereminalcore/add.cgi',
 		defaults : {
 			width : 300,
 			msgTarget : 'side'
@@ -147,111 +198,117 @@ Ext.onReady(function(){
 			{
 				xtype:'hidden',
 				fieldLabel : 'ID',
-				name : 'staff.id',
+				name : 'object.id',
 				allowBlank : false
 			},
 			{
-				id:'form_username',
-				fieldLabel : '工号',
-				name : 'staff.username',
+				xtype:'hidden',
+				name : 'action',
+				value:'add'
+			},
+			{
+				fieldLabel : 'TAC',
+				name : 'object.tac',
 				allowBlank : false,
-				vtype:'beta',
 				maxLength:50
 			},
 			{
-				fieldLabel:'密码',
-				id:'pwd',
-				name:'newPwd',
-				inputType:'password',
-				vtype:'safe',
-				maxLength:20
+				fieldLabel : '厂商',
+				name : 'object.hsman',
+				allowBlank : false,
+				maxLength:50
+			},
+			{
+				fieldLabel : '厂商(中文)',
+				name : 'object.hsmanch',
+				maxLength:50
 			},
 			 {
-				id:'form_password',
-				fieldLabel:'确认密码',
-				inputType:'password',
-				name:'staff.password',
-				vtype:'password',
-				initialPassField: 'pwd', // 要比较的另外一个的组件的id
-				maxLength:20
-			},
-			{
-				fieldLabel : '手机号码',
-				name : 'staff.mobile',
-				allowBlank : false
-			},{
-				fieldLabel : '办公室号码',
-				name : 'staff.officephone',
-				allowBlank : false
-			},{
-				//下拉框
-				xtype:'combo',
-				fieldLabel : '所属业务区',
-                mode:'remote',
-				store:new Ext.data.Store({
-					proxy:new Ext.data.HttpProxy({ 
-						url:project+'/bdistrict/bdlist.cgi?start=0&limit=100&colName=d_parent_code&value=0000'
-					}),
-					reader : new Ext.data.JsonReader({
-						root : 'obj'
-					}, [{name : 'code',type : 'string'},
-						{name : 'name',type : 'string'}
-					])
-				}),
-				selectOnFocus:true,
-				triggerAction:'all',
-                valueField: "code",
-                displayField: "name",
-                blankText: '请选择所属业务区',
-                emptyText: '请选择所属业务区',
-                editable:false,
+				fieldLabel : '机型',
+				name : 'object.hstype',
 				allowBlank : false,
-				listeners:{  
-					select : function(combo,record,index){
-						//首先清理当前store下的数据
-						app.channel_combo_store.removeAll();
-//						app.channel_combo_store.clear();
-						//根据选择的父节点值,到渠道表中查找数据
-						app.channel_combo_store.proxy= new Ext.data.HttpProxy({url:project+'/channel/chlist.cgi?start=0&limit=100&colName=d_bdcode&value='+combo.value});
-						//重载新载入的数据
-	 					app.channel_combo_store.reload();
-					}
-				}
+				maxLength:50
 			},
 			{
-				id:'channel_combo',
-				//下拉选择框
-				xtype:'combo',
-				fieldLabel : '所属渠道',
-				hiddenName:'staff.channelcode',
-		        valueField: 'code',
-		        displayField: 'name',
-		        triggerAction:'all',
-		        mode: 'local',
-				store:app.channel_combo_store,
-	            editable:false,
-				emptyText : '请选择所属渠道!',
-				allowBlank : false
-				/**,
-				listeners:{
-					select:function(combo,record,index){
-						Ext.getCmp('username').setValue('');
-						Ext.getCmp('username').setValue(combo.getValue());
-					}
-				}
-				**/
+				fieldLabel : '机型(中文)',
+				name : 'object.hstypech',
+				maxLength:50
 			},{
 				//下拉选择框
 				xtype:'combo',
-				fieldLabel : '状态',
-				hiddenName:'staff.status',
+				fieldLabel : 'GPRS',
+				hiddenName:'object.gprs',
 		        valueField: 'id',
 		        displayField: 'name',
 		        triggerAction:'all',
 		        mode: 'local',
 		        store: new Ext.data.SimpleStore({
 		            fields: ['id','name'],
-		            data: [[1,'可用'],[0,'不可用']]
+		            data: [[1,'支持'],[0,'不支持']]
+		        }),
+	            editable:false,
+				emptyText : '请选择业务状态!',
+				allowBlank : false
+			},{
+				//下拉选择框
+				xtype:'combo',
+				fieldLabel : 'WAP',
+				hiddenName:'object.wap',
+		        valueField: 'id',
+		        displayField: 'name',
+		        triggerAction:'all',
+		        mode: 'local',
+		        store: new Ext.data.SimpleStore({
+		            fields: ['id','name'],
+		            data: [[1,'支持'],[0,'不支持']]
+		        }),
+	            editable:false,
+				emptyText : '请选择业务状态!',
+				allowBlank : false
+			},{
+				//下拉选择框
+				xtype:'combo',
+				fieldLabel : '智能手机',
+				hiddenName:'object.smartphone',
+		        valueField: 'id',
+		        displayField: 'name',
+		        triggerAction:'all',
+		        mode: 'local',
+		        store: new Ext.data.SimpleStore({
+		            fields: ['id','name'],
+		            data: [[1,'支持'],[0,'不支持']]
+		        }),
+	            editable:false,
+				emptyText : '请选择业务状态!',
+				allowBlank : false
+			},{
+				//下拉选择框
+				xtype:'combo',
+				fieldLabel : '操作系统',
+				hiddenName:'object.os',
+		        valueField: 'id',
+		        displayField: 'name',
+		        triggerAction:'all',
+		        mode: 'local',
+		        store: new Ext.data.SimpleStore({
+		            fields: ['id','name'],
+		            data: [[1,'支持'],[0,'不支持']]
+		        }),
+	            editable:false,
+				emptyText : '请选择业务状态!',
+				allowBlank : false
+			},{
+				//下拉选择框
+				xtype:'combo',
+				fieldLabel : 'WIFI',
+				hiddenName:'object.wifi',
+		        valueField: 'id',
+		        displayField: 'name',
+		        triggerAction:'all',
+		        mode: 'local',
+		        store: new Ext.data.SimpleStore({
+		            fields: ['id','name'],
+		            data: [[1,'支持'],[0,'不支持']]
 		        }),
 	            editable:false,
 				emptyText : '请选择业务状态!',
@@ -340,8 +397,8 @@ Ext.onReady(function(){
 	});	
 	
 	app.btn_add = new Ext.Button({
-		text : '添加员工',
-		iconCls:'icon-user_add',
+		text : '添加',
+		iconCls:'icon-add',
 		disabled:false,
 		handler : function(){
 			app.data_form.getForm().reset();
@@ -372,7 +429,7 @@ Ext.onReady(function(){
 				Ext.Msg.confirm('提示', '你确定禁用所选记录?', function(btn) {
 					if (btn == 'yes') {
 						Ext.Ajax.request({
-							url : project+'/staff/disable.cgi',
+							url : project+'/tereminalcore/disable.cgi',
 							params : {
 								id : ids
 							},
@@ -436,7 +493,7 @@ Ext.onReady(function(){
 				Ext.Msg.confirm('提示', '你确定启用用所选记录?', function(btn) {
 					if (btn == 'yes') {
 						Ext.Ajax.request({
-							url : project+'/staff/enable.cgi',
+							url : project+'/tereminalcore/enable.cgi',
 							params : {
 								id : ids
 							},
@@ -485,33 +542,137 @@ Ext.onReady(function(){
 		handler : function(){
 			if(app.grid.getSelectionModel().getSelected()){
 				Ext.getCmp('data_form_reset').hide();
-				var username = Ext.getCmp('form_username');
-				username.disable();
-				var pwd = Ext.getCmp('pwd');
-				pwd.disable();
-				var password = Ext.getCmp('form_password');
-				password.disable();
  				app.record = app.grid.getSelectionModel().getSelected();
- 				app.data_form.getForm().findField('staff.id').setValue(app.record.get('id'));
- 				app.data_form.getForm().findField('staff.username').setValue(app.record.get('username'));
- 				app.data_form.getForm().findField('newPwd').setValue(app.record.get('password'));
- 				app.data_form.getForm().findField('staff.password').setValue(app.record.get('password'));
- 				app.data_form.getForm().findField('staff.mobile').setValue(app.record.get('mobile'));
- 				app.data_form.getForm().findField('staff.officephone').setValue(app.record.get('officephone'));
- 				app.data_form.getForm().findField('staff.channelcode').setValue(app.record.get('channelcode'));
- 				app.data_form.getForm().findField('staff.status').setValue(app.record.get('status'));
+ 				app.data_form.getForm().findField('action').setValue('edit');
+ 				app.data_form.getForm().findField('object.id').setValue(app.record.get('id'));
+ 				app.data_form.getForm().findField('object.tac').setValue(app.record.get('tac'));
+ 				app.data_form.getForm().findField('object.hsman').setValue(app.record.get('hsman'));
+ 				app.data_form.getForm().findField('object.hsmanch').setValue(app.record.get('hsmanch'));
+ 				app.data_form.getForm().findField('object.hstype').setValue(app.record.get('hstype'));
+ 				app.data_form.getForm().findField('object.hstypech').setValue(app.record.get('hstypech'));
+ 				app.data_form.getForm().findField('object.gprs').setValue(app.record.get('gprs'));
+ 				app.data_form.getForm().findField('object.wap').setValue(app.record.get('wap'));
+ 				app.data_form.getForm().findField('object.smartphone').setValue(app.record.get('smartphone'));
+ 				app.data_form.getForm().findField('object.os').setValue(app.record.get('os'));
+ 				app.data_form.getForm().findField('object.wifi').setValue(app.record.get('wifi'));
 				app.add_win.show();
-				app.add_win.setTitle("修改员工信息");
+				app.add_win.setTitle("修改终端属性信息");
 			}else{
 				Ext.Msg.show({
 					title : '系统提示',
-					msg : '请选择需要修改的数据业务!',
+					msg : '请选择需要修改的终端!',
 					buttons : Ext.Msg.OK,
 					icon : Ext.MessageBox.ERROR
 				});
 			}
 		}
 	}); 
+	
+    var fp = new Ext.FormPanel({
+    	id:'upload_form',
+        url: project + '/tereminalcore/upload.cgi',
+        fileUpload: true,
+        frame: true,
+        autoWidth:true,
+        autoHeight: true,
+        bodyStyle: 'padding: 10px 10px 0 10px;',
+        labelWidth: 100,
+        defaults: {
+            anchor: '95%',
+            allowBlank: false,
+            msgTarget: 'side'
+        },
+        items: [
+		{
+            xtype: 'fileuploadfield',
+            id: 'form-file',
+            emptyText: '请选择文件',
+            fieldLabel: '终端核心数据文件',
+            name: 'filef',
+            buttonText: '',
+            buttonCfg: {
+                iconCls: 'upload-icon'
+            }
+        }],
+        buttons: [{
+            text: '上传',
+            iconCls:'icon-upload-icon',
+            handler: function(){
+            	var frm = Ext.getCmp('upload_form').form;
+                if(frm.isValid()){
+	                frm.submit({
+	                    waitMsg: '正在上传文件，请稍等...',
+	                    success: function(frm, action){
+							Ext.Msg.show({
+								title : '系统提示',
+								msg : action.result.msg,
+								buttons : Ext.Msg.OK,
+								fn:function(){
+									app.ds_data.load({
+										params : {
+											start : 0,
+											limit : app.limit,
+											colName : app.colName,
+											value : app.values
+										}
+									});
+								},
+								icon : Ext.Msg.INFO
+							});
+							frm.reset();
+			                var upload_win = Ext.getCmp('upload_win');
+			                upload_win.hide();
+	                    },
+	                    failure : function(frm, action){
+							Ext.Msg.show({
+								title : '系统提示',
+								msg : action.result.msg,
+								buttons : Ext.Msg.OK,
+								icon : Ext.Msg.ERROR
+							});
+							fp.getForm().reset();
+						}
+	                });
+                }
+            }
+        },{
+            text: '取消',
+            iconCls:'icon-cancel',
+            handler: function(){
+                fp.getForm().reset();
+                var upload_win = Ext.getCmp('upload_win');
+                upload_win.hide();
+            }
+        }]
+    });
+    
+ 	app.upload_win = new Ext.Window({
+		id:'upload_win',
+		title:'上传终端核心数据',
+		iconCls:'icon-add',
+		width : 500,
+		resizable : false,
+		autoHeight : true,
+		modal : true,
+		closeAction : 'hide',
+		animCollapse : true,
+		pageY : 20,
+		pageX : document.body.clientWidth / 2 - 420 / 2,
+		animateTarget : Ext.getBody(),
+		constrain : true,
+		items : [
+			fp
+		]
+	});	
+    
+	app.btn_import = new Ext.Button({
+		text : '导入数据',
+		iconCls : 'icon-database_add',
+		handler : function(){
+			app.upload_win.show();
+			app.upload_win.setTitle("添加");
+		}
+	});
 	
 	app.text_search_code = new Ext.form.TextField({
 		name : 'textSearchcode',
@@ -529,7 +690,7 @@ Ext.onReady(function(){
 		app.colName = app.search_comb_queyrCol_code.getValue();
 		app.values =app.text_search_code.getValue();
 		Ext.Ajax.request({
-			url : project+'/staff/list.cgi',
+			url : project+'/tereminalcore/list.cgi',
 			params : {
 				start : 0,
 				limit : app.limit,
@@ -565,18 +726,22 @@ Ext.onReady(function(){
 	});
 	
 	app.ds_data = new Ext.data.Store({
-		url : project+'/staff/list.cgi',
+		url : project+'/tereminalcore/list.cgi',
 		baseParams:{},
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'count',
 			root : 'obj'
-		}, [{name : 'username',type : 'string'
-		}, {name : 'mobile',type : 'string'
-		}, {name : 'officephone',type : 'string'
-		}, {name : 'channelcode',type : 'string'
-		}, {name : 'password',type : 'string'
-		}, {name : 'status',type : 'int'
+		}, [{name : 'hsman',type : 'string'
+		}, {name : 'hsmanch',type : 'string'
+		}, {name : 'hstype',type : 'string'
+		}, {name : 'hstypech',type : 'string'
+		}, {name : 'gprs',type : 'int'
+		}, {name : 'wap',type : 'int'
+		}, {name : 'smartphone',type : 'int'
+		}, {name : 'os',type : 'int'
+		}, {name : 'wifi',type:'int'
 		}, {name : 'createtime',type:'string'
+		}, {name : 'tac',type:'string'
 		}, {name : 'id',type:'int'
 		}])
 	});
@@ -600,6 +765,8 @@ Ext.onReady(function(){
 	        }   
 	 	);   
 	});
+	/**
+	**/  
 	
 	app.ptb = new Ext.PagingToolbar({
 		pageSize:app.limit,
@@ -624,9 +791,10 @@ Ext.onReady(function(){
         viewConfig: {
             forceFit:true
         },
+ 		plugins: app.expander,
 		sm:app.sm,
-		//app.btn_detail,'-','-',app.btn_update,'请输入员工名:',
-		tbar : [app.btn_add,'-',app.btn_disable,'-',app.btn_enable,'-',app.btn_update,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code],
+		//app.btn_detail,'-','-',app.btn_update,'请输入员工名:',app.btn_add,'-',app.btn_disable,'-',app.btn_enable,'-',
+		tbar : [app.btn_import,'-',app.btn_add,'-',app.btn_update,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code],
 		bbar : app.ptb
 	});
 	
@@ -649,38 +817,20 @@ Ext.onReady(function(){
 	 * 记录单击事件
 	 */
 	app.grid.addListener('rowclick',function(grid, rowIndex){
-				if(grid.getSelectionModel().isSelected(rowIndex)){
-					app.btn_disable.enable();
-					app.btn_enable.enable();
-					app.btn_add.disable();
-					app.btn_detail.enable();
-					app.btn_update.enable();
-				}else{
-					app.btn_disable.disable();
-					app.btn_enable.disable();
-					app.btn_add.enable();
-					app.btn_detail.disable();
-					app.btn_update.disable();
-				}
+		if(grid.getSelectionModel().isSelected(rowIndex)){
+			app.btn_disable.enable();
+			app.btn_enable.enable();
+			app.btn_add.disable();
+			app.btn_detail.enable();
+			app.btn_update.enable();
+		}else{
+			app.btn_disable.disable();
+			app.btn_enable.disable();
+			app.btn_add.enable();
+			app.btn_detail.disable();
+			app.btn_update.disable();
+		}
 	});
 	
-    app.grid.render('staff');
+    app.grid.render('terminal-property');
 });
-
-var ds_hstype = new Ext.data.Store({
-	proxy:new Ext.data.HttpProxy({
-		url:'/hstype/list.cgi'
-	}),
-	reader : new Ext.data.JsonReader({
-		root : 'obj'
-	}, [{name : 'id',type : 'int'},
-		{name : 'name',type : 'string'},
-		{name : 'icon',type : 'string'}
-		
-	])
-});
-
-function vmobile(v){
-     var r = /^((\(\d{2,3}\))|(\d{3}\-))?1?[3,5,8]\d{9}$/;
-     return r.test(v);
-}
