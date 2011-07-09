@@ -101,6 +101,37 @@ public class BDistrictAction extends BaseAction {
 	}
 	
 	/**
+	 * 查询业务区数据
+	 * @param colName
+	 * @param value
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	@At("/enablelist")
+	@Ok("json")
+	public JsonObject enableList(@Param("colName") String colName,@Param("value") String value,@Param("start") int start,@Param("limit") int limit){
+		json = new JsonObject();
+		int count = bDistrictService.getbdListCount(colName,value);
+		List<BDistrict> list =  bDistrictService.bdlist(colName,value,start, limit);
+		logger.debug(" >> count:"+count);
+		if(null != list && list.size() > 0){
+			for(int i=0;i<list.size();i++){
+				BDistrict b = (BDistrict)list.get(i);
+				if(b.getStatus() == 0){
+					list.remove(i);
+					count--;
+				}
+			}
+			json.setCount(count);
+			json.setObj(list);
+		}else{
+			json.setSuccess(false);
+		}
+		return json;
+	}
+	
+	/**
 	 * 修改个人信息
 	 * @param bdistrict
 	 * @return
