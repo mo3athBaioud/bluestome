@@ -8,12 +8,17 @@
 	String bdName = "渭南区局";
 	String bdcode = "0000";
 	String ip = request.getRemoteAddr();
+	boolean isAdmin = false;
 	String sessionName = ip + "_" + Constants.USERSESSION;
 	Object obj  = request.getSession().getAttribute(sessionName);
 	if(null != obj){
 		us = (UserSession)obj;
 		if(null != us.getStaff()){
 			loginName = us.getStaff().getUsername();
+			if(us.getStaff().getAdmin() == 1){
+			    //是否管理员
+				isAdmin = true;
+			}
 		}
 		if(null != us.getChannel()){
 			deptName = us.getChannel().getChannlename();
