@@ -57,9 +57,14 @@ public class LoginAction extends BaseAction {
 					request.getSession().setAttribute(sessionName, userSession);
 					//TODO 获取区局数据
 					json.setSuccess(true);
-					if(sta.getUsername().equals("admin")){
-						//设置用户属性到SESSION
-						json.setMsg(request.getContextPath()+"/admin.jsp");
+					if(sta.getAdmin() == 1){
+						if(sta.getUsername().equals("admin")){
+							//超级管理员
+							json.setMsg(request.getContextPath()+"/admin.jsp");
+						}else{
+							//一般管理员 只能管理用户查看日志
+							json.setMsg(request.getContextPath()+"/uadmin.jsp");
+						}
 					}else{
 						//设置用户属性到SESSION
 						json.setMsg(request.getContextPath()+"/index.jsp");

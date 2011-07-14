@@ -32,15 +32,42 @@ public class StaffAction extends BaseAction {
 	 */
 	@At("/add")
 	@Ok("json")
-	public JsonObject insert(@Param("::staff.") Staff staff){
+	public JsonObject insert(@Param("::staff.") Staff staff,HttpServletRequest request){
+		UserSession us = null;
 		json = new JsonObject();
 		try{
-			if(staffService.add(staff)){
-				json.setSuccess(true);
-				json.setMsg("添加员工成功");
+			String ip = request.getRemoteAddr();
+			String sessionName = ip + "_" + Constants.USERSESSION;
+			Object obj  = request.getSession().getAttribute(sessionName);
+			if(null != obj){
+				us = (UserSession)obj;
+				if(staff.getUsername().equals("admin")){
+					//判断登录用户是否为admin,
+					if(us.getStaff().getUsername().equals("admin")){
+						if(staffService.update(staff)){
+							json.setSuccess(true);
+							json.setMsg("保存员工成功");
+						}else{
+							json.setSuccess(false);
+							json.setMsg("保存员工失败!");
+						}
+					}else{
+						json.setSuccess(false);
+						json.setMsg("您无权修改[admin]用户信息!");
+						return json;
+					}
+				}else{
+					if(staffService.add(staff)){
+						json.setSuccess(true);
+						json.setMsg("保存员工成功");
+					}else{
+						json.setSuccess(false);
+						json.setMsg("保存员工失败,是否存在相同用户名!");
+					}
+				}
 			}else{
 				json.setSuccess(false);
-				json.setMsg("添加员工失败,是否存在相同用户名!");
+				json.setMsg("您还没有登录，请先登录!");
 			}
 		}catch(Exception e){
 			json.setSuccess(false);
