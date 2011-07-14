@@ -42,6 +42,9 @@ public class Noplog implements Serializable{
 	
 	@Column("d_result")
 	private Integer result;
+	
+	@Column("d_ip")
+	private String ip;
 
 	public Integer getBtype() {
 		return btype;
@@ -114,5 +117,14 @@ public class Noplog implements Serializable{
 	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+	
 	
 }

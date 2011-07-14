@@ -9,7 +9,7 @@ import org.nutz.dao.entity.annotation.Name;
 import org.nutz.dao.entity.annotation.One;
 import org.nutz.dao.entity.annotation.Table;
 
-@Table("tbl_tac")
+@Table("tbl_tac_201107")
 public class Tac implements Serializable{
 
 	/**

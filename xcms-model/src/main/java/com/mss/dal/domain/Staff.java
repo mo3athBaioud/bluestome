@@ -40,6 +40,10 @@ public class Staff implements Serializable {
 	@Column("d_status")
 	private Integer status = 1;
 	
+	//是否管理员
+	@Column("d_admin")
+	private Integer admin = 0;
+	
 	@Column("d_createtime")
 	private Date createtime = new Date();
 	
@@ -118,5 +122,12 @@ public class Staff implements Serializable {
 		this.channel = channel;
 	}
 
-	
+	public Integer getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(Integer admin) {
+		this.admin = admin;
+	}
+
 }
