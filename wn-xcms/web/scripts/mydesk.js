@@ -84,7 +84,7 @@ Ext.onReady(function() {
 		store : new Ext.data.SimpleStore({
 			data : [
 					['d_phonenum', '手机号码'],
-					['d_phonenum_bdistrict','号码业务区代码)'],
+					['d_phonenum_bdistrict','号码业务区代码'],
 					['d_loginname','登录名/员工号'],
 					['d_loginname_bdistrict','登录名所属业务区']
 		    ],
@@ -100,6 +100,15 @@ Ext.onReady(function() {
 	var searchcode = function() {
 			app.colName = search_comb_queyrCol_code.getValue();
 			app.values = text_search.getValue();
+			ds_data.load({
+				params : {
+					start:0,
+					limit:app.limit,
+					colName : app.colName,
+					value : app.values
+				}
+			});
+			/**
 			Ext.Ajax.request({
 				url : project + '/noplog/list.cgi?loginName='+username,
 				params : {
@@ -137,6 +146,7 @@ Ext.onReady(function() {
 					});
 		        }
 		});
+		**/
 	}
 		
 	var btn_del = new Ext.Button({

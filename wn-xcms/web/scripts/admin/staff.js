@@ -65,6 +65,15 @@ Ext.onReady(function(){
         		return '<font color="yellow">未知</font>';
         	}
         }},
+        {header: "是否管理员", width: 150, sortable: true, dataIndex: 'admin',renderer:function(v){
+        	if(v == 0){
+        		return '<font color="red">否</font>';
+        	}else if(v == 1){
+        		return '<font color="blue">是</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
         {header: "渠道代码", width: 100, sortable: true, dataIndex: 'channelcode'},
         {header: "创建时间", width: 130, sortable: true, dataIndex: 'createtime'}
     ]);
@@ -205,12 +214,11 @@ Ext.onReady(function(){
                 blankText: '请选择所属业务区',
                 emptyText: '请选择所属业务区',
                 editable:false,
-				allowBlank : false,
+//				allowBlank : false,
 				listeners:{  
 					select : function(combo,record,index){
 						//首先清理当前store下的数据
 						app.channel_combo_store.removeAll();
-//						app.channel_combo_store.clear();
 						//根据选择的父节点值,到渠道表中查找数据
 						app.channel_combo_store.proxy= new Ext.data.HttpProxy({url:project+'/channel/chlist.cgi?start=0&limit=100&colName=d_bdcode&value='+combo.value});
 						//重载新载入的数据
@@ -256,6 +264,22 @@ Ext.onReady(function(){
 	            editable:false,
 				emptyText : '请选择业务状态!',
 				allowBlank : false
+			},{
+				//下拉选择框
+				xtype:'combo',
+				fieldLabel : '是否管理员',
+				hiddenName:'staff.admin',
+		        valueField: 'id',
+		        displayField: 'name',
+		        triggerAction:'all',
+		        mode: 'local',
+		        store: new Ext.data.SimpleStore({
+		            fields: ['id','name'],
+		            data: [[0,'否'],[1,'是']]
+		        }),
+	            editable:false,
+				emptyText : '请选择!',
+				allowBlank : false
 			}],
 			buttonAlign : 'center',
 			minButtonWidth : 60,
@@ -266,17 +290,16 @@ Ext.onReady(function(){
 				handler : function(btn) {
 					var frm = Ext.getCmp('add_form').form;
 					if (frm.isValid()) {
-						var dnfield = frm.findField('username');
+						var dnfield = frm.findField('staff.username');
 						frm.submit({
 							waitTitle : '请稍候',
 							waitMsg : '正在提交表单数据,请稍候...',
 							success : function(form, action) {
 					 			Ext.Msg.show({
 									title : '系统提示',
-									msg : '添加成功!',
+									msg : '保存成功!',
 									buttons : Ext.Msg.OK,
 									fn:function(){
-										frm.reset();
 										app.ds_data.load({params : {
 											start : 0,
 											limit : app.limit,
@@ -284,17 +307,17 @@ Ext.onReady(function(){
 											value : app.values
 											}
 										});
-										btn.enable();
+										app.data_form.getForm().reset();
 										var win = Ext.getCmp('add_win');
 										win.hide();
 									},
 									icon : Ext.MessageBox.INFO
 								});
 							},
-							failure : function(){
+							failure : function(form, action){
 								Ext.Msg.show({
 									title : '错误提示',
-									msg : '"' + dnfield.getValue() + '" ' + '名称可能已经存在或者您没有添加数据的权限!',
+									msg : action.result.msg,
 									buttons : Ext.Msg.OK,
 									icon : Ext.Msg.ERROR
 								})
@@ -486,11 +509,13 @@ Ext.onReady(function(){
 			if(app.grid.getSelectionModel().getSelected()){
 				Ext.getCmp('data_form_reset').hide();
 				var username = Ext.getCmp('form_username');
-				username.disable();
+//				username.disable();
+				username.readOnly = true;
 				var pwd = Ext.getCmp('pwd');
-				pwd.disable();
+				pwd.readOnly = true;
 				var password = Ext.getCmp('form_password');
-				password.disable();
+//				password.disable();
+				password.readOnly = true;
  				app.record = app.grid.getSelectionModel().getSelected();
  				app.data_form.getForm().findField('staff.id').setValue(app.record.get('id'));
  				app.data_form.getForm().findField('staff.username').setValue(app.record.get('username'));
@@ -500,6 +525,7 @@ Ext.onReady(function(){
  				app.data_form.getForm().findField('staff.officephone').setValue(app.record.get('officephone'));
  				app.data_form.getForm().findField('staff.channelcode').setValue(app.record.get('channelcode'));
  				app.data_form.getForm().findField('staff.status').setValue(app.record.get('status'));
+ 				app.data_form.getForm().findField('staff.admin').setValue(app.record.get('admin'));
 				app.add_win.show();
 				app.add_win.setTitle("修改员工信息");
 			}else{
@@ -577,6 +603,7 @@ Ext.onReady(function(){
 		}, {name : 'password',type : 'string'
 		}, {name : 'status',type : 'int'
 		}, {name : 'createtime',type:'string'
+		}, {name : 'admin',type:'int'
 		}, {name : 'id',type:'int'
 		}])
 	});
