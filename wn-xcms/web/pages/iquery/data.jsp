@@ -29,23 +29,16 @@
 			font-size:12pt;
 	    }
 	    </style>
-		<link rel="stylesheet" type="text/css"
-			href="${ctx}/resource/theme/default/resources/css/ext-all.css" />
-		<script type="text/javascript"
-			src="${ctx}/resource/extjs3.1/adapter/ext/ext-base.js"></script>
-		<script type="text/javascript" src="${ctx}/resource/extjs3.1/ext-all.js"></script>
-		<script type="text/javascript"
-			src="${ctx}/resource/commonjs/ext-lang-zh_CN.js"></script>
-		<script type="text/javascript" src="${ctx}/resource/commonjs/eredg4.js"></script>
+		<link rel="stylesheet" type="text/css" href="${ctx}/resource/theme/default/resources/css/ext-all.css" />
 		<link rel="stylesheet" type="text/css" href="${ctx}/resource/css/eredg4.css" />
+		<link rel="stylesheet" type="text/css" href="${ctx}/resource/extjs3.1/ux/css/ux-all.css" />
+		<script type="text/javascript" src="${ctx}/resource/extjs3.1/adapter/ext/ext-base.js"></script>
+		<script type="text/javascript" src="${ctx}/resource/extjs3.1/ext-all.js"></script>
+		<script type="text/javascript" src="${ctx}/resource/commonjs/ext-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="${ctx}/resource/commonjs/eredg4.js"></script>
 		<script type="text/javascript" src="${ctx}/resource/extjs3.1/ux/ux-all.js"></script>
-		<link rel="stylesheet" type="text/css"
-			href="${ctx}/resource/extjs3.1/ux/css/ux-all.css" />
-		<script type="text/javascript" src="${ctx}/scripts/common/swfupload.js"></script>
-		<script type="text/javascript" src="${ctx}/scripts/common/UploadDialog.js"></script>
 		<script type="text/javascript" src="${ctx}/scripts/common/RowExpander.js"></script>
-		<script type="text/javascript"
-			src="${ctx}/scripts/common/validation.js"></script>
+		<script type="text/javascript" src="${ctx}/scripts/common/validation.js"></script>
 		<script type="text/javascript" src="${ctx}/scripts/common/examples.js"></script>
 		<script type="text/javascript" src="${ctx}/scripts/iquery/business.js"></script>
 		<script type="text/javascript">
