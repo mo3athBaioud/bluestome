@@ -7,7 +7,7 @@ import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
-@Table("tbl_terminal_property")
+@Table("tbl_terminal_property_20110711")
 public class TerminalProperty implements Serializable {
 
 	/**

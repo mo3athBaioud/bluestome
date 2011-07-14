@@ -44,4 +44,9 @@ public class TacDao extends BasicDao {
 		return tmp;
 	}
 	
+	public boolean updateByTac(Tac tac){
+		Cnd condition = Cnd.where("d_tac", "=", tac.getTac());
+		return update(Tac.class, null, condition);
+	}
+	
 }
