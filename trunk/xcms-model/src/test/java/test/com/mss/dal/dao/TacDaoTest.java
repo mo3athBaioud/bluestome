@@ -1,6 +1,8 @@
 package test.com.mss.dal.dao;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,12 +33,16 @@ public class TacDaoTest {
 	
 	static String[] INVALID = {"86017400","358228032733960"};
 	
+	private static Integer BCOUNT = 0;
+	
+	static StringBuffer SB_SQL = new StringBuffer();
+	
 	@Before
 	public void init(){
 		try{
 			ioc = new NutIoc(new ComboIocLoader(
 	            "*org.nutz.ioc.loader.json.JsonLoader",
-	            "conf/datasource.json", 
+	            "conf/jdbc.js", 
 	            "*org.nutz.ioc.loader.annotation.AnnotationIocLoader", 
 	            "com.mss.dal"
             ));
@@ -46,7 +52,6 @@ public class TacDaoTest {
 		dao = ioc.get(TacDao.class,"tacDao");
 	}
 
-	@Test
 	public void find() {
 		String tac = "01058001";
 		int c = 0;
@@ -56,10 +61,18 @@ public class TacDaoTest {
 		while(it.hasNext()){
 			String key = (String)it.next();
 			Tac t = dao.getByTac(key);
+			String[] str = map.get(key);
 			if(null != t){
-				System.out.println(" > hsmanName:"+t.getHsmanNameEn()+"|"+t.getHstypeNameEn()+"|"+t.getHsmanName());
+				t.setTac(key);
+				t.setHsmanNameEn(str[1]);
+				t.setHsmanName(str[1]);
+				t.setHstypeNameEn(str[2]);
+				t.setHstypeName(str[2]);
+				t.setModifytime(new Date());
+				if(dao.update(t)){
+					System.out.println(" >> Update Success!");
+				}
 			}else{
-				String[] str = map.get(key);
 				t = new Tac();
 				t.setTac(key);
 				t.setHsmanNameEn(str[1]);
@@ -258,71 +271,99 @@ public class TacDaoTest {
 		
 	}
 
-	public void test3() throws ClassNotFoundException{
+	public void test3(String fileName) throws ClassNotFoundException{
 		if(null != dao){
 			System.out.println(" >> dao is not null");
-			List<String[]> list = CvsFileParser.getCSV("2011-06-03_GPRS.csv");
+//			List<String[]> list = CvsFileParser.getCSV("tac.csv");
+			List<String[]> list = CvsFileParser.getCSV(fileName, 1000000);
 			int offset = 0;
 			int foffset = 0;
 			Tac tac = null;
-			List<String> outL = new ArrayList<String>();
-			List<Tac> tList = new ArrayList<Tac>();
+//			List<String> outL = new ArrayList<String>();
+//			List<Tac> tList = new ArrayList<Tac>();
 			HashMap ok = new HashMap();
 			HashMap failure = new HashMap();
 			HashMap common = new HashMap();
 			String ttac = "";
 			for(String[] s:list){
-				Integer i=1;
+//				Integer i=1;
 				tac = new Tac();
+//				ttac = s[0];
 				String phoneNum = s[0];
-				String uid = s[2];
-				String imei = s[4];
-				try{
-					ttac = imei.substring(0,8);
-					tac.setTac(ttac);
-				}catch(Exception e){
-					System.err.println(" >> "+imei);
-					continue;
-				}
+//				String uid = s[2];
+				String imei = s[1];
+				String bd = s[2];
+//				try{
+//					ttac = imei.substring(0,8);
+//					tac.setTac(ttac);
+//				}catch(Exception e){
+//					System.err.println(" >> "+imei);
+//					continue;
+//				}
 				
-//				common.put(phoneNum, s);
-				Tac tmp = dao.findByCondition(Tac.class, Cnd.where("d_tac", "=", ttac));
-				if(null == tmp){
-//					failure.put(phoneNum+"_"+imei, tmp);
-					foffset ++;
-				}else{
-//					tList.add(tmp);
-					ok.put(phoneNum+"_"+imei+"_"+uid,tmp);
-					offset++;
-				}
+//				Tac tmp = dao.findByCondition(Tac.class, Cnd.where("d_tac", "=", ttac));
+//				if(null == tmp){
+////					failure.put(phoneNum+"_"+imei, tmp);
+//					foffset ++;
+//				}else{
+//					
+////					tList.add(tmp);
+//					ok.put(ttac,tmp);
+////					if(null != tmp.getHsmanName()){
+////						ok.put(tmp.getHsmanName()+"_"+tmp.getHstypeName(), tmp);
+////					}else{
+////						ok.put(tmp.getHsmanNameEn()+"_"+tmp.getHstypeNameEn(), tmp);
+////					}
+//					offset++;
+					BCOUNT++;
+//				}
+				SB_SQL.append("insert into tbl_cmdata (d_phonenum,d_imei,d_bistrict) values (\'"+phoneNum+"\',\'"+imei+"\',\'"+bd+"\')");
 			}
-			System.out.println(" >> 成功|offset："+offset);
-			System.out.println(" >> 失败|foffset："+foffset);
-			StringBuffer sb = new StringBuffer();
-			System.out.println(" >> 识别的号码数量为:"+ok.size());
-			System.out.println(" >> 未被识别的号码数量为:"+failure.size());
-			System.out.println(" >> 总共的号码数量:"+common.size());
+//			System.out.println(" >> 成功|offset："+offset);
+//			System.out.println(" >> 失败|foffset："+foffset);
+//			StringBuffer sb = new StringBuffer();
+//			System.out.println(" >> 识别的号码数量为:"+ok.size());
+//			System.out.println(" >> 未被识别的号码数量为:"+failure.size());
+//			System.out.println(" >> 总共的号码数量:"+common.size());
 			
 			
-			int s = 0;
-			Iterator it = ok.keySet().iterator();
-			while(it.hasNext()){
-				String key = (String)it.next();
-				Object obj = ok.get(key) ;
-//				System.out.println(" >> key:"+key);
-				if( null != obj){
-					String[] t  = key.split("_");
-					Tac value = (Tac)obj;
-//					System.out.println(" >> 该手机号在成功终端中已经存在:"+key+"|"+value.getHsmanName()+"|"+value.getHsmanNameEn()+"|"+value.getHstypeName()+"|"+value.getHstypeNameEn());
-//					System.out.println(" >> 该手机号在成功终端中已经存在:"+t[0]+"|"+t[1]+"|"+value.getHsmanName()+"|"+value.getHsmanNameEn()+"|"+value.getHstypeName()+"|"+value.getHstypeNameEn());
-					sb.append(t[2]).append(",").append(t[0]).append(",").append(t[1]).append(",").append(t[1].substring(0,8)).append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append(",").append(1).append("\r\n");
-//					sb.append(key).append(",").append(value.getTac()).append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append("\r\n");
-//					t ++;
-				}
+//			int s = 0;
+//			Iterator it = ok.keySet().iterator();
+//			HashMap<String,String> HSMAN_MAP = new HashMap<String,String>();
+//			while(it.hasNext()){
+//				String key = (String)it.next();
+//				Object obj = ok.get(key) ;
+//				if( null != obj){
+//					String[] t  = key.split("_");
+//					Tac value = (Tac)obj;
+//					sb.append(t[0]).append(",").append(t[1]).append(",").append(t[1]).append(",").append(t[1].substring(0,8)).append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append(",").append(1).append("\r\n");
+//					sb.append(key).append(",").append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append(",").append(1).append("\r\n");
+//					sb.append(value.getHsmanName()).append(",").append(value.getHsmanNameEn()).append(",").append(value.getHstypeName()).append(",").append(value.getHstypeNameEn()).append("\r\n");
+//					if(null != value.getHsmanName() && !"".equals(value.getHsmanName())){
+//						HSMAN_MAP.put(value.getHsmanName(), value.getHsmanName());
+//					}else if(null != value.getHsmanNameEn() && !"".equals(value.getHsmanNameEn())){
+//						HSMAN_MAP.put(value.getHsmanNameEn(), value.getHsmanNameEn());
+//					}
+//					s++;
+//				}
+//			}
+			/**
+				sb.append("\r\n"+s);
+				IOUtil.createFile(sb.toString(), "2011-07-11_已识别的终端数据_"+"_OK"+System.currentTimeMillis());
+			**/
+//			Iterator its = HSMAN_MAP.keySet().iterator();
+//			while(its.hasNext()){
+//				String value = (String)its.next();
+//				sb.append(value).append("\r\n");
+//			}
+//			IOUtil.createFile(sb.toString(), "厂商数据"+"_OK"+System.currentTimeMillis());
+//			BCOUNT += offset;
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			System.out.println(" >> s:"+s);
-			
-			IOUtil.createFile(sb.toString(), "TAC(8位)识别出的终端数据_2011-06-03.csv");
 		}else{
 			System.out.println(" >> dao is null");
 		}
@@ -386,10 +427,295 @@ public class TacDaoTest {
 		System.gc();
 	}
 	
+	public String getUserSQL(String filePath){
+		StringBuffer sb = new StringBuffer();
+		try{
+			List<String[]> list = CvsFileParser.getCSV(filePath, 100000);
+			int i=0;
+			for(String[] s:list){
+				if(i%5000 == 0){
+					sb.append("LOCK TABLES tbl_cmdata WRITE;\r\n");
+					sb.append("insert into tbl_cmdata (d_phonenum,d_imei,d_bistrict) values \r\n");
+				}
+				String phoneNum = s[0];
+				String imei = s[1];
+				String bd = s[2];
+				sb.append("(\'"+phoneNum+"\',\'"+imei+"\',\'"+bd+"\')");
+				i++;
+				if(i%5000 == 0){
+					sb.append(";").append("\r\n");
+					sb.append("UNLOCK TABLES;");
+				}else{
+					if(i<list.size()){
+						sb.append(",").append("\r\n");
+					}
+				}
+			}
+			sb.append(";").append("\r\n");
+			sb.append("UNLOCK TABLES;");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 组装终端核心SQL
+	 * @param filePath
+	 * @return
+	 */
+	public HashMap<String,String> getTerminalCoreSQL(String filePath){
+		HashMap<String,String> map = new HashMap<String,String>();
+		try{
+			List<String[]> list = CvsFileParser.getCSV(filePath);
+//			sb.append("insert into tbl_terminal_core (d_hsman_ch,d_hsman,d_hstype_ch,d_hstype,d_tac,d_gprs,d_wap,d_smartphone,d_os,d_wifi,d_createtime) values ");
+			for(String[] s:list){
+				StringBuffer sb = new StringBuffer();
+				String tac = s[0];
+				String hsman = s[1];
+				String hsmanen = s[2];
+				String hstype = s[3];
+				String hstypeen = s[4];
+				String gprs = s[5];
+				String wap = s[6];
+				String smartphone = s[7];
+				String os = s[8];
+				String wifi = s[9];
+				
+				sb.append("(\'"+hsman+"\',").append("\'"+hsmanen+"\',").append("\'"+hstype+"\',").append("\'"+hstypeen+"\',").append("\'"+tac+"\',").append(gprs).append(",");
+				sb.append(wap).append(",").append(smartphone).append(",").append(os).append(",").append(wifi).append(",").append("now()),");
+				sb.append("\r\n");
+				map.put(tac, sb.toString());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return map;
+	}
+	
+	public void generatorTerminalCore(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("LOCK TABLES `tbl_terminal_core` WRITE;\r\n");
+		sb.append("insert into tbl_terminal_core (d_hsman_ch,d_hsman,d_hstype_ch,d_hstype,d_tac,d_gprs,d_wap,d_smartphone,d_os,d_wifi,d_createtime) values \r\n");
+		HashMap<String,String> map = getTerminalCoreSQL("终端核心表_02.csv");
+		Iterator it = map.keySet().iterator();
+		while(it.hasNext()){
+			String key = (String)it.next();
+			String sql = map.get(key);
+			sb.append(sql);
+		}
+		sb.append("UNLOCK TABLES;");
+//		System.out.println(sb.toString());
+		IOUtil.createFile(sb.toString(), "SQL_终端核心表_03"+System.currentTimeMillis());
+	}
+	
+	@Test
+	public void generatorFile(){
+		File file = null;
+		try{
+			file = new File("F:\\tmp\\split\\20110714\\");
+			if(file.isDirectory()){
+				File[] subs = file.listFiles();
+				int i=0;
+				for(File sub:subs){
+					String sql = getTerminalSQL(sub.getAbsolutePath());
+//					System.out.println(sql);
+					System.out.println(" > "+i+" 已生成!");
+					IOUtil.createFile(sql, "F:\\tmp\\split\\20110714\\result\\","CTA_"+i);
+					System.gc();
+					Thread.sleep(100);
+					i++;
+				}
+			}
+			System.out.println(" >> 识别的总数:"+BCOUNT);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void updateTacTerminal(){
+		/**
+			List<String[]> list = CvsFileParser.getCSV("厂商数据_01.csv");
+			for(String[] ss:list){
+				if(ss.length < 3){
+					System.out.println(" >> "+ss[0]+"|"+ss[1]);
+				}
+			}
+		 **/
+			Cnd condition = Cnd.where("d_status","=","1");
+			List<Tac> tlist = dao.search(Tac.class, condition.orderBy().asc("d_hsman_name"));
+			for(Tac t:tlist){
+				List<String[]> list = CvsFileParser.getCSV("厂商数据_01.csv");
+				for(String[] str:list){
+					if(t.getHsmanName().toLowerCase().equals(str[0].toLowerCase())){
+						if(!"0".equals(str[1])){
+							t.setHsmanNameEn(str[1].toLowerCase());
+						}
+						if(!"0".equals(str[2])){
+							t.setHsmanName(str[2].toLowerCase());
+						}
+						
+						if(dao.update(t)){
+							System.out.println(" >> 更新成功["+t.getId()+"|"+t.getTac()+"|"+t.getHsmanName()+"|"+t.getHsmanNameEn()+"]");
+							break;
+						}
+					}
+				}
+		}
+		
+	}
+	
+	
+	/**
+	 * 已匹配的终端数据和终端属性数据
+	 * @param filePath
+	 * @return
+	 */
+	public String getKnownTerminalSQL(String filePath){
+		StringBuffer sb = new StringBuffer();
+		try{
+			List<String[]> list = CvsFileParser.getCSV(filePath,100001);
+			int i=0;
+			for(String[] s:list){
+				if(i%5000 == 0){
+					sb.append("LOCK TABLES tbl_tmp_08 WRITE;\r\n");
+					sb.append("insert into tbl_tmp_08 (d_phonenum,d_tac,d_bistrict) values \r\n");
+				}
+				String phoneNum = s[0];
+				String imei = s[2];
+				String bd = s[1];
+				sb.append("(\'"+phoneNum+"\',\'"+imei+"\',\'"+bd+"\')");
+				i++;
+				if(i%5000 == 0){
+					sb.append(";").append("\r\n");
+					sb.append("UNLOCK TABLES;");
+				}else{
+					if(i<list.size()){
+						sb.append(",").append("\r\n");
+					}
+				}
+			}
+			sb.append(";").append("\r\n");
+			sb.append("UNLOCK TABLES;");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return sb.toString();
+	}
+	
+	
+	/**
+	 * 最终终端数据
+	 * @param filePath
+	 * @return
+	 */
+	public String getTerminalSQL(String filePath){
+		StringBuffer sb = new StringBuffer();
+		try{
+			List<String[]> list = CvsFileParser.getCSV(filePath,100001);
+			int i=0;
+			for(String[] s:list){
+				int support = 0;
+				int supprotType = 0;
+				if(i%5000 == 0){
+					sb.append("LOCK TABLES tbl_bussiness_simplify WRITE;\r\n");
+					sb.append("insert into tbl_bussiness_simplify (d_btype,d_bdistrict,d_phonenum,d_support,d_support_type) values \r\n");
+				}
+				String phoneNum = s[0];
+				String bd = s[1];
+				String gprs = s[2];
+				String wap = s[3];
+				String smartPhone = s[4];
+				String os = s[5];
+				String wifi = s[6];
+				if(smartPhone.equals("1") || os.equals("1")){
+					support = 1;
+					supprotType = 2;
+				}else{
+					if(wap.equals("1") && gprs.equals("1")){
+						support = 1;
+						supprotType = 1;
+					}
+				}
+				sb.append("(0,\'"+bd+"\',\'"+phoneNum+"\',"+support+","+supprotType+")");
+				i++;
+				if(i%5000 == 0){
+					sb.append(";").append("\r\n");
+					sb.append("UNLOCK TABLES;");
+				}else{
+					if(i<list.size()){
+						sb.append(",").append("\r\n");
+					}
+				}
+			}
+			sb.append(";").append("\r\n");
+			sb.append("UNLOCK TABLES;");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return sb.toString();
+	}
+	
 	public void test2(){
-		Cnd condition = Cnd.where("d_phone_num","=","15891064365");
-		ViewTerminal v = dao.findByCondition(ViewTerminal.class, condition);
-		System.out.println(" >> "+Json.toJson(v));
+		Cnd condition = Cnd.where("d_hsman_name","=","apple");
+		List<Tac> list = dao.search(Tac.class, condition);
+		StringBuffer sb = new StringBuffer(" in (\t");
+		for(Tac tac:list){
+			sb.append("\'"+tac.getTac()+"\'").append(",");
+		}
+		sb.append("\t)");
+//		ViewTerminal v = dao.findByCondition(ViewTerminal.class, condition);
+//		System.out.println(" >> "+Json.toJson(v));
+		System.out.println(""+sb.toString());
+	}
+	
+	public void test5(){
+		List<String[]> list = CvsFileParser.getCSV("tac.csv");
+		System.out.println(" >> list.size："+list.size());
 	}
 
+	public void test6(){
+		Cnd condition = Cnd.where("d_status","=","1");
+		List<Tac> tlist = dao.search(Tac.class, condition.orderBy().asc("d_hsman_name"));
+		for(Tac t:tlist){
+//			System.out.print(" > "+t.getHsmanName()+"|"+t.getHsmanNameEn()+"|"+t.getHstypeName()+"|"+t.getHstypeNameEn());
+			//如果是英文，则将中文名称制空，然后修改英文
+			/**
+			if(t.getHsmanName().matches("^[a-zA-Z]*")){
+				t.setHsmanName("暂无");
+				t.setCreatetime(new Date());
+			}
+			**/
+			if(null != t.getHsmanNameEn() && !"".equals(t.getHsmanNameEn()) && t.getHstypeName().toLowerCase().startsWith(t.getHsmanNameEn().toLowerCase())){
+				String hstypename = t.getHstypeName().toLowerCase().replace(t.getHsmanNameEn().toLowerCase(),"");
+				if(null != hstypename){
+					t.setHstypeName(hstypename.trim());
+					System.out.println(" -> 1:"+hstypename.trim());
+				}
+			}
+			if(null != t.getHsmanName() && !"".equals(t.getHsmanName()) && t.getHstypeName().toLowerCase().startsWith(t.getHsmanName().toLowerCase())){
+				String hstypename = t.getHstypeName().toLowerCase().replace(t.getHsmanName().toLowerCase(),"");
+				if(null != hstypename){
+					t.setHstypeName(hstypename.trim());
+					System.out.println(" -> 2:"+hstypename.trim());
+				}
+			}
+			if(t.getHstypeName().startsWith("one touch ")){
+				String hstypename = t.getHstypeName().toLowerCase().replace("one touch ","");
+				t.setHstypeName(hstypename);
+			}
+			String[] strs = t.getHstypeName().toLowerCase().split(" ");
+			if(strs.length > 2){
+				String hsman = strs[0];
+				String hstype = strs[1];
+				System.out.println(" > ["+t.getHsmanName()+"|"+t.getHstypeName()+"] "+hsman+"|"+hstype);
+			}
+			/**
+			**/
+//			if(dao.update(t)){
+//				System.out.println(" >> 更新厂商名称为英文的厂商名称成功!");
+//			}
+		}
+	}
 }

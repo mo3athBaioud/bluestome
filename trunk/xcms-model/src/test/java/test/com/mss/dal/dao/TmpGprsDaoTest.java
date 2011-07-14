@@ -33,7 +33,7 @@ public class TmpGprsDaoTest {
 		try{
 			ioc = new NutIoc(new ComboIocLoader(
                 "*org.nutz.ioc.loader.json.JsonLoader",
-                "conf/datasource.json", 
+                "conf/jdbc.js", 
                 "*org.nutz.ioc.loader.annotation.AnnotationIocLoader", 
                 "com.mss.dal"
                 ));
