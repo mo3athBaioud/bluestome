@@ -134,7 +134,7 @@ Ext.onReady(function() {
 
 			var win = new Ext.Window({
 				//西安移动终端营销系统(西安泰讯信息技术技术有限公司测试版)
-						title : '演示版',
+						title : '正式版',
 						renderTo : Ext.getBody(),
 						layout : 'fit',
 						width : 460,
