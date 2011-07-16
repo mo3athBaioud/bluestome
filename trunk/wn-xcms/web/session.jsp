@@ -32,7 +32,8 @@
 	<script type="text/javascript">
 	<!--
 		alert('会话超时，请重新登录!');
-		window.location.href = 	'<%=request.getContextPath()%>/login3.jsp';	
+//		window.location.href = 	'<%=request.getContextPath()%>/login3.jsp';	
+		window.parent.location.href = = 	'<%=request.getContextPath()%>/login3.jsp';	
 	//-->
 	</script>
 	<%
