@@ -27,7 +27,7 @@ Ext.onReady(function() {
 
 			var closeButton = new Ext.Button({
 				// text : '退出',
-				iconCls : 'cancel_48Icon',
+				iconCls : 'icon-cancel',
 				iconAlign : 'left',
 				scale : 'medium',
 				width : 30,
