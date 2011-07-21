@@ -14,17 +14,17 @@
 		<result column="d_modifytime" property="modifytime" />
 		<result column="d_status" property="status" />
 		<result column="d_remarks" property="remarks" />
+		<!--
 		<result property="children" column="d_id"
 			select="GET_CHILD_WEBSITE_BY_FATHER_ID" />
-		<!-- 
 		<result property="articles" column="d_id" select="GET_ARTICLE_BY_WEB_ID" />						
 		-->
 		<result property="count" column="d_id"
 			select="GET_ARTICLE_COUNT_BY_WEB_ID" />
-			
+		<!-- 
 		<result property="father" column="d_parent_id"
 			select="GET_WEBSITE_BY_ID" />
-			
+		 -->
 	</resultMap>
 
      <insert id="website.insert" parameterClass="website"> 

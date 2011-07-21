@@ -14,9 +14,9 @@
 		<result column="d_file_small_name" property="smallName" />
 		<result column="d_createtime" property="createTime" />
 		<result column="d_status" property="status" />
+		<!-- 
 		<result property="article" column="d_article_id"
 			select="GET_ARTICLE_BY_ID" />
-		<!-- 
 		<result property="image" column="d_image_id"
 			select="GET_IMAGE_BY_ID" />
 		 -->
