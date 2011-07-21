@@ -149,7 +149,8 @@ public class WebsiteServiceImpl implements IWebsiteService {
 				sb.append("\t\t{\n");
 				sb.append("\t\t\"text\":\t\""+bean.getName()+"\",\n");
 				sb.append("\t\t\"id\":\"" + bean.getId()+"\",\n");
-				if(null != bean.getChildren() && bean.getChildren().size() > 0){
+//				if(null != bean.getChildren() && bean.getChildren().size() > 0){
+				if(bean.getChildSize() > 0){
 	//				sb.append("\t\t\t\"href\":\""+request.getContextPath()+"website/toTree.cgi?id="+bean.getParentId()+"\",\n");
 	//				sb.append("\t\t\t\"href\":\""+request.getContextPath()+"/website/sub.cgi?id="+bean.getId()+"\",\n");
 	//				sb.append("\t\t\t\"hrefTarget\":\"mainFrame\",\n");
