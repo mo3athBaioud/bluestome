@@ -38,6 +38,8 @@ public class Website extends AbstractEntity {
 
 	private List<Website> children = new ArrayList<Website>();
 	
+	private int childSize = 0;
+	
 	private Website father;
 
 	public Website() {
@@ -145,6 +147,14 @@ public class Website extends AbstractEntity {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public int getChildSize() {
+		return childSize;
+	}
+
+	public void setChildSize(int childSize) {
+		this.childSize = childSize;
 	}
 	
 	
