@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+	<bean id="cacheMethodAroundAdvice" class="com.ssi.cms.core.aop.advice.MethodCacheAroundAdvice">
+		<property name="cache">
+			<ref bean="methodCache" />
+		</property>
+	</bean>
+	
+	<bean id="cacheMethodAfterAdvice" class="com.ssi.cms.core.aop.advice.MethodCacheAfterAdvice">
+		<property name="cache">
+			<ref bean="methodCache" />
+		</property>
+	</bean>
+		<!-- 
+		<aop:advisor id="findMethodAroundAdviceAdvisor"
+			advice-ref="cacheMethodAroundAdvice"
+			pointcut="execution(* com.ssi.cms.web.service.impl.*Service.find*(..))" />
+		 -->
+	<aop:config>
+		<aop:advisor id="getListMethodAroundAdviceAdvisor"
+			advice-ref="cacheMethodAroundAdvice"
+			pointcut="execution(* com.ssi.cms.web.service.impl.*ServiceImpl.getPage*(..))" />
+		<aop:advisor id="findMethodAroundAdviceAdvisor"
+			advice-ref="cacheMethodAroundAdvice"
+			pointcut="execution(* com.ssi.cms.web.service.impl.*ServiceImpl.find*(..))" />
+		<aop:advisor id="insertMethodAfterAdviceAdvisor"
+			advice-ref="cacheMethodAfterAdvice"
+			pointcut="execution(* com.ssi.cms.web.service.impl.*ServiceImpl.insert(..))" />
+		<aop:advisor id="updateMethodAfterAdviceAdvisor"
+			advice-ref="cacheMethodAfterAdvice"
+			pointcut="execution(* com.ssi.cms.web.service.impl.*ServiceImpl.update(..))" />
+		<aop:advisor id="deleteMethodAfterAdviceAdvisor"
+			advice-ref="cacheMethodAfterAdvice"
+			pointcut="execution(* com.ssi.cms.web.service.impl.*ServiceImpl.delete(..))" />
+	</aop:config>
+</beans>
