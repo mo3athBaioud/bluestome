@@ -2,7 +2,7 @@ var app = {};
 Ext.onReady(function(){
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
     Ext.QuickTips.init();
-	app.limit = 15;
+	app.limit = 20;
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
 	var website =Ext.data.Record.create([
@@ -792,8 +792,8 @@ Ext.onReady(function(){
 		},
 	    cm: app.cm_website,
 	    ds: app.ds_website,
-		width:850,
- 		height:600,
+	    width:document.body.clientWidth-50,
+	    height:document.body.clientHeight-50,
         autoScroll: true,
         viewConfig: {
             forceFit:true

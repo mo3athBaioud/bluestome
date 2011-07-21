@@ -3,7 +3,7 @@ Ext.onReady(function(){
 	
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
     app.start = 0;
-	app.limit = 15;
+	app.limit = 20;
 	app.colName = colName;
 	app.values = values;
     app.sm = new Ext.grid.CheckboxSelectionModel();
@@ -443,7 +443,7 @@ Ext.onReady(function(){
 				mode : 'local',
 				store : new Ext.data.SimpleStore({
 							fields : ['value', 'text'],
-							data : [[10, '10条/页'], [15, '15条/页'], [20, '20条/页']]
+							data : [[15, '15条/页'], [25, '25条/页'], [50, '50条/页']]
 						}),
 				valueField : 'value',
 				displayField : 'text',
@@ -481,8 +481,8 @@ Ext.onReady(function(){
 		},
 	    cm: app.cm_articledoc,
 	    ds: app.ds_article,
-		width:850,
-		height:600,
+	    width:document.body.clientWidth-50,
+	    height:document.body.clientHeight-50,
 		autoScroll: true,
 		sm:app.sm,
 		tbar : [app.btn_add_code,'-',app.update_code_btn,'-', app.btn_fresh,'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code

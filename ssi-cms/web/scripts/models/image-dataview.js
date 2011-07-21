@@ -72,7 +72,8 @@
 	    var tpl = new Ext.XTemplate('<tpl for=".">', '<div class="thumb-wrap" id="{id}">', '<div class="thumb"><table qtip="{tips} border="0"><tr><td align="center" valign="middle">', '<img qtip="{tips}" alt="{tips}" class="thumb-img" src="{imgUrl}" onerror="imgErr(this);">', '</td></tr></table></div>','</div>','</tpl>', '<div class="x-clear"></div>');//tpl
 	    var dataView = new Ext.DataView({
 	        store: store,
-	        height:600,
+		    width:document.body.clientWidth-50,
+		    height:document.body.clientHeight-50,
 	        autoScroll: true,
 //	        style: 'overflow:auto',
 	        tpl: tpl,
@@ -384,7 +385,8 @@
 			loadMask : {
 				msg : '数据加载中...'
 			},
-		    height:600,
+		    width:document.body.clientWidth-50,
+		    height:document.body.clientHeight-50,
 	        autoScroll: true,
 	        closable: true,
 	        tbar:[dataAction[6],'-',dataAction[0],'-', dataAction[1], '-',dataAction[2],'-', dataAction[3],'-', dataAction[4],'-', dataAction[5],'-',app.btn_set_article_icon],
