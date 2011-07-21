@@ -21,6 +21,8 @@
 		-->
 		<result property="count" column="d_id"
 			select="GET_ARTICLE_COUNT_BY_WEB_ID" />
+		<result property="childSize" column="d_id"
+			select="GET_CHILD_COUNT_WEBSITE_BY_FATHER_ID" />
 		<!-- 
 		<result property="father" column="d_parent_id"
 			select="GET_WEBSITE_BY_ID" />
@@ -66,6 +68,12 @@
 		ORDER BY t.d_id asc
 	</statement>
 
+	<statement id="GET_CHILD_COUNT_WEBSITE_BY_FATHER_ID"
+		parameterClass="java.lang.Integer" resultClass="java.lang.Integer">
+		SELECT COUNT(*) FROM tbl_web_site t WHERE t.d_parent_id = #value# and t.d_status = 1
+		ORDER BY t.d_id asc
+	</statement>
+	
 	<statement id="GET_WEBSITE_COUNT" parameterClass="java.util.Map"
 		resultClass="java.lang.Integer">
 		SELECT COUNT(*) FROM tbl_web_site T WHERE 1 = 1
