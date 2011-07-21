@@ -13,8 +13,8 @@
 		<result column="d_text" property="text"/>	
 		<result column="d_createtime" property="createTime"/>						
 		<result column="d_intro" property="intro"/>						
-		<result property="website" column="d_web_id" select="GET_WEBSITE_BY_ID" />	
 		<!-- 
+		<result property="website" column="d_web_id" select="GET_WEBSITE_BY_ID" />	
 		<result property="images" column="d_id" select="GET_IMAGE_BY_ARTICLE_ID" />						
 		 -->
 	</resultMap>
@@ -22,7 +22,7 @@
 	<delete id="article.deleteByPrimaryKey" parameterClass="java.lang.Integer">
 		delete from TBL_ARTICLE where d_id = #value#
 	</delete>
-	
+	<!-- article.selectByMap -->
 	<statement id="GET_ARTICLE_BY_MAP"  parameterClass="java.util.Map" resultMap="articleMap">
     	SELECT DISTINCT t.* FROM TBL_ARTICLE t WHERE 1 = 1
 		<dynamic>
@@ -86,6 +86,50 @@
  		where d_id = #id#
 	</update>
 	
+	<statement id="article.selectByMap"  parameterClass="java.util.Map" resultMap="articleMap">
+    	SELECT DISTINCT t.* FROM TBL_ARTICLE t WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="id" prepend="and">
+				t.d_id = #id#
+			</isNotEmpty>
+			<isNotEmpty property="webId" prepend="and">
+				t.d_web_id = #webId#
+			</isNotEmpty>
+			<isNotEmpty property="title" prepend="and">
+				t.d_title like concat('%',#title#,'%')
+			</isNotEmpty>
+			<isNotEmpty property="articleUrl" prepend="and">
+				t.d_acticle_url like concat('%',#articleUrl#,'%')
+			</isNotEmpty>
+			<isNotEmpty property="acticleRealUrl" prepend="and">
+				t.d_article_real_url = #acticleRealUrl#
+			</isNotEmpty>
+			<isNotEmpty property="acticleXmlUrl" prepend="and">
+				t.d_article_xml_url = #acticleXmlUrl#
+			</isNotEmpty>
+			<isNotEmpty property="text" prepend="and">
+				t.d_text like concat('%',#text#,'%')
+			</isNotEmpty>
+			<isNotEmpty property="intro" prepend="and">
+				t.d_intro like concat('%',#intro#,'%')
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY t.d_id
+		<dynamic>
+			<isNotEmpty property="asc">
+				$asc$
+			</isNotEmpty>
+		</dynamic>
+		<dynamic>
+			<isNotEmpty property="offset" prepend="limit">
+				#offset#
+			</isNotEmpty>
+			<isNotEmpty property="limit" prepend=",">
+				#limit#
+			</isNotEmpty>
+		</dynamic>
+    </statement>
+    
 	<statement id="QUERY_ARTICLE_BY_MAP"  parameterClass="java.util.Map" resultMap="articleMap">
     	SELECT DISTINCT t.* FROM TBL_ARTICLE t WHERE 1 = 1
 		<dynamic>
