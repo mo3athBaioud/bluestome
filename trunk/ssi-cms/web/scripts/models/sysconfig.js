@@ -3,7 +3,7 @@ Ext.onReady(function(){
 	
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
     Ext.QuickTips.init();
-	app.limit = 15;
+	app.limit = 20;
 	app.colName = colName;
 	app.values = values;
     app.sm = new Ext.grid.CheckboxSelectionModel();
@@ -456,8 +456,8 @@ Ext.onReady(function(){
 		},
 	    cm: app.cm_sysconfig,
 	    ds: app.ds_sysconfig,
-	    width:850,
-	    height:600,
+	    width:document.body.clientWidth-50,
+	    height:document.body.clientHeight-50,
         autoScroll: true,
         viewConfig: {
             forceFit:true
