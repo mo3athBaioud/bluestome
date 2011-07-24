@@ -2,6 +2,6 @@
 <%@ taglib uri="/tags/fmt.tld" prefix="fmt"%>
 <%@ taglib uri="/tags/fn.tld" prefix="fn"%>
 <%@ taglib uri="/tags/sql.tld" prefix="sql"%>
-<%@ taglib uri="/tags/x.tld" prefix="xml"%>
+<%@ taglib uri="/tags/x.tld" prefix="x"%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
