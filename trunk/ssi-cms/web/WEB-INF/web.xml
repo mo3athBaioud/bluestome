@@ -85,6 +85,7 @@
 		</listener-class>
 	</listener>
 	
+	<!-- 
 	<taglib>
 		<taglib-uri>/tags/struts-bean.tld</taglib-uri>
 		<taglib-location>/WEB-INF/tlds/struts-bean.tld</taglib-location>
@@ -111,6 +112,7 @@
 			/WEB-INF/tlds/struts-tiles.tld
 		</taglib-location>
 	</taglib>
+	 -->
 	<taglib>
 		<taglib-uri>/tags/c.tld</taglib-uri>
 		<taglib-location>/WEB-INF/tlds/c.tld</taglib-location>
@@ -123,8 +125,21 @@
 		<taglib-uri>/tags/fn.tld</taglib-uri>
 		<taglib-location>/WEB-INF/tlds/fn.tld</taglib-location>
 	</taglib>
+	<taglib>
+		<taglib-uri>/tags/sql.tld</taglib-uri>
+		<taglib-location>/WEB-INF/tlds/sql.tld</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/tags/x.tld</taglib-uri>
+		<taglib-location>/WEB-INF/tlds/x.tld</taglib-location>
+	</taglib>
+	
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
 	
 	<welcome-file-list>
+		<welcome-file>login3.jsp</welcome-file>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 </web-app>
