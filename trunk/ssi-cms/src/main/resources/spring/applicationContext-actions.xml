@@ -64,4 +64,7 @@
 			<ref bean="sysconfigService" />
 		</property>
 	</bean>
+	
+	<bean id="loginAction" class="com.ssi.cms.web.action.LoginAction" parent="baseAction" />
+	
 </beans>
