@@ -73,7 +73,7 @@
 	    var dataView = new Ext.DataView({
 	        store: store,
 		    width:document.body.clientWidth-50,
-		    height:document.body.clientHeight-50,
+		    height:document.body.clientHeight-150,
 	        autoScroll: true,
 //	        style: 'overflow:auto',
 	        tpl: tpl,
@@ -386,7 +386,7 @@
 				msg : '数据加载中...'
 			},
 		    width:document.body.clientWidth-50,
-		    height:document.body.clientHeight-50,
+		    height:document.body.clientHeight-150,
 	        autoScroll: true,
 	        closable: true,
 	        tbar:[dataAction[6],'-',dataAction[0],'-', dataAction[1], '-',dataAction[2],'-', dataAction[3],'-', dataAction[4],'-', dataAction[5],'-',app.btn_set_article_icon],

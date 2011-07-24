@@ -793,7 +793,7 @@ Ext.onReady(function(){
 	    cm: app.cm_website,
 	    ds: app.ds_website,
 	    width:document.body.clientWidth-50,
-	    height:document.body.clientHeight-50,
+	    height:document.body.clientHeight-150,
         autoScroll: true,
         viewConfig: {
             forceFit:true

@@ -197,6 +197,25 @@ Ext.onReady(function(){
 		}
 	});
 	
+	app.btn_fresh = new Ext.Button({
+		text : '打开缩略图',
+		iconCls:'icon-folder_go',
+		handler : function() {
+			var record = app.grid.getSelectionModel().getSelected();
+			if(record){
+				var url = String.format(project+"/pages/images/image-dataview.jsp?id={0}&webid={1}",record.get('d_article_id'),webId);
+				window.location = url;
+			}else{
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '请选择要打开的文件!',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.ERROR
+				});
+			}
+		}
+	});
+	
 	app.btn_search_code = new Ext.Button({
 		text : '查询',
 		iconCls : 'icon-search',
@@ -369,14 +388,14 @@ Ext.onReady(function(){
 	    cm: app.cm_image,
 	    ds: app.ds_image,
 	    width:document.body.clientWidth-50,
-	    height:document.body.clientHeight-50,
+	    height:document.body.clientHeight-150,
         autoScroll: true,
         viewConfig: {
             forceFit:true
         },
  		plugins: app.expander,
  		sm:app.sm,
-		tbar : [app.btn_back,'-',app.btn_edit,'-',app.btn_set_article_icon,'-',app.btn_download_img,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code], //'-',app.btn_search_code
+		tbar : [app.btn_fresh,'-',app.btn_back,'-',app.btn_edit,'-',app.btn_set_article_icon,'-',app.btn_download_img,'-',app.search_comb_queyrCol_code,'-',app.text_search_code,'-',app.btn_search_code], //'-',app.btn_search_code
 		bbar : app.ptb
 	});
 	

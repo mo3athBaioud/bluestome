@@ -2,80 +2,68 @@ var app = {};
 Ext.onReady(function(){
 	
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
-    app.start = 0;
-	app.limit = 20;
+    Ext.QuickTips.init();
+	app.limit = 15;
 	app.colName = colName;
 	app.values = values;
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
-	app.articledoc = Ext.data.Record.create([{
+	app.article = Ext.data.Record.create([{
 		name : 'id',
 		mapping : 'd_id',
 		type : 'int'
 	}, {
-		name : 'url',
-		mapping : 'd_url',
+		name : 'acticleRealUrl',
+		mapping : 'd_article_real_url',
 		type : 'string'
 	}, {
-		name : 'webId',
-		mapping : 'd_web_id',
-		type : 'int'
-	}, {
-		name : 'author',
-		mapping : 'd_author',
+		name : 'acticleXmlUrl',
+		mapping : 'd_article_xml_url',
 		type : 'string'
 	}, {
-		name : 'grade',
-		mapping : 'd_grade',
-		type : 'int'
-	}, {
-		name : 'tag',
-		mapping : 'd_tag',
+		name : 'articleUrl',
+		mapping : 'd_acticle_url',
 		type : 'string'
 	}, {
-		name : 'status',
-		mapping : 'd_status',
-		type : 'int'
+		name : 'createTime',
+		mapping : 'd_createtime',
+		type : 'string'
+	}, {
+		name : 'intro',
+		mapping : 'd_intro',
+		type : 'string'
+	}, {
+		name : 'text',
+		mapping : 'd_text',
+		type : 'string'
 	}, {
 		name : 'title',
 		mapping : 'd_title',
 		type : 'string'
 	}, {
-		name : 'createtime',
-		mapping : 'd_createtime',
-		type : 'string'
-	}, {
-		name : 'modifytime',
-		mapping : 'd_modifytime',
-		type : 'string'
-	}, {
-		name : 'publishtime',
-		mapping : 'd_publish_time',
-		type : 'string'
+		name : 'webId',
+		mapping : 'd_web_id',
+		type : 'int'
 	}]);
     
-    //d_img_count
     var expander = new Ext.grid.RowExpander({
         tpl : new Ext.Template(
-        	'<p><b>标题:</b><br/>{d_title}</p>',
-            '<p><b>作者:</b><br/>{d_author}</p>',
-            '<p><b>时间:</b><br/>{d_publish_time}</p>',
-            '<p><b>网址:</b><br/>{d_title}<a href="{d_url}" target="_blank"><img src="'+project+'/images/world_go.png" alt="{d_title}"/></a></p>'
+            '<p><b>备注:</b><br/>{d_intro}</p>',
+            '<p><b>网址:</b><br/>{d_acticle_url}<a href="{d_acticle_url}" target="_blank"><img src="'+project+'/images/world_go.png" alt="{d_web_name}"/></a></p>'
         )
     });
     
-    app.cm_articledoc = new Ext.grid.ColumnModel([
-    	expander, 
+    app.cm_article = new Ext.grid.ColumnModel([
+	    expander,
 //        {header: "ID", sortable: true, dataIndex: 'd_id'}, //width: 50, 
-        {header: "类型", width: 35, sortable: true, dataIndex: 'd_title',
+        {header: "类型", width: 50,
         	renderer : function(value) {
-				return '<img src="'+project+'/images/page_white_world.png"/>';
+				return '<img src="'+project+'/images/picture.png"/>';
 			}
         },
-        {header: "标题", width: 250, sortable: true, dataIndex: 'd_title'},
-        {header: "作者", width: 70, sortable: true, dataIndex: 'd_author'},
-        {header: "发布时间", width:100, sortable: true, dataIndex: 'd_publish_time'},
-        {header: "状态", width: 70, sortable: true, dataIndex: 'd_status'},
+        {header: "标题", width: 200, sortable: true, dataIndex: 'd_title'},
+        {header: "地址", width: 300, sortable: true, dataIndex: 'd_acticle_url'},
+        {header: "状态", width: 70, sortable: true, dataIndex: 'd_text'},
         {header: "创建时间", width: 150, sortable: true,dataIndex: 'd_createtime'}
     ]);
     
@@ -89,8 +77,8 @@ Ext.onReady(function(){
 				store : new Ext.data.SimpleStore({
 					data : [
 							['title', '文章标题'],
-							['author','作者'],
-							['status','文章状态']
+							['intro','文章介绍'],
+							['text','文章状态']
 				    ],
 					fields : ['id', 'name']
 				}),	
@@ -113,8 +101,19 @@ Ext.onReady(function(){
 		handler:function(){
 			if(app.grid.getSelectionModel().getSelected()){
 				var record = app.grid.getSelectionModel().getSelected();
+				alert('获取文章ID:'+record.get('d_id'));
+				alert('获取文章所属网站ID:'+webId);
 			}else{
-				Ext.MessageBox.alert("提示信息!!", "请选择要获取URL的数据!!");
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '请选择要获取URL的数据!',
+					buttons : Ext.Msg.OK,
+//					fn : function() {
+//						dnfield.focus(true);
+//						btn.enable();
+//					},
+					icon : Ext.MessageBox.ERROR
+				});
 			}
 		}
 	});
@@ -136,7 +135,7 @@ Ext.onReady(function(){
 		app.colName = app.search_comb_queyrCol_code.getValue();
 		app.values =app.text_search_code.getValue();
 		Ext.Ajax.request({
-			url : project+'/article/articledoc.cgi?id='+webId,
+			url : project+'/article/article.cgi?id='+webId,
 			params : {
 //				start:0,
 //				limit:app.limit,
@@ -148,11 +147,29 @@ Ext.onReady(function(){
 				if(obj.success){
 					app.ds_article.load({params : {start:0,limit:app.limit}}); //,colName:app.colName,value:app.values
 				}else{
-	             	Ext.MessageBox.alert('提示',obj.msg);
+					Ext.Msg.show({
+						title : '系统提示',
+						msg : obj.msg,
+						buttons : Ext.Msg.OK,
+//						fn : function() {
+//							dnfield.focus(true);
+//							btn.enable();
+//						},
+						icon : Ext.MessageBox.ERROR
+					});
 				}
 			},
             failure:function(){
-             	Ext.MessageBox.alert('提示','服务器内部错误');
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '服务器内部错误',
+					buttons : Ext.Msg.OK,
+//					fn : function() {
+//						dnfield.focus(true);
+//						btn.enable();
+//					},
+					icon : Ext.MessageBox.ERROR
+				});
             }
 		})
 	};
@@ -161,22 +178,20 @@ Ext.onReady(function(){
 //		proxy : new Ext.data.HttpProxy({
 //			url : project+'/article/article.cgi?id='+webId
 //		}),
-		url : project+'/article/articledoc.cgi?id='+webId,
+		url : project+'/article/article.cgi?id='+webId,
 		baseParams:{},
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'count',
-			root : 'articledoc'
+			root : 'article'
 		}, [{name : 'd_id',type : 'int'
 		}, {name : 'd_web_id',type : 'int'
 		}, {name : 'd_title',type : 'string'
-		}, {name : 'd_url',type : 'string'
-		}, {name : 'd_author',type : 'string'
-		}, {name : 'd_grade',type : 'string'
-		}, {name : 'd_tag',type : 'string'
-		}, {name : 'd_status',type : 'string'
+		}, {name : 'd_acticle_url',type : 'string'
+		}, {name : 'd_article_real_url',type : 'string'
+		}, {name : 'd_article_xml_url',type : 'string'
+		}, {name : 'd_text',type : 'string'
 		}, {name : 'd_createtime',type : 'string'
-		}, {name : 'd_modifytime',type : 'string'
-		}, {name : 'd_publish_time',type : 'string'
+		}, {name : 'd_intro',type : 'string'
 		}])
 	});
 	
@@ -188,25 +203,41 @@ Ext.onReady(function(){
 		}
 	});
 	
-	app.btn_fresh = new Ext.Button({
-		text : '刷新',
-		handler : function() {
-			app.ds_article.reload({
-						params : {
-							start : 0,
-							limit : app.ptb.pageSize
-						}
-			});
-		}
+	app.showUploadDialog =  function(){
+		var dialog = new UploadDialog({
+			uploadUrl : 'uploadFiles.action',
+			filePostName : 'myUpload', //这里很重要，默认值为'fileData',这里匹配action中的setMyUpload 属性
+			flashUrl : 'js/swfupload.swf',
+			fileSize : '500 MB', 
+			fileTypes : '*.*',
+			fileTypesDescription : '所有文件',
+			scope : this
+		})
+		dialog.show();
+	};
+	
+	app.btn_upload = new Ext.Button({
+		text:'上传',
+		iconCls:'upload-icon',
+		handler:function(){
+			app.showUploadDialog();
+		},
+		scope:this
 	});
 	
 	app.window_add = new Ext.Window({
+		id:'window_add_article',
 		title : '添加',
 		iconCls : 'icon-add',
-		width : 400,
-		height: 250,
-		resizable : false,
-		modal : true,
+		width : 500,
+		height : 410,
+//        collapsible: true,
+        closable: true,
+        draggable: true,
+        shadow: false,
+        resizable: false,
+//        x: 530, 
+//        y: 100,
 		closeAction : 'hide',
 		listeners : {
 			'hide' : function() {
@@ -214,43 +245,64 @@ Ext.onReady(function(){
 			}
 		},
 		items : [new Ext.FormPanel({
+			id:'form_add_article',
 			labelWidth : 80,
-			labelAlign : 'right',
-			url : 'addcode.action',
-			border : false,
+			labelAlign : 'center',
+			url : project+'/article/insert.cgi',
+			frame: true,
 			baseCls : 'x-plain',
-			bodyStyle : 'padding:5px 5px 0',
 			anchor : '100%',
-			defaults : {
-				width : 233,
-				msgTarget : 'side'
-			},
+			bodyStyle: {padding: '5px'},
+	        defaults: {
+	            anchor: '98%',
+	            msgTarget: 'side'
+	        },
 			defaultType : 'textfield',
 			items : [{
 				fieldLabel : '标题',
-				id : 'articleDoc.title',
-				name : 'articleDoc.title',
+				id : 'article.title',
+				name : 'article.title',
 				maxLength : 50
-			},{
-				fieldLabel : '作者',		
-				name : 'articleDoc.author',
-				maxLength : 150
-			},{
+			}, {
 				fieldLabel : '文章地址',		
-				name : 'articleDoc.url',
+				name : 'article.articleUrl',
+				maxLength : 150
+			}, {
+				fieldLabel : '实际地址',		
+				name : 'article.articleUrl',
 				maxLength : 150
 			},{
-				fieldLabel : '评分',
-				name : 'articleDoc.grade',
-				value:webId
+				fieldLabel : '内容地址',		
+				name : 'article.articleUrl',
+				maxLength : 150
 			},{
 				fieldLabel : '所属网站ID',
-				name : 'articleDoc.webId',
+				name : 'article.websiteBean.id',
 				readOnly:true,
 				value:webId
 			},{
+				fieldLabel : '介绍',
+				xtype:'textarea',
+				name : 'article.text',
+//				allowBlank : false,
+				maxLength : 20
+			},{
+				//下拉选择框
+				xtype:'combo',
 				fieldLabel : '状态',
-				name : 'articleDoc.status',
+				id : 'add_article_text',
+				hiddenName:'article.text',
+                valueField: 'id',
+                displayField: 'name',
+                triggerAction:'all',
+                mode: 'local',
+                store: new Ext.data.SimpleStore({
+                    fields: ['id','name'],
+                    data: [['FD','可用'], ['NED','停用']]
+                }),
+                emptyText : '请选择记录状态!',
+                editable:false,
+				allowBlank : false,
 				maxLength : 20
 			}],
 			buttonAlign : 'right',
@@ -304,13 +356,13 @@ Ext.onReady(function(){
 			}, {
 				text : '重置',
 				handler : function() {
-					this.ownerCt.form.reset();
+					Ext.getCmp('form_add_article').getForm().reset();
 				}
 			}, {
 				text : '取消',
 				handler : function() {
-					this.ownerCt.ownerCt.hide();
-					this.ownerCt.form.reset();
+					Ext.getCmp('form_add_article').getForm().reset();
+					Ext.getCmp('window_add_article').hide();
 				}
 			}]
 		})]
@@ -322,81 +374,114 @@ Ext.onReady(function(){
 		handler : function() {
 			if(app.grid.getSelectionModel().getSelected()){
 			var record = app.grid.getSelectionModel().getSelected();
-				var updateWin = new Ext.Window({ 
+				var updateWin = new Ext.Window({
+					id:'update_article_win', 
 					title : '编辑',
 					iconCls:'icon-edit',
-					width : 450,
-					height : 300,
-					resizable : false,
-					modal : true,
+					width : 500,
+					height : 410,
+			        collapsible: true,
+			        closable: true,
+			        draggable: false,
+			        shadow: false,
+			        resizable: false,
+			        x: 530, 
+			        y: 100,
 					closeAction : 'close',
+			        bodyStyle: {padding: '5px'},
 					items : [new Ext.FormPanel({
+						id:'form_article_add',
 						labelWidth : 80,
-						labelAlign : 'right',
+						labelAlign : 'center',
 						url : project+'/article/update.cgi',
-						border : false,
+						frame: true,
 						baseCls : 'x-plain',
-						bodyStyle : 'padding:5px 5px 0',
 						anchor : '100%',
-						defaults : {
-							width : 300,
-							msgTarget : 'side'
-						},
+						bodyStyle: {padding: '5px'},
+				        defaults: {
+				            anchor: '98%',
+				            msgTarget: 'side'
+				        },
 						defaultType : 'textfield',
 						items : [
-						{
-							fieldLabel : 'ID',
-							id : 'articleDoc.id',
-							name : 'articleDoc.id',
-							maxLength : 50,
-							value:record.get('d_id')
+						{ 
+							fieldLabel : '类型ID',
+							id : 'article.id',
+							name : 'article.id',
+							readOnly:true,
+							value : record.get('d_id')
 						},{
 							fieldLabel : '标题',
-							id : 'articleDoc.title',
-							name : 'articleDoc.title',
-							maxLength : 50,
-							value:record.get('d_title')
+							name : 'article.title',
+							value : record.get('d_title')
 						},{
-							fieldLabel : '作者',		
-							name : 'articleDoc.author',
-							maxLength : 150,
-							value:record.get('d_author')
+							fieldLabel : '外部地址',
+							name : 'article.articleUrl',
+							value : record.get('d_acticle_url')
 						},{
-							fieldLabel : '评分',
-							name : 'articleDoc.grade',
-							value:webId
+							fieldLabel : '内容URL',
+							name : 'article.acticleRealUrl',
+							value : record.get('d_article_real_url')
 						},{
-							fieldLabel : '文章地址',		
-							name : 'articleDoc.url',
-							maxLength : 150,
-							value:record.get('d_url')
+							fieldLabel : '内容XML',
+							name : 'article.acticleXmlUrl',
+							value : record.get('d_article_xml_url')
 						},{
-							fieldLabel : '所属网站ID',
-							name : 'articleDoc.webId',
-							readOnly:true,
-							value:webId,
-							value:record.get('d_web_id')
+							fieldLabel : '时间',
+							xtype:'hidden',
+							name : 'article.createTime',
+							value:record.get('d_createtime')
 						},{
+							fieldLabel : '所属网站',
+							name : 'article.webId',
+							value : webId
+						},{
+							fieldLabel : '介绍',
+							xtype:'textarea',
+							name : 'article.intro',
+							value:record.get('d_intro')
+						},{
+							//下拉选择框
+							xtype:'combo',
 							fieldLabel : '状态',
-							name : 'articleDoc.status',
-							maxLength : 20
+							id : 'update_article_text',
+							hiddenName:'article.text',
+			                valueField: 'id',
+			                displayField: 'name',
+			                triggerAction:'all',
+			                mode: 'local',
+			                store: new Ext.data.SimpleStore({
+			                    fields: ['id','name'],
+			                    data: [['FD','可用'], ['NED','停用']]
+			                }),
+							emptyText : '当前状态:'+(record.get('d_text') == 'FD'?'启用':'停用'),
+			                editable:false,
+							allowBlank : false,
+							maxLength : 20,
+							value : record.get('d_text')
 						}],
 						buttonAlign : 'right',
 						minButtonWidth : 60,
 						buttons : [{
 							text : '更新',
 							handler : function(btn) {
-								var frm = this.ownerCt.form;
+								var frm = Ext.getCmp('form_article_add').getForm();
 								if (frm.isValid()) {
 									btn.disable();
-									var dnfield = frm.findField('articleDoc.title');
+									var dnfield = frm.findField('article.title');
 									frm.submit({
 										waitTitle : '请稍候',
 										waitMsg : '正在提交表单数据,请稍候...',
 										success : function(form, action) {
-											Ext.MessageBox.alert("成功！", "修改成功!");
-											this.ownerCt.ownerCt.hide();
-//											app.ds_article.load({params : {start : 0,limit : app.limit}});
+											var update_code_win = Ext.getCmp('update_article_win');
+											update_code_win.close(this);
+											Ext.Msg.show({
+												title : '系统提示',
+												msg : '修改文章"' + dnfield.getValue() + '"成功!',
+												buttons : Ext.Msg.OK,
+												icon : Ext.MessageBox.INFO
+											});
+											app.ds_article.load({params : {start : 0,limit : app.limit}});
 										},
 										failure : function() {
 											Ext.Msg.show({
@@ -412,22 +497,28 @@ Ext.onReady(function(){
 						}, {
 							text : '重置',
 							handler : function() {
-								this.ownerCt.form.reset();
+								Ext.getCmp('form_article_add').getForm().reset();
 							}
 						}, {
 							text : '取消',
 							handler : function() {
-								this.ownerCt.ownerCt.close();
-								this.ownerCt.form.reset();
+								var update_code_win = Ext.getCmp('update_article_win');
+								update_code_win.close(this);
+								Ext.getCmp('form_article_add').getForm().reset();
 							}
 						}]
 					})]
 			}).show();
 		}else{
-				Ext.MessageBox.alert("提示信息!!", "请选择要修改行!!");
+			Ext.Msg.show({
+				title : '系统提示',
+				msg : '请选择要修改的记录!',
+				buttons : Ext.Msg.OK,
+				icon : Ext.MessageBox.ERROR
+			});
 		}
 		}
-	});
+	})
 	
 	app.ds_article.load({
 		params : {
@@ -454,7 +545,7 @@ Ext.onReady(function(){
 				mode : 'local',
 				store : new Ext.data.SimpleStore({
 							fields : ['value', 'text'],
-							data : [[15, '15条/页'], [25, '25条/页'], [50, '50条/页']]
+							data : [[10, '10条/页'],[15, '15条/页'],[20, '20条/页']]
 						}),
 				valueField : 'value',
 				displayField : 'text',
@@ -478,7 +569,6 @@ Ext.onReady(function(){
 		store:app.ds_article,
 		displayInfo:true,
 		displayMsg:'第 {0} - {1} 条  共 {2} 条',
-//		displayMsg : '显示{0}条到{1}条,共{2}条',
 		emptyMsg:'没有记录',
 		items : ['-', '&nbsp;&nbsp;', app.pagesize_combo]
 	});
@@ -490,26 +580,30 @@ Ext.onReady(function(){
 		loadMask : {
 			msg : '数据加载中...'
 		},
-	    cm: app.cm_articledoc,
+	    cm: app.cm_article,
 	    ds: app.ds_article,
-	    width:document.body.clientWidth-50,
-	    height:document.body.clientHeight-150,
-		autoScroll: true,
+	    width:850,
+	    height:600,
+        autoScroll: true,
         viewConfig: {
             forceFit:true
         },
  		plugins: expander,
 		sm:app.sm,
-		tbar : [app.btn_add_code,'-',app.update_code_btn,'-', app.btn_fresh,'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
+		tbar : [app.btn_get_img_url,'-',app.btn_add_code,'-',app.update_code_btn,'-',app.btn_upload,'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
 		bbar : app.ptb
 	});
 	
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
-		if(grid.getSelectionModel().isSelected(rowIndex)){
-			var record = app.grid.getSelectionModel().getSelected();
-			var url = record.get('d_url');
-			window.open(url,'doc','height=600,width=800,top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
-		}
+				if(grid.getSelectionModel().isSelected(rowIndex)){
+					var record = app.grid.getSelectionModel().getSelected();
+//					app.text_search_code.setValue(record.get('d_title'));
+//					Ext.get('op').dom.value += "ID:"+record.get('d_id') +　"\t" + record.get('d_title') + "\t" + record.get('d_acticle_url') 
+//							+ '\td_web_id:'+webId
+//							+ "\n---------------------------------------------------------------------------------------------------\n";
+					var url = String.format(project+"/pages/images/image.jsp?id={0}",record.get('d_id'));
+					window.location = url;
+				}
 	});
 
     app.grid.render('div-article');

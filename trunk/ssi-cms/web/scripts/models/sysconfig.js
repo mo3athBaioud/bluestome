@@ -457,7 +457,7 @@ Ext.onReady(function(){
 	    cm: app.cm_sysconfig,
 	    ds: app.ds_sysconfig,
 	    width:document.body.clientWidth-50,
-	    height:document.body.clientHeight-50,
+	    height:document.body.clientHeight-150,
         autoScroll: true,
         viewConfig: {
             forceFit:true
