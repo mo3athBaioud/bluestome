@@ -2,7 +2,7 @@
 <!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
 <sqlMapConfig>
 	<settings cacheModelsEnabled="true" enhancementEnabled="false"
-		lazyLoadingEnabled="true" maxRequests="3000" maxSessions="3000"
+		lazyLoadingEnabled="false" maxRequests="3000" maxSessions="3000"
 		maxTransactions="3000" useStatementNamespaces="true" />
 	<sqlMap
 		resource="com/ssi/common/dal/domain/sqlmap/website_sqlmap_mapping.xml" />
