@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ include file="/session.jsp"%>
 <%@ include file="/commons/taglibs.jsp"%>
 <%@ include file="/commons/style.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -30,7 +31,9 @@
                 background: #dddddd;
                 padding: 3px;
             } .thumb table {
+            /*
                 height: 120px;
+             */   
                 width: 120px;
             } .thumb img {
                 border: 1px solid white;

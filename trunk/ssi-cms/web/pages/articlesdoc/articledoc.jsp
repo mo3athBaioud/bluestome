@@ -10,22 +10,17 @@
 		<script type="text/javascript" src="${ctx}/adapter/ext/ext-base.js"></script>
 		<script type="text/javascript" src="${ctx}/adapter/ext/ext-all.js"></script>
 		<script type="text/javascript" src="${ctx}/adapter/ext/ext-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="${ctx}/scripts/common/RowExpander.js"></script>
 		<script type="text/javascript" src="${ctx}/scripts/models/articledoc.js"></script>
 		<script type="text/javascript">
 		    	var project = '${ctx}';
 				var webId = '${param.id}';
 				var colName = '${colName}';
 				var values = '${value}';
-//				alert("colName:"+colName);
-//				alert("values:"+values);
 		</script>
 	</head>
 
 	<body>
 		<div id="div-article"></div>
-		<!-- 
-		<div>执行操作</div>
-		<textarea id="op" rows="10" style="width:800px;"></textarea>
-		 -->
 	</body>
 </html>
