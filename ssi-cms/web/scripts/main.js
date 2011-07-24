@@ -163,9 +163,18 @@ Ext.onReady(function() {
 								Ext.Msg.confirm('操作提示', '您确定要退出本系统?', function(btn) {
 									if ('yes' == btn) {
 										Ext.Ajax.request({
-											url : 'logout.action',
-											success : function() {
-												location = project+'/login.jsp';
+											url : project+'/logout.cgi',
+											success : function(response,option) {
+												var obj = Ext.util.JSON.decode(response.responseText);
+												Ext.Msg.show({
+													title : '提示',
+													msg : obj.msg,
+													icon : Ext.Msg.INFO,
+													fn:function(){
+														window.parent.location = obj.url;
+													},
+													buttons : Ext.Msg.OK
+												});
 											},
 											failure : function() {
 												Ext.Msg.show({

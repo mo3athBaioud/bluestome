@@ -474,7 +474,7 @@ Ext.onReady(function(){
 	    cm: app.cm_usgs,
 	    ds: app.ds_usgs,
 	    width:document.body.clientWidth-50,
-	    height:document.body.clientHeight-50,
+	    height:document.body.clientHeight-150,
         autoScroll: true,
         viewConfig: {
             forceFit:true

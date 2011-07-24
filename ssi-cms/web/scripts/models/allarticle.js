@@ -108,11 +108,51 @@ Ext.onReady(function(){
 				emptyText : '查询的字段名'
 	});
 	
+	app.btn_fresh = new Ext.Button({
+		text : '刷新',
+		iconCls:'icon-arrow_refresh',
+		handler : function() {
+			app.ds_article.reload({
+				params : {
+					start : 0,
+					limit : app.limit
+				}
+			});
+		}
+	});
+	
+	app.btn_fresh = new Ext.Button({
+		text : '打开',
+		iconCls:'icon-folder_go',
+		handler : function() {
+			var record = app.grid.getSelectionModel().getSelected();
+			if(record){
+				if(record.get('d_img_count') > 0){
+					var url = String.format(project+"/pages/images/image.jsp?id={0}&webid={1}",record.get('d_id'),record.get('d_web_id'));
+					window.location = url;
+				}else{
+					Ext.Msg.show({
+						title : '系统提示',
+						msg : '该资源下无图片!',
+						buttons : Ext.Msg.OK,
+						icon : Ext.MessageBox.ERROR
+					});
+				}
+			}else{
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '请选择要打开的文件!',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.ERROR
+				});
+			}
+		}
+	});
+	
 	app.btn_search_code = new Ext.Button({
 		text : '查询',
 		iconCls : 'icon-search',
 		handler : function(){
-			alert('search');
 			app.searchcode();
 		}
 	});
@@ -255,14 +295,14 @@ Ext.onReady(function(){
 	    cm: app.cm_article,
 	    ds: app.ds_article,
 	    width:document.body.clientWidth-50,
-	    height:document.body.clientHeight-50,
+	    height:document.body.clientHeight-150,
         autoScroll: true,
         viewConfig: {
             forceFit:true
         },
  		plugins: expander,
 		sm:app.sm,
-		tbar : [app.search_comb_queyrCol_code,'-', app.text_search_code,'-', app.btn_search_code],
+		tbar : [app.btn_fresh,'-',app.search_comb_queyrCol_code,'-', app.text_search_code,'-', app.btn_search_code],
 		bbar : app.ptb
 	});
 	

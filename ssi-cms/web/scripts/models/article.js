@@ -241,6 +241,34 @@ Ext.onReady(function(){
 		scope:this
 	});
 	
+	app.btn_fresh = new Ext.Button({
+		text : '打开',
+		iconCls:'icon-folder_go',
+		handler : function() {
+			var record = app.grid.getSelectionModel().getSelected();
+			if(record){
+				if(record.get('d_img_count') > 0){
+					var url = String.format(project+"/pages/images/image.jsp?id={0}&webid={1}",record.get('d_id'),record.get('d_web_id'));
+					window.location = url;
+				}else{
+					Ext.Msg.show({
+						title : '系统提示',
+						msg : '该资源下无图片!',
+						buttons : Ext.Msg.OK,
+						icon : Ext.MessageBox.ERROR
+					});
+				}
+			}else{
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '请选择要打开的文件!',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.ERROR
+				});
+			}
+		}
+	});
+	
 	var btn_disable = new Ext.Button({
 		text : '禁用',
 		iconCls : 'icon-application_delete',
@@ -774,14 +802,14 @@ Ext.onReady(function(){
 	    cm: app.cm_article,
 	    ds: app.ds_article,
 	    width:document.body.clientWidth-50,
-	    height:document.body.clientHeight-50,
+	    height:document.body.clientHeight-150,
         autoScroll: true,
         viewConfig: {
             forceFit:true
         },
  		plugins: expander,
 		sm:app.sm,
-		tbar : [app.btn_get_img_url,'-',app.btn_add_code,'-',app.update_code_btn,'-',btn_enable,'-',btn_disable,'-',app.delete_btn,'-',app.btn_upload,'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
+		tbar : [app.btn_fresh,'-',app.btn_get_img_url,'-',app.btn_add_code,'-',app.update_code_btn,'-',btn_enable,'-',btn_disable,'-',app.delete_btn,'-',app.btn_upload,'-',app.search_comb_queyrCol_code,'-', app.text_search_code], //'-',app.btn_search_code
 		bbar : app.ptb
 	});
 	
