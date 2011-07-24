@@ -67,16 +67,14 @@ public class MethodCacheAroundAdvice implements MethodInterceptor,ThrowsAdvice {
 		if (null == element) {
 			result = arg0.proceed();
 			element = new Element(key, (Serializable) result);
-//			if(!result.getClass().getName().equals("com.ibatis.sqlmap.engine.mapping.result.loader.LazyResultLoader")){
 			try{
 				cache.put(element);
 			}catch(Exception e){
 				logger.error(" > Exception:"+e);
 			}
-//			}
 			logger.debug(" >> element save to cache,key["+key+"]");
 		}else{
-			logger.debug(" >> get from cache key["+key+"] success ");
+			logger.info(" >> get from cache key["+key+"] success ");
 		}
 		if (null != key) {
 			key = null;
