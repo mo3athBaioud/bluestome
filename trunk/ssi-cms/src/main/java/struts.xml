@@ -10,12 +10,15 @@
 	<constant name="struts.multipart.maxSize" value="524288000" />
 
 	<include file="struts-default.xml" />
+	<include file="struts-user.xml" />
 	<include file="struts-website.xml" />
 	<include file="struts-article.xml" />
 	<include file="struts-image.xml" />
 	<include file="struts-usgs.xml" />
 	<include file="struts-sysconfig.xml" />
 	<package name="slimp" extends="struts-default">
+    	<action name="login"  class="loginAction" method="login"/>
+    	<action name="logout"  class="loginAction" method="logout"/>
 	</package>
 </struts>
  
