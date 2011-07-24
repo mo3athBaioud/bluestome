@@ -30,7 +30,7 @@ public class ImageAction extends BaseAction {
 
 	private Integer id;
 	
-	final static String URL_PREFIX = "http://192.168.0.100:8080/image";
+	final static String URL_PREFIX = "http://192.168.0.101:8080/image";
 
 	public String showImage() {
 		try{
@@ -155,7 +155,11 @@ public class ImageAction extends BaseAction {
 //			json.put("d_src_imgurl", image.getImgUrl());
 			json.put("d_intro", image.getIntro());
 			json.put("d_link", image.getLink());
-			json.put("d_name", image.getName());
+			if(null != image.getName() && !"".equals(image.getName())){
+				json.put("d_name", image.getName());
+			}else{
+				json.put("d_name", "无");
+			}
 			json.put("d_orderid", image.getOrderId());
 			json.put("d_time", image.getTime());
 			json.put("d_title", image.getTitle());
