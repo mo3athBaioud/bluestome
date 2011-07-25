@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.math.BigDecimal;
 import java.io.BufferedReader;   
+import java.io.File;
 import java.io.IOException;   
 import java.io.InputStream;   
 import java.io.InputStreamReader;   
@@ -39,14 +40,19 @@ import org.htmlparser.util.NodeList;
 
 import com.chinamilitary.bean.Article;
 import com.chinamilitary.bean.ImageBean;
+import com.chinamilitary.bean.PicfileBean;
 import com.chinamilitary.bean.WebsiteBean;
 import com.chinamilitary.dao.ArticleDao;
 import com.chinamilitary.dao.ImageDao;
 import com.chinamilitary.dao.PicFileDao;
 import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.factory.DAOFactory;
+import com.chinamilitary.memcache.MemcacheClient;
+import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
+import com.chinamilitary.util.StringUtils;
+import com.common.Constants;
 
 public class XCar 
 {
@@ -73,15 +79,44 @@ public class XCar
 	
 	static int COUNT = 0 ;
 	
+	static String PIC_SAVE_PATH = Constants.FILE_SERVER;
+	
+	static final String IMAGE_CACHE_KEY = "XCAR_CACHE_KEY_IMAGE";
+	
+	static final String ARTICLE_CACHE_KEY = "XCAR_CACHE_KEY_ARTICLE";
+	
+	static MemcacheClient client = MemcacheClient.getInstance();
+	
 	public static void main(String[] args) {
 //		parserAutoBrandSQL();
 //		parserCars();
 //		parserCarModelYear();
 //		parserCarModel();
 		
-//		getCarSerial();
+		new Thread(new Runnable(){
+			private boolean isRun = true;
+			public void run() {
+				while(isRun){
+					try{
+						getCarSerial();
+						getArticleImage();
+						try{
+							imgDownload();
+						}catch(Exception e){
+							e.printStackTrace();
+						}
+						isRun = false;
+						System.exit(-1);
+						//休眠半小时
+						Thread.sleep(160000000);
+					}catch(Exception e){
+						e.printStackTrace();
+						isRun = false;
+					}
+				}
+			}
+		 }).start();
 		
-		getArticleImage();
 	}
 	
 
@@ -106,13 +141,17 @@ public class XCar
 					getCarSerial2(bean);
 				}
 			}else{
+				
+				String lastModify = HttpClientUtils.getLastModifiedByUrl(web.getUrl());
+				if(null != web.getLastModifyTime() && !"".equals(web.getLastModifyTime()) && web.getLastModifyTime().equals(lastModify)){
+					return;
+				}
+				
 				//获取车型下视角图片
 				List<LinkTag> ll = getPictureListPageLinkTag(web); //getPictureListPage(web.getUrl())
 				Article art = null;
 				for(LinkTag u:ll){
 					art = new Article();
-					//
-					WebsiteBean tmp = web;
 					if(null != u.getLinkText() && !"".equals(u.getLinkText())){
 						String name = u.getAttribute("title");
 						int end = u.getLinkText().lastIndexOf("(");
@@ -122,23 +161,27 @@ public class XCar
 							name = u.getLinkText().substring(0,end);
 						}
 						
-						tmp.setName(name);
+						art.setTitle(name);
 					}else{
-						tmp.setName(u.getLinkText());
+						art.setTitle(u.getLinkText());
 					}
-					tmp.setRemarks("0");
-					tmp.setUrl(u.getLink());
-					tmp.setParentId(web.getId());
-					
-					art.setArticleUrl(tmp.getUrl());
-					art.setTitle(tmp.getName());
+					art.setArticleUrl(u.getLink());
 					art.setWebId(web.getId());
-					art.setIntro(tmp.getRemarks());
+					art.setIntro("0");
 					int result = articleDao.insert(art);
 					if(result > 0){
 						System.out.println(" >> 添加"+art.getWebId()+"|"+art.getTitle()+"|"+result+"|"+art.getArticleUrl()+"|"+art.getIntro() + "成功");
 					}else{
 						System.err.println(" >> 添加"+art.getWebId()+"|"+art.getTitle()+"|"+result+"|"+art.getArticleUrl()+"|"+art.getIntro() + "失败");
+					}
+				}
+				
+				if(lastModify != null && !"".equals(lastModify) ){
+					if(null == web.getLastModifyTime() || "".equals(web.getLastModifyTime()) || !web.getLastModifyTime().equals(lastModify)){
+						web.setLastModifyTime(lastModify);
+						if(webSiteDao.update(web)){
+							System.out.println(" >> 更新网站["+web.getName()+"|"+web.getUrl()+"]最后时间["+lastModify+"]成功!");
+						}
 					}
 				}
 			}
@@ -192,6 +235,12 @@ public class XCar
 						for(String[] str:ilist){
 							img = new ImageBean();
 							String bg = getBigImageSrc(str[1]);
+							if(null == bg || "".equals(bg)){
+								continue;
+							}
+							if(null != client.get(IMAGE_CACHE_KEY+bg)){
+								continue;
+							}
 							img.setImgUrl(str[2]);
 							img.setHttpUrl(bg);
 							img.setCommentsuburl(str[0]);
@@ -202,6 +251,7 @@ public class XCar
 							int result = imageDao.insert(img);
 							System.out.println(" >> getArticleImage2.insert.img:"+result);
 							if(result > 0){
+								client.add(IMAGE_CACHE_KEY+bg, img);
 								i++;
 							}else{
 								System.err.println(" >> 添加图片["+img.getArticleId()+"|"+img.getTitle()+"|"+bg+"]失败!");
@@ -242,6 +292,130 @@ public class XCar
 		}
 	}
 	
+	static void imgDownload() throws Exception {
+		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
+		for(WebsiteBean website:webList){
+			imgDownload2(website);
+		}
+	}
+	
+	static void imgDownload2(WebsiteBean website) throws Exception {
+		List<WebsiteBean> webList = webSiteDao.findByParentId(website.getId());
+		if(webList.size() > 0){
+			System.out.println(" >> "+website.getName()+"|"+website.getUrl()+"|"+webList.size());
+			for(WebsiteBean web:webList){
+				imgDownload2(web);
+			}
+		}else{
+			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
+//			List<Article> artList = articleDao.findByWebId(website.getId(), "FD");
+			List<Article> artList = articleDao.findByWebId(website.getId());
+			System.out.println("文章数量:"+artList.size());
+			for(Article article:artList){
+				List<ImageBean> list = imageDao.findImage(article.getId());
+				System.out.println(">> 图片数量:["+article.getTitle()+"["+article.getId()+"]]"+list.size()+"\n**************************");
+				if(list.size() == 0){
+					article.setText("NED");
+					if(articleDao.update(article)){
+						System.out.println(">> 更新图片记录数据为0的文章成功");
+					}
+				}else{
+					for(ImageBean bean : list) {
+						if(bean.getStatus() == -1){
+							if(download(bean)){
+								System.out.println(">> 更新图片对象["+bean.getId()+"]成功");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	static boolean download(ImageBean imgBean) {
+		PicfileBean bean = null;
+		bean = new PicfileBean();
+		String s_fileName = imgBean.getImgUrl().substring(
+				imgBean.getImgUrl().lastIndexOf("/") + 1,
+				imgBean.getImgUrl().length());
+		String fileName = imgBean.getHttpUrl().substring(
+				imgBean.getHttpUrl().lastIndexOf("/") + 1,
+				imgBean.getHttpUrl().length());
+		String length = "0";
+		try {
+			if(imgBean.getHttpUrl().toLowerCase().endsWith("htm")){
+				return false;
+			}
+			byte[] small = null;
+			small = HttpClientUtils.getResponseBodyAsByte(imgBean.getImgUrl(), null, imgBean.getImgUrl());
+			if(null == small)
+				return false;
+			//小图
+			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName)) == null) {
+				IOUtil.createFile(small, File.separator+PIC_SAVE_PATH
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId() + File.separator
+						+ s_fileName);
+			}
+			byte[] big = null;
+			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, imgBean.getHttpUrl());
+			if(null == big)
+				return false;
+			length = String.valueOf(big.length);
+			if(length.equalsIgnoreCase("20261")){
+				return false;
+			}
+			//大图
+			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ fileName)) == null) {
+				IOUtil.createFile(big, File.separator+PIC_SAVE_PATH
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId() + File.separator
+						+ fileName);
+			}
+			bean.setArticleId(imgBean.getArticleId());
+			bean.setImageId(imgBean.getId());
+			bean.setTitle(imgBean.getTitle());
+			bean.setSmallName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName);
+			bean.setName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ fileName);
+			bean.setUrl(PIC_SAVE_PATH);
+			try {
+				imgBean.setStatus(1);
+				imgBean.setLink("FD");
+				imgBean.setFileSize(Long.valueOf(length));
+				if(imageDao.update(imgBean)){
+					boolean b = picFiledao.insert(bean);
+					if (b) {
+						client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+								+ bean.getName()), bean);
+						client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+								+ bean.getSmallName()), bean);
+					} else {
+						return false;
+					}
+				}
+			} catch (Exception e) {
+				System.out.println("数据库异常");
+				e.printStackTrace();
+				return false;
+			}
+		} catch (IOException e) {
+			System.out.println("网络连接，文件IO异常");
+			return false;
+		}
+		return true;
+	}
 	private static Map<String, Object> getPictureLinkPage2(Article web) {
 		Map<String,Object> map = new HashMap<String,Object>();
 		Integer count = 0;
