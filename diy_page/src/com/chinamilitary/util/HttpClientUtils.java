@@ -363,6 +363,29 @@ public class HttpClientUtils {
 		return value;
 	}
 
+	/**
+	 * 执行POST
+	 *
+	 */
+	static void post(){
+		String url = "http://172.18.1.21:8081/upload/upload.cgi";
+		try{
+			httpclient = new HttpClient();
+			postMethod = new PostMethod(encodeURL(url,"UTF-8"));
+			
+			int statusCode = httpclient.executeMethod(postMethod);
+			Thread.sleep(2000);
+			System.out.println(" >> :"+statusCode);
+		}catch(Exception e){
+			
+		}finally {
+			if (null != postMethod)
+				postMethod.releaseConnection();
+			if (null != httpclient)
+				httpclient = null;
+		}
+	}
+	
 	public static void main(String args[]) {
 		String url = "http://www.showimg.com/other/jingxuan20101102/big/jingxuan003[1].jpg";
 		try {
@@ -398,10 +421,14 @@ public class HttpClientUtils {
 			// System.out.println("isTRUE:"+urlValidation("http://www.bizhi.com/wallpaper/1150_2.html"));
 			
 			//Last-Modified
-			String time = getHttpHeaderResponse("http://www.bizhizhan.com/", "Last-Modified");
-			System.out.println(" >> ora:"+time);
-			Date date = DateUtils.parserDate(time);
-			System.out.println(" >> time:"+DateUtils.formatDate(date, DateUtils.FULL_STANDARD_PATTERN2));
+//			String time = getHttpHeaderResponse("http://www.tupian.com/", "Last-Modified");
+//			System.out.println(" >> ora:"+time);
+//			Date date = DateUtils.parserDate(time);
+//			System.out.println(" >> time:"+DateUtils.formatDate(date, DateUtils.FULL_STANDARD_PATTERN2));
+			
+			
+			//2011-06-11
+			post();
 		} catch (Exception e) {
 			System.err.println(e);
 		} finally {

@@ -758,9 +758,9 @@ public class ChinaTUKUAutoParser {
 //			catalogChina("http://tuku.auto.china.com/auto/html/4466/4466-4467_1.html");
 //			catalogWorld("http://tuku.auto.china.com/auto/html/4466/4466-4468_1.html");
 
-//			update2();
+			update2();
 			getArticleImages();
-//			downloadImages();
+			downloadImages();
 
 		}catch(Exception e){
 			e.printStackTrace();

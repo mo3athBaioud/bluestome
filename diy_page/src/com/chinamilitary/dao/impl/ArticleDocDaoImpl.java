@@ -50,6 +50,40 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 		return list;
 	}
 
+	/**
+	 * 获取某网站下的前多少的文章
+	 * @param webId
+	 * @param desc
+	 * @param offset
+	 * @return
+	 * @throws Exception
+	 */
+	public List<ArticleDoc> find(Integer webId, int status,boolean desc,Integer offset) throws Exception {
+		List<ArticleDoc> list = new ArrayList<ArticleDoc>();
+		ArticleDoc bean = null;
+		pstmt = conn.prepareStatement(QUERY_SQL + " where d_web_id = ? and d_status = ? order by d_id "+(desc?"desc":"asc")+" limit ?");
+		pstmt.setInt(1, webId);
+		pstmt.setInt(2, status);
+		pstmt.setInt(3,offset);
+		rs = pstmt.executeQuery();
+		while(rs.next()){
+			bean = new ArticleDoc();
+			bean.setId(rs.getInt("d_id"));
+			bean.setWebId(rs.getInt("d_web_id"));
+			bean.setUrl(rs.getString("d_url"));
+			bean.setTitle(rs.getString("d_title"));
+			bean.setGrade(rs.getInt("d_grade"));
+			bean.setTag(rs.getString("d_tag"));
+			bean.setStatus(rs.getInt("d_status"));
+			bean.setAuthor(rs.getString("d_author"));
+			bean.setCreateTime(rs.getDate("d_createtime"));
+			bean.setPublishTime(rs.getString("d_publish_time"));
+			list.add(bean);
+		}
+		releaseLink();
+		return list;
+	}
+	
 	public List<ArticleDoc> findAll() throws Exception {
 		List<ArticleDoc> list = new ArrayList<ArticleDoc>();
 		ArticleDoc bean = null;
@@ -231,12 +265,12 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 			return key;
 		}
 		if(null == bean.getTitle() || "".equals(bean.getTitle())){
-			System.out.println("标题为空!");
+			log.debug("标题为空!");
 			return key;
 		}
 		if(bean.getTitle().indexOf("：") != -1){
 			if(getCountByTitle(bean.getTitle().replace("：", ":")) != -1){
-				System.out.println("已存在相同标题："+bean.getTitle());
+				log.debug("已存在相同标题："+bean.getTitle());
 				return key;
 			}
 		}
@@ -244,14 +278,14 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 		Long start = System.currentTimeMillis();
 		int urlResult = getCountByURL(bean.getUrl()); //,bean.getWebId()
 		Long end = System.currentTimeMillis();
-		System.out.println("查询耗时："+(end-start));
+		log.debug("查询耗时："+(end-start));
 		if(urlResult > 0){
 			return key;
 		}
 		
 		
 //		if(checkExists(bean.getTitle(),bean.getWebId())){
-//			System.out.println("已存在相同标题："+bean.getTitle());
+//			log.debug("已存在相同标题："+bean.getTitle());
 //			return key;
 //		}
 		

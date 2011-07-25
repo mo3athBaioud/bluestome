@@ -98,6 +98,11 @@ public class Article implements java.io.Serializable{
 		this.intro = intro;
 	}
 	
-	
+	@Override
+	public String toString(){
+		String body = null;
+		body = this.getWebId()+"|"+this.getTitle()+"|"+this.getArticleUrl();
+		return body;
+	}
 	
 }

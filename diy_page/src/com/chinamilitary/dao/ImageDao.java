@@ -84,6 +84,15 @@ public interface ImageDao extends ICommonDao {
 	List<ImageBean> findImage(Integer articleId) throws Exception;	
 	
 	/**
+	 * 根据文章ID查找图片
+	 * @param articleId
+	 * @param text 资源状态
+	 * @return
+	 * @throws Exception
+	 */
+	List<ImageBean> findImage(Integer articleId,String text) throws Exception;	
+	
+	/**
 	 * 
 	 * @param bean
 	 * @return
