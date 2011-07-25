@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.HasAttributeFilter;
@@ -28,6 +30,7 @@ import com.chinamilitary.factory.DAOFactory;
 import com.chinamilitary.memcache.MemcacheClient;
 import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.CommonUtil;
+import com.chinamilitary.util.DateUtils;
 import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
 import com.chinamilitary.util.HttpClientUtils;
@@ -37,6 +40,8 @@ import com.utils.FileUtils;
 
 public class ChinaTUKUParser {
 
+	static Log log = LogFactory.getLog(ChinaTUKUParser.class);
+	
 	static final String URL_ = "http://tuku.china.com/";
 
 	// final static String FILE_SERVER = "O:\\fileserver\\image\\";
@@ -46,7 +51,8 @@ public class ChinaTUKUParser {
 	static int D_PARENT_ID = 300;
 
 	// "http://tuku.tech.china.com/tech",
-	static final String[] CATALOG_URL = { "http://pic.news.china.com/news/",
+	static final String[] CATALOG_URL = {
+			"http://pic.news.china.com/news/",
 			"http://tuku.kaiyun.china.com/kaiyun/",
 			"http://tuku.ent.china.com/fun/",
 			"http://tuku.military.china.com/military/",
@@ -106,7 +112,7 @@ public class ChinaTUKUParser {
 		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
 				LinkTag link = (LinkTag) list.elementAt(i);
-				System.out.println(link.getLinkText() + "\t" + link.getLink());
+				log.debug(link.getLinkText() + "\t" + link.getLink());
 				bean = new LinkBean();
 				bean.setLink(link.getLink());
 				String name = StringUtils
@@ -180,11 +186,11 @@ public class ChinaTUKUParser {
 		String aKey = CacheUtils.getArticleKey(id);
 		try {
 			if (null != client.get(aKey)) {
-				System.out.println(">> 从缓存中获取文章对象[" + id + "] ");
+				log.debug(">> 从缓存中获取文章对象[" + id + "] ");
 				article = (Article) client.get(aKey);
 			}
 			if (null == article) {
-				System.out.println(">> 从缓存中未获取文章对象，从数据库中获取文章对象[" + id + "] ");
+				log.debug(">> 从缓存中未获取文章对象，从数据库中获取文章对象[" + id + "] ");
 				article = articleDao.findById(id);
 				if (null != article)
 					client.add(aKey, article);
@@ -192,7 +198,7 @@ public class ChinaTUKUParser {
 			if (article != null) {
 				// if (!HttpClientUtils.validationURL(article.getArticleUrl()))
 				// {
-				// System.err.println(">> getImage.地址不通["
+				// log.error(">> getImage.地址不通["
 				// + article.getArticleUrl() + "]");
 				// return;
 				// }
@@ -213,7 +219,7 @@ public class ChinaTUKUParser {
 							// .validationURL(bean.getImgUrl())
 							// || !HttpClientUtils.validationURL(bean
 							// .getHttpUrl())) {
-							// System.err.println(">> 地址不通["
+							// log.error(">> 地址不通["
 							// + bean.getHttpUrl() + "]");
 							// continue;
 							// }
@@ -221,7 +227,7 @@ public class ChinaTUKUParser {
 //									.getHttpHeaderResponse(bean.getHttpUrl(),
 //											"Content-Length");
 							String length = "0";
-							System.out.println(">> Content-Length:" + length);
+							log.debug(">> Content-Length:" + length);
 							if (null != length) {
 								bean.setFileSize(Long.valueOf(length));
 								bean.setStatus(1);
@@ -231,7 +237,7 @@ public class ChinaTUKUParser {
 								// HttpClientUtils
 								int result = imageDao.insert(bean);
 								if (result == -1) {
-									System.out.println("图片标题为："
+									log.error(" >> 图片标题为："
 											+ bean.getTitle() + " 已存在，未添加到数据库");
 								} else {
 									offset++;
@@ -245,7 +251,7 @@ public class ChinaTUKUParser {
 //									isDownload = true;
 //									bean.setLink("FD");
 //									if (imageDao.update(bean)) {
-//										System.out.println(">> 保存图片["
+//										log.debug(">> 保存图片["
 //												+ bean.getHttpUrl() + "]成功");
 //									}
 //								} else {
@@ -259,18 +265,18 @@ public class ChinaTUKUParser {
 						}
 						
 						if (isDownload) {
-							System.out.println(" >> 更新文章["+article.getId()+"|"+article.getTitle()+"]状态为'已完成'状态!");
+							log.info(" >> 更新文章["+article.getId()+"|"+article.getTitle()+"]状态为'已完成'状态!");
 							article.setText("FD");
 							articleDao.update(article);
 						}else{
-							System.out.println(" >> 更新文章["+article.getId()+"|"+article.getTitle()+"]状态为'无更新'状态!");
+							log.error(" >> 更新文章["+article.getId()+"|"+article.getTitle()+"]状态为'无更新'状态!");
 							article.setText("NNN");
 							articleDao.update(article);
 						}
 					}
 				}
 			} else {
-				System.out.println("未查询到ARTICLE记录");
+				log.error("未查询到ARTICLE记录");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -298,7 +304,7 @@ public class ChinaTUKUParser {
 			if (length.equalsIgnoreCase("20261")
 					|| length.equalsIgnoreCase("3267")
 					|| length.equalsIgnoreCase("4096")) {
-				System.out.println(">>> 尝试使用Referer来获取图片");
+				log.debug(">>> 尝试使用Referer来获取图片");
 				big = HttpClientUtils.getResponseBodyAsByte(imgBean
 						.getHttpUrl(), null, imgBean.getHttpUrl());
 				if (null == big)
@@ -307,7 +313,7 @@ public class ChinaTUKUParser {
 				if (length.equalsIgnoreCase("20261")
 						|| length.equalsIgnoreCase("3267")
 						|| length.equalsIgnoreCase("4096")) {
-					System.err.println("下载被屏蔽，未突破盗链系统...");
+					log.error("下载被屏蔽，未突破盗链系统...");
 					return false;
 				}
 			}
@@ -351,7 +357,7 @@ public class ChinaTUKUParser {
 						imgBean.setFileSize(Long.valueOf(length));
 						imgBean.setLink("FD");
 						if (imageDao.update(imgBean)) {
-							System.out.println(">> 保存图片["
+							log.debug(">> 保存图片["
 									+ imgBean.getHttpUrl() + "]成功");
 						}
 						client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
@@ -365,12 +371,12 @@ public class ChinaTUKUParser {
 					return false;
 				}
 			} catch (Exception e) {
-				System.out.println("数据库异常");
+				log.error("数据库异常");
 				e.printStackTrace();
 				return false;
 			}
 		} catch (IOException e) {
-			System.out.println("网络连接，文件IO异常");
+			log.error("网站ID["+webId+"]的网络连接错误，出现文件IO异常");
 			return false;
 		}
 		return true;
@@ -379,12 +385,38 @@ public class ChinaTUKUParser {
 	public static void main(String args[]) {
 		try {
 			// patch();
-//			 index();
-			update2();
-			getArticleImages();
-			
-			downloadImages();
-
+			new Thread(new Runnable(){
+				private boolean isRun = true;
+				public void run() {
+					while(isRun){
+						try{
+							long start = System.currentTimeMillis();
+							index();
+							update2();
+							getArticleImages();
+							downloadImages();
+							long end = System.currentTimeMillis();
+							log.info(" >> End Of One Parser CHINA.COM,SPEAD: " +DateUtils.getNumberOfSecondsBetween(end,start)+"|"+DateUtils.getNow());
+							isRun = false;
+							System.exit(-1);
+							//休眠半小时
+							Thread.sleep(40000000);
+						}catch(Exception e){
+							isRun = false;
+							try {
+								Thread.sleep(10000l);
+								isRun = true;
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								log.error(e1);
+							}
+						}finally{
+							long end = System.currentTimeMillis();
+							
+						}
+					}
+				}
+			 }).start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -401,13 +433,13 @@ public class ChinaTUKUParser {
 				if (null != tmp) {
 					LinkBean bean = LINKHASH.get(key);
 					if (!bean.getLink().startsWith(tmp.getUrl())) {
-						System.out.println("[" + bean.getLink() + "]不是以"
+						log.debug("[" + bean.getLink() + "]不是以"
 								+ tmp.getUrl() + "开始的!");
 						continue;
 					}
-					System.out.println("title:" + bean.getTitle() + "\tname:"
+					log.debug("title:" + bean.getTitle() + "\tname:"
 							+ bean.getName() + "\tlink:" + bean.getLink());
-					System.out.println(" >> :" + tmp.getId() + "\t"
+					log.debug(" >> :" + tmp.getId() + "\t"
 							+ tmp.getName());
 
 					try {
@@ -461,6 +493,7 @@ public class ChinaTUKUParser {
 						}
 						int result = articleDao.insert(acticle);
 						if (result > 0) {
+							log.info(" >> Article:"+acticle.toString());
 							client.add(bean.getLink(), bean.getLink());
 							acticle.setId(result);
 							String aKey = CacheUtils.getArticleKey(result);
@@ -470,10 +503,9 @@ public class ChinaTUKUParser {
 //							getImage(result, tmp.getUrl());
 						}
 					} catch (Exception e) {
-						System.err.println(" >> " + e.getMessage());
+						log.error(" >> " + e.getMessage());
 						continue;
 					}
-					System.out.println();
 				}
 				/**
 				 **/
@@ -485,9 +517,9 @@ public class ChinaTUKUParser {
 
 	public static void processC() throws Exception {
 		List<Article> list = articleDao.findByWebId(301);
-		System.out.println(" >> list.size():" + list.size());
+		log.debug(" >> list.size():" + list.size());
 		for (Article article : list) {
-			// System.out.println(" >>
+			// log.debug(" >>
 			// title["+article.getTitle()+"]\t"+article.getArticleUrl()+"\t"+article.getText());
 			if (article.getArticleUrl().startsWith(
 					"http://tuku.news.china.com/history")) {
@@ -542,7 +574,7 @@ public class ChinaTUKUParser {
 				article.setWebId(1633);
 			}
 			if (articleDao.update(article)) {
-				System.out.println(" >> update article.webid"
+				log.debug(" >> update article.webid"
 						+ article.getWebId() + " success!");
 			}
 		}
@@ -551,7 +583,7 @@ public class ChinaTUKUParser {
 	public static void update2() throws Exception {
 		List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : list) {
-			if(bean.getId() == 1636 || bean.getParentId() == 1636 || bean.getId() == 1664 || bean.getParentId() == 1664){ //|| bean.getId() == 1636 && bean.getId() == 1644
+			if(bean.getId() == 1633 || bean.getParentId() == 1633 || bean.getId() == 1644 || bean.getParentId() == 1644 || bean.getId() == 1636 || bean.getParentId() == 1636 || bean.getId() == 1664 || bean.getParentId() == 1664){ //|| bean.getId() == 1636 && bean.getId() == 1644
 				continue;
 			}
 			switch(bean.getId()){
@@ -564,12 +596,12 @@ public class ChinaTUKUParser {
 						if(tmp.getId() != 1663){
 							continue;
 						}
-						System.out.println(" >> "+tmp.getId());
+						log.debug(" >> "+tmp.getId());
 						List<WebsiteBean> c2 = webSiteDao.findByParentId(tmp.getId());
-						System.out.println(" >> "+c2.size());
+						log.debug(" >> "+c2.size());
 						if(c2.size() > 0){
 							for(WebsiteBean t2 : c2){
-								System.out.println("\t\t>>"+t2.getName()+"|"+t2.getUrl());
+								log.debug("\t\t>>"+t2.getName()+"|"+t2.getUrl());
 								List<WebsiteBean> c3 = webSiteDao.findByParentId(t2.getId());
 								if(c3.size() > 0){
 									for(WebsiteBean t3 : c3){
@@ -655,9 +687,9 @@ public class ChinaTUKUParser {
 		id = url.substring(start + 1, end);
 		if(id.indexOf("-") != -1){
 			start = id.lastIndexOf("-");
-			System.out.println(" \t\t>> start:"+start);
+			log.debug(" \t\t>> start:"+start);
 			id = id.substring(start+1,id.length());
-			System.out.println(" \t\t>> id:"+id);
+			log.debug(" \t\t>> id:"+id);
 		}
 		return id;
 	}
@@ -674,7 +706,7 @@ public class ChinaTUKUParser {
 						new HasAttributeFilter("class", "pages borTop"));
 		if (list != null && list.size() > 0) {
 			Div div = (Div) list.elementAt(0);
-			System.out.println(" >> " + div.toHtml());
+			log.debug(" >> " + div.toHtml());
 		}
 		page.add(url);
 		if (null != parser)
@@ -683,7 +715,7 @@ public class ChinaTUKUParser {
 	}
 
 	private static void doProcess(WebsiteBean bean) throws Exception {
-		System.out.println(" >> url.id[" + bean.getId() + "] url.url["
+		log.debug(" >> url.id[" + bean.getId() + "] url.url["
 				+ bean.getUrl() + "]");
 		try {
 			getLink(bean.getUrl());
@@ -697,13 +729,13 @@ public class ChinaTUKUParser {
 						bean.getUrl().lastIndexOf("/") + 1);
 				LinkBean link = (LinkBean) LINKHASH.get(key);
 				if (!link.getLink().startsWith(tmpUrl)) {
-					System.out.println(" >> [" + link.getLink() + "] 不是以["
+					log.error(" >> [" + link.getLink() + "] 不是以["
 							+ tmpUrl + "]开头的");
 					continue;
 				}
 				Article acticle = null;
 				if (null != client.get(link.getLink())) {
-					System.err.println("缓存中已存在相同地址[" + link.getLink() + "]");
+					log.error("缓存中已存在相同地址[" + link.getLink() + "]");
 					continue;
 				}
 				acticle = new Article();
@@ -711,7 +743,7 @@ public class ChinaTUKUParser {
 				acticle.setTitle(link.getName());
 				acticle.setWebId(bean.getId());
 				acticle.setText("NED");
-				System.out.println(" >> tmpUrl:" + tmpUrl);
+				log.debug(" >> tmpUrl:" + tmpUrl+"| web.id:"+bean.getId()+"| web.name:"+bean.getName());
 				if (link.getLink().startsWith(tmpUrl)) {
 					if (link.getLink().indexOf("_") == -1) {
 						if (bean.getId() == 1633 || bean.getParentId() == 1636
@@ -755,7 +787,8 @@ public class ChinaTUKUParser {
 				}
 				int result = articleDao.insert(acticle);
 				if (result > 0) {
-					 client.add(link.getLink(), link.getLink());
+					log.info(" >> Article:"+acticle.toString());
+				    client.add(link.getLink(), link.getLink());
 					acticle.setId(result);
 					String aKey = CacheUtils.getArticleKey(result);
 					 if (null == client.get(aKey)) {
@@ -789,16 +822,16 @@ public class ChinaTUKUParser {
 			try {
 				String tmpUrl = bean.getUrl().substring(0,
 						bean.getUrl().lastIndexOf("/html") + 1)+"html/";
-				System.out.println(""+tmpUrl);
+				log.debug(""+tmpUrl);
 				LinkBean link = (LinkBean) LINKHASH.get(key);
 				if (!link.getLink().startsWith(tmpUrl)) {
-					System.out.println(" >> [" + link.getLink() + "] 不是以["
+					log.debug(" >> [" + link.getLink() + "] 不是以["
 							+ tmpUrl + "]开头的");
 					continue;
 				}
 				Article acticle = null;
 				if (null != client.get(link.getLink())) {
-					System.err.println("缓存中已存在相同地址[" + link.getLink() + "]");
+					log.error("缓存中已存在相同地址[" + link.getLink() + "]");
 					continue;
 				}
 				acticle = new Article();
@@ -806,7 +839,7 @@ public class ChinaTUKUParser {
 				acticle.setTitle(link.getName());
 				acticle.setWebId(bean.getId());
 				acticle.setText("NED");
-				System.out.println(" >> tmpUrl:" + tmpUrl);
+				log.debug(" >> tmpUrl:" + tmpUrl);
 				if (link.getLink().startsWith(tmpUrl)) {
 					if (link.getLink().indexOf("_") == -1) {
 						if (bean.getId() == 1633 || bean.getParentId() == 1636
@@ -873,8 +906,8 @@ public class ChinaTUKUParser {
 	static void getArticleImages() throws Exception{
 		List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : list) {
-			System.out.println(" >> 站点名称["+bean.getName()+"],站点ID["+bean.getId()+"]");
-			if(bean.getId() == 1636 || bean.getParentId() == 1636 || bean.getId() == 1664 || bean.getParentId() == 1664){ //|| bean.getId() == 1636 && bean.getId() == 1644
+			log.debug(" >> 站点名称["+bean.getName()+"],站点ID["+bean.getId()+"]");
+			if(bean.getId() == 1633 || bean.getParentId() == 1633 || bean.getId() == 1644 || bean.getParentId() == 1644 || bean.getId() == 1636 || bean.getParentId() == 1636 || bean.getId() == 1664 || bean.getParentId() == 1664){ //|| bean.getId() == 1636 && bean.getId() == 1644
 				continue;
 			}
 			List<Article> alist = articleDao.findByWebId(bean.getId(), "NED");
@@ -892,13 +925,13 @@ public class ChinaTUKUParser {
 	static void downloadImages() throws Exception{
 		List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : list) {
-			System.out.println(" >> 站点名称["+bean.getName()+"],站点ID["+bean.getId()+"]");
-			if(bean.getId() == 1636 || bean.getParentId() == 1636 || bean.getParentId() == 1633 || bean.getId() == 1664 || bean.getParentId() == 1664){ //|| bean.getId() == 1636 && bean.getId() == 1644
+			log.debug(" >> 站点名称["+bean.getName()+"],站点ID["+bean.getId()+"]");
+			if(bean.getId() == 1636 || bean.getParentId() == 1636 || bean.getId() == 1633 || bean.getParentId() == 1633 || bean.getId() == 1644 || bean.getParentId() == 1644 || bean.getId() == 1664 || bean.getParentId() == 1664){ //|| bean.getId() == 1636 && bean.getId() == 1644
 				continue;
 			}
 			List<Article> alist = articleDao.findByWebId(bean.getId(), "FD");
 			for(Article a:alist){
-				System.out.println(" >> "+a.getId()+"|"+a.getTitle());
+				log.debug(" >> "+a.getId()+"|"+a.getTitle());
 				List<ImageBean> mlist = imageDao.findImage(a.getId());
 				for(ImageBean img:mlist){
 					if(img.getLink().equals("NED")){
@@ -922,10 +955,10 @@ public class ChinaTUKUParser {
 						new HasAttributeFilter("class", "ImgHolder"));
 		if (null != list && list.size() > 0) {
 			int count = list.size();
-			System.out.println(" >> auto.size:" + count);
+			log.debug(" >> auto.size:" + count);
 			for (int i = 0; i < count; i++) {
 				Div div = (Div) list.elementAt(i);
-				System.out.println(" >> " + div.toHtml());
+				log.debug(" >> " + div.toHtml());
 			}
 		}
 
@@ -947,7 +980,7 @@ public class ChinaTUKUParser {
 			int count = list.size();
 			for (int i = 0; i < count; i++) {
 				Div div = (Div) list.elementAt(i);
-				System.out.println(" >> " + div.toHtml());
+				log.debug(" >> " + div.toHtml());
 			}
 		}
 
@@ -969,7 +1002,7 @@ public class ChinaTUKUParser {
 			Iterator it = LINKHASH.keySet().iterator();
 			while (it.hasNext()) {
 				String key = (String) it.next();
-				System.out.println("key:" + key);
+				log.debug("key:" + key);
 				try {
 					LinkBean bean = (LinkBean) LINKHASH.get(key);
 					Article acticle = null;
@@ -1021,7 +1054,7 @@ public class ChinaTUKUParser {
 								// 老版本图片播放器解析方式
 								String realUrl = HTMLParser.getRealUrl(bean
 										.getLink());
-								System.out.println("老版本图片播放器解析：" + realUrl);
+								log.debug("老版本图片播放器解析：" + realUrl);
 								String xmlUrl = HTMLParser.getXmlUrl(realUrl);
 								if (xmlUrl != null) {
 									acticle.setActicleXmlUrl(xmlUrl);
@@ -1058,7 +1091,7 @@ public class ChinaTUKUParser {
 							getImage(result, url);
 						}
 					} else {
-						System.err.println(">> getActicle 地址暂不可用 ["
+						log.error(">> getActicle 地址暂不可用 ["
 								+ bean.getLink() + "]");
 						continue;
 					}
@@ -1091,7 +1124,7 @@ public class ChinaTUKUParser {
 							// 老版本图片播放器解析方式
 							String realUrl = HTMLParser.getRealUrl(article
 									.getArticleUrl());
-							System.out.println("老版本图片播放器解析：" + realUrl);
+							log.debug("老版本图片播放器解析：" + realUrl);
 							String xmlUrl = HTMLParser.getXmlUrl(realUrl);
 							if (xmlUrl != null) {
 								article.setActicleXmlUrl(xmlUrl);
@@ -1145,11 +1178,11 @@ public class ChinaTUKUParser {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		PicfileBean bean = null;
 		for (WebsiteBean website : webList) {
-			System.out.println(website.getId() + "|" + website.getName() + "|"
+			log.debug(website.getId() + "|" + website.getName() + "|"
 					+ website.getUrl());
 			List<Article> artList = articleDao.findByWebId(website.getId(),
 					"FD");
-			System.out.println("文章数量:" + artList.size());
+			log.debug("文章数量:" + artList.size());
 			for (Article article : artList) {
 				List<ImageBean> list = imageDao.findImage(article.getId());
 				for (ImageBean img : list) {
@@ -1157,12 +1190,12 @@ public class ChinaTUKUParser {
 							article.getId());
 					if (null != bean) {
 						if (moveFile(bean)) {
-							System.out.println(bean.getId() + "|"
+							log.debug(bean.getId() + "|"
 									+ bean.getArticleId() + "|"
 									+ bean.getImageId());
-							System.out.println("after move file name:"
+							log.debug("after move file name:"
 									+ bean.getName());
-							System.out.println("after move file smallName:"
+							log.debug("after move file smallName:"
 									+ bean.getSmallName());
 							System.out
 									.println("-------------------------------------------------------------");
@@ -1193,18 +1226,18 @@ public class ChinaTUKUParser {
 		String smgTarget = FILE_SERVER + smallFileName;
 		bean.setUrl(FILE_SERVER);
 		if (FileUtils.copyFile(source, target)) {
-			System.out.println(">> 大图成功!!!");
+			log.debug(">> 大图成功!!!");
 			if (FileUtils.deleteFile(source)) {
-				System.out.println(">> 删除源大图[" + source + "]成功");
+				log.debug(">> 删除源大图[" + source + "]成功");
 			}
 			bean.setName(fileName);
 			isBig = true;
 		}
 
 		if (FileUtils.copyFile(smgSource, smgTarget)) {
-			System.out.println(">> 小图成功!!!");
+			log.debug(">> 小图成功!!!");
 			if (FileUtils.deleteFile(smgSource)) {
-				System.out.println(">> 删除源小图[" + smgSource + "]成功");
+				log.debug(">> 删除源小图[" + smgSource + "]成功");
 			}
 			bean.setSmallName(smallFileName);
 			isSmall = true;
@@ -1213,7 +1246,7 @@ public class ChinaTUKUParser {
 			if (isBig || isSmall) {
 				try {
 					if (picFiledao.update(bean)) {
-						System.out.println(">> 更新图片文件[" + bean.getId()
+						log.debug(">> 更新图片文件[" + bean.getId()
 								+ "]记录成功!");
 					}
 				} catch (Exception e) {

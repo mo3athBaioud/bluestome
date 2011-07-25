@@ -87,4 +87,14 @@ public interface ArticleDocDao extends ICommonDao {
 	 */
 	List<ArticleDoc> findDoc(Integer webId) throws Exception;
 	
+	/**
+	 * 获取某网站下的前多少的文章
+	 * @param webId
+	 * @param desc
+	 * @param offset
+	 * @return
+	 * @throws Exception
+	 */
+	List<ArticleDoc> find(Integer webId, int status,boolean desc,Integer offset) throws Exception;
+	
 }

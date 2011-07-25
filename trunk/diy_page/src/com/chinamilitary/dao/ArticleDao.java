@@ -97,4 +97,11 @@ public interface ArticleDao extends ICommonDao{
 	 */
 	public List<Article> findShowImg(Integer webId) throws Exception;
 	
+	/**
+	 * 根据WEBID查找记录
+	 * @param webId
+	 * @return
+	 */
+	public List<Article> findByWebId(Integer webId,String text,boolean desc) throws Exception;
+	
 }

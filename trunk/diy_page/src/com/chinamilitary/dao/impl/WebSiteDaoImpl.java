@@ -160,7 +160,7 @@ public class WebSiteDaoImpl extends CommonDB implements WebSiteDao {
 	public List<WebsiteBean> findByParentId(Integer id) throws Exception{
 		List<WebsiteBean> list = new ArrayList<WebsiteBean>();
 		WebsiteBean bean = null;
-		pstmt = conn.prepareStatement(QUERY_SQL+" where d_status = ? and d_parent_id = ? order by d_id");
+		pstmt = conn.prepareStatement(QUERY_SQL+" where d_status = ? and d_parent_id = ? order by d_parent_id");
 		pstmt.setInt(1, 1);
 		pstmt.setInt(2, id);
 		rs = pstmt.executeQuery();

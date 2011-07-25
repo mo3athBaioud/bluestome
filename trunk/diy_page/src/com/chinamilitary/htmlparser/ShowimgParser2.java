@@ -1070,7 +1070,7 @@ public class ShowimgParser2 {
 				if (list != null && list.size() > 0) {
 					for (WebsiteBean bean : list) {
 						if(bean != null){
-							List<Article> alist = articleDao.findByWebId(bean.getId(),"FD");//47 48 49 50 51 52 
+							List<Article> alist = articleDao.findByWebId(bean.getId(),"NED");//47 48 49 50 51 52 
 							for(Article article:alist){
 								try{
 									int count = imageDao.findImage(article.getId()).size();
@@ -1131,10 +1131,24 @@ public class ShowimgParser2 {
 			System.out.println("查找web菜单："+lists.size());
 			if (lists != null && lists.size() > 0) {
 				for (WebsiteBean bean : lists) {
+					String lastModify = HttpClientUtils.getLastModifiedByUrl(bean.getUrl());
+					if(null != bean.getLastModifyTime() && !"".equals(bean.getLastModifyTime()) && bean.getLastModifyTime().equals(lastModify)){
+						continue;
+					}
+					
+					
 					System.out.println("\t"+bean.getName()+"\t"+bean.getUrl());
 					getSecondLink(bean);
-					//更新菜单列表时间
-					wesiteDao.update(bean);
+
+					if(lastModify != null && !"".equals(lastModify) ){
+						if(null == bean.getLastModifyTime() || "".equals(bean.getLastModifyTime()) || !bean.getLastModifyTime().equals(lastModify)){
+							bean.setLastModifyTime(lastModify);
+							if(wesiteDao.update(bean)){
+								System.out.println(" >> 更新网站["+bean.getName()+"|"+bean.getUrl()+"]最后时间["+lastModify+"]成功!");
+							}
+						}
+					}
+
 				}
 			}
 		} catch (Exception e) {

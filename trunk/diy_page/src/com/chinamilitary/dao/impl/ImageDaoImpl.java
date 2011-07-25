@@ -89,6 +89,45 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 		return list;
 	}
 	
+	/**
+	 * 根据文章ID查找图片
+	 * @param articleId
+	 * @param text 资源状态
+	 * @return
+	 * @throws Exception
+	 */
+	public List<ImageBean> findImage(Integer articleId,String text) throws Exception{
+		List<ImageBean> list = new ArrayList<ImageBean>();
+		ImageBean bean = null;
+		pstmt = conn.prepareStatement(FIND_BY_ARTICLE_ID+ " and d_link = ? order by d_id ");
+		pstmt.setInt(1, articleId);
+		pstmt.setString(2, text);
+		rs = pstmt.executeQuery();
+		while(rs.next()){
+			bean = new ImageBean();
+			bean.setId(rs.getInt("d_id"));
+			bean.setArticleId(rs.getInt("d_article_id"));
+			bean.setTitle(rs.getString("d_title"));
+			bean.setName(rs.getString("d_name"));
+			bean.setImgUrl(rs.getString("d_imgurl"));
+			bean.setHttpUrl(rs.getString("d_httpurl"));
+			bean.setOrderId(rs.getInt("d_orderid"));
+			bean.setTime(rs.getString("d_time"));
+			bean.setIntro(rs.getString("d_intro"));
+			bean.setCommentsuburl(rs.getString("d_commentsuburl"));
+			bean.setCommentshowurl(rs.getString("d_commentshowurl"));
+			bean.setLink(rs.getString("d_link"));
+			bean.setCreatetime(rs.getDate("d_createtime"));
+			bean.setStatus(rs.getInt("d_status"));
+			bean.setFileSize(rs.getLong("d_filesize"));
+			list.add(bean);
+		}
+		if(pstmt != null)
+			pstmt.close();
+		if(rs != null)
+			rs.close();
+		return list;
+	}
 	public List<ImageBean> findAll() throws Exception {
 		List<ImageBean> list = new ArrayList<ImageBean>();
 		ImageBean bean = null;
@@ -224,7 +263,7 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public synchronized ImageBean findByHttpUrl(String httpurl) throws Exception{
+	public ImageBean findByHttpUrl(String httpurl) throws Exception{
 		ImageBean bean = null;
 		pstmt = conn.prepareStatement(QUERY_SQL + " where d_httpurl = ? order by d_id desc limit 1");
 		pstmt.setString(1, httpurl);
@@ -261,7 +300,7 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public synchronized ImageBean findByLink(String link,Integer webId) throws Exception{
+	public ImageBean findByLink(String link,Integer webId) throws Exception{
 		ImageBean bean = null;
 		pstmt = conn.prepareStatement(QUERY_SQL + " where d_link = ? and d_article_id in (select distinct d_id from tbl_article where d_web_id > ? order by d_id desc ) order by d_id desc limit 1");
 		pstmt.setString(1, "NED");

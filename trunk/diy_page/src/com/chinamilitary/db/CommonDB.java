@@ -15,7 +15,7 @@ public abstract class CommonDB {
 	protected PreparedStatement pstmt = null;
 	protected static Connection conn = null; // 连接对象
 	protected DBConnectionManager connMgr = null; // 连接池管理类
-	private static Log log = LogFactory.getLog(CommonDB.class);
+	protected final Log log = LogFactory.getLog(this.getClass());
 	
 	public CommonDB() throws Exception{
 		try {

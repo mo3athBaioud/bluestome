@@ -851,6 +851,12 @@ public class WallcooParser {
 			int i = 0;
 			for (WebsiteBean bean : list) {
 				System.out.println("\t"+bean.getUrl()+"\t"+bean.getName());
+				
+				String lastModify = HttpClientUtils.getLastModifiedByUrl(bean.getUrl());
+				if(null != bean.getLastModifyTime() && !"".equals(bean.getLastModifyTime()) && bean.getLastModifyTime().equals(lastModify)){
+					continue;
+				}
+				
 				try{
 					result = hasPaging(bean, "id", "linkid");
 					if (result.isBool()) {
@@ -870,6 +876,16 @@ public class WallcooParser {
 								}
 							}
 						}
+						
+						if(lastModify != null && !"".equals(lastModify) ){
+							if(null == bean.getLastModifyTime() || "".equals(bean.getLastModifyTime()) || !bean.getLastModifyTime().equals(lastModify)){
+								bean.setLastModifyTime(lastModify);
+								if(wesiteDao.update(bean)){
+									System.out.println(" >> 更新网站["+bean.getName()+"|"+bean.getUrl()+"]最后时间["+lastModify+"]成功!");
+								}
+							}
+						}
+						
 					}
 					i++;
 					// 更新菜单列表排序
@@ -877,6 +893,7 @@ public class WallcooParser {
 				}catch(Exception e){
 					System.out.println(">> Exception :"+e.getMessage());
 				}
+				
 			}
 		}
 	}
@@ -888,12 +905,26 @@ public class WallcooParser {
 			
 			//初始化数据到缓存中
 //			init2cache();
+			new Thread(new Runnable(){
+				private boolean isRun = true;
+				public void run() {
+					while(isRun){
+						try{
+							update();
+							loadImg();
+							imgDownload();
+							isRun = false;
+							System.exit(-1);
+							//休眠半小时
+							Thread.sleep(80000000);
+						}catch(Exception e){
+							e.printStackTrace();
+							isRun = false;
+						}
+					}
+				}
+			 }).start();
 			
-			update();
-			
-			loadImg();
-			
-			imgDownload();
 			
 			
 			//测试分页

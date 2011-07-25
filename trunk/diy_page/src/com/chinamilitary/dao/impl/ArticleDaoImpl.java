@@ -46,11 +46,8 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 	
 	public synchronized int getCount(String url,String title) throws Exception {
 		int count = 0;
-//		System.out.println("url:"+(url == null ? "注意，异常" : url));
-//		System.out.println("title:"+(title == null ? "注意，异常" : title));
 		pstmt = conn.prepareStatement(COUNT_SQL+" where d_acticle_url = ?");// and d_title = ?
 		pstmt.setString(1,url);
-//		pstmt.setString(2,title);
 		rs = pstmt.executeQuery();
 		while(rs.next()){
 			count = rs.getInt(1);
@@ -123,17 +120,16 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 	public int insert(Article bean) throws Exception{
 		int key = -1;
 		if(checkExists(bean.getTitle(),bean.getWebId())){
-			System.err.println("已存在相同标题："+bean.getTitle());
+			log.debug("已存在相同标题："+bean.getTitle());
 			return key;
 		}
 		
 		if(getCountByURL(bean.getArticleUrl()) > 0){
-			System.err.println("已存在相同URL："+bean.getTitle());
+			log.debug("已存在相同URL："+bean.getTitle());
 			return key;
 		}
 		
 		int urlResult = getCountByURL(bean.getArticleUrl());
-//		System.out.println(bean.getArticleUrl()+",总数:"+urlResult);
 		if(urlResult > 0){ //,bean.getWebId()
 			return key;
 		}
@@ -522,4 +518,41 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 		return list;
 	}
 
+	/**
+	 * 根据WEBID查找记录
+	 * @param webId
+	 * @return
+	 */
+	public List<Article> findByWebId(Integer webId,String text,boolean desc) throws Exception {
+		List<Article> list = new ArrayList<Article>();
+		Article bean = null;
+		try{
+			pstmt = conn.prepareStatement(QUERY_SQL+" where d_web_id = ? and (d_text = ?) order by d_id"+(desc?" desc":" asc")); // or d_text = '0'
+			pstmt.setInt(1, webId);
+			pstmt.setString(2, text);
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				bean = new Article();
+				bean.setId(rs.getInt("d_id"));
+				bean.setWebId(rs.getInt("d_web_id"));
+				bean.setArticleUrl(rs.getString("d_acticle_url"));
+				bean.setActicleRealUrl(rs.getString("d_article_real_url"));
+				bean.setActicleXmlUrl(rs.getString("d_article_xml_url"));
+				bean.setText(rs.getString("d_text"));
+				bean.setTitle(rs.getString("d_title"));
+				bean.setIntro(rs.getString("d_intro"));
+				bean.setCreateTime(rs.getDate("d_createtime"));
+				list.add(bean);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			return list;
+		}finally{
+			if(pstmt !=null)
+				pstmt.close();
+			if(rs !=null)
+				rs.close();
+		}
+		return list;
+	}
 }
