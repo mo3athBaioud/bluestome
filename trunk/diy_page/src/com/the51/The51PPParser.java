@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
@@ -50,6 +52,8 @@ import com.common.Constants;
 import com.utils.FileUtils;
 
 public class The51PPParser {
+	
+	static Log log = LogFactory.getLog(The51PPParser.class);
 
 	static String URL_ = "http://pp.the51.com";
 
@@ -113,19 +117,19 @@ public class The51PPParser {
 						tmp = new WebsiteBean();
 						tmp.setName(link.getLinkText());
 						if (!link.getLink().startsWith("http://")) {
-							System.out.println(URL + link.getLink() + "\n");
+							log.info(URL + link.getLink() + "\n");
 							tmp.setUrl(URL + link.getLink());
 						} else {
-							System.out.println(link.getLink() + "\n");
+							log.info(link.getLink() + "\n");
 							tmp.setUrl(link.getLink());
 						}
 						tmp.setParentId(D_PARENT_ID);
 						boolean b = webSiteDao.insert(tmp);
 						if (b) {
 							client.add(tmp.getUrl(), tmp.getUrl());
-							System.out.println("成功");
+							log.info("成功");
 						} else {
-							System.out.println("失败");
+							log.info("失败");
 						}
 					}
 				}
@@ -161,19 +165,19 @@ public class The51PPParser {
 						tmp = new WebsiteBean();
 						tmp.setName(link.getLinkText());
 						if (!link.getLink().startsWith("http://")) {
-							System.out.println(URL + link.getLink() + "\n");
+							log.info(URL + link.getLink() + "\n");
 							tmp.setUrl(URL + link.getLink());
 						} else {
-							System.out.println(link.getLink() + "\n");
+							log.info(link.getLink() + "\n");
 							tmp.setUrl(link.getLink());
 						}
 						tmp.setParentId(D_PARENT_ID);
 						boolean b = webSiteDao.insert(tmp);
 						if (b) {
 							client.add(tmp.getUrl(), tmp.getUrl());
-							System.out.println("成功");
+							log.info("成功");
 						} else {
-							System.out.println("失败");
+							log.info("失败");
 						}
 					}
 				}
@@ -247,7 +251,7 @@ public class The51PPParser {
 	static ResultBean hasPaging2(String url) throws Exception {
 		boolean b = false;
 		StringBuffer buffer = new StringBuffer();
-		System.out.println("url:"+url);
+		log.info("url:"+url);
 		ResultBean result = new ResultBean();
 		Parser parser = new Parser();
 		parser.setURL(url);
@@ -354,11 +358,11 @@ public class The51PPParser {
 				if (null != content && !"".equalsIgnoreCase(content)) {
 					// processWithDoc(bean.getId(), content);
 					Long end1 = System.currentTimeMillis();
-					System.out.println("单条耗时:" + (end1 - start1) + "长度："
+					log.info("单条耗时:" + (end1 - start1) + "长度："
 							+ content.getBytes().length);
 				}
 			} catch (Exception e) {
-				System.out.println("Exception:" + e.getMessage());
+				log.info("Exception:" + e.getMessage());
 				continue;
 			}
 		}
@@ -404,7 +408,7 @@ public class The51PPParser {
 						RECORD_COUNT ++;
 						if(isUpdate){
 							if (null == client.get(url)) {
-								System.out.println("url:"+url);
+								log.info("url:"+url);
 								article = new Article();
 								article.setWebId(webId);
 								article.setArticleUrl(url);
@@ -419,7 +423,7 @@ public class The51PPParser {
 												+ imageTag.getImageURL());
 									}
 								}
-								System.out.println(" >> title:"+tmp.getAttribute("title"));
+								log.info(" >> title:"+tmp.getAttribute("title"));
 								int key = articleDao.insert(article);
 								if (key > 0) {
 									System.out.print(article.getTitle() + "\t|"
@@ -455,14 +459,14 @@ public class The51PPParser {
 		ResultBean result = hasPaging2(article.getArticleUrl());
 		if (result.isBool()) {
 			int size = imageDao.getCount("select count(*) from tbl_image where d_article_id = "+article.getId());
-			System.out.println(" >> size:"+size);
+			log.info(" >> size:"+size);
 			int msize = result.getMap().size();
 			if(size < 20 ){
-				System.out.println("不需要更新,数据库中的记录数不满足分页条件!");
+				log.info("不需要更新,数据库中的记录数不满足分页条件!");
 				return false;
 			}
 			if((size/20) == msize){
-				System.out.println("不需要更新,只有一页的数据!");
+				log.info("不需要更新,只有一页的数据!");
 				return false;
 			}
 			Iterator it = result.getMap().keySet().iterator();
@@ -470,7 +474,7 @@ public class The51PPParser {
 				String key = (String) it.next();
 				LinkBean link = result.getMap().get(key);
 				boolean s = getImage(link, article.getId(),article.getTitle());
-				System.out.println(" >> getImage:"+s+"\t by article.id:"+article.getId());
+				log.info(" >> getImage:"+s+"\t by article.id:"+article.getId());
 				if(!s){
 					b = false;
 					break;
@@ -520,7 +524,7 @@ public class The51PPParser {
 					}
 
 					imgSrc = getImageURL(url);
-//					System.out.println("imgSrc:" + imgSrc);
+//					log.info("imgSrc:" + imgSrc);
 					if (null != imgSrc) {
 						if (null == client.get(imgSrc)) {
 							imgBean = new ImageBean();
@@ -553,7 +557,7 @@ public class The51PPParser {
 							try {
 								int key = imageDao.insert(imgBean);
 								if (key > 0) {
-//									System.out.println(imgBean.getTitle()
+//									log.info(imgBean.getTitle()
 //											+ "\t|" + imgBean.getHttpUrl());
 //									client.add(imgBean.getHttpUrl(), imgBean
 //											.getHttpUrl());
@@ -598,7 +602,7 @@ public class The51PPParser {
 						try {
 							int key = imageDao.insert(imgBean);
 							if (key > 0) {
-//								System.out.println(imgBean.getTitle()
+//								log.info(imgBean.getTitle()
 //										+ "\t|" + imgBean.getHttpUrl());
 //								client.add(imgBean.getHttpUrl(), imgBean
 //										.getHttpUrl());
@@ -742,7 +746,7 @@ public class The51PPParser {
 									// HttpClientUtils
 									int result = imageDao.insert(imgBean);
 									if (result > 0) {
-										System.out.println(">> add article["
+										log.info(">> add article["
 												+ articleId + "] image id["
 												+ result + "] to DB");
 										imgBean.setId(result);
@@ -800,6 +804,10 @@ public class The51PPParser {
 	static void update() throws Exception {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : webList) {
+			String lastModify = HttpClientUtils.getLastModifiedByUrl(bean.getUrl());
+			if(null != bean.getLastModifyTime() && !"".equals(bean.getLastModifyTime()) && bean.getLastModifyTime().equals(lastModify)){
+				continue;
+			}
 			ResultBean result = hasPaging2(bean.getUrl());
 			if (result.isBool()) {
 				Iterator it = result.getMap().keySet().iterator();
@@ -823,6 +831,15 @@ public class The51PPParser {
 //					}
 				}
 			}
+			if(lastModify != null && !"".equals(lastModify) ){
+				if(null == bean.getLastModifyTime() || "".equals(bean.getLastModifyTime()) || !bean.getLastModifyTime().equals(lastModify)){
+					bean.setLastModifyTime(lastModify);
+					if(webSiteDao.update(bean)){
+						log.info(" >> 更新网站["+bean.getName()+"|"+bean.getUrl()+"]最后时间["+lastModify+"]成功!");
+					}
+				}
+			}
+
 		}
 	}
 
@@ -831,7 +848,7 @@ public class The51PPParser {
 		try {
 //			 catalog2(URL);
 			 update();
-//			 System.out.println("记录数:"+RECORD_COUNT);
+//			 log.info("记录数:"+RECORD_COUNT);
 //			 if(RECORD_COUNT > 0){
 //				 RECORD_COUNT = 0;
 //			 }
@@ -857,13 +874,13 @@ public class The51PPParser {
 		int size = 20;
 		int msize = map.size();
 		if((size/20) == msize){
-			System.out.println("不需要更新");
+			log.info("不需要更新");
 			return;
 		}
-		System.out.println(" >> msize:"+msize);
+		log.info(" >> msize:"+msize);
 		while(it.hasNext()){
 			String url = (String)it.next();
-			System.out.println(" >> url:"+url);
+			log.info(" >> url:"+url);
 		}
 //		IOUtil.createFile(buffer.toString());
 	}
@@ -876,11 +893,11 @@ public class The51PPParser {
 				if (getImage(art)) {
 					art.setText("FD");
 					if (articleDao.update(art)) {
-						System.out.println("更新记录[" + art.getTitle() + "]成功");
+						log.info("更新记录[" + art.getTitle() + "]成功");
 					}
 					/**
 					**/
-					System.out.println("新增记录数[" + art.getTitle() + "]成功");
+					log.info("新增记录数[" + art.getTitle() + "]成功");
 				}
 			}
 		}
@@ -892,7 +909,7 @@ public class The51PPParser {
 				 if (getImage(art)) {
 					 art.setText("FD");
 					 	if (articleDao.update(art)) {
-					 		System.out.println("更新记录[" + art.getTitle() + "]成功");
+					 		log.info("更新记录[" + art.getTitle() + "]成功");
 					 	}
 				 }
 			}
@@ -901,20 +918,20 @@ public class The51PPParser {
 	static void imgDownload() throws Exception {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean website : webList) {
-			System.out.println(website.getId() + "|" + website.getName() + "|"
+			log.info(website.getId() + "|" + website.getName() + "|"
 					+ website.getUrl());
 			List<Article> artList = articleDao.findByWebId(website.getId(),
 					"FD");
-			System.out.println("文章数量:" + artList.size());
+			log.info("文章数量:" + artList.size());
 			for (Article article : artList) {
 				List<ImageBean> list = imageDao.findImage(article.getId());
-				System.out.println(">> 图片数量:[" + article.getTitle() + "["
+				log.info(">> 图片数量:[" + article.getTitle() + "["
 						+ article.getId() + "]]" + list.size()
 						+ "\n**************************");
 				if (list.size() == 0) {
 					article.setText("NED");
 					if (articleDao.update(article)) {
-						System.out.println(">> 更新图片记录数据为0的文章成功");
+						log.info(">> 更新图片记录数据为0的文章成功");
 					}
 				} else {
 					for (ImageBean bean : list) {
@@ -923,7 +940,7 @@ public class The51PPParser {
 								bean.setStatus(1);
 								bean.setLink("FD");
 								if (imageDao.update(bean)) {
-									System.out.println(">> 更新图片对象["
+									log.info(">> 更新图片对象["
 											+ bean.getId() + "]成功");
 								}
 							}
@@ -996,12 +1013,12 @@ public class The51PPParser {
 					return false;
 				}
 			} catch (Exception e) {
-				System.out.println("数据库异常");
+				log.info("数据库异常");
 				e.printStackTrace();
 				return false;
 			}
 		} catch (IOException e) {
-			System.out.println("网络连接，文件IO异常");
+			log.info("网络连接，文件IO异常");
 			e.printStackTrace();
 			return false;
 		}
@@ -1012,19 +1029,19 @@ public class The51PPParser {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		PicfileBean bean = null;
 		for(WebsiteBean website:webList){
-			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
+			log.info(website.getId()+"|"+website.getName()+"|"+website.getUrl());
 			List<Article> artList = articleDao.findByWebId(website.getId(), "FD");
-			System.out.println("文章数量:"+artList.size());
+			log.info("文章数量:"+artList.size());
 			for(Article article:artList){
 				List<ImageBean> list = imageDao.findImage(article.getId());
 				for(ImageBean img:list){
 					bean = picFiledao.findByImgIdAndArticleId(img.getId(), article.getId());
 					if(null != bean){
 						if(moveFile(bean)){
-							System.out.println(bean.getId()+"|"+bean.getArticleId()+"|"+bean.getImageId());
-							System.out.println("after move file name:"+bean.getName());
-							System.out.println("after move file smallName:"+bean.getSmallName());
-							System.out.println("-------------------------------------------------------------");
+							log.info(bean.getId()+"|"+bean.getArticleId()+"|"+bean.getImageId());
+							log.info("after move file name:"+bean.getName());
+							log.info("after move file smallName:"+bean.getSmallName());
+							log.info("-------------------------------------------------------------");
 						}
 					}
 				}
@@ -1046,18 +1063,18 @@ public class The51PPParser {
 		String smgTarget = FILE_SERVER + smallFileName;
 		bean.setUrl(FILE_SERVER);
 		if(FileUtils.copyFile(source, target)){
-			System.out.println(">> 大图成功!!!");
+			log.info(">> 大图成功!!!");
 			if(FileUtils.deleteFile(source)){
-				System.out.println(">> 删除源大图["+source+"]成功");
+				log.info(">> 删除源大图["+source+"]成功");
 			}
 			bean.setName(fileName);
 			isBig = true;
 		}
 		
 		if(FileUtils.copyFile(smgSource, smgTarget)){
-			System.out.println(">> 小图成功!!!");
+			log.info(">> 小图成功!!!");
 			if(FileUtils.deleteFile(smgSource)){
-				System.out.println(">> 删除源小图["+smgSource+"]成功");
+				log.info(">> 删除源小图["+smgSource+"]成功");
 			}
 			bean.setSmallName(smallFileName);
 			isSmall = true;
@@ -1066,7 +1083,7 @@ public class The51PPParser {
 			if(isBig || isSmall){
 				try{
 					if(picFiledao.update(bean)){
-						System.out.println(">> 更新图片文件["+bean.getId()+"]记录成功!");
+						log.info(">> 更新图片文件["+bean.getId()+"]记录成功!");
 					}
 				}catch(Exception e){
 					e.printStackTrace();
@@ -1130,7 +1147,7 @@ public class The51PPParser {
 	}
 	
 	static void showThread(int id){
-		System.out.println(">> 第"+id+"个线程");
+		log.info(">> 第"+id+"个线程");
 		
 	}
 

@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.HasAttributeFilter;
@@ -22,11 +24,9 @@ import org.htmlparser.tags.Div;
 import org.htmlparser.tags.ImageTag;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.tags.TableTag;
-import org.htmlparser.tags.Span;
 import org.htmlparser.util.NodeList;
 
 import com.chinamilitary.bean.Article;
-import com.chinamilitary.bean.ArticleDoc;
 import com.chinamilitary.bean.ImageBean;
 import com.chinamilitary.bean.LinkBean;
 import com.chinamilitary.bean.PicfileBean;
@@ -37,6 +37,7 @@ import com.chinamilitary.dao.ImageDao;
 import com.chinamilitary.dao.PicFileDao;
 import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.factory.DAOFactory;
+import com.chinamilitary.htmlparser.ChinaTUKUParser;
 import com.chinamilitary.memcache.MemcacheClient;
 import com.chinamilitary.test.TestHttpClient;
 import com.chinamilitary.util.CacheUtils;
@@ -48,6 +49,8 @@ import com.common.Constants;
 import com.utils.FileUtils;
 
 public class ZOLDESKParser {
+
+	static Log log = LogFactory.getLog(ZOLDESKParser.class);
 
 	static String URL_ = "http://desk.zol.com.cn/";
 
@@ -106,23 +109,23 @@ public class ZOLDESKParser {
 				for (int i = 0; i < linkList.size(); i++) {
 					LinkTag link = (LinkTag) linkList.elementAt(i);
 					if (link.getLink().endsWith(".html")) {
-						System.out.println(link.getLinkText());
+						log.debug(link.getLinkText());
 						tmp = new WebsiteBean();
 						tmp.setName(link.getLinkText());
 						if (!link.getLink().startsWith("http://")) {
-							System.out.println(URL + link.getLink() + "\n");
+							log.debug(URL + link.getLink() + "\n");
 							tmp.setUrl(URL + link.getLink());
 						} else {
-							System.out.println(link.getLink() + "\n");
+							log.debug(link.getLink() + "\n");
 							tmp.setUrl(link.getLink());
 						}
 						tmp.setParentId(D_PARENT_ID);
 						// boolean b = webSiteDao.insert(tmp);
 						// if (b) {
 						// client.add(tmp.getUrl(), tmp.getUrl());
-						// System.out.println("成功");
+						// log.debug("成功");
 						// } else {
-						// System.out.println("失败");
+						// log.debug("失败");
 						// }
 					}
 				}
@@ -231,11 +234,11 @@ public class ZOLDESKParser {
 				if (null != content && !"".equalsIgnoreCase(content)) {
 					// processWithDoc(bean.getId(), content);
 					Long end1 = System.currentTimeMillis();
-					System.out.println("单条耗时:" + (end1 - start1) + "长度："
+					log.debug("单条耗时:" + (end1 - start1) + "长度："
 							+ content.getBytes().length);
 				}
 			} catch (Exception e) {
-				System.out.println("Exception:" + e.getMessage());
+				log.debug("Exception:" + e.getMessage());
 				continue;
 			}
 		}
@@ -289,7 +292,7 @@ public class ZOLDESKParser {
 						NodeList tmp = ltmp.getChildren();
 						if (tmp != null && tmp.size() > 0) {
 							ImageTag imgTag = (ImageTag) tmp.elementAt(0);
-							System.out.println(imgTag.getAttribute("alt")
+							log.debug(imgTag.getAttribute("alt")
 									+ "|[" + url + "]");
 							if(imgTag.getImageURL().startsWith("http://")){
 								article.setActicleXmlUrl(imgTag.getImageURL());
@@ -304,11 +307,12 @@ public class ZOLDESKParser {
 						}
 						int key = articleDao.insert(article);
 						if (key > 0) {
+							log.info(" >> " +article.toString());
 							System.out.print(ltmp.getLinkText() + "\t|" + url);
 							client.add(url, url);
 						}
 					} else {
-						System.err.println(">> 已存在相同的内容 [" + ltmp.getLinkText()
+						log.error(">> 已存在相同的内容 [" + ltmp.getLinkText()
 								+ "]");
 					}
 				}
@@ -336,7 +340,7 @@ public class ZOLDESKParser {
 			Iterator it = result.getMap().keySet().iterator();
 			while (it.hasNext()) {
 				String key = (String) it.next();
-				System.out.println("需要解析的URL:"+key);
+				log.debug("需要解析的URL:"+key);
 				LinkBean link = result.getMap().get(key);
 				b = getImage(link, article.getId());
 			}
@@ -416,19 +420,19 @@ public class ZOLDESKParser {
 								imgBean.setStatus(3);
 							} catch (Exception e) {
 								e.printStackTrace();
-								System.err.println(">> IMAGE SIZE ERROR");
+								log.error(">> IMAGE SIZE ERROR");
 								size = 0;
 								imgBean.setFileSize(0l);
 								imgBean.setStatus(1);
 							}
 							int key = imageDao.insert(imgBean);
 							if (key > 0) {
-								System.out.println(imgBean.getTitle() + "\t|"
+								log.debug(imgBean.getTitle() + "\t|"
 										+ url);
 								client.add(url, url);
 							}
 						} else {
-							System.err.println(">> 已存在相同的内容 ["
+							log.error(">> 已存在相同的内容 ["
 									+ ltmp.getLinkText() + "]");
 						}
 					} else {
@@ -542,17 +546,17 @@ public class ZOLDESKParser {
 									// HttpClientUtils
 									int result = imageDao.insert(imgBean);
 									if (result > 0) {
-										System.out.println(">> add article["
+										log.debug(">> add article["
 												+ articleId + "] image id["
 												+ result + "] to DB");
 										imgBean.setId(result);
 										client.add(url, url);
 									} else {
-										System.err.println(">> 未添加[" + url
+										log.error(">> 未添加[" + url
 												+ "]到数据库中");
 									}
 								} else {
-									System.err.println(">> 缓存中已存在相同的内容 ["
+									log.error(">> 缓存中已存在相同的内容 ["
 											+ nl.getLink() + "]");
 								}
 							}
@@ -602,8 +606,12 @@ public class ZOLDESKParser {
 		for (WebsiteBean bean : webList) {
 			if (!bean.getUrl().equalsIgnoreCase(
 					"http://vista.zol.com.cn/desk.html")) {
-				ResultBean result = hasPaging(bean.getUrl(), "class",
-						"page f14b");
+				String lastModify = HttpClientUtils.getLastModifiedByUrl(bean.getUrl());
+				if(null != bean.getLastModifyTime() && !"".equals(bean.getLastModifyTime()) && bean.getLastModifyTime().equals(lastModify)){
+					continue;
+				}
+				
+				ResultBean result = hasPaging(bean.getUrl(), "class","page f14b");
 				if (result.isBool()) {
 					Iterator it = result.getMap().keySet().iterator();
 					while (it.hasNext()) {
@@ -613,8 +621,17 @@ public class ZOLDESKParser {
 							secondURL(link, bean.getId());
 						} catch (Exception e) {
 							e.printStackTrace();
-							System.out.println("key:" + key);
+							log.debug("key:" + key);
 							continue;
+						}
+					}
+				}
+				
+				if(lastModify != null && !"".equals(lastModify) ){
+					if(null == bean.getLastModifyTime() || "".equals(bean.getLastModifyTime()) || !bean.getLastModifyTime().equals(lastModify)){
+						bean.setLastModifyTime(lastModify);
+						if(webSiteDao.update(bean)){
+							log.info(" >> 更新网站["+bean.getName()+"|"+bean.getUrl()+"]最后时间["+lastModify+"]成功!");
 						}
 					}
 				}
@@ -626,11 +643,28 @@ public class ZOLDESKParser {
 		// init();
 		try {
 			// catalog(URL);
-			 update();
-			 vistDesk();
+//			 update();
+//			 vistDesk();
 //			threadParser();
-			loadImg();
-			imgDownload();
+//			loadImg();
+//			imgDownload();
+//			new Thread(new Runnable(){
+//				private boolean isRun = true;
+//				public void run() {
+//					while(isRun){
+//						try{
+							 update();
+							loadImg();
+							imgDownload();
+							//休眠半小时
+//							Thread.sleep(80000000);
+//						}catch(Exception e){
+//							e.printStackTrace();
+//							isRun = false;
+//						}
+//					}
+//				}
+//			 }).start();
 			
 //			movefile();			
 			
@@ -643,19 +677,19 @@ public class ZOLDESKParser {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		PicfileBean bean = null;
 		for(WebsiteBean website:webList){
-			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
+			log.debug(website.getId()+"|"+website.getName()+"|"+website.getUrl());
 			List<Article> artList = articleDao.findByWebId(website.getId(), "FD");
-			System.out.println("文章数量:"+artList.size());
+			log.debug("文章数量:"+artList.size());
 			for(Article article:artList){
 				List<ImageBean> list = imageDao.findImage(article.getId());
 				for(ImageBean img:list){
 					bean = picFiledao.findByImgIdAndArticleId(img.getId(), article.getId());
 					if(null != bean){
 						if(moveFile(bean)){
-							System.out.println(bean.getId()+"|"+bean.getArticleId()+"|"+bean.getImageId());
-							System.out.println("after move file name:"+bean.getName());
-							System.out.println("after move file smallName:"+bean.getSmallName());
-							System.out.println("-------------------------------------------------------------");
+							log.debug(bean.getId()+"|"+bean.getArticleId()+"|"+bean.getImageId());
+							log.debug("after move file name:"+bean.getName());
+							log.debug("after move file smallName:"+bean.getSmallName());
+							log.debug("-------------------------------------------------------------");
 						}
 					}
 //					break;
@@ -681,18 +715,18 @@ public class ZOLDESKParser {
 		String smgTarget = FILE_SERVER + smallFileName;
 		bean.setUrl(FILE_SERVER);
 		if(FileUtils.copyFile(source, target)){
-			System.out.println(">> 大图成功!!!");
+			log.debug(">> 大图成功!!!");
 			if(FileUtils.deleteFile(source)){
-				System.out.println(">> 删除源大图["+source+"]成功");
+				log.debug(">> 删除源大图["+source+"]成功");
 			}
 			bean.setName(fileName);
 			isBig = true;
 		}
 		
 		if(FileUtils.copyFile(smgSource, smgTarget)){
-			System.out.println(">> 小图成功!!!");
+			log.debug(">> 小图成功!!!");
 			if(FileUtils.deleteFile(smgSource)){
-				System.out.println(">> 删除源小图["+smgSource+"]成功");
+				log.debug(">> 删除源小图["+smgSource+"]成功");
 			}
 			bean.setSmallName(smallFileName);
 			isSmall = true;
@@ -701,7 +735,7 @@ public class ZOLDESKParser {
 			if(isBig || isSmall){
 				try{
 					if(picFiledao.update(bean)){
-						System.out.println(">> 更新图片文件["+bean.getId()+"]记录成功!");
+						log.debug(">> 更新图片文件["+bean.getId()+"]记录成功!");
 					}
 				}catch(Exception e){
 					e.printStackTrace();
@@ -719,14 +753,14 @@ public class ZOLDESKParser {
 			List<Article> list = articleDao.findByWebId(bean.getId(),"NED");
 			for (Article art : list) {
 				List<ImageBean> imgList = imageDao.findImage(art.getId());
-//				System.out.println(">> zol.com.cn 记录[" + art.getTitle() + "|"+art.getId()+"]下的图片数量["+imgList.size()+"]");
+//				log.debug(">> zol.com.cn 记录[" + art.getTitle() + "|"+art.getId()+"]下的图片数量["+imgList.size()+"]");
 				if(imgList.size() == 0 ){
-					System.out.println(">> zol.com.cn 记录[" + art.getTitle() + "|"+art.getId()+"]下的图片数量["+imgList.size()+"] ");
+					log.debug(">> zol.com.cn 记录[" + art.getTitle() + "|"+art.getId()+"]下的图片数量["+imgList.size()+"] ");
 					if (!art.getArticleUrl().startsWith("http://vista.zol.com.cn")) {
 						if (getImage(art)) {
 							art.setText("FD");
 							if (articleDao.update(art)) {
-								System.out.println(">> zol.com.cn 更新记录[" + art.getTitle() + "|"+art.getId()+"]成功");
+								log.info(">> zol.com.cn 更新记录[" + art.getTitle() + "|"+art.getId()+"]成功");
 							}
 						}
 					}
@@ -747,7 +781,7 @@ public class ZOLDESKParser {
 						new HasAttributeFilter("class", "deskP1"));
 		if (list != null && list.size() > 0) {
 
-			// System.out.println(list.toHtml());
+			// log.debug(list.toHtml());
 			Parser p2 = null;
 			for (int i = 0; i < list.size(); i++) {
 				Div div = (Div) list.elementAt(i);
@@ -767,7 +801,7 @@ public class ZOLDESKParser {
 						url = ltmp.getLink();
 					}
 
-					System.out.println(ltmp.getLinkText() + "|[" + url + "]");
+					log.debug(ltmp.getLinkText() + "|[" + url + "]");
 
 					if (null == client.get(url)) {
 						article = new Article();
@@ -791,11 +825,11 @@ public class ZOLDESKParser {
 							if (key > 0) {
 								System.out.print(">> 连接名称:"
 										+ ltmp.getLinkText());
-								System.out.println(">> URL:" + url);
+								log.debug(">> URL:" + url);
 								client.add(url, url);
 							}
 						} else {
-							System.err.println(">> 已存在相同的内容 ["
+							log.error(">> 已存在相同的内容 ["
 									+ ltmp.getLinkText() + "]");
 						}
 					}
@@ -812,16 +846,16 @@ public class ZOLDESKParser {
 	static void imgDownload() throws Exception {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for(WebsiteBean website:webList){
-			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
+			log.debug(website.getId()+"|"+website.getName()+"|"+website.getUrl());
 			List<Article> artList = articleDao.findByWebId(website.getId(), "FD");
-			System.out.println("文章数量:"+artList.size());
+			log.debug("文章数量:"+artList.size());
 			for(Article article:artList){
 				List<ImageBean> list = imageDao.findImage(article.getId());
-				System.out.println(">> 图片数量:["+article.getTitle()+"["+article.getId()+"]]"+list.size()+"\n**************************");
+				log.debug(">> 图片数量:["+article.getTitle()+"["+article.getId()+"]]"+list.size()+"\n**************************");
 				if(list.size() == 0){
 					article.setText("NED");
 					if(articleDao.update(article)){
-						System.out.println(">> 更新图片记录数据为0的文章成功");
+						log.debug(">> 更新图片记录数据为0的文章成功");
 					}
 				}else{
 					for(ImageBean bean : list) {
@@ -830,7 +864,7 @@ public class ZOLDESKParser {
 								bean.setStatus(1);
 								bean.setLink("FD");
 								if(imageDao.update(bean)){
-									System.out.println(">> 更新图片对象["+bean.getId()+"]成功");
+									log.info(">> 更新图片对象["+bean.getId()+"]成功");
 								}
 							}
 						}
@@ -913,110 +947,15 @@ public class ZOLDESKParser {
 					return false;
 				}
 			} catch (Exception e) {
-				System.out.println("数据库异常");
+				log.error("数据库异常");
 				e.printStackTrace();
 				return false;
 			}
 		} catch (IOException e) {
-			System.out.println("网络连接，文件IO异常");
+			log.error("网络连接，文件IO异常");
 			return false;
 		}
 		return true;
-	}
-	
-	static void threadParser(){
-		
-		List<WebsiteBean> webList = null;
-		ParserThread thread = null;
-		List<ParserThread> threadList = new ArrayList<ParserThread>();
-		try{
-			webList = webSiteDao.findByParentId(D_PARENT_ID);
-			for(WebsiteBean bean:webList){
-				thread = new ParserThread(bean.getId());
-				threadList.add(thread);
-			}
-			
-			for(ParserThread th:threadList){
-				th.start();
-			}
-			
-			if(null != threadList)
-				threadList.clear();
-			
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-}
-
-
-class ParserThread extends Thread{
-
-	private int webId;
-	boolean isRunning = true;
-	String message = "No";
-	ArticleDao articleDao = DAOFactory.getInstance().getArticleDao();
-	WebSiteDao webSiteDao = DAOFactory.getInstance().getWebSiteDao();
-	ImageDao imageDao = DAOFactory.getInstance().getImageDao();
-	PicFileDao picFiledao = DAOFactory.getInstance().getPicFileDao();
-	
-	ParserThread(int webId){
-		this.webId = webId;
-	}
-
-	@Override
-	public void run(){
-		while(isRunning){
-			System.out.println(">> No."+webId+" Thread");
-			try{
-				List<Article> list = articleDao.findByWebId(webId,"NED");
-				for (Article art : list) {
-					System.out.println(art.getTitle()+"|"+System.currentTimeMillis());
-					List<ImageBean> imgList = ZOLDESKParser.imageDao.findImage(art.getId());
-					if(imgList.size() == 0 ){
-						if (!art.getArticleUrl().startsWith("http://vista.zol.com.cn")) {
-							if (ZOLDESKParser.getImage(art)) {
-								art.setText("FD");
-								if (ZOLDESKParser.articleDao.update(art)) {
-									System.out.println(">> zol.com.cn 更新记录[" + art.getTitle() + "|"+art.getId()+"]成功");
-								}
-							}
-						}
-					}else{
-						isRunning = false;
-					}
-					
-				}
-				Thread.sleep(1000);	
-			}catch(Exception e){
-				isRunning = false;
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public boolean isRunning() {
-		return isRunning;
-	}
-
-	public void setRunning(boolean isRunning) {
-		this.isRunning = isRunning;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public int getWebId() {
-		return webId;
-	}
-
-	public void setWebId(int webId) {
-		this.webId = webId;
 	}
 	
 }

@@ -7,16 +7,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
 import org.htmlparser.filters.HasAttributeFilter;
 import org.htmlparser.filters.NodeClassFilter;
-import org.htmlparser.filters.NotFilter;
 import org.htmlparser.filters.OrFilter;
 import org.htmlparser.tags.CompositeTag;
 import org.htmlparser.tags.Div;
@@ -25,11 +27,9 @@ import org.htmlparser.tags.LinkTag;
 import org.htmlparser.tags.OptionTag;
 import org.htmlparser.tags.SelectTag;
 import org.htmlparser.tags.TableTag;
-import org.htmlparser.tags.Span;
 import org.htmlparser.util.NodeList;
 
 import com.chinamilitary.bean.Article;
-import com.chinamilitary.bean.ArticleDoc;
 import com.chinamilitary.bean.ImageBean;
 import com.chinamilitary.bean.LinkBean;
 import com.chinamilitary.bean.PicfileBean;
@@ -48,9 +48,12 @@ import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
 import com.common.Constants;
+import com.zol.zoldesk.ZOLDESKParser;
 
 public class ZHUOKUParser {
 
+	static Log log = LogFactory.getLog(ZHUOKUParser.class);
+	
 	private static final String PIC_SAVE_PATH = Constants.FILE_SERVER;//"d:\\share\\zhuoku\\";//"d:\\share\\zhuoku\\";
 
 	static String URL_ = "http://www.zhuoku.com/";
@@ -60,6 +63,8 @@ public class ZHUOKUParser {
 	static String IMAGE_URL = "http://image6.tuku.cn/";
 	
 	static String ARTICLE_COM_URL = "";
+	
+	static int D_PARENT_ID = 900;
 	
 	static List<LinkBean> LINKLIST = new ArrayList<LinkBean>();
 
@@ -102,7 +107,7 @@ public class ZHUOKUParser {
 				WebsiteBean tmp = null;
 				for (int i = 0; i < linkList.size(); i++) {
 					LinkTag link = (LinkTag) linkList.elementAt(i);
-					System.out.println(link.getLinkText()+"|"+link.getLink());
+					log.debug(link.getLinkText()+"|"+link.getLink());
 					if (link.getLink().endsWith(".htm") && !link.getLink().equalsIgnoreCase("http://www.05sun.com")
 							&&!link.getLink().equalsIgnoreCase("http://desk.zhuoku.com")
 							&&!link.getLink().equalsIgnoreCase("http://www.letget.com")
@@ -110,19 +115,19 @@ public class ZHUOKUParser {
 						tmp = new WebsiteBean();
 						tmp.setName(link.getLinkText());
 						if (!link.getLink().startsWith("http://")) {
-							System.out.println(URL + link.getLink() + "\n");
+							log.debug(URL + link.getLink() + "\n");
 							tmp.setUrl(URL + link.getLink());
 						} else {
-							System.out.println(link.getLink() + "\n");
+							log.debug(link.getLink() + "\n");
 							tmp.setUrl(link.getLink());
 						}
 						tmp.setParentId(900);
 						boolean b = webSiteDao.insert(tmp);
 						if (b) {
 							client.add(tmp.getUrl(), tmp.getUrl());
-							System.out.println("成功");
+							log.debug("成功");
 						} else {
-							System.out.println("失败");
+							log.debug("失败");
 						}
 					}
 				}
@@ -163,19 +168,19 @@ public class ZHUOKUParser {
 							tmp = new WebsiteBean();
 							tmp.setName(link.getLinkText());
 							if (!link.getLink().startsWith("http://")) {
-								System.out.println(link.getLinkText()+"|"+URL + link.getLink() + "\n");
+								log.debug(link.getLinkText()+"|"+URL + link.getLink() + "\n");
 								tmp.setUrl(URL + link.getLink());
 							} else {
-								System.out.println(link.getLinkText()+"|"+link.getLink() + "\n");
+								log.debug(link.getLinkText()+"|"+link.getLink() + "\n");
 								tmp.setUrl(link.getLink());
 							}
 							tmp.setParentId(webid);
 							boolean b = webSiteDao.insert(tmp);
 							if (b) {
 								client.add(tmp.getUrl(), tmp.getUrl());
-								System.out.println("成功");
+								log.debug("成功");
 							} else {
-								System.out.println("失败");
+								log.debug("失败");
 							}
 						}
 					}
@@ -331,11 +336,11 @@ public class ZHUOKUParser {
 				if (null != content && !"".equalsIgnoreCase(content)) {
 					// processWithDoc(bean.getId(), content);
 					Long end1 = System.currentTimeMillis();
-					System.out.println("单条耗时:" + (end1 - start1) + "长度："
+					log.debug("单条耗时:" + (end1 - start1) + "长度："
 							+ content.getBytes().length);
 				}
 			} catch (Exception e) {
-				System.out.println("Exception:" + e.getMessage());
+				log.debug("Exception:" + e.getMessage());
 				continue;
 			}
 		}
@@ -396,20 +401,20 @@ public class ZHUOKUParser {
 							}
 							article.setTitle(imgTag.getAttribute("alt") == null ? "NT" : imgTag.getAttribute("alt"));
 						}
-//						System.out.println("*****************Start***************");
-//						System.out.println("ArticleUrl:"+article.getArticleUrl());
-//						System.out.println("ActicleXmlUrl:"+article.getActicleXmlUrl());
-//						System.out.println("Title:"+article.getTitle());
-//						System.out.println("Text:"+article.getText());
-//						System.out.println("*****************End***************\n");
+//						log.debug("*****************Start***************");
+//						log.debug("ArticleUrl:"+article.getArticleUrl());
+//						log.debug("ActicleXmlUrl:"+article.getActicleXmlUrl());
+//						log.debug("Title:"+article.getTitle());
+//						log.debug("Text:"+article.getText());
+//						log.debug("*****************End***************\n");
 						int key = articleDao.insert(article);
 						if (key > 0) {
-							System.out.print(ltmp.getLinkText() + "\t|" + url);
+							log.info(" >> 文章:"+article.toString());
 							client.add(url, url);
 							getImage(article);
 						}
 					} else {
-						System.err.println(">> 已存在相同的内容 [" + ltmp.getLinkText()
+						log.error(">> 已存在相同的内容 [" + ltmp.getLinkText()
 								+ "]");
 					}
 				}
@@ -435,7 +440,7 @@ public class ZHUOKUParser {
 
 		if (null != list && list.size() > 0) {
 			LinkTag link = (LinkTag) list.elementAt(0);
-			System.out.println(link.getLinkText() + "|" + link.getLink());
+			log.debug(link.getLinkText() + "|" + link.getLink());
 			if (!link.getLink().startsWith("http://")) {
 				url = URL + link.getLink();
 			} else {
@@ -464,7 +469,16 @@ public class ZHUOKUParser {
 			while (it.hasNext()) {
 				String key = (String) it.next();
 				LinkBean link = result.getMap().get(key);
-				b = getImage(link, article.getId());
+				if(null != link){
+					try{
+						b = getImage(link, article.getId());
+					}catch(Exception e){
+						log.error(e);
+						continue;
+					}
+				}else{
+					log.info(" >> key:"+key);
+				}
 			}
 		}
 
@@ -480,12 +494,12 @@ public class ZHUOKUParser {
 	 */
 	public static boolean getImage(LinkBean link, int artId) throws Exception {
 
+		boolean resultB = true;
 		Parser parser = new Parser();
 		parser.setURL(link.getLink());
 		parser.setEncoding("UTF-8");
-		boolean resultB = true;
 		// 获取指定ID的TableTag内容
-		NodeFilter filter = new NodeClassFilter(CompositeTag.class);
+		NodeFilter filter = new NodeClassFilter(Div.class);
 		NodeList list = parser
 				.extractAllNodesThatMatch(filter)
 				.extractAllNodesThatMatch(new HasAttributeFilter("class", "bizhiin"));
@@ -518,7 +532,6 @@ public class ZHUOKUParser {
 					if (null != imgSrc) {
 						if (null == client.get(imgSrc)) {
 							imgBean = new ImageBean();
-							imgBean = new ImageBean();
 							imgBean.setArticleId(artId);
 							imgBean.setHttpUrl(imgSrc);
 							NodeList tmp = ltmp.getChildren();
@@ -540,25 +553,25 @@ public class ZHUOKUParser {
 								imgBean.setStatus(3);
 							} catch (Exception e) {
 								e.printStackTrace();
-								System.err.println(">> IMAGE SIZE ERROR");
+								log.error(">> IMAGE SIZE ERROR");
 								size = 0;
 								imgBean.setFileSize(0l);
 								imgBean.setStatus(1);
 							}
-//							System.out.println("Title:"+imgBean.getTitle());
-//							System.out.println("ArticleId:"+imgBean.getArticleId());
-//							System.out.println("大图地址:"+imgBean.getHttpUrl());
-//							System.out.println("小图地址:"+imgBean.getImgUrl());
+//							log.debug("Title:"+imgBean.getTitle());
+//							log.debug("ArticleId:"+imgBean.getArticleId());
+//							log.debug("大图地址:"+imgBean.getHttpUrl());
+//							log.debug("小图地址:"+imgBean.getImgUrl());
 							int key = imageDao.insert(imgBean);
 							if (key > 0) {
-								System.out.println("添加图片记录:["+imgBean.getTitle() + "]\t|" + url+"\n");
+								log.info("添加图片记录:["+imgBean.getTitle() + "]\t|" + url+"\n");
 								client.add(imgSrc, imgSrc);
 							}else{
 								ImageBean tmpImg = imageDao.findByHttpUrl(imgBean.getHttpUrl());
 								if(null != tmpImg){
 									tmpImg.setCommentshowurl(url);
-									if(!imageDao.update(tmpImg)){
-										System.out.println("更新图片记录:["+tmpImg.getArticleId()+"|"+tmpImg.getTitle() + "]\t|" + url+"\t成功");
+									if(imageDao.update(tmpImg)){
+										log.info("更新图片记录:["+tmpImg.getArticleId()+"|"+tmpImg.getTitle() + "]\t|" + url+"\t成功");
 										client.add(imgSrc, imgSrc);
 									}
 								}
@@ -567,15 +580,15 @@ public class ZHUOKUParser {
 							ImageBean tmpImg = imageDao.findByHttpUrl(imgBean.getHttpUrl());
 							if(null != tmpImg){
 								tmpImg.setCommentshowurl(url);
-								if(!imageDao.update(tmpImg)){
-									System.out.println("更新图片记录:["+tmpImg.getArticleId()+"|"+tmpImg.getTitle() + "]\t|" + url+"\t成功");
+								if(imageDao.update(tmpImg)){
+									log.info("更新图片记录:["+tmpImg.getArticleId()+"|"+tmpImg.getTitle() + "]\t|" + url+"\t成功");
 									client.add(imgSrc, imgSrc);
 								}
 							}
 						}
 					} else {
 						resultB = false;
-						System.err.println(">> 出现异常，文章ID["+imgBean.getArticleId()+"|"+imgBean.getArticleId()+"]\t返回False");
+						log.error(">> 出现异常，文章ID["+imgBean.getArticleId()+"|"+imgBean.getArticleId()+"]\t返回False");
 						break;
 					}
 				}
@@ -687,17 +700,17 @@ public class ZHUOKUParser {
 									// HttpClientUtils
 									int result = imageDao.insert(imgBean);
 									if (result > 0) {
-										System.out.println(">> add article["
+										log.debug(">> add article["
 												+ articleId + "] image id["
 												+ result + "] to DB");
 										imgBean.setId(result);
 										client.add(url, url);
 									} else {
-										System.err.println(">> 未添加[" + url
+										log.error(">> 未添加[" + url
 												+ "]到数据库中");
 									}
 								} else {
-									System.err.println(">> 缓存中已存在相同的内容 ["
+									log.error(">> 缓存中已存在相同的内容 ["
 											+ nl.getLink() + "]");
 								}
 							}
@@ -743,10 +756,21 @@ public class ZHUOKUParser {
 	}
 
 	static void update() throws Exception {
-		List<WebsiteBean> webList = webSiteDao.findByParentId(900);
+		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
+		boolean b = false;
 		for (WebsiteBean bean : webList) {
+			String lastModify = HttpClientUtils.getLastModifiedByUrl(bean.getUrl());
+//			if(null != bean.getLastModifyTime() && !"".equals(bean.getLastModifyTime()) && bean.getLastModifyTime().equals(lastModify)){
+//				log.debug(" >> 不需要更新:"+lastModify);
+//				continue;
+//			}
 			List<WebsiteBean> subList = webSiteDao.findByParentId(bean.getId());
 			for(WebsiteBean website:subList){
+				String slastModify = HttpClientUtils.getLastModifiedByUrl(website.getUrl());
+//				if(null != website.getLastModifyTime() && !"".equals(website.getLastModifyTime()) && website.getLastModifyTime().equals(slastModify)){
+//					continue;
+//				}
+				
 				ResultBean result = hasPaging2(website.getUrl());
 				if (result.isBool()) {
 					Iterator it = result.getMap().keySet().iterator();
@@ -757,21 +781,50 @@ public class ZHUOKUParser {
 							secondURL(link, website.getId());
 						} catch (Exception e) {
 							e.printStackTrace();
-							System.err.println("key:" + key);
+							log.error("key:" + key);
 							continue;
+						}
+					}
+					
+					if(slastModify != null && !"".equals(slastModify) ){
+						if(null == website.getLastModifyTime() || "".equals(website.getLastModifyTime()) || !website.getLastModifyTime().equals(slastModify)){
+							website.setLastModifyTime(slastModify);
+							if(webSiteDao.update(website)){
+								log.info(" >> 更新网站["+bean.getName()+"|"+bean.getUrl()+"]最后时间["+lastModify+"]成功!");
+							}
 						}
 					}
 				}
 			}
+			
 		}
 	}
 
 	public static void main(String[] args) {
 		// init();
 		try {
-			 update();
-			 loadImg();
-			 imgDownload();
+//			long start = System.currentTimeMillis();
+//			update();
+//			long end = System.currentTimeMillis();
+//			log.debug(" >> 耗时:"+(end-start)/1000+1);
+//			 new Thread(new Runnable(){
+//				private boolean isRun = true;
+//				public void run() {
+//					while(isRun){
+//						try{
+							update();
+							loadImg();
+							imgDownload();
+//							Thread.sleep(86400000);
+//						}catch(Exception e){
+//							e.printStackTrace();
+//							isRun = false;
+//						}
+//					}
+//				}
+//			 }).start();
+			/**
+			 **/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -784,7 +837,7 @@ public class ZHUOKUParser {
 		// WebsiteBean bean = webSiteDao.findById(702);
 		List<WebsiteBean> webList = webSiteDao.findByParentId(900);
 		for (WebsiteBean bean : webList) {
-			System.out.println(bean.getName()+"|"+bean.getUrl());
+			log.debug(bean.getName()+"|"+bean.getUrl());
 			catalogLevel2(bean.getUrl(),bean.getId());
 		}
 	}
@@ -801,15 +854,15 @@ public class ZHUOKUParser {
 			List<WebsiteBean> subList = webSiteDao.findByParentId(bean.getId());
 			for(WebsiteBean website:subList){
 				List<Article> list = articleDao.findByWebId(website.getId(),"NED");
-				System.out.println("文章列表:"+list.size());
+				log.debug("文章列表:"+list.size());
 				for (Article art : list) {
+					log.debug(" :"+art.getTitle()+"|"+art.getText());
 //					List<ImageBean> imgList = imageDao.findImage(art.getId());
 //					if(imgList.size() == 0){
 						if (getImage(art)) {
 							art.setText("FD");
 							if (articleDao.update(art)) {
-								System.out
-										.println("更新记录[" + art.getId()+"|"+art.getTitle() + "]成功");
+								log.info("更新记录[" + art.getId()+"|"+art.getTitle() + "]成功");
 							}
 						}
 //					}
@@ -833,18 +886,20 @@ public class ZHUOKUParser {
 			List<WebsiteBean> subList = webSiteDao.findByParentId(bean.getId());
 			for(WebsiteBean website:subList){
 				List<Article> list = articleDao.findByWebId(website.getId(),"FD");
-				System.out.println(">> 网站["+bean.getId()+"|"+bean.getName()+"|"+bean.getUrl()+"]\t下文章数量"+list.size());
+				log.debug(">> 网站["+bean.getId()+"|"+bean.getName()+"|"+bean.getUrl()+"]\t下文章数量"+list.size());
 				for (Article art : list) {
 					List<ImageBean> imgList = imageDao.findImage(art.getId());
-					System.out.println(">> 文章["+art.getId()+"|"+art.getTitle()+"]\t下的图片数量"+imgList.size());
+					log.debug(">> 文章["+art.getId()+"|"+art.getTitle()+"]\t下的图片数量"+imgList.size());
 //					ARTICLE_COM_URL = art.getArticleUrl();
 					for (ImageBean img : imgList) {
 						if(img.getStatus() != -1 || img.getLink().equals("NED")){
-							if (download(img,art.getArticleUrl())) {
+							String url = art.getArticleUrl().replace(URLEncoder.encode("[", "utf-8"), "[").replace(URLEncoder.encode(" ", "utf-8"), " ")
+															.replace(URLEncoder.encode("]", "utf-8"), "]");
+							if (download(img,url)) {
 								img.setStatus(-1);
 								img.setLink("FD");
 								if (imageDao.update(img)) {
-									System.out.println(">> 更新图片对象["+art.getTitle()+"|" + img.getId() + "]成功!");
+									log.info(">> 更新图片对象["+art.getTitle()+"|" + img.getId() + "]成功!");
 								}
 							}
 						}
@@ -903,7 +958,7 @@ public class ZHUOKUParser {
 						
 					} else {
 						resultB = false;
-						System.err.println(">> 出现异常，文章ID["+imgBean.getArticleId()+"]\t返回False");
+						log.error(">> 出现异常，文章ID["+imgBean.getArticleId()+"]\t返回False");
 						break;
 					}
 				}
@@ -930,7 +985,11 @@ public class ZHUOKUParser {
 		String length = "0";
 		try {
 			byte[] big = null;
-			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, imgBean.getHttpUrl());
+			String imgUrl = imgBean.getHttpUrl().replace("[", "%5B").replace(" ","%20").replace("]","%5D");
+			log.info(" > URLEncoder.encode(\"[\", \"utf-8\"):"+URLEncoder.encode("[", "utf-8"));
+			log.info(" > URLEncoder.encode(\"]\", \"utf-8\"):"+URLEncoder.encode("]", "utf-8"));
+			log.info(" > IMGURL:"+imgUrl);
+			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, imgUrl);
 			if(null == big)
 				return false;
 			length = String.valueOf(big.length);
@@ -986,12 +1045,12 @@ public class ZHUOKUParser {
 					return false;
 				}
 			} catch (Exception e) {
-				System.out.println("数据库异常");
+				log.error("数据库异常");
 				e.printStackTrace();
 				return false;
 			}
 		} catch (IOException e) {
-			System.out.println("网络连接，文件IO异常");
+			log.error("网络连接，文件IO异常");
 			return false;
 		}
 		return true;
@@ -1007,7 +1066,7 @@ public class ZHUOKUParser {
 			Iterator it = result.getMap().keySet().iterator();
 			while (it.hasNext()) {
 				String key = (String) it.next();
-				System.out.println("key:" + key);
+				log.debug("key:" + key);
 				LinkBean link = (LinkBean) result.getMap().get(key);
 				secondURL(link, 0);
 			}

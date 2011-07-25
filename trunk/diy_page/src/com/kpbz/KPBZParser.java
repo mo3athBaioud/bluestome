@@ -661,6 +661,13 @@ public class KPBZParser {
 	static void update() throws Exception {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : webList) {
+			
+			String lastModify = HttpClientUtils.getLastModifiedByUrl(bean.getUrl());
+			if(null != bean.getLastModifyTime() && !"".equals(bean.getLastModifyTime()) && bean.getLastModifyTime().equals(lastModify)){
+				continue;
+			}
+			
+			
 			ResultBean result = hasPaging2(bean.getUrl());
 			if (result.isBool()) {
 				Iterator it = result.getMap().keySet().iterator();
@@ -673,6 +680,16 @@ public class KPBZParser {
 						e.printStackTrace();
 						System.out.println("key:" + key);
 						continue;
+					}
+				}
+				
+				
+				if(lastModify != null && !"".equals(lastModify) ){
+					if(null == bean.getLastModifyTime() || "".equals(bean.getLastModifyTime()) || !bean.getLastModifyTime().equals(lastModify)){
+						bean.setLastModifyTime(lastModify);
+						if(webSiteDao.update(bean)){
+							System.out.println(" >> 更新网站["+bean.getName()+"|"+bean.getUrl()+"]最后时间["+lastModify+"]成功!");
+						}
 					}
 				}
 			}
