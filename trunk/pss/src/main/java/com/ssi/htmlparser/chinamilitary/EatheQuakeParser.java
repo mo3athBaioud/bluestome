@@ -8,6 +8,7 @@ import org.htmlparser.*;
 import org.htmlparser.util.*;
 import org.htmlparser.tags.*;
 
+import com.ssi.common.utils.HttpClientUtils;
 import com.ssi.dal.usgs.domain.EarthQuakeDetail;
 import com.ssi.dal.usgs.domain.EarthQuakeInfo;
 import com.ssi.htmlparser.utils.CommonUtil;
@@ -294,6 +295,11 @@ public class EatheQuakeParser {
 		String content = null;
 		List<EarthQuakeInfo> elist = new ArrayList<EarthQuakeInfo>();
 		try {
+			int status = HttpClientUtils.getResponseCode(USGS_LATEST_LIST);
+			System.out.println(" >> getLatestEarthQuake.Website["+USGS_LATEST_LIST+"]响应码为:"+status);
+			if(status != 200){
+				return null;
+			}
 			p1 = new Parser();
 			p1.setURL(USGS_LATEST_LIST);
 			p1.setEncoding("UTF-8");
@@ -404,17 +410,19 @@ public class EatheQuakeParser {
 						if (null != row) {
 							TableColumn[] cols = row.getColumns();
 							node = row.getChild(0);
-							String nt = node.toHtml();
-							if(nt.startsWith("<td><strong>")){
+							if(node.toHtml().startsWith("<td><strong>")){
 								node = row.getChild(1);
 							}
-							System.out.println(" >> node:"+node.toHtml());
-							if (null != node) {
+							if (null != node && !"".equals(node.toHtml())) {
 								String key = null;
 								Integer id = -1;
 								String value = null;
 								try {
 									NodeList nl = node.getChildren();
+									if(null == nl || null == nl.elementAt(1)){
+										System.out.println("\t nl.elementAt(1) is null");
+										continue;
+									}
 									if (nl.elementAt(1) instanceof LinkTag) {
 										LinkTag link = (LinkTag) nl
 												.elementAt(1);
