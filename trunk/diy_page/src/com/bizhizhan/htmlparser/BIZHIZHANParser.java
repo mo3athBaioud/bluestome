@@ -46,6 +46,7 @@ import com.chinamilitary.memcache.MemcacheClient;
 import com.chinamilitary.test.TestHttpClient;
 import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.CommonUtil;
+import com.chinamilitary.util.DateUtils;
 import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
@@ -208,14 +209,15 @@ public class BIZHIZHANParser {
 		Parser p1 = new Parser();
 		p1.setURL(url);
 
-		NodeFilter filter = new NodeClassFilter(Div.class);
-		NodeList list = p1.extractAllNodesThatMatch(filter)
-				.extractAllNodesThatMatch(
-						new HasAttributeFilter("class", "list"));
-
-		if (null != list && list.size() > 0) {
+//		NodeFilter filter = new NodeClassFilter(Div.class);
+//		NodeList list = p1.extractAllNodesThatMatch(filter)
+//				.extractAllNodesThatMatch(
+//						new HasAttributeFilter("class", "list"));
+//
+//		if (null != list && list.size() > 0) {
 			Parser p2 = new Parser();
-			p2.setInputHTML(list.toHtml());
+//			p2.setInputHTML(list.toHtml());
+			p2.setURL(url);
 
 			NodeFilter filter2 = new NodeClassFilter(CompositeTag.class);
 			NodeList list2 = p2.extractAllNodesThatMatch(filter2)
@@ -272,7 +274,7 @@ public class BIZHIZHANParser {
 				}
 
 			}
-		}
+//		}
 
 	}
 
@@ -505,13 +507,26 @@ public class BIZHIZHANParser {
 			
 //			index();
 			
+			new Thread(new Runnable(){
+				private boolean isRun = true;
+				public void run() {
+					while(isRun){
+						try{
+							update();
+							image();
+							downloadImg();
+							isRun = false;
+							System.exit(-1);
+							//休眠半小时
+							Thread.sleep(80000000);
+						}catch(Exception e){
+							e.printStackTrace();
+							isRun = false;
+						}
+					}
+				}
+			 }).start();
 //			init();
-			
-			update();
-//			
-			image();
-//			
-			downloadImg();
 			
 //			movefile();
 			
@@ -692,15 +707,28 @@ public class BIZHIZHANParser {
 	public static void update() throws Exception{
 		List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : list) {
+			String lastModify = HttpClientUtils.getLastModifiedByUrl(bean.getUrl());
+			if(null != bean.getLastModifyTime() && !"".equals(bean.getLastModifyTime()) && bean.getLastModifyTime().equals(lastModify)){
+				continue;
+			}
 			ResultBean result = hasPaging(bean.getUrl());
 			if (result.isBool()) {
+				
 				Iterator it = result.getMap().keySet().iterator();
 				while (it.hasNext()) {
 					String key = (String) it.next();
 					System.out.println("key:" + key);
 					getArtcile(key, bean.getId());
 				}
-
+				
+				if(lastModify != null && !"".equals(lastModify) ){
+					if(null == bean.getLastModifyTime() || "".equals(bean.getLastModifyTime()) || !bean.getLastModifyTime().equals(lastModify)){
+						bean.setLastModifyTime(lastModify);
+						if(webSiteDao.update(bean)){
+							System.out.println(" >> 更新网站["+bean.getName()+"|"+bean.getUrl()+"]最后时间["+lastModify+"]成功!");
+						}
+					}
+				}
 			}
 		}
 	}
@@ -775,7 +803,9 @@ public class BIZHIZHANParser {
 			System.out.println("引用的地址："+imgBean.getCommentshowurl());
 			if(null == imgBean.getCommentshowurl())
 				return false;
-			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), "rtime=4; ltime=1283479552367; cnzz_eid=5808015-1282816593-http%3A//www.tuku.cn/; virtualwall=vsid=0c8cafa6001de309645c11edffa3aa43; cnzz_a1235385=1; sin1235385=", imgBean.getHttpUrl());
+			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), "rtime=9; ltime=1307670496472; cnzz_eid=5808015-1282816593-http%3A//www.tuku.cn/; virtualwall=vsid=76abb5c68280e4c3f99efa93145827a7", imgBean.getHttpUrl());
+//			big = HttpClientUtils.getResponseBodyAsByte(null, "rtime=4; ltime=1283479552367; cnzz_eid=5808015-1282816593-http%3A//www.tuku.cn/; virtualwall=vsid=0c8cafa6001de309645c11edffa3aa43; cnzz_a1235385=1; sin1235385=", imgBean.getHttpUrl());
+//			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getHttpUrl());
 			if(null == big)
 				return false;
 			length = String.valueOf(big.length);
