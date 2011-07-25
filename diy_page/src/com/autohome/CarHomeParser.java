@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.math.BigDecimal;
 import java.io.BufferedReader;   
+import java.io.File;
 import java.io.IOException;   
 import java.io.InputStream;   
 import java.io.InputStreamReader;   
@@ -36,13 +37,19 @@ import org.htmlparser.util.NodeList;
 
 import com.chinamilitary.bean.Article;
 import com.chinamilitary.bean.ImageBean;
+import com.chinamilitary.bean.PicfileBean;
 import com.chinamilitary.bean.WebsiteBean;
 import com.chinamilitary.dao.ArticleDao;
 import com.chinamilitary.dao.ImageDao;
 import com.chinamilitary.dao.PicFileDao;
 import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.factory.DAOFactory;
+import com.chinamilitary.memcache.MemcacheClient;
+import com.chinamilitary.util.CacheUtils;
+import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
+import com.chinamilitary.util.StringUtils;
+import com.common.Constants;
 
 public class CarHomeParser 
 {
@@ -64,7 +71,15 @@ public class CarHomeParser
 
 	static PicFileDao picFiledao = DAOFactory.getInstance().getPicFileDao();
 	
+	static String PIC_SAVE_PATH = Constants.FILE_SERVER;
+	
+	static MemcacheClient client = MemcacheClient.getInstance();
+	
 	static int COUNT = 0 ;
+	
+	static final String IMAGE_CACHE_KEY = "AUTO_HOME_CACHE_KEY_IMAGE";
+	
+	static final String ARTICLE_CACHE_KEY = "AUTO_HOME_CACHE_KEY_ARTICLE";
 	
 	public static void main(String[] args) {
 //		parserAutoBrandSQL();
@@ -73,9 +88,82 @@ public class CarHomeParser
 //		parserCarModel();
 //		System.out.println(" >>\t"+fileSize(123l));
 		
-//		getCarSerial();
 		
-		getArticleImage();
+//		patch();
+		new Thread(new Runnable(){
+			private boolean isRun = true;
+			public void run() {
+				while(isRun){
+					try{
+						getCarSerial();
+						getArticleImage();
+
+						try{
+							imgDownload();
+						}catch(Exception e){
+							e.printStackTrace();
+						}
+						isRun = false;
+						System.exit(-1);
+						//休眠半小时
+						Thread.sleep(80000000);
+					}catch(Exception e){
+						e.printStackTrace();
+						isRun = false;
+					}
+				}
+			}
+		 }).start();
+		
+//		patch();
+	}
+	
+	/**
+	 * 更新图片数量与实际网站数量不符合的文章状态为NND[NO NEED DOWNLOAD]
+	 *
+	 */
+	static void patch(){
+		try{
+			List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
+			for(WebsiteBean bean:list){
+				patch2(bean);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	static void patch2(WebsiteBean web){
+		try{
+			List<WebsiteBean> list = webSiteDao.findByParentId(web.getId());
+			if(list.size() > 0){
+				for(WebsiteBean bean:list){
+					patch2(bean);
+				}
+			}else{
+				List<Article> alist = articleDao.findByWebId(web.getId(), "NED");
+				for(Article art:alist){
+					int ic = imageDao.getCount("select count(*) from tbl_image where d_article_id = "+art.getId());
+					if(ic > 0 ){
+						int count = 0;
+						try{
+							count = Integer.parseInt(art.getIntro());
+							System.out.println(" >> "+art.getTitle()+".Count:" + count);
+							if(count > 0){
+								art.setText("NND");
+								if(!articleDao.update(art)){
+									System.err.println(" >> 更新 "+art.getId()+"|"+art.getTitle()+"| 为NND状态失败");
+								}
+							}
+						}catch(Exception e){
+							continue;
+						}
+					}
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -105,10 +193,12 @@ public class CarHomeParser
 			if(list.size() > 0){
 				for (WebsiteBean bean : list) {
 					getArticleImage2(bean);
-					Thread.sleep(100);
+					Thread.sleep(10);
 				}
 			}else{
 				List<Article> alist = articleDao.findByWebId(web.getId(), "NED");
+				
+				System.out.println(" >> "+web.getName()+"|"+web.getUrl()+"|"+web.getParentId()+"|"+alist.size());
 				for(Article art:alist){
 					Map<String, Object> map = getPictureLinkPage2(art);
 					Iterator it = map.keySet().iterator();
@@ -121,19 +211,26 @@ public class CarHomeParser
 						for(String[] str:ilist){
 							img = new ImageBean();
 							String bg = getBigImageSrc(str[1]);
-							img.setImgUrl(str[2]);
-							img.setHttpUrl(bg);
-							img.setCommentsuburl(str[0]);
-							img.setCommentshowurl(str[0]);
-							img.setArticleId(art.getId());
-							img.setTitle(str[3]);
-							icon = img.getImgUrl();
-							int result = imageDao.insert(img);
-							System.out.println(" >> getArticleImage2.insert.img:"+result);
-							if(result > 0){
-								i++;
+							if(null != bg && !"".equals(bg)){
+								if(null != client.get(IMAGE_CACHE_KEY+bg)){
+									continue;
+								}
+								img.setImgUrl(str[2]);
+								img.setHttpUrl(bg);
+								img.setCommentsuburl(str[0]);
+								img.setCommentshowurl(str[0]);
+								img.setArticleId(art.getId());
+								img.setTitle(str[3]);
+								icon = img.getImgUrl();
+								int result = imageDao.insert(img);
+								if(result > 0){
+									i++;
+									client.add(IMAGE_CACHE_KEY+bg, img);
+								}else{
+									System.err.println(" >> 添加图片["+img.getArticleId()+"|"+img.getTitle()+"|"+bg+"]失败!");
+								}
 							}else{
-								System.err.println(" >> 添加图片["+img.getArticleId()+"|"+img.getTitle()+"|"+bg+"]失败!");
+								System.err.println(" >> 获取图片大图["+str[1]+"]失败!");
 							}
 						}
 					}
@@ -161,11 +258,137 @@ public class CarHomeParser
 						}
 					}
 				}
-				Thread.sleep(100);
+				Thread.sleep(10);
+				/**
+				**/
 			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+
+
+	static void imgDownload() throws Exception {
+		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
+		for(WebsiteBean website:webList){
+			imgDownload2(website);
+		}
+	}
+	
+	static void imgDownload2(WebsiteBean website) throws Exception {
+		List<WebsiteBean> webList = webSiteDao.findByParentId(website.getId());
+		if(webList.size() > 0){
+			System.out.println(" >> "+website.getName()+"|"+website.getUrl()+"|"+webList.size());
+			for(WebsiteBean web:webList){
+				imgDownload2(web);
+			}
+		}else{
+			System.out.println(website.getId()+"|"+website.getName()+"|"+website.getUrl());
+//			List<Article> artList = articleDao.findByWebId(website.getId(), "FD");
+			List<Article> artList = articleDao.findByWebId(website.getId());
+			System.out.println("文章数量:"+artList.size());
+			for(Article article:artList){
+				List<ImageBean> list = imageDao.findImage(article.getId());
+				System.out.println(">> 图片数量:["+article.getTitle()+"["+article.getId()+"]]"+list.size()+"\n**************************");
+				if(list.size() == 0){
+					article.setText("NED");
+					if(articleDao.update(article)){
+						System.out.println(">> 更新图片记录数据为0的文章成功");
+					}
+				}else{
+					for(ImageBean bean : list) {
+						if(bean.getStatus() == -1){
+							if(download(bean)){
+								System.out.println(">> 更新图片对象["+bean.getId()+"]成功");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	static boolean download(ImageBean imgBean) {
+		PicfileBean bean = null;
+		bean = new PicfileBean();
+		String s_fileName = imgBean.getImgUrl().substring(
+				imgBean.getImgUrl().lastIndexOf("/") + 1,
+				imgBean.getImgUrl().length());
+		String fileName = imgBean.getHttpUrl().substring(
+				imgBean.getHttpUrl().lastIndexOf("/") + 1,
+				imgBean.getHttpUrl().length());
+		String length = "0";
+		try {
+			byte[] small = null;
+			small = HttpClientUtils.getResponseBodyAsByte(imgBean.getImgUrl(), null, imgBean.getImgUrl());
+			if(null == small)
+				return false;
+			//小图
+			if (client.get(CacheUtils.getShowImgKey(PIC_SAVE_PATH
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName)) == null) {
+				IOUtil.createFile(small, File.separator+PIC_SAVE_PATH
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId() + File.separator
+						+ s_fileName);
+			}
+			
+			byte[] big = null;
+			big = HttpClientUtils.getResponseBodyAsByte(imgBean.getCommentshowurl(), null, imgBean.getHttpUrl());
+			if(null == big)
+				return false;
+			length = String.valueOf(big.length);
+			if(length.equalsIgnoreCase("20261")){
+				return false;
+			}
+			//大图
+			if (client.get(CacheUtils.getBigPicFileKey(PIC_SAVE_PATH
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ fileName)) == null) {
+				IOUtil.createFile(big, File.separator+PIC_SAVE_PATH
+						+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+						+ imgBean.getArticleId() + File.separator
+						+ fileName);
+			}
+			bean.setArticleId(imgBean.getArticleId());
+			bean.setImageId(imgBean.getId());
+			bean.setTitle(imgBean.getTitle());
+			bean.setSmallName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ s_fileName);
+			bean.setName(File.separator
+					+ StringUtils.gerDir(String.valueOf(imgBean.getArticleId()))
+					+ imgBean.getArticleId() + File.separator
+					+ fileName);
+			bean.setUrl(PIC_SAVE_PATH);
+			try {
+				imgBean.setStatus(1);
+				imgBean.setLink("FD");
+				imgBean.setFileSize(Long.valueOf(length));
+				if(imageDao.update(imgBean)){
+					boolean b = picFiledao.insert(bean);
+					if (b) {
+						client.add(CacheUtils.getBigPicFileKey(bean.getUrl()
+								+ bean.getName()), bean);
+						client.add(CacheUtils.getSmallPicFileKey(bean.getUrl()
+								+ bean.getSmallName()), bean);
+					} else {
+						return false;
+					}
+				}
+			} catch (Exception e) {
+				System.out.println("数据库异常");
+				e.printStackTrace();
+				return false;
+			}
+		} catch (IOException e) {
+			System.out.println("网络连接，文件IO异常");
+			return false;
+		}
+		return true;
 	}
 	
 	public static void getCarSerial(){
@@ -189,46 +412,60 @@ public class CarHomeParser
 					getCarSerial2(bean);
 				}
 			}else{
+				
+				String lastModify = HttpClientUtils.getLastModifiedByUrl(web.getUrl());
+				if(null != web.getLastModifyTime() && !"".equals(web.getLastModifyTime()) && web.getLastModifyTime().equals(lastModify)){
+					return;
+				}
+				
 				//获取车型下视角图片
 				List<LinkTag> ll = getPictureListPage(web.getUrl());
 				Article art = null;
-				for(LinkTag u:ll){
-					art = new Article();
-					//
-					WebsiteBean tmp = web;
-					if(null != u.getLinkText() && !"".equals(u.getLinkText())){
-						int end = u.getLinkText().lastIndexOf("(");
-						//共有68图片
-						String name = u.getLinkText().substring(0,end);
-						
-						int start = u.getLinkText().lastIndexOf("有");
-						int end2 = u.getLinkText().lastIndexOf("图");
-						int end3 = u.getLinkText().lastIndexOf("张");
-						if(end3 != -1){
-							String count = u.getLinkText().substring(start+1,end3);
-							System.out.println(" >> ["+u.getLinkText()+"]count:"+count);
-							tmp.setRemarks(count);
+				if(null != ll && ll.size() > 0){
+					for(LinkTag u:ll){
+						art = new Article();
+						if(null != u.getLinkText() && !"".equals(u.getLinkText())){
+							if(null != client.get(ARTICLE_CACHE_KEY+u.getLink())){
+								continue;
+							}
+							int end = u.getLinkText().lastIndexOf("(");
+							//共有68图片
+							String name = u.getLinkText().substring(0,end);
+							
+							int start = u.getLinkText().lastIndexOf("有");
+							int end2 = u.getLinkText().lastIndexOf("图");
+							int end3 = u.getLinkText().lastIndexOf("张");
+							if(end3 != -1){
+								String count = u.getLinkText().substring(start+1,end3);
+								System.out.println(" >> ["+u.getLinkText()+"]count:"+count);
+								art.setIntro(count);
+							}else{
+								String count = u.getLinkText().substring(start+1,end2);
+								System.out.println(" >> ["+u.getLinkText()+"]count:"+count);
+								art.setIntro(count);
+							}
+							art.setTitle(name);
 						}else{
-							String count = u.getLinkText().substring(start+1,end2);
-							System.out.println(" >> ["+u.getLinkText()+"]count:"+count);
-							tmp.setRemarks(count);
+							art.setTitle(u.getLinkText());
 						}
-						tmp.setName(name);
-					}else{
-						tmp.setName(u.getLinkText());
+						art.setArticleUrl(u.getLink());
+						art.setWebId(web.getId());
+						int result = articleDao.insert(art);
+						if(result > 0){
+							client.add(ARTICLE_CACHE_KEY+art.getArticleUrl(), art);
+							System.out.println(" >> 添加"+art.getWebId()+"|"+result+"|"+art.getArticleUrl()+"|"+art.getIntro() + "成功");
+						}else{
+							System.err.println(" >> 添加"+art.getWebId()+"|"+result+"|"+art.getArticleUrl()+"|"+art.getIntro() + "失败");
+						}
 					}
-					tmp.setUrl(u.getLink());
-					tmp.setParentId(web.getId());
-					
-					art.setArticleUrl(tmp.getUrl());
-					art.setTitle(tmp.getName());
-					art.setWebId(web.getId());
-					art.setIntro(tmp.getRemarks());
-					int result = articleDao.insert(art);
-					if(result > 0){
-						System.out.println(" >> 添加"+art.getWebId()+"|"+result+"|"+art.getArticleUrl()+"|"+art.getIntro() + "成功");
-					}else{
-						System.err.println(" >> 添加"+art.getWebId()+"|"+result+"|"+art.getArticleUrl()+"|"+art.getIntro() + "失败");
+				
+					if(lastModify != null && !"".equals(lastModify) ){
+						if(null == web.getLastModifyTime() || "".equals(web.getLastModifyTime()) || !web.getLastModifyTime().equals(lastModify)){
+							web.setLastModifyTime(lastModify);
+//							if(webSiteDao.update(web)){
+//								System.out.println(" >> 更新网站["+web.getName()+"|"+web.getUrl()+"]最后时间["+lastModify+"]成功!");
+//							}
+						}
 					}
 				}
 			}
@@ -761,7 +998,7 @@ public class CarHomeParser
 			}else{
 				count = Integer.parseInt(remark);
 			}
-			int num = count/60;
+			int num = count/72;
 			if(count%60 > 0){
 				num ++;
 			}
@@ -856,8 +1093,14 @@ public class CarHomeParser
 	public static String getBigImageSrc(String url){
 		Parser p1 = new Parser();
 		String src = null;
+		String content = null;
 		try{
-			p1.setURL(url);
+			content = HttpClientUtils.getResponseBody(url);
+			if(null == content){
+				return src;
+			}
+//			p1.setURL(url);
+			p1.setInputHTML(content);
 			p1.setEncoding("gb2312");
 			NodeFilter fileter = new NodeClassFilter(ImageTag.class);
 			NodeList nodeList = p1.extractAllNodesThatMatch(fileter).extractAllNodesThatMatch(
