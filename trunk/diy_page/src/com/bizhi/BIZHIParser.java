@@ -681,7 +681,6 @@ public class BIZHIParser {
 							}
 						}
 					}
-					Thread.sleep(1000);
 				}
 			}
 		}
@@ -723,6 +722,12 @@ public class BIZHIParser {
 	static void update() throws Exception {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : webList) {
+			
+			String lastModify = HttpClientUtils.getLastModifiedByUrl(bean.getUrl());
+			if(null != bean.getLastModifyTime() && !"".equals(bean.getLastModifyTime()) && bean.getLastModifyTime().equals(lastModify)){
+				continue;
+			}
+			
 			ResultBean result = hasPaging2(bean.getUrl());
 			if (result.isBool()) {
 				Iterator it = result.getMap().keySet().iterator();
@@ -745,6 +750,15 @@ public class BIZHIParser {
 						continue;
 					}
 				}
+				
+				if(lastModify != null && !"".equals(lastModify) ){
+					if(null == bean.getLastModifyTime() || "".equals(bean.getLastModifyTime()) || !bean.getLastModifyTime().equals(lastModify)){
+						bean.setLastModifyTime(lastModify);
+						if(webSiteDao.update(bean)){
+							System.out.println(" >> 更新网站["+bean.getName()+"|"+bean.getUrl()+"]最后时间["+lastModify+"]成功!");
+						}
+					}
+				}
 			}
 		}
 	}
@@ -753,9 +767,25 @@ public class BIZHIParser {
 		// init();
 		try {
 			// catalog(URL);
-			 update();
-			 loadImg();
-			 imgDownload();
+			new Thread(new Runnable(){
+				private boolean isRun = true;
+				public void run() {
+					while(isRun){
+						try{
+							 update();
+							 loadImg();
+							 imgDownload();
+							 isRun = false;
+							 System.exit(-1);
+							//休眠半小时
+							Thread.sleep(80000000);
+						}catch(Exception e){
+							e.printStackTrace();
+							isRun = false;
+						}
+					}
+				}
+			 }).start();
 //			threadParser();
 //			movefile();
 			
