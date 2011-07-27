@@ -1,5 +1,6 @@
 package com.ssi.common.htmlparser.parser;
 
+import com.ssi.common.htmlparser.bean.AbsResource;
 import com.ssi.common.htmlparser.bean.LinkPage;
 
 /**
@@ -24,4 +25,13 @@ public interface AbstractHtmlParser {
 	 * @throws Exception
 	 */
 	LinkPage page(String url) throws Exception;
+	
+	
+	/**
+	 * 获取详情数据
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 */
+	AbsResource detail(String url) throws Exception;
 }
