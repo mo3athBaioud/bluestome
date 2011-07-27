@@ -21,9 +21,8 @@
 			<tr>
 				<td>
 					<display:table name="websiteList" id="row" requestURI="/index.cgi"
-						class="list" cellpadding="2" style="width:100%" cellspacing="1"
-						pagesize='10' sort="list" partialList="true" size="resultSize">
-						<display:column title="网站名称" sort="true">
+						class="list" style="width:100%"	pagesize='10' partialList="true" size="20">
+						<display:column title="网站名称">
 							${row.name}
 						</display:column>
 						<display:column title="是否包含子站" >
@@ -42,7 +41,7 @@
 								<br />
 							</c:forEach>
 						</display:column>
-						<display:column title="网站地址" sort="true">
+						<display:column title="网站地址">
 							${row.url}
 						</display:column>
 						<display:column title="创建时间">
