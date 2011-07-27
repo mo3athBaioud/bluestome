@@ -4,8 +4,27 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>ssi.root</param-value>
+	</context-param>
+
+	<filter>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<filter-class>
+			org.tuckey.web.filters.urlrewrite.UrlRewriteFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>UrlRewriteFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:spring/applicationContext.xml</param-value>
+		<param-value>
+			classpath:spring/applicationContext.xml
+		</param-value>
 	</context-param>
 	<filter>
 		<filter-name>struts-cleanup</filter-name>
@@ -29,6 +48,7 @@
 			<param-value>UTF-8</param-value>
 		</init-param>
 	</filter>
+
 	<servlet>
 		<servlet-name>velocityView</servlet-name>
 		<servlet-class>
@@ -39,11 +59,11 @@
 			<param-value>/WEB-INF/toolbox.xml</param-value>
 		</init-param>
 	</servlet>
-
 	<servlet-mapping>
 		<servlet-name>velocityView</servlet-name>
 		<url-pattern>*.vm</url-pattern>
 	</servlet-mapping>
+
 	<filter-mapping>
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
@@ -66,4 +86,47 @@
 			org.springframework.web.context.ContextLoaderListener
 		</listener-class>
 	</listener>
+
+	<taglib>
+		<taglib-uri>/tags/struts-bean.tld</taglib-uri>
+		<taglib-location>/WEB-INF/tlds/struts-bean.tld</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/tags/struts-html.tld</taglib-uri>
+		<taglib-location>/WEB-INF/tlds/struts-html.tld</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/tags/struts-logic.tld</taglib-uri>
+		<taglib-location>
+			/WEB-INF/tlds/struts-logic.tld
+		</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/tags/struts-nested.tld</taglib-uri>
+		<taglib-location>
+			/WEB-INF/tlds/struts-nested.tld
+		</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/tags/struts-tiles.tld</taglib-uri>
+		<taglib-location>
+			/WEB-INF/tlds/struts-tiles.tld
+		</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/tags/c.tld</taglib-uri>
+		<taglib-location>/WEB-INF/tlds/c.tld</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/tags/fmt.tld</taglib-uri>
+		<taglib-location>/WEB-INF/tlds/fmt.tld</taglib-location>
+	</taglib>
+	<taglib>
+		<taglib-uri>/tags/fn.tld</taglib-uri>
+		<taglib-location>/WEB-INF/tlds/fn.tld</taglib-location>
+	</taglib>
+
+	<welcome-file-list>
+		<welcome-file>temp.jsp</welcome-file>
+	</welcome-file-list>
 </web-app>
