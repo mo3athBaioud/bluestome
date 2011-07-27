@@ -5,11 +5,11 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.ssi.common.dal.dao.IArticleDAO;
+import com.ssi.common.dal.dao.IPictureFileDAO;
+import com.ssi.common.dal.domain.Article;
+import com.ssi.common.dal.domain.PictureFile;
 import com.ssi.common.utils.DateUtils;
-import com.ssi.dal.dao.IArticleDAO;
-import com.ssi.dal.dao.IPictureFileDAO;
-import com.ssi.dal.domain.Article;
-import com.ssi.dal.domain.PictureFile;
 
 public class SendMessage {
 
@@ -41,6 +41,7 @@ public class SendMessage {
 			logger.debug("----------------------------耗时:"+(end-start)+"ms----------------------------\n");
 		}else{
 			logger.debug(">> 暂未查询当日最新图片文件");
+			Integer i = 2147483647;
 		}
 	}
 	public IArticleDAO getArticleDAO() {
