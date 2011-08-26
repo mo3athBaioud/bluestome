@@ -14,6 +14,7 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 
 import com.mss.dal.dao.BussinessSimplifyDao;
+import com.mss.dal.domain.BDistrict;
 import com.mss.dal.domain.BussinessSimplify;
 
 @IocBean
@@ -158,6 +159,35 @@ public class BussinessSimplifyService {
 			c = 1;
 		}
 		return c;
+	}
+	
+	/**
+	 * 根据记录ID查找记录对象
+	 * @param id
+	 * @return
+	 */
+	public BussinessSimplify find(Integer id){
+		BussinessSimplify bs = null;
+		try{
+			bs = bussinessSimplifyDao.find(id, BussinessSimplify.class);
+		}catch(Exception e){
+			log.error(e);
+		}
+		return bs;
+	}
+	
+	/**
+	 * 修改业务信息
+	 * @param BDistrict
+	 * @return boolean true:成功 false:失败
+	 */
+	public boolean update(BussinessSimplify bs){
+		try{
+			return bussinessSimplifyDao.update(bs);
+		}catch(Exception e){
+			log.error(e);
+			return false;
+		}
 	}
 	
 	public BussinessSimplifyDao getBussinessSimplifyDao() {
