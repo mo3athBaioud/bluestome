@@ -398,3 +398,28 @@ select distinct b.d_hsman,b.d_hstype,a.d_tac,b.d_gprs,b.d_wap,b.d_smartphone,b.d
 终端识别功能未完成。
 终端匹配功能未完成。
 原始通话数据 -> [终端核心库] ->【终端识别】 -> 识别后的数据 -> 业务数据 -> 导入业务库 -> 用户查询
+
+
+
+2011-07-11
+>> 识别的总数:1419299
+
+对终端核心库数据的匹配过程中的数据，如果没有匹配出的厂商的属性数据，则将该终端定义为功能机，主要体现为如下特性：
+1.支持GPRS.
+2.支持WAP.
+
+2011-08-24
+1.在数据业务表中新增字段
+  a.d_ismarketing 是否营销 默认为0 已经营销 1  未营销 2
+  b.d_msuccess 营销是否成功 默认为0 营销成功 1  营销失败 2
+2.在操作日志表中新增字段
+  a.d_ismarketing 是否营销 默认为0 已经营销 1  未营销 2
+  b.d_msuccess 营销是否成功 默认为0 营销成功 1  营销失败 2
+3.规则
+
+3.脚本
+	ALTER TABLE `tbl_bussiness_simplify`  ADD COLUMN `d_ismarketing` INT(4) NULL DEFAULT '0' COMMENT '是否营销';
+	ALTER TABLE `tbl_bussiness_simplify`  ADD COLUMN `d_msuccess` INT(4) NULL DEFAULT '0' COMMENT '营销是否成功';
+
+	ALTER TABLE `tbl_noplog`  ADD COLUMN `d_ismarketing` INT(4) NULL DEFAULT '0' COMMENT '是否营销';
+	ALTER TABLE `tbl_noplog`  ADD COLUMN `d_msuccess` INT(4) NULL DEFAULT '0' COMMENT '营销是否成功';
