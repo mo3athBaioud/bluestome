@@ -42,6 +42,8 @@ Ext.onReady(function() {
 		}, {name : 'phonenumBDistrict',type : 'string'
 		}, {name : 'result',type : 'int'
 		}, {name : 'createtime',type : 'string'
+		}, {name : 'isMarket',type : 'int'
+		}, {name : 'mSuccess',type : 'int'
 		}, {name : 'id',type : 'int'
 		}, {name : 'uid',type : 'int'
 		}])
@@ -193,6 +195,28 @@ Ext.onReady(function() {
             {header: '号码业务区', width: 100, sortable: true, dataIndex: 'phonenumBDistrict'},
             {header: '登录名', width: 100, sortable: true, dataIndex: 'loginname'},
             {header: '时间', width: 150, sortable: true, dataIndex: 'createtime'},
+	        {header: "是否营销", width: 100, sortable: true, dataIndex: 'isMarket',renderer:function(v){
+	        	if(v == 0){
+	        		return '';
+	        	}else if(v == 1){
+	        		return '<font color="blue">是</font>';
+	        	}else if(v == 2){
+	        		return '<font color="yellow">否</font>';
+	        	}else{
+	        		return '<font color="yellow">未知</font>';
+	        	}
+	        }},
+	        {header: "是否营销成功", width: 100, sortable: true, dataIndex: 'mSuccess',renderer:function(v){
+	        	if(v == 0){
+	        		return '';
+	        	}else if(v == 1){
+	        		return '<font color="blue">是</font>';
+	        	}else  if(v == 2){
+	        		return '<font color="yellow">否</font>';
+	        	}else{
+	        		return '<font color="yellow">未知</font>';
+	        	}
+	        }},
         	{header: "业务类型", width: 100, sortable: true, dataIndex: 'btype',renderer:function(v){
 				var x = parseInt(v);
 				switch(x){
@@ -256,7 +280,7 @@ Ext.onReady(function() {
         animCollapse: false,
         closable:false,
         height:350,
-        width:600,
+        width:800,
         autoScroll: true,
         bbar : ptb,
         //btn_del,'-',
