@@ -89,6 +89,8 @@ public class BussinessSimplifyAction extends BaseAction {
 						op.setPhonenum(bus.getPhonenum());
 						op.setPhonenumBDistrict(bus.getBdistrict());
 						op.setResult(1);
+						op.setMSuccess(bus.getMSuccess());
+						op.setIsMarket(bus.getIsMarket());
 					}
 					// 保存查询日志 异步
 					json.setCount(count);
@@ -182,6 +184,43 @@ public class BussinessSimplifyAction extends BaseAction {
 		}
 		return json;
 	}
+	
+	/**
+	 * 修改当前号码的营销状态 
+	 * @param id
+	 * @param phonenum
+	 * @param isMarket
+	 * @param mSuccess
+	 * @return
+	 */
+	@At("/umarket")
+	@Ok("json")
+	public JsonObject umarket(@Param("id")int id, @Param("phonenum") String phonenum, @Param("isMarket") int isMarket, @Param("mSuccess") int mSuccess,HttpServletRequest request) {
+		json = new JsonObject();
+		try{
+			BussinessSimplify bs = bussinessSimplifyService.find(id);
+			if(null != bs && bs.getPhonenum().equals(phonenum)){
+				bs.setMSuccess(mSuccess);
+				bs.setIsMarket(isMarket);
+				if(bussinessSimplifyService.update(bs)){
+					json.setSuccess(true);
+					json.setMsg("更新数据状态成功!");
+				}else{
+					json.setSuccess(false);
+					json.setMsg("更新数据失败");
+				}
+			}else{
+				json.setSuccess(false);
+				json.setMsg("未查询到手机号码为[" + phonenum + "]的数据");
+			}
+		}catch(Exception e){
+			logger.error("BussinessAction.search.exception:"+e);
+			json.setSuccess(false);
+			json.setMsg("更新数据出现异常");
+		}
+		return json;
+	}
+	
 
 	public NOplogService getNOplogService() {
 		return nOplogService;
