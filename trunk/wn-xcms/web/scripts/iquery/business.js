@@ -127,6 +127,28 @@ Ext.onReady(function(){
         	return '<font color="blue">'+typeName+'</font>';
         }},
         {header: "业务区", width: 100, sortable: true, dataIndex: 'bdistrict'},
+        {header: "是否营销", width: 100, sortable: true, dataIndex: 'isMarket',renderer:function(v){
+        	if(v == 0){
+        		return '';
+        	}else if(v == 1){
+        		return '<font color="blue">是</font>';
+        	}else if(v == 2){
+        		return '<font color="yellow">否</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
+        {header: "是否营销成功", width: 100, sortable: true, dataIndex: 'mSuccess',renderer:function(v){
+        	if(v == 0){
+        		return '';
+        	}else if(v == 1){
+        		return '<font color="blue">是</font>';
+        	}else  if(v == 2){
+        		return '<font color="yellow">否</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
         {header: "业务是否支持", width: 100, sortable: true, dataIndex: 'support',renderer:function(v){
         	if(v == 0){
         		return '<font color="red">不支持</font>';
@@ -141,7 +163,7 @@ Ext.onReady(function(){
         	var typeName = '短信';
         	switch(x){
         		case 0:
-        			typeName = '无业务形式';
+        			typeName = '<font color="red">不支持</font>';
         			break;
         		case 1:
     				typeName = 'WAP,短信';
@@ -206,6 +228,51 @@ Ext.onReady(function(){
 //        }}
     ]);
     
+	app.isprompt = new Ext.form.ComboBox({
+//				fieldLabel : '查询条件',
+				id : 'isprompt',
+				hiddenName : 'colName',
+				valueField : 'id',
+				displayField : 'name',
+				mode:'local',
+//				value:'1',
+				store : new Ext.data.SimpleStore({
+					data : [
+							['1', '是'],
+							['2', '否']
+				    ],
+					fields : ['id', 'name']
+				}),	
+				selectOnFocus : true,
+				editable : false,
+				allowBlank : false,
+				triggerAction : 'all',
+				emptyText : '是否进行营销'
+	});
+
+
+	app.promptss = new Ext.form.ComboBox({
+//				fieldLabel : '营销是否成功',
+				id : 'promptss',
+				hiddenName : 'colName',
+				valueField : 'id',
+				displayField : 'name',
+				mode:'local',
+//				value:'1',
+				store : new Ext.data.SimpleStore({
+					data : [
+							['1', '是'],
+							['2', '否']
+				    ],
+					fields : ['id', 'name']
+				}),	
+				selectOnFocus : true,
+				editable : false,
+				allowBlank : false,
+				triggerAction : 'all',
+				emptyText : '营销是否成功'
+	});
+
 	app.btn_search_code = new Ext.Button({
 		text : '查询',
 		disabled:false,
@@ -215,6 +282,103 @@ Ext.onReady(function(){
 		}
 	});
 	
+	app.btn_save_code = new Ext.Button({
+		text : '保存',
+		disabled:false,
+		iconCls : 'icon-accept',
+		handler : function(){
+			var values =app.text_phone_number.getValue();
+			var records = app.grid.getSelectionModel().getSelections();
+			if(records.length == 0 ){
+				Ext.Msg.show({
+					title : '提示',
+					msg:'请选择需要修改的记录',
+					buttons : Ext.Msg.OK,
+					icon : Ext.Msg.ERROR
+				});
+			}else{
+				var isMarket = app.isprompt.getValue();
+				var mSuccess = app.promptss.getValue();
+				if('' == isMarket || null == isMarket){
+					Ext.MessageBox.alert('提示','营销状态必须选择！');
+					app.isprompt.focus();
+					return;
+				}
+				
+				if('' == mSuccess || null == mSuccess){
+					Ext.MessageBox.alert('提示','营销结果必须选择！');
+					app.promptss.focus();
+					return;
+				}
+				
+				if(null != values && '' !=  values){
+					if(records[0].get('isMarket') == 1 && records[0].get('mSuccess') == 1){
+						Ext.Msg.show({
+							title : '系统提示',
+							msg : '当前记录已经为营销且成功状态，不能修改',
+							buttons : Ext.Msg.OK,
+							icon : Ext.MessageBox.ERROR
+						});
+						return;
+					}else{
+						//执行提交所选号码，并修改该号码的营销状态
+						Ext.Msg.confirm('提示', '你确定修改用所选记录的营销状态和结果?', function(btn) {
+							if (btn == 'yes') {
+								Ext.Ajax.request({
+									url : project+'/bussinesssimplify/umarket.cgi',
+									params : {
+										id : records[0].get('id'),
+										phonenum:records[0].get('phonenum'),
+										isMarket:isMarket,
+										mSuccess:mSuccess
+									},
+									success:function(response,option){
+										var obj = Ext.util.JSON.decode(response.responseText);
+										if(obj.success){
+											Ext.Msg.show({
+												title : '提示',
+												msg:obj.msg,
+												buttons : Ext.Msg.OK,
+//												fn:function(){
+//													app.ds_data.load({
+//														params:{
+//															colName :app.colName,
+//															value:values,
+//															start:0,
+//															limit:app.limit
+//														}
+//													});
+//												},
+												icon : Ext.Msg.INFO
+											});
+										}else{
+											Ext.Msg.show({
+												title : '提示',
+												msg : obj.msg,
+												buttons : Ext.Msg.OK,
+												icon : Ext.Msg.ERROR
+											});
+										}
+									},
+					                failure:function(response,option){
+										Ext.Msg.show({
+											title : '提示',
+											msg : '系统发生错误!',
+											buttons : Ext.Msg.OK,
+											icon : Ext.Msg.ERROR
+										});
+					                }
+								});
+							}
+						});
+					}
+				}
+			}
+			/**
+			**/
+		}
+	});
+
 	app.searchcode = function() {
 		var values =app.text_phone_number.getValue();
 		if(null == values || '' ==  values){
@@ -282,6 +446,7 @@ Ext.onReady(function(){
 		**/
 		app.ds_data.load({
 			params : {
+				btype:btype,
 				colName :app.colName,
 				value:values,
 				start:0,
@@ -318,6 +483,8 @@ Ext.onReady(function(){
 		}, {name : 'imei',type : 'string'
 		}, {name : 'support',type : 'int'
 		}, {name : 'suuporttype',type : 'int'
+		}, {name : 'isMarket',type : 'int'
+		}, {name : 'mSuccess',type : 'int'
 		}, {name : 'id',type : 'int'
 		}])
 	});
@@ -346,7 +513,7 @@ Ext.onReady(function(){
         },
  		plugins: expander,
 		sm:app.sm,
-		tbar : ['请输入手机号码：',app.text_phone_number,'-',app.btn_search_code],
+		tbar : ['请输入手机号码：',app.text_phone_number,'-',app.btn_search_code,'-','是否进行营销','-',app.isprompt,'-','营销是否成功','-',app.promptss,'-',app.btn_save_code],
 		bbar : app.ptb
 	});
 	
