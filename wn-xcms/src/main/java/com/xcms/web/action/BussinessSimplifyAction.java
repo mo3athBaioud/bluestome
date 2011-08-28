@@ -20,6 +20,7 @@ import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param;
 import org.nutz.mvc.upload.UploadAdaptor;
 
+import com.mss.dal.domain.Bussiness;
 import com.mss.dal.domain.BussinessSimplify;
 import com.mss.dal.domain.Noplog;
 import com.mss.dal.domain.OPlog;
@@ -222,6 +223,91 @@ public class BussinessSimplifyAction extends BaseAction {
 	}
 	
 
+	/**
+	 * 查询业务数据
+	 * 
+	 * @param colName
+	 * @param value
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	@At("/admin/list")
+	@Ok("json")
+	public JsonObject alist(@Param("colName") String colName, @Param("value") String value, @Param("start") int start, @Param("limit") int limit,HttpServletRequest request) {
+		json = new JsonObject();
+		UserSession us = null;
+		Bussiness bus = null;
+		try{
+			String ip = request.getRemoteAddr();
+			String sessionName = ip + "_" + Constants.USERSESSION;
+			Object obj  = request.getSession().getAttribute(sessionName);
+			if(null != obj){
+				us = (UserSession)obj;
+			}			
+			int count = bussinessSimplifyService.getCount(colName, value);
+			if (count > 0) {
+				List<BussinessSimplify> list = bussinessSimplifyService.search(colName,
+						value, start, limit);
+				logger.debug(" >> count:" + count);
+				if (null != list && list.size() > 0) {
+					// 保存查询日志 异步
+					json.setCount(count);
+					json.setObj(list);
+				} else {
+					json.setSuccess(false);
+				}
+			} else {
+				json.setSuccess(false);
+				json.setMsg("未查询到[" + colName + "]为[" + value + "]的数据");
+			}
+		}catch(Exception e){
+			logger.error("BussinessAction.search.exception:"+e);
+		}
+		return json;
+	}
+	
+	/**
+	 * 重置当前号码的营销状态 
+	 * @param id
+	 * @param phonenum
+	 * @param isMarket
+	 * @param mSuccess
+	 * @return
+	 */
+	@At("/admin/reset")
+	@Ok("json")
+	public JsonObject reset(@Param("id")int id, @Param("phonenum") String phonenum,HttpServletRequest request) {
+		json = new JsonObject();
+		try{
+			BussinessSimplify bs = bussinessSimplifyService.find(id);
+			if(null != bs && bs.getPhonenum().equals(phonenum)){
+				if(bs.getMSuccess() == 0 && bs.getIsMarket() == 0){
+					json.setSuccess(false);
+					json.setMsg("号码["+phonenum+"],不需要重置");
+				}else{
+					bs.setMSuccess(0);
+					bs.setIsMarket(0);
+					if(bussinessSimplifyService.update(bs)){
+						json.setSuccess(true);
+						json.setMsg("重置号码["+phonenum+"]数据状态成功!");
+					}else{
+						json.setSuccess(false);
+						json.setMsg("重置号码["+phonenum+"]失败");
+					}
+				}
+			}else{
+				json.setSuccess(false);
+				json.setMsg("未查询到手机号码为[" + phonenum + "]的数据");
+			}
+		}catch(Exception e){
+			logger.error("BussinessAction.search.exception:"+e);
+			json.setSuccess(false);
+			json.setMsg("重置号码["+phonenum+"]出现异常");
+		}
+		return json;
+	}
+	
 	public NOplogService getNOplogService() {
 		return nOplogService;
 	}
