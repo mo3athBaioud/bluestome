@@ -5,7 +5,7 @@ Ext.onReady(function(){
     Ext.QuickTips.init();
 	app.limit = 15;
 	app.colName = "d_phonenum";
-	app.values = "";
+	app.values = "000000";
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
     var expander = new Ext.grid.RowExpander({
@@ -513,8 +513,8 @@ Ext.onReady(function(){
         },
  		plugins: expander,
 		sm:app.sm,
-		tbar : ['请输入手机号码：',app.text_phone_number,'-',app.btn_search_code,'-','是否进行营销','-',app.isprompt,'-','营销是否成功','-',app.promptss,'-',app.btn_save_code],
-		bbar : app.ptb
+		tbar : ['请输入手机号码：',app.text_phone_number,'-',app.btn_search_code,'-','是否进行营销','-',app.isprompt,'-','营销是否成功','-',app.promptss,'-',app.btn_save_code]
+//		bbar : app.ptb
 	});
 	
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
