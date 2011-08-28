@@ -147,7 +147,24 @@
         id:'id_node_01010901'
 
     });
+    var node_01010904 = new Ext.tree.TreeNode({
+        text:'数据管理',
+    	expanded:false,
+        iconCls:'icon-table',
+        id:'id_node_01010904'
+    });
 
+  	var node_0101090401 = new Ext.tree.TreeNode({
+ 		text:'业务数据管理',
+ 		listeners: {
+ 		'click': function(){
+ 		  addTab(project+'/pages/admin/dbussiness.jsp','业务数据管理','0101090401','渭南移动终端业务营销系统 -> 系统管理 -> 数据管理 -> 业务数据管理','application_view_columns.png');
+ 		}},
+ 		expanded:false,
+ 		iconCls:'icon-grid',
+ 		id:'id_node_0101090401'
+ 	});
+ 	
     var node_01010903 = new Ext.tree.TreeNode({
         text:'日志管理',
         listeners: {
@@ -263,6 +280,8 @@
  		id:'id_node_0101090204'
  	});
  	
+    node_01010904.appendChild(node_0101090401);
+    
     node_01010903.appendChild(node_0101090301);
  	
     node_01010902.appendChild(node_0101090204);
@@ -277,6 +296,7 @@
     node_010109.appendChild(node_01010903);
     node_010109.appendChild(node_01010901);
     node_010109.appendChild(node_01010902);
+    node_010109.appendChild(node_01010904);
     node_0101.appendChild(node_010109);
     
     var treePanel_0101 = new Ext.tree.TreePanel({
