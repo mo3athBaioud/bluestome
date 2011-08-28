@@ -236,17 +236,21 @@ Ext.onReady(function(){
 										buttons : Ext.Msg.OKCANCEL,
 										fn:function(btn){
 											if(btn == 'ok'){
-												var startdate = frm.findField('startdate').getValue().format("Y-m-d H:i:s") ;
-												var enddate = frm.findField('enddate').getValue().format("Y-m-d H:i:s") ;
+												var startdate = frm.findField('startdate').getValue().format("Y-m-d H:i:s");
+												var enddate = frm.findField('enddate').getValue();
 												//TODO 执行请求下载
-												var url = project + '/noplog/download.cgi?startdate='+startdate+'&enddate='+enddate;
+												var url = project + '/noplog/download.cgi?startdate='+startdate;
 												Ext.Msg.show({
 													title : '提示',
 													msg : '确认导出查询的日志数据？',
 													buttons : Ext.Msg.OKCANCEL,
 													fn:function(btn){
 														if(btn == 'ok'){
-															window.open(url);
+															if('' != enddate && null != enddate){
+																window.open(url+'&enddate='+(frm.findField('enddate').getValue().format("Y-m-d H:i:s")));
+															}else{
+																window.open(url);
+															}
 														}
 													},
 													icon : Ext.Msg.INFO
@@ -468,21 +472,3 @@ Ext.onReady(function(){
 	
     app.grid.render('staff');
 });
-
-var ds_hstype = new Ext.data.Store({
-	proxy:new Ext.data.HttpProxy({
-		url:'/hstype/list.cgi'
-	}),
-	reader : new Ext.data.JsonReader({
-		root : 'obj'
-	}, [{name : 'id',type : 'int'},
-		{name : 'name',type : 'string'},
-		{name : 'icon',type : 'string'}
-		
-	])
-});
-
-function vmobile(v){
-     var r = /^((\(\d{2,3}\))|(\d{3}\-))?1?[3,5,8]\d{9}$/;
-     return r.test(v);
-}
