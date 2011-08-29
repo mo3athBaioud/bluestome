@@ -80,6 +80,17 @@ Ext.onReady(function(){
 	        		return '<font color="yellow">未知</font>';
 	        	}
 	        }},
+	        {header: "本平台营销成功", width: 100, sortable: true, dataIndex: 'platsell',renderer:function(v){
+	        	if(v == 0){
+	        		return '';
+	        	}else if(v == 1){
+	        		return '<font color="blue">是</font>';
+	        	}else  if(v == 2){
+	        		return '<font color="red">否</font>';
+	        	}else{
+	        		return '<font color="yellow">未知</font>';
+	        	}
+	        }},
         	{header: "业务类型", width: 100, sortable: true, dataIndex: 'btype',renderer:function(v){
 				var x = parseInt(v);
 				switch(x){
@@ -392,6 +403,7 @@ Ext.onReady(function(){
 		}, {name : 'createtime',type : 'string'
 		}, {name : 'isMarket',type : 'int'
 		}, {name : 'mSuccess',type : 'int'
+		}, {name : 'platsell',type : 'int'
 		}, {name : 'id',type : 'int'
 		}, {name : 'uid',type : 'int'
 		}])

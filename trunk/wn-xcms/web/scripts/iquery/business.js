@@ -133,7 +133,7 @@ Ext.onReady(function(){
         	}else if(v == 1){
         		return '<font color="blue">是</font>';
         	}else if(v == 2){
-        		return '<font color="yellow">否</font>';
+        		return '<font color="red">否</font>';
         	}else{
         		return '<font color="yellow">未知</font>';
         	}
@@ -144,7 +144,18 @@ Ext.onReady(function(){
         	}else if(v == 1){
         		return '<font color="blue">是</font>';
         	}else  if(v == 2){
-        		return '<font color="yellow">否</font>';
+        		return '<font color="red">否</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
+        {header: "本平台营销成功", width: 100, sortable: true, dataIndex: 'platsell',renderer:function(v){
+        	if(v == 0){
+        		return '';
+        	}else if(v == 1){
+        		return '<font color="blue">是</font>';
+        	}else  if(v == 2){
+        		return '<font color="red">否</font>';
         	}else{
         		return '<font color="yellow">未知</font>';
         	}
@@ -235,6 +246,7 @@ Ext.onReady(function(){
 				valueField : 'id',
 				displayField : 'name',
 				mode:'local',
+				width:100,
 //				value:'1',
 				store : new Ext.data.SimpleStore({
 					data : [
@@ -259,6 +271,7 @@ Ext.onReady(function(){
 				displayField : 'name',
 				mode:'local',
 //				value:'1',
+				width:100,
 				store : new Ext.data.SimpleStore({
 					data : [
 							['1', '是'],
@@ -273,6 +286,29 @@ Ext.onReady(function(){
 				emptyText : '营销是否成功'
 	});
 
+	app.platsell = new Ext.form.ComboBox({
+//				fieldLabel : '',
+				id : 'platsell',
+				hiddenName : 'colName',
+				valueField : 'id',
+				displayField : 'name',
+				mode:'local',
+//				value:'1',
+				width:100,
+				store : new Ext.data.SimpleStore({
+					data : [
+							['1', '是'],
+							['2', '否']
+				    ],
+					fields : ['id', 'name']
+				}),	
+				selectOnFocus : true,
+				editable : false,
+				allowBlank : false,
+				triggerAction : 'all',
+				emptyText : '本平台营销成功'
+	});
+	
 	app.btn_search_code = new Ext.Button({
 		text : '查询',
 		disabled:false,
@@ -299,6 +335,7 @@ Ext.onReady(function(){
 			}else{
 				var isMarket = app.isprompt.getValue();
 				var mSuccess = app.promptss.getValue();
+				var platsell = app.platsell.getValue();
 				if('' == isMarket || null == isMarket){
 					Ext.MessageBox.alert('提示','营销状态必须选择！');
 					app.isprompt.focus();
@@ -307,6 +344,12 @@ Ext.onReady(function(){
 				
 				if('' == mSuccess || null == mSuccess){
 					Ext.MessageBox.alert('提示','营销结果必须选择！');
+					app.promptss.focus();
+					return;
+				}
+				
+				if('' == platsell || null == platsell){
+					Ext.MessageBox.alert('提示','是否本平台营销必须选择！');
 					app.promptss.focus();
 					return;
 				}
@@ -330,7 +373,8 @@ Ext.onReady(function(){
 										id : records[0].get('id'),
 										phonenum:records[0].get('phonenum'),
 										isMarket:isMarket,
-										mSuccess:mSuccess
+										mSuccess:mSuccess,
+										platsell:platsell
 									},
 									success:function(response,option){
 										var obj = Ext.util.JSON.decode(response.responseText);
@@ -485,6 +529,7 @@ Ext.onReady(function(){
 		}, {name : 'suuporttype',type : 'int'
 		}, {name : 'isMarket',type : 'int'
 		}, {name : 'mSuccess',type : 'int'
+		}, {name : 'platsell',type : 'int'
 		}, {name : 'id',type : 'int'
 		}])
 	});
@@ -513,7 +558,7 @@ Ext.onReady(function(){
         },
  		plugins: expander,
 		sm:app.sm,
-		tbar : ['请输入手机号码：',app.text_phone_number,'-',app.btn_search_code,'-','是否进行营销','-',app.isprompt,'-','营销是否成功','-',app.promptss,'-',app.btn_save_code]
+		tbar : ['请输入手机号码：',app.text_phone_number,'-',app.btn_search_code,'-','是否进行营销','-',app.isprompt,'-','营销是否成功','-',app.promptss,'-','本平台营销成功','-',app.platsell,'-',app.btn_save_code]
 //		bbar : app.ptb
 	});
 	
