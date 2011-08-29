@@ -92,6 +92,7 @@ public class BussinessSimplifyAction extends BaseAction {
 						op.setResult(1);
 						op.setMSuccess(bus.getMSuccess());
 						op.setIsMarket(bus.getIsMarket());
+						op.setPlatsell(bus.getPlatsell());
 					}
 					// 保存查询日志 异步
 					json.setCount(count);
@@ -196,13 +197,14 @@ public class BussinessSimplifyAction extends BaseAction {
 	 */
 	@At("/umarket")
 	@Ok("json")
-	public JsonObject umarket(@Param("id")int id, @Param("phonenum") String phonenum, @Param("isMarket") int isMarket, @Param("mSuccess") int mSuccess,HttpServletRequest request) {
+	public JsonObject umarket(@Param("id")int id, @Param("phonenum") String phonenum, @Param("isMarket") int isMarket, @Param("mSuccess") int mSuccess,@Param("platsell") int platsell,HttpServletRequest request) {
 		json = new JsonObject();
 		try{
 			BussinessSimplify bs = bussinessSimplifyService.find(id);
 			if(null != bs && bs.getPhonenum().equals(phonenum)){
 				bs.setMSuccess(mSuccess);
 				bs.setIsMarket(isMarket);
+				bs.setPlatsell(platsell);
 				if(bussinessSimplifyService.update(bs)){
 					json.setSuccess(true);
 					json.setMsg("更新数据状态成功!");
@@ -218,6 +220,8 @@ public class BussinessSimplifyAction extends BaseAction {
 			logger.error("BussinessAction.search.exception:"+e);
 			json.setSuccess(false);
 			json.setMsg("更新数据出现异常");
+		}finally{
+			
 		}
 		return json;
 	}
