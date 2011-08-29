@@ -182,7 +182,7 @@ public class NOplogService {
 	 */
 	public String generatorCsv(List<Noplog> list){
 		StringBuffer sb = new StringBuffer();
-		sb.append("查询号码").append(",").append("号码所属业务区").append(",").append("查询时间").append(",").append("是否进行营销").append(",").append("营销是否成功").append(",").append("查询业务种类").append(",").append("查询工号").append(",").append("查询工号业务区").append("\r\n");
+		sb.append("查询号码").append(",").append("号码所属业务区").append(",").append("查询时间").append(",").append("是否进行营销").append(",").append("营销是否成功").append(",").append("营销是否成功").append(",").append("查询业务种类").append(",").append("查询工号").append(",").append("查询工号业务区").append("\r\n");
 		for(Noplog op:list){
 			sb.append(op.getPhonenum()).append(",").append(op.getPhonenumBDistrict()).append(",").append(DateUtils.formatDate(op.getCreatetime(), "yyyy-MM-dd HH:mm:ss")).append(",");
 			switch(op.getIsMarket()){
@@ -209,6 +209,19 @@ public class NOplogService {
 				default:
 					sb.append("");
 					break;
+			}
+			sb.append(",");
+			switch(op.getPlatsell()){
+			case 1:
+				sb.append("否");
+				break;
+			case 2:
+				sb.append("是");
+				break;
+			case 0:
+			default:
+				sb.append("");
+				break;
 			}
 			sb.append(",");
 			switch(op.getBtype()){
