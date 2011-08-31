@@ -1743,7 +1743,7 @@ function addTab(url,name,menuid,pathCh,icon){
   if(index != -1)
     url = url + '&menuid4Log=' + menuid;
 	 var n = mainTabs.getComponent(id);
- 
+  alert(' > n:'+n);
   if (!n) {
 
      // 如果对centerPanel进行遮罩,则可以出现阴影mainTabs
