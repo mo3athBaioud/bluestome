@@ -2,8 +2,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 	<head>
-		<title>首页</title>
 		<%@ include file="/commons/head.jsp"%>
+		<title>首页</title>
 		<script type="text/javascript">
 			var project = '${ctx}';
 			var mainTabs;
@@ -157,14 +157,20 @@
 						<nobr>
 							&nbsp;
 							<img class="IEPNG" src="${ctx}/images/comments.png" />
-							&nbsp;欢迎您,帐户:admin
+							&nbsp;
+							<script type="text/javascript">
+								document.write(welcomeword);
+							</script>
+							admin
 						</nobr>
 					</td>
 
 					<td width="35%">
 						<div align="right">
 							<nobr>
-								Copyright&copy 2011 杭州斯凯网络科技有限公司
+								<script type="text/javascript">
+									document.write(copyright);
+								</script>
 							</nobr>
 						</div>
 					</td>
