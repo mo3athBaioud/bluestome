@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="oms-admin"
+  id="myeclipse.1314680956407"
+  context-root="/oms"
+  j2ee-spec="5.0"
+  archive="oms-admin.war">
+  <attributes>
+    <attribute name="webrootdir" value="web" />
+  </attributes>
+</project-module>
+
