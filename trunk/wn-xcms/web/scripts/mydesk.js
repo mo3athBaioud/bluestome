@@ -193,9 +193,8 @@ Ext.onReady(function() {
         store: ds_data,
         columns: [
             {id:'title',header: '号码', width: 100, sortable: true, dataIndex: 'phonenum'},
-            {header: '号码业务区', width: 100, sortable: true, dataIndex: 'phonenumBDistrict'},
-            {header: '登录名', width: 100, sortable: true, dataIndex: 'loginname'},
-            {header: '时间', width: 150, sortable: true, dataIndex: 'createtime'},
+//            {header: '号码业务区', width: 100, sortable: true, dataIndex: 'phonenumBDistrict'},
+//            {header: '登录名', width: 100, sortable: true, dataIndex: 'loginname'},
 	        {header: "是否营销", width: 100, sortable: true, dataIndex: 'isMarket',renderer:function(v){
 	        	if(v == 0){
 	        		return '';
@@ -285,14 +284,15 @@ Ext.onReady(function() {
 						break;
 				}
         		return '<font color="blue">'+name+'</font>';
-        	}}
+        	}},
+            {header: '时间', width: 150, sortable: true, dataIndex: 'createtime'},
         ],
 //		tools: tools,
         collapsible: true,
         animCollapse: false,
         closable:false,
         height:350,
-        width:850,
+        width:750,
         autoScroll: true,
         bbar : ptb,
         //btn_del,'-',
