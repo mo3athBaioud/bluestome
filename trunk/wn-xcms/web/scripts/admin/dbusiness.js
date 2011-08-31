@@ -133,7 +133,7 @@ Ext.onReady(function(){
         	}else if(v == 1){
         		return '<font color="blue">是</font>';
         	}else if(v == 2){
-        		return '<font color="yellow">否</font>';
+        		return '<font color="red">否</font>';
         	}else{
         		return '<font color="yellow">未知</font>';
         	}
@@ -144,7 +144,18 @@ Ext.onReady(function(){
         	}else if(v == 1){
         		return '<font color="blue">是</font>';
         	}else  if(v == 2){
-        		return '<font color="yellow">否</font>';
+        		return '<font color="red">否</font>';
+        	}else{
+        		return '<font color="yellow">未知</font>';
+        	}
+        }},
+        {header: "本平台营销成功", width: 100, sortable: true, dataIndex: 'platsell',renderer:function(v){
+        	if(v == 0){
+        		return '';
+        	}else if(v == 1){
+        		return '<font color="blue">是</font>';
+        	}else  if(v == 2){
+        		return '<font color="red">否</font>';
         	}else{
         		return '<font color="yellow">未知</font>';
         	}
@@ -423,6 +434,7 @@ Ext.onReady(function(){
 		}, {name : 'suuporttype',type : 'int'
 		}, {name : 'isMarket',type : 'int'
 		}, {name : 'mSuccess',type : 'int'
+		}, {name : 'platsell',type : 'int'
 		}, {name : 'id',type : 'int'
 		}])
 	});
