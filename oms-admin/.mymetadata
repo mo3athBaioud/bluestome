@@ -7,7 +7,7 @@
   j2ee-spec="5.0"
   archive="oms-admin.war">
   <attributes>
-    <attribute name="webrootdir" value="web" />
+    <attribute name="webrootdir" value="/web" />
   </attributes>
 </project-module>
 
