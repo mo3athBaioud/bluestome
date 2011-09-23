@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+   <!-- 
+   确定搜索包的路径。
+   只要是结尾为action的包都要搜索。
+   basePackage按照默认不用配置，如果配置，只会找以此配置开头的包。
+   locators及locators.basePackage都是一组以逗号分割的字符串
+    -->
+	<constant name="struts.convention.default.parent.package" value="crud-default" />
+	<!-- com.skymobi.oms.[web].xx.xx.xx.xxx -->
+	<constant name="struts.convention.package.locators" value="web" />
+	<!-- 开始扫描的位置 -->
+	<constant name="struts.convention.package.locators.basePackage" value="com.skymobi.qunker" />
+    <constant name="struts.i18n.encoding" value="UTF-8"/>
+    <constant name="struts.locale" value="zh_CN"></constant>
+    <constant name="struts.ui.theme" value="simple"></constant>
+    <constant name="struts.devMode" value="false"></constant>
+    <constant name="struts.enable.DynamicMethodInvocation" value="true"></constant>
+    <constant name="struts.i18n.reload" value="true"></constant>
+    <constant name="struts.serve.static.browserCache" value="false"></constant>
+    <constant name="struts.url.includeParams" value="none"></constant>
+    <constant name="struts.action.extension" value="action,do"/>
+    <constant name="struts.multipart.maxSize" value="524288000" />
+
+    
+    
+	<!-- 用于CRUD Action的parent package -->
+	<package name="crud-default" extends="convention-default">
+		<!-- 基于paramsPrepareParamsStack,增加store interceptor保证actionMessage在redirect后不会丢失 -->
+		<interceptors>
+			<interceptor-stack name="crudStack">
+				<interceptor-ref name="store">
+					<param name="operationMode">AUTOMATIC</param>
+				</interceptor-ref>
+				<interceptor-ref name="paramsPrepareParamsStack" />
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="crudStack" />
+	</package>
+
+</struts>
