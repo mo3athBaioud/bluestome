@@ -27,7 +27,8 @@
 					fn:function(){
 						//是否提交登录成功
 						//转入管理后台
-						window.location.href = project+'/pages/admin/index.jsp';
+//						window.location.href = project+'/pages/admin/index.jsp';
+						window.location.href = project+'/admin/grouproom.action';
 					},
 					icon : Ext.MessageBox.INFO
 				});
