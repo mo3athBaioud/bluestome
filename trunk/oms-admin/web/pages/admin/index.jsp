@@ -6,7 +6,6 @@
 		<title>首页</title>
 		<script type="text/javascript">
 			var project = '${ctx}';
-			var mainTabs;
 		</script>
 		<link href="${pageContext.request.contextPath}/styles/eredg4.css" rel="stylesheet" type="text/css">		
 		<script type="text/javascript" src="${pageContext.request.contextPath}/scripts/other/extTabCloseMenu.js"></script>	
@@ -72,9 +71,7 @@
 		</style>
 
 		<!--显示loding区域-->
-
 		<DIV id=loading-mask></DIV>
-
 		<DIV id=loading>
 			<DIV class=loading-indicator>
 				<IMG style="MARGIN-RIGHT: 8px" height=32
@@ -86,9 +83,7 @@
 
 		<div id="north">
 			<!-- background="${ctx}/resource/image/banner_background/default.png"  -->
-			<table border="0" cellpadding="0" cellspacing="0" width="100%"
-				height="60"
-				>
+			<table border="0" cellpadding="0" cellspacing="0" width="100%" height="60">
 				<tr>
 					<td style="padding-left: 15px">
 						<img class="IEPNG" src="${ctx}/resources/images/default/s.gif" />
@@ -104,21 +99,15 @@
 									您好,admin!
 									<span id="rTime"><span>
 								</td>
-
 							</tr>
 
 							<tr align="right">
-
 								<td>
-
 									<table border="0" cellpadding="0" cellspacing="1">
-
 										<tr>
-
 											<td>
 												<div id="themeDiv">
 											</td>
-
 											<td>
 												&nbsp;
 											</td>
@@ -131,23 +120,14 @@
 											<td>
 												<div id="closeDiv">
 											</td>
-
 										</tr>
-
 									</table>
-
 								</td>
-
 							</tr>
-
 						</table>
-
 					</td>
-
 				</tr>
-
 			</table>
-
 		</div>
 
 		<div id="south" align="left">
