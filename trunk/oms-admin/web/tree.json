@@ -7,42 +7,42 @@
 						"text":"创建房间",
 						"id":"0102",
 						"iconCls":"icon-script_go",
-						"tabicon":"/images/house.png",
+						"tabicon":"/images/page.png",
 						"ahref":"/mydesk.jsp",
 						"leaf":true
 				},{
 						"text":"查看编辑房间",
 						"id":"0103",
 						"iconCls":"icon-script_go",
-						"tabicon":"/images/house.png",
+						"tabicon":"/images/page.png",
 						"ahref":"/mydesk.jsp",
 						"leaf":true
 				},{
 						"text":"查封房间",
 						"id":"0104",
 						"iconCls":"icon-script_go",
-						"tabicon":"/images/house.png",
+						"tabicon":"/images/page.png",
 						"ahref":"/mydesk.jsp",
 						"leaf":true
 				},{
 						"text":"解封房间",
 						"id":"0105",
 						"iconCls":"icon-script_go",
-						"tabicon":"/images/house.png",
+						"tabicon":"/images/page.png",
 						"ahref":"/mydesk.jsp",
 						"leaf":true
 				},{
 						"text":"实时聊天",
 						"id":"0106",
 						"iconCls":"icon-script_go",
-						"tabicon":"/images/house.png",
+						"tabicon":"/images/page.png",
 						"ahref":"/mydesk.jsp",
 						"leaf":true
 				},{
 						"text":"邀请好友",
 						"id":"0107",
 						"iconCls":"icon-script_go",
-						"tabicon":"/images/house.png",
+						"tabicon":"/images/page.png",
 						"ahref":"/mydesk.jsp",
 						"leaf":true
 				}
