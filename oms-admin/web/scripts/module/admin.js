@@ -4,9 +4,9 @@
  * @author XiongChun
  * @since 2010-01-13
  */
+var mainTabs;		
 Ext.onReady(function() {
 		Ext.QuickTips.init();
-		
         mainTabs = new Ext.TabPanel({
             region:'center', 
             activeTab:0,
@@ -102,12 +102,18 @@ Ext.onReady(function() {
 							'click' : function(n) {
 								try{
 									//子节点点击事件，json中最好不要使用href这个参数，extjs会将该参数名转换为a链接，然后打开新的窗口。
-									var sn = this.selModel.selNode || {};
+//									var sn = this.selModel.selNode || {};
 									if (n.leaf && (null != n.attributes.ahref && '' != n.attributes.ahref)) {
-										//' -> 统计分析 -> 自定义报表 -> 手机电视推荐清单'
-										addTab(n.attributes.ahref,n.text,n.id,projectname+' -> '+n.parentNode.text+' -> '+n.text,n.attributes.tabicon);								
+										var url = project + n.attributes.ahref;
+										addTab(url,n.text,n.id,projectname+' -> '+n.parentNode.text+' -> '+n.text,n.attributes.tabicon);								
 									}
 								}catch(e){
+									Ext.Msg.show({
+										title : '提示',
+										msg:e.toString(),
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.ERROR
+									});
 								}
 							}
 						}
