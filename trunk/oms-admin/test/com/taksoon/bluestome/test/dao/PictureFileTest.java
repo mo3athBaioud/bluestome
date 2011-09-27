@@ -68,12 +68,16 @@ public class PictureFileTest {
 		int c = pictureFileManager.getTotalBySql(entity);
 		System.out.println(" > c:"+c);
 		List<PictureFile> list = pictureFileManager.getListBySql(entity, 0, 200);
+		
+		/**
 		for(PictureFile art:list){
 			System.out.println(" > art.toJson():"+art.toJson());
 		}
+		**/
 		
 		String json = ExtUtil.getJsonFromList(c, list);
 		System.out.println(" > json.length:"+json.length());
+		System.out.println(json);
 		
 //		String json2 = DateJsonValueProcessor.obj2JsonObj(list);
 		

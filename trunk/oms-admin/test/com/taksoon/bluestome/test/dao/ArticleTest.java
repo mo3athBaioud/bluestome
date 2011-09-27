@@ -68,7 +68,8 @@ public class ArticleTest {
 //		entity.setActicleXmlUrl("xml");
 //		entity.setIntro(null);
 //		entity.setText("FD");
-		entity.setWebId(36);
+//		entity.setWebId(36);
+		entity.setTitle("中国");
 		String sql = articleManager.buildCountSQL(entity);
 		System.out.println(" > sql:" + sql);
 		int c = articleManager.getTotalBySql(entity);
