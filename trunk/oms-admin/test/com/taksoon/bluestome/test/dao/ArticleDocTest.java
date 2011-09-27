@@ -8,42 +8,40 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 
-import com.takesoon.oms.ssi.entity.Article;
-import com.takesoon.oms.ssi.json.DateJsonValueProcessor;
-import com.takesoon.oms.ssi.service.ArticleManager;
+import com.takesoon.oms.ssi.entity.ArticleDoc;
+import com.takesoon.oms.ssi.service.ArticleDocManager;
 import com.takesoon.oms.ssi.utils.ExtUtil;
 
-public class ArticleTest {
+public class ArticleDocTest {
 
-	private ArticleManager articleManager;
+	private ArticleDocManager articleDocManager;
 	
 	@Before
 	public void init(){
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		articleManager = (ArticleManager)context.getBean("articleManager");
+		articleDocManager = (ArticleDocManager)context.getBean("articleDocManager");
 	}
 	
 	@After
 	public void destory(){
-		if(null != articleManager)
-			articleManager = null;
+		if(null != articleDocManager)
+			articleDocManager = null;
 	}
 	
 	public void test(){
-		Article entity = new Article();
-		entity.setId(135);
-		if(null != articleManager){
-			System.out.println("articleManager is not null");
-			int c = articleManager.getCount(entity);
+		ArticleDoc entity = new ArticleDoc();
+		entity.setId(10010);
+		if(null != articleDocManager){
+			System.out.println("articleDocManager is not null");
+			int c = articleDocManager.getCount(entity);
 			System.out.println(" > c:" + c);
 		}
 		
 	}
 	
-	@Test
 	public void get(){
 		Integer id = 135;
-		Article entity = articleManager.get(id);
+		ArticleDoc entity = articleDocManager.get(id);
 		if(null != entity){
 			System.out.println(" > entity.id:"+entity.getId());
 			System.out.println(" > entity.webId:"+entity.getWebId());
@@ -55,38 +53,43 @@ public class ArticleTest {
 	}
 	
 	public void getTotal(){
-		Article entity = new Article();
-		int t = articleManager.getTotal(entity);
+		ArticleDoc entity = new ArticleDoc();
+		int t = articleDocManager.getTotal(entity);
 		System.out.println(" > t:" + t);
 	}
 	
+	@Test
 	public void buildCountSQL(){
-		Article entity = new Article();
+		ArticleDoc entity = new ArticleDoc();
 //		entity.setId(13);
 //		entity.setArticleUrl("military");
 //		entity.setActicleRealUrl("http://");
 //		entity.setActicleXmlUrl("xml");
 //		entity.setIntro(null);
 //		entity.setText("FD");
-		entity.setWebId(36);
-		String sql = articleManager.buildCountSQL(entity);
+		entity.setWebId(1350);
+		String sql = articleDocManager.buildCountSQL(entity);
 		System.out.println(" > sql:" + sql);
-		int c = articleManager.getTotalBySql(entity);
+		
+		int c = articleDocManager.getTotalBySql(entity);
 		System.out.println(" > c:"+c);
-		List<Article> list = articleManager.getListBySql(entity, 0, 200);
-//		for(Article art:list){
+		
+		List<ArticleDoc> list = articleDocManager.getListBySql(entity, 0, 200);
+//		for(ArticleDoc art:list){
 //			System.out.println(" > art.toJson():"+art.toJson());
 //		}
 		
+		//JSON格式
 		String json = ExtUtil.getJsonFromList(c, list);
+		System.out.println(json);
 		System.out.println(" > json.length:"+json.length());
 		
 //		String json2 = DateJsonValueProcessor.obj2JsonObj(list);
 		
-		String xml = ExtUtil.getXmlFromList(c, list);
-		System.out.println(" > xml.length:"+xml.length());
+//		String xml = ExtUtil.getXmlFromList(c, list);
+//		System.out.println(" > xml.length:"+xml.length());
 		
-		System.out.println(" > list.size:" + list.size());
+//		System.out.println(" > list.size:" + list.size());
 		System.out.println(" > count:" + c);
 	}
 }
