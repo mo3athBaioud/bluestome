@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.takesoon.oms.ssi.json.DateJsonValueProcessor;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -30,8 +31,7 @@ public class ExtUtil {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(TOTAL, inList.size());
 		map.put(RECORDS, inList);
-		JSONObject jsonObj = JSONObject.fromObject(map);
-		return jsonObj.toString();
+		return DateJsonValueProcessor.map2JSonStr(map);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class ExtUtil {
 	 * @return
 	 */
 	public static String getJsonFromObject(Object inObject) {
-		JSONObject jsonString = JSONObject.fromObject(inObject);
+		JSONObject jsonString = DateJsonValueProcessor.obj2JsonObj(inObject);
 		return jsonString.toString();
 	}
 
