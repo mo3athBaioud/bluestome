@@ -3,10 +3,12 @@ package com.takesoon.oms.ssi.entity;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * 图片对象 tbl_image
@@ -14,53 +16,71 @@ import javax.persistence.Table;
  * @author bluestome
  * 
  */
+@Entity
 @Table(name="tbl_image")
 public class Image extends AbstractEntity {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7126894035875863901L;
+	private static final Long serialVersionUID = 7126894035875863901L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="d_id")
 	private Integer id;
 
+	@Column(name="d_article_id")
 	private Integer articleId;
 
+	@Column(name="d_title")
 	private String title;
 
+	@Column(name="d_name")
 	private String name;
 
+	@Column(name="d_imgurl")
 	private String imgUrl;
 
+	@Column(name="d_httpurl")
 	private String httpUrl;
 
+	@Column(name="d_orderid")
 	private Integer orderId;
 
+	@Column(name="d_time")
 	private String time;
 
+	@Column(name="d_intro")
 	private String intro;
 
+	@Column(name="d_commentsuburl")
 	private String commentsuburl;
 
+	@Column(name="d_commentshowurl")
 	private String commentshowurl;
 
+	@Column(name="d_link")
 	private String link;
 
+	@Column(name="d_createtime")
 	private Date createtime;
 
-	private int status;
+	@Column(name="d_status")
+	private Integer status;
 
-	private long size;
+	@Column(name="d_filesize")
+	private Long size;
 
+	@Transient
 	private String referer;
 
 	//文章对象
+	@Transient
 	private Article article;
 
 	//图片文件对象
+	@Transient
 	private PictureFile pictureFile;
 
 	public Image() {
@@ -178,19 +198,19 @@ public class Image extends AbstractEntity {
 		this.article = article;
 	}
 
-	public long getSize() {
+	public Long getSize() {
 		return size;
 	}
 
-	public void setSize(long size) {
+	public void setSize(Long size) {
 		this.size = size;
 	}
 
-	public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 
