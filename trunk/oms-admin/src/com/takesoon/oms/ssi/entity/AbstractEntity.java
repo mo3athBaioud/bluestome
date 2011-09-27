@@ -4,12 +4,13 @@ import java.util.Date;
 
 import javax.persistence.Transient;
 
-import net.sf.json.util.JSONBuilder;
+import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 import com.skymobi.qunker.util.JSONUtils;
+import com.takesoon.oms.ssi.json.DateJsonValueProcessor;
 
 public abstract class AbstractEntity implements java.io.Serializable {
 
@@ -25,10 +26,10 @@ public abstract class AbstractEntity implements java.io.Serializable {
 	private Date endDate;
 	
 	@Transient
-	private Integer start = 0;
+	protected Integer start = 0;
 	
 	@Transient
-	private Integer limit = 15;
+	protected Integer limit = 15;
 	
 	@Override
 	public String toString() {
@@ -37,7 +38,11 @@ public abstract class AbstractEntity implements java.io.Serializable {
 	}
 	//将对象转换成JSON格式
 	public String toJson(){
-		return JSONUtils.bean2Json(this);
+		JSONObject obj = DateJsonValueProcessor.obj2JsonObj(this);
+		if(null != obj){
+			return obj.toString();
+		}
+		return json;
 	}
 	public Date getEndDate() {
 		return endDate;

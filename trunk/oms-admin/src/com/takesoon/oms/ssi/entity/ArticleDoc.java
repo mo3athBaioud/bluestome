@@ -42,7 +42,7 @@ public class ArticleDoc extends AbstractEntity {
 	private String author;
 
 	@Column(name="d_grade")
-	private Integer grade = 5;
+	private Integer grade;
 
 	@Column(name="d_tag")
 	private String tag;
@@ -51,7 +51,7 @@ public class ArticleDoc extends AbstractEntity {
 	private String content;
 
 	@Column(name="d_status")
-	private Integer status = 1;
+	private Integer status;
 
 	@Column(name="d_publish_time")
 	private String publishTime;

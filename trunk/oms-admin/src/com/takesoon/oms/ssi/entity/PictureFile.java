@@ -3,10 +3,12 @@ package com.takesoon.oms.ssi.entity;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * 图片文件对象 tbl_pic_file
@@ -14,6 +16,7 @@ import javax.persistence.Table;
  * @author bluestome
  * 
  */
+@Entity
 @Table(name="tbl_pic_file")
 public class PictureFile extends AbstractEntity {
 
@@ -27,32 +30,42 @@ public class PictureFile extends AbstractEntity {
 	@Column(name="d_id")
 	private Integer id;
 
+	@Column(name="d_article_id")
 	private Integer articleId;
 
+	@Column(name="d_image_id")
 	private Integer imageId;
 
+	@Column(name="d_file_url")
 	private String url;
 
+	@Column(name="d_file_title")
 	private String title;
 
+	@Column(name="d_file_name")
 	private String name;
 
+	@Column(name="d_file_small_name")
 	private String smallName;
 
+	@Transient
 	private String desc;
 
-	private Date createTime = new Date();
+	@Column(name="d_createtime")
+	private Date createTime;
 
-	private int status;
+	@Column(name="d_status")
+	private Integer status;
 
 	// 文章对象
+	@Transient
 	private Article article;
 
 	// 图片对象
+	@Transient
 	private Image image;
 
 	public PictureFile() {
-
 	}
 
 	public String getDesc() {
@@ -127,11 +140,11 @@ public class PictureFile extends AbstractEntity {
 		this.smallName = smallName;
 	}
 
-	public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 

@@ -2,6 +2,7 @@ package com.takesoon.oms.ssi.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -60,8 +61,8 @@ public class Article extends AbstractEntity {
 
 	// 网站对象
 	@Transient
-	@OneToOne(fetch = FetchType.LAZY )
-	@JoinColumn(name = "webId", referencedColumnName = "id")
+	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,optional = false)
+	@JoinColumn(name = "d_web_id", referencedColumnName = "d_id")
 	private Website website;
 
 	public Article() {
