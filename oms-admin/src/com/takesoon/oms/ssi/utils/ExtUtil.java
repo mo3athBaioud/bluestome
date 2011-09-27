@@ -29,7 +29,7 @@ public class ExtUtil {
 	 */
 	public static String getJsonFromList(long totalNum, List inList) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(TOTAL, inList.size());
+		map.put(TOTAL, totalNum);
 		map.put(RECORDS, inList);
 		return DateJsonValueProcessor.map2JSonStr(map);
 	}
