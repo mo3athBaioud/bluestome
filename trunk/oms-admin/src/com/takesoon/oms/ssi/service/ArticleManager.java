@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,33 +47,35 @@ public class ArticleManager {
 	
 	public Criteria getCriteria(Article entity) {
 		Criteria criteria = articleDao.createCriteria();
-		if(null != entity.getStartDate() && null != entity.getEndDate()){
-			criteria.add(Restrictions.between("createTime", entity.getStartDate(), entity.getEndDate()));
-		}else{
-			if(null != entity.getStartDate()){
-				criteria.add(Restrictions.gt("createTime", entity.getStartDate()));
+		if(null != entity){
+			if(null != entity.getStartDate() && null != entity.getEndDate()){
+				criteria.add(Restrictions.between("createTime", entity.getStartDate(), entity.getEndDate()));
+			}else{
+				if(null != entity.getStartDate()){
+					criteria.add(Restrictions.gt("createTime", entity.getStartDate()));
+				}
+				if(null != entity.getEndDate()){
+					criteria.add(Restrictions.lt("createTime", entity.getEndDate()));
+				}
 			}
-			if(null != entity.getEndDate()){
-				criteria.add(Restrictions.lt("createTime", entity.getEndDate()));
+			if (entity.getId() != null && entity.getId() != 0) {
+				criteria.add(Restrictions.eq("id", entity.getId()));
 			}
-		}
-		if (entity.getId() != null && entity.getId() != 0) {
-			criteria.add(Restrictions.eq("id", entity.getId()));
-		}
-		if (StringUtils.isNotBlank(entity.getTitle())) {
-			criteria.add(Restrictions.like("title", "%"+entity.getId()+"%"));
-		}
-		if (StringUtils.isNotBlank(entity.getIntro())) {
-			criteria.add(Restrictions.like("intro", "%"+entity.getIntro()+"%"));
-		}
-		if (StringUtils.isNotBlank(entity.getText())) {
-			criteria.add(Restrictions.like("text", "%"+entity.getText()+"%"));
-		}
-		if (StringUtils.isNotBlank(entity.getArticleUrl())) {
-			criteria.add(Restrictions.like("articleUrl", "%"+entity.getArticleUrl()+"%"));
-		}
-		if (entity.getWebId() != null && entity.getWebId() != 0) {
-			criteria.add(Restrictions.eq("webId", entity.getWebId()));
+			if (StringUtils.isNotBlank(entity.getTitle())) {
+				criteria.add(Restrictions.like("title", "%"+entity.getId()+"%"));
+			}
+			if (StringUtils.isNotBlank(entity.getIntro())) {
+				criteria.add(Restrictions.like("intro", "%"+entity.getIntro()+"%"));
+			}
+			if (StringUtils.isNotBlank(entity.getText())) {
+				criteria.add(Restrictions.like("text", "%"+entity.getText()+"%"));
+			}
+			if (StringUtils.isNotBlank(entity.getArticleUrl())) {
+				criteria.add(Restrictions.like("articleUrl", "%"+entity.getArticleUrl()+"%"));
+			}
+			if (entity.getWebId() != null && entity.getWebId() != 0) {
+				criteria.add(Restrictions.eq("webId", entity.getWebId()));
+			}
 		}
 		return criteria;
 	}
@@ -101,7 +104,11 @@ public class ArticleManager {
 	 * @return
 	 */
 	public List<Article> getList(Article entity,int start,int limit){
-		return null;
+		Criteria criteria = getCriteria(entity);
+		criteria.setFirstResult(start);
+		criteria.setMaxResults(limit);
+		criteria.addOrder(Order.asc("id"));
+		return articleDao.getAll(criteria);
 	}
 	
 	/**
@@ -112,12 +119,7 @@ public class ArticleManager {
 	 * @return
 	 */
 	public List<Article> getListBySql(Article entity,int start,int limit){
-		if(null == entity.getStart() && start > 0)
-			entity.setStart(start);
-		if(null == entity.getLimit() && limit  > 0)
-			entity.setLimit(limit);
-		String sql = buildSQL(entity);
-		System.out.println(" > sql:" + sql);
+		String sql = buildSQL(entity,start,limit);
 		return articleDao.getListBySQL(sql);
 	}
 	
@@ -164,7 +166,7 @@ public class ArticleManager {
 		return sql.toString();
 	}
 
-	public String buildSQL(Article entity){
+	public String buildSQL(Article entity,int start,int limit){
 		StringBuffer sql = new StringBuffer("select * from tbl_article");
 		if(null != entity){
 			sql.append(" a");
@@ -205,10 +207,10 @@ public class ArticleManager {
 			}
 			sql.append(" order by d_id asc");
 			if(null != entity.getStart() && null != entity.getLimit()){
-				sql.append(" limit ").append(entity.getLimit());
-				sql.append(" offset ").append(entity.getStart());
 			}
 		}
+		sql.append(" limit ").append(limit);
+		sql.append(" offset ").append(start);
 		return sql.toString();
 	}
 }
