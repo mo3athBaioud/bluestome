@@ -3,7 +3,6 @@ package com.takesoon.oms.ssi.service;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
@@ -11,41 +10,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.takesoon.oms.ssi.dao.ArticleDao;
-import com.takesoon.oms.ssi.entity.Article;
+import com.takesoon.oms.ssi.dao.ArticleDocDao;
+import com.takesoon.oms.ssi.entity.ArticleDoc;
 
 @Component
 @Transactional
-public class ArticleManager {
+public class ArticleDocManager {
 
 	@Autowired
-	private ArticleDao articleDao;
+	private ArticleDocDao articleDocDao;
 	
-	public Article get(Integer id) {
-		return articleDao.getting(id);
+	public ArticleDoc get(Integer id) {
+		return articleDocDao.getting(id);
 	}
 	
 	public String getId(){
-		return articleDao.getIdName();
+		return articleDocDao.getIdName();
 	}
 	
-	public int getCount(Article entity){
+	public int getCount(ArticleDoc entity){
 		Criteria criteria = getCriteria(entity);
-		return articleDao.getAll(criteria).size();
+		return articleDocDao.getAll(criteria).size();
 	}
 	
-	public int getTotal(Article entity) {
+	public int getTotal(ArticleDoc entity) {
 		Criteria criteria = getCriteria(entity);
-		return articleDao.getAll(criteria).size();
+		return articleDocDao.getAll(criteria).size();
 	}
 	
-	public int getTotalBySql(Article entity) throws HibernateException{
+	public int getTotalBySql(ArticleDoc entity) throws HibernateException{
 		String sql = buildCountSQL(entity);
-		return articleDao.getTotalBySQL(sql);
+		return articleDocDao.getTotalBySQL(sql);
 	}
 	
-	public Criteria getCriteria(Article entity) {
-		Criteria criteria = articleDao.createCriteria();
+	public Criteria getCriteria(ArticleDoc entity) {
+		Criteria criteria = articleDocDao.createCriteria();
 		if(null != entity.getStartDate() && null != entity.getEndDate()){
 			criteria.add(Restrictions.between("createTime", entity.getStartDate(), entity.getEndDate()));
 		}else{
@@ -62,17 +61,29 @@ public class ArticleManager {
 		if (StringUtils.isNotBlank(entity.getTitle())) {
 			criteria.add(Restrictions.like("title", "%"+entity.getId()+"%"));
 		}
-		if (StringUtils.isNotBlank(entity.getIntro())) {
-			criteria.add(Restrictions.like("intro", "%"+entity.getIntro()+"%"));
+		if (StringUtils.isNotBlank(entity.getUrl())) {
+			criteria.add(Restrictions.like("url", "%"+entity.getUrl()+"%"));
 		}
-		if (StringUtils.isNotBlank(entity.getText())) {
-			criteria.add(Restrictions.like("text", "%"+entity.getText()+"%"));
+		if (StringUtils.isNotBlank(entity.getAuthor())) {
+			criteria.add(Restrictions.like("author", "%"+entity.getUrl()+"%"));
 		}
-		if (StringUtils.isNotBlank(entity.getArticleUrl())) {
-			criteria.add(Restrictions.like("articleUrl", "%"+entity.getArticleUrl()+"%"));
+		
+		if (StringUtils.isNotBlank(entity.getTag())) {
+			criteria.add(Restrictions.like("tag", "%"+entity.getTag()+"%"));
+		}
+		
+		if (StringUtils.isNotBlank(entity.getPublishTime())) {
+			criteria.add(Restrictions.like("publishTime", "%"+entity.getPublishTime()+"%"));
 		}
 		if (entity.getWebId() != null && entity.getWebId() != 0) {
 			criteria.add(Restrictions.eq("webId", entity.getWebId()));
+		}
+		if (null != entity.getStatus()) {
+			criteria.add(Restrictions.eq("status", entity.getStatus()));
+		}
+		
+		if (null != entity.getGrade()) {
+			criteria.add(Restrictions.eq("grade", entity.getGrade()));
 		}
 		return criteria;
 	}
@@ -81,8 +92,8 @@ public class ArticleManager {
 	 * 保存记录
 	 * @param entity
 	 */
-	public void save(Article entity){
-		articleDao.save(entity);
+	public void save(ArticleDoc entity){
+		articleDocDao.save(entity);
 	}
 	
 	/**
@@ -90,7 +101,7 @@ public class ArticleManager {
 	 * @param id
 	 */
 	public void delete(Integer id){
-		articleDao.delete(id);
+		articleDocDao.delete(id);
 	}
 	
 	/**
@@ -100,7 +111,7 @@ public class ArticleManager {
 	 * @param limit
 	 * @return
 	 */
-	public List<Article> getList(Article entity,int start,int limit){
+	public List<ArticleDoc> getList(ArticleDoc entity,int start,int limit){
 		return null;
 	}
 	
@@ -111,18 +122,17 @@ public class ArticleManager {
 	 * @param limit
 	 * @return
 	 */
-	public List<Article> getListBySql(Article entity,int start,int limit){
+	public List<ArticleDoc> getListBySql(ArticleDoc entity,int start,int limit){
 		if(null == entity.getStart() && start > 0)
 			entity.setStart(start);
 		if(null == entity.getLimit() && limit  > 0)
 			entity.setLimit(limit);
 		String sql = buildSQL(entity);
-		System.out.println(" > sql:" + sql);
-		return articleDao.getListBySQL(sql);
+		return articleDocDao.getListBySQL(sql);
 	}
 	
-	public String buildCountSQL(Article entity){
-		StringBuffer sql = new StringBuffer("select count(*) as total from tbl_article");
+	public String buildCountSQL(ArticleDoc entity){
+		StringBuffer sql = new StringBuffer("select count(*) as total from tbl_article_doc");
 		if(null != entity){
 			sql.append(" a");
 			sql.append(" where 1 = 1").append("\n");
@@ -135,20 +145,23 @@ public class ArticleManager {
 			if(null != entity.getTitle()){
 				sql.append(" and a.d_title like '%").append(entity.getTitle()).append("%'").append("\n");
 			}
-			if(null != entity.getArticleUrl()){
-				sql.append(" and a.d_acticle_url like '%").append(entity.getArticleUrl()).append("%'").append("\n");
+			if(null != entity.getUrl()){
+				sql.append(" and a.d_url like '%").append(entity.getUrl()).append("%'").append("\n");
 			}
-			if(null != entity.getActicleRealUrl()){
-				sql.append(" and a.d_article_real_url like '%").append(entity.getActicleRealUrl()).append("%'").append("\n");
+			if(null != entity.getAuthor()){
+				sql.append(" and a.d_author like '%").append(entity.getAuthor()).append("%'").append("\n");
 			}
-			if(null != entity.getActicleXmlUrl()){
-				sql.append(" and a.d_article_xml_url like '%").append(entity.getActicleXmlUrl()).append("%'").append("\n");
+			if(null != entity.getTag()){
+				sql.append(" and a.d_tag like '%").append(entity.getTag()).append("%'").append("\n");
 			}
-			if(null != entity.getText()){
-				sql.append(" and a.d_text like '%").append(entity.getText()).append("%'").append("\n");
+			if(null != entity.getStatus()){
+				sql.append(" and a.d_status = ").append(entity.getStatus()).append("\n");
 			}
-			if(null != entity.getIntro()){
-				sql.append(" and a.d_intro like '%").append(entity.getIntro()).append("%'").append("\n");
+			if(null != entity.getGrade()){
+				sql.append(" and a.d_grade = ").append(entity.getGrade()).append("\n");
+			}
+			if(null != entity.getPublishTime()){
+				sql.append(" and a.d_publishtime like '%").append(entity.getPublishTime()).append("%'").append("\n");
 			}
 			if(null != entity.getStartDate() && null != entity.getEndDate()){
 //				sql.append(" and a.d_createtime between '").append()
@@ -164,8 +177,8 @@ public class ArticleManager {
 		return sql.toString();
 	}
 
-	public String buildSQL(Article entity){
-		StringBuffer sql = new StringBuffer("select * from tbl_article");
+	public String buildSQL(ArticleDoc entity){
+		StringBuffer sql = new StringBuffer("select * from tbl_article_doc");
 		if(null != entity){
 			sql.append(" a");
 			sql.append(" where 1 = 1").append("\n");
@@ -178,20 +191,23 @@ public class ArticleManager {
 			if(null != entity.getTitle()){
 				sql.append(" and a.d_title like '%").append(entity.getTitle()).append("%'").append("\n");
 			}
-			if(null != entity.getArticleUrl()){
-				sql.append(" and a.d_acticle_url like '%").append(entity.getArticleUrl()).append("%'").append("\n");
+			if(null != entity.getUrl()){
+				sql.append(" and a.d_url like '%").append(entity.getUrl()).append("%'").append("\n");
 			}
-			if(null != entity.getActicleRealUrl()){
-				sql.append(" and a.d_article_real_url like '%").append(entity.getActicleRealUrl()).append("%'").append("\n");
+			if(null != entity.getAuthor()){
+				sql.append(" and a.d_author like '%").append(entity.getAuthor()).append("%'").append("\n");
 			}
-			if(null != entity.getActicleXmlUrl()){
-				sql.append(" and a.d_article_xml_url like '%").append(entity.getActicleXmlUrl()).append("%'").append("\n");
+			if(null != entity.getTag()){
+				sql.append(" and a.d_tag like '%").append(entity.getTag()).append("%'").append("\n");
 			}
-			if(null != entity.getText()){
-				sql.append(" and a.d_text like '%").append(entity.getText()).append("%'").append("\n");
+			if(null != entity.getStatus()){
+				sql.append(" and a.d_status = ").append(entity.getStatus()).append("\n");
 			}
-			if(null != entity.getIntro()){
-				sql.append(" and a.d_intro like '%").append(entity.getIntro()).append("%'").append("\n");
+			if(null != entity.getGrade()){
+				sql.append(" and a.d_grade = ").append(entity.getGrade()).append("\n");
+			}
+			if(null != entity.getPublishTime()){
+				sql.append(" and a.d_publishtime like '%").append(entity.getPublishTime()).append("%'").append("\n");
 			}
 			if(null != entity.getStartDate() && null != entity.getEndDate()){
 //				sql.append(" and a.d_createtime between '").append()
