@@ -3,7 +3,7 @@ Ext.onReady(function(){
   	Ext.BLANK_IMAGE_URL = project + '/resources/images/default/s.gif';
     Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
     Ext.QuickTips.init();
-	app.limit = 15;
+	app.limit = 25;
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
     app.cm_utp = new Ext.grid.ColumnModel([
