@@ -34,7 +34,6 @@ public class WebsiteTest {
 		}
 	}
 	
-	@Test
 	public void getList(){
 		int parentId = 0;
 		getList(parentId);
@@ -58,5 +57,15 @@ public class WebsiteTest {
 //			**/
 			ttmp = null;
 		}
+	}
+	
+	@Test
+	public void get(){
+		Website entity = new Website();
+		entity = websiteManager.get(200);
+		if(null != entity){
+			System.out.println(entity.toJson());
+		}
+		
 	}
 }
