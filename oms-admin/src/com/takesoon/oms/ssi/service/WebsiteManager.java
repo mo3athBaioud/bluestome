@@ -89,6 +89,34 @@ public class WebsiteManager {
 	}
 	
 	/**
+	 * 启用记录
+	 * @param id
+	 */
+	public void enabled(Integer id){
+		Website entity = null;
+		try{
+			entity = get(id);
+			entity.setStatus(1);
+			save(entity);
+		}catch(Exception e){
+		}
+	}
+	
+	/**
+	 * 禁用记录
+	 * @param id
+	 */
+	public void disabled(Integer id){
+		Website entity = null;
+		try{
+			entity = get(id);
+			entity.setStatus(0);
+			save(entity);
+		}catch(Exception e){
+		}
+	}
+	
+	/**
 	 * 删除对象
 	 * @param id
 	 */
