@@ -42,7 +42,7 @@ public class ArticleTest {
 	
 	@Test
 	public void get(){
-		Integer id = 135;
+		Integer id = 100000;
 		Article entity = articleManager.get(id);
 		if(null != entity){
 			System.out.println(" > entity.id:"+entity.getId());
