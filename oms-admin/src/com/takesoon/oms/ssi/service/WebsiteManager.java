@@ -124,7 +124,7 @@ public class WebsiteManager {
 	}
 	
 	public String buildCountSQL(Website entity){
-		StringBuffer sql = new StringBuffer("select count(*) as total from tbl_article");
+		StringBuffer sql = new StringBuffer("select count(*) as total from tbl_web_site");
 		if(null != entity){
 			sql.append(" a");
 			sql.append(" where 1 = 1").append("\n");
@@ -161,7 +161,7 @@ public class WebsiteManager {
 	}
 
 	public String buildSQL(Website entity,int start,int limit){
-		StringBuffer sql = new StringBuffer("select * from tbl_article");
+		StringBuffer sql = new StringBuffer("select * from tbl_web_site");
 		if(null != entity){
 			sql.append(" a");
 			sql.append(" where 1 = 1").append("\n");
