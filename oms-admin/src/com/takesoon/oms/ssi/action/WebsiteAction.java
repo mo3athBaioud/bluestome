@@ -30,6 +30,10 @@ public class WebsiteAction extends CRUDActionSupport {
 	private WebsiteManager websiteManager;
 	
 	private Website entity;
+	
+	
+	//访问地址
+	private String turl;
 
 	@Override
 	public void delete() throws IOException {
@@ -114,6 +118,74 @@ public class WebsiteAction extends CRUDActionSupport {
 			}
 		}
 	}
+	
+	/**
+	 * 启用
+	 * @throws IOException
+	 */
+	public void enable() throws IOException{
+		PrintWriter out = null;
+		try{
+			 out = getOut(response);
+			 for(Long id:ids){
+				 //TODO 启用记录
+				 logger.info(" >> id:"+id);
+				 websiteManager.enabled(id.intValue());
+			 }
+			 out.println("{success:true,msg:'启用成功!'}"); 
+		}catch(Exception e){
+			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
+		}finally{
+			if(null != out){
+				out.flush();
+				out.close();
+			}
+		}
+	}
+	
+	/**
+	 * 页面测试
+	 * @throws IOException
+	 */
+	public void debug() throws IOException{
+		PrintWriter out = null;
+		try{
+			 out = getOut(response);
+			 logger.info(" > id:" + id);
+			 logger.info(" > turl:" + turl);
+			 out.println("{success:true,msg:'测试成功!',plength:65432,times:12345}"); 
+		}catch(Exception e){
+			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
+		}finally{
+			if(null != out){
+				out.flush();
+				out.close();
+			}
+		}
+	}
+	
+	/**
+	 * 禁用
+	 * @throws IOException
+	 */
+	public void disable() throws IOException{
+		PrintWriter out = null;
+		try{
+			 out = getOut(response);
+			 for(Long id:ids){
+				 //TODO 禁用记录
+				 websiteManager.disabled(id.intValue());
+			 }
+			 out.println("{success:true,msg:'禁用成功!'}"); 
+		}catch(Exception e){
+			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
+		}finally{
+			if(null != out){
+				out.flush();
+				out.close();
+			}
+		}
+	}
 
 	public Website getEntity() {
 		return entity;
@@ -121,6 +193,14 @@ public class WebsiteAction extends CRUDActionSupport {
 
 	public void setEntity(Website entity) {
 		this.entity = entity;
+	}
+
+	public String getTurl() {
+		return turl;
+	}
+
+	public void setTurl(String turl) {
+		this.turl = turl;
 	}
 
 	
