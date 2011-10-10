@@ -59,5 +59,21 @@
 			"iconCls":"icon-folder",
 			"leaf":true,
 			"hrefTarget":"mainFrame"
+	},{
+			"text":"文章管理",
+			"id":"04",
+			"iconCls":"icon-page",
+			"leaf":true,
+			"tabicon":"/images/page.png",
+			"ahref":"/admin/article.cgi",
+			"hrefTarget":"center2"
+	},{
+			"text":"网站管理",
+			"id":"05",
+			"iconCls":"icon-page",
+			"leaf":true,
+			"tabicon":"/images/page.png",
+			"ahref":"/admin/website.cgi",
+			"hrefTarget":"center2"
 	}
 ]
