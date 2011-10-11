@@ -11,6 +11,7 @@
   </head>
   
   <body>
+    <div id="grid-query"></div>
     <div id="grid-div"></div>
   </body>
 </html>
