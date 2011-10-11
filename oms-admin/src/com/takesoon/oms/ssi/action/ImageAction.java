@@ -11,17 +11,16 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ssi.common.utils.HttpClientUtils;
-import com.takesoon.oms.ssi.entity.Website;
-import com.takesoon.oms.ssi.service.WebsiteManager;
+import com.takesoon.oms.ssi.entity.Image;
+import com.takesoon.oms.ssi.service.ImageManager;
 import com.takesoon.oms.ssi.utils.ExtUtil;
 
 @Namespace("/admin")
-@Action("website")
+@Action("images")
 @Results( {
-	@Result(name = "success", location = "/WEB-INF/pages/admin/website.jsp"),
+	@Result(name = "success", location = "/WEB-INF/pages/admin/images.jsp"),
 })
-public class WebsiteAction extends CRUDActionSupport {
+public class ImageAction extends CRUDActionSupport {
 	
 	/**
 	 * 
@@ -29,14 +28,11 @@ public class WebsiteAction extends CRUDActionSupport {
 	private static final long serialVersionUID = 1L;
 	
 	@Autowired
-	private WebsiteManager websiteManager;
+	private ImageManager imageManager;
 	
-	private Website entity;
+	private Image entity;
 	
 	
-	//访问地址
-	private String turl;
-
 	@Override
 	public void delete() throws IOException {
 		PrintWriter out = null;
@@ -63,10 +59,10 @@ public class WebsiteAction extends CRUDActionSupport {
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
-			 if(null != websiteManager){
-				 int c = websiteManager.getTotalBySql(entity);
+			 if(null != imageManager){
+				 int c = imageManager.getTotalBySql(entity);
 				 if(c > 0){
-					 List<Website> list = websiteManager.getListBySql(entity, start, limit);
+					 List<Image> list = imageManager.getListBySql(entity, start, limit);
 					 if(null != list && list.size() > 0){
 						 String json = ExtUtil.getJsonFromList(c, list);
 						 out.println(json);
@@ -93,10 +89,10 @@ public class WebsiteAction extends CRUDActionSupport {
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
-			 if(null != websiteManager){
-				 int c = websiteManager.getTotalBySql(entity);
+			 if(null != imageManager){
+				 int c = imageManager.getTotalBySql(entity);
 				 if(c > 0){
-					 List<Website> list = websiteManager.getListBySql(entity, start, limit);
+					 List<Image> list = imageManager.getListBySql(entity, start, limit);
 					 if(null != list && list.size() > 0){
 						 String json = ExtUtil.getJsonFromList(c, list);
 						 out.println(json);
@@ -161,36 +157,8 @@ public class WebsiteAction extends CRUDActionSupport {
 			 out = getOut(response);
 			 for(Long id:ids){
 				 //TODO 启用记录
-				 logger.info(" >> id:"+id);
-				 websiteManager.enabled(id.intValue());
 			 }
 			 out.println("{success:true,msg:'启用成功!'}"); 
-		}catch(Exception e){
-			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
-		}finally{
-			if(null != out){
-				out.flush();
-				out.close();
-			}
-		}
-	}
-	
-	/**
-	 * 页面测试
-	 * @throws IOException
-	 */
-	public void debug() throws IOException{
-		PrintWriter out = null;
-		try{
-			 out = getOut(response);
-			 HashMap<String,String> psmap = new HashMap<String,String>();
-			 psmap = websiteManager.debugURL(turl);
-			 if(psmap.size() > 0){
-				 String json = ExtUtil.getJsonFromList(true,"测试成功",psmap);
-				 out.println(json);
-			 }else{
-				 out.println("{success:false,msg:'测试站点失败，未获取响应数据!'}");
-			 }
 		}catch(Exception e){
 			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
 		}finally{
@@ -211,7 +179,6 @@ public class WebsiteAction extends CRUDActionSupport {
 			 out = getOut(response);
 			 for(Long id:ids){
 				 //TODO 禁用记录
-				 websiteManager.disabled(id.intValue());
 			 }
 			 out.println("{success:true,msg:'禁用成功!'}"); 
 		}catch(Exception e){
@@ -224,21 +191,12 @@ public class WebsiteAction extends CRUDActionSupport {
 		}
 	}
 
-	public Website getEntity() {
+	public Image getEntity() {
 		return entity;
 	}
 
-	public void setEntity(Website entity) {
+	public void setEntity(Image entity) {
 		this.entity = entity;
 	}
 
-	public String getTurl() {
-		return turl;
-	}
-
-	public void setTurl(String turl) {
-		this.turl = turl;
-	}
-
-	
 }
