@@ -32,10 +32,10 @@ public class Website extends AbstractEntity {
 	private Integer id;
 
 	@Column(name="d_web_type")
-	private Integer type = 1;
+	private Integer type;
 
 	@Column(name="d_parent_id")
-	private Integer parentId = 0;
+	private Integer parentId;
 
 	@Column(name="d_web_url")
 	private String url;
@@ -50,7 +50,7 @@ public class Website extends AbstractEntity {
 	private Date modifytime;
 
 	@Column(name="d_status")
-	private Integer status = 1;
+	private Integer status;
 
 	@Transient
 	private int count = 0;
