@@ -9,3 +9,4 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/scripts/util/RowExpander.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/scripts/util/VType.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/scripts/constants.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/scripts/util/utils-panel.js"></script>
