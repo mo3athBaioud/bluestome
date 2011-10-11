@@ -1,5 +1,7 @@
 package com.takesoon.oms.ssi.service;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssi.common.utils.HttpClientUtils;
 import com.takesoon.oms.ssi.dao.WebsiteDao;
 import com.takesoon.oms.ssi.entity.Website;
 
@@ -125,6 +128,32 @@ public class WebsiteManager {
 	}
 	
 	/**
+	 * 测试URL，并返回响应信息
+	 * @param url
+	 * @return
+	 */
+	public HashMap<String,String> debugURL(String url){
+		HashMap<String,String> pmap = new HashMap<String,String>();
+		HashMap<String,String> tmap = HttpClientUtils.getHttpHeaderResponse(url);
+		Iterator it = tmap.keySet().iterator();
+		while(it.hasNext()){
+			String key = (String)it.next();
+			String value = tmap.get(key);
+			//重新构建KEY 例如：contentType,contentLength
+			int pos = key.lastIndexOf("-");
+			if(pos != -1){
+				String prex = key.substring(0,pos).toLowerCase();
+				String ends = key.substring(pos+1);
+				key = prex + ends;
+			}else{
+				key = key.toLowerCase();
+			}
+			pmap.put(key, value);
+		}
+		return pmap;
+	}
+	
+	/**
 	 * 获取指定的列表数量
 	 * @param entity
 	 * @param start
@@ -165,10 +194,10 @@ public class WebsiteManager {
 			if(null != entity.getParentId()){
 				sql.append(" and a.d_parent_id = ").append(entity.getParentId()).append("\n");
 			}
-			if(null != entity.getUrl()){
+			if(null != entity.getUrl() && !entity.getUrl().equals("")){
 				sql.append(" and a.d_web_url like '%").append(entity.getUrl()).append("%'").append("\n");
 			}
-			if(null != entity.getName()){
+			if(null != entity.getName() && !entity.getName().equals("")){
 				sql.append(" and a.d_web_name like '%").append(entity.getName()).append("%'").append("\n");
 			}
 			if(null != entity.getStatus()){
@@ -202,10 +231,10 @@ public class WebsiteManager {
 			if(null != entity.getParentId()){
 				sql.append(" and a.d_parent_id = ").append(entity.getParentId()).append("\n");
 			}
-			if(null != entity.getUrl()){
+			if(null != entity.getUrl() && !entity.getUrl().equals("")){
 				sql.append(" and a.d_web_url like '%").append(entity.getUrl()).append("%'").append("\n");
 			}
-			if(null != entity.getName()){
+			if(null != entity.getName() && !entity.getName().equals("")){
 				sql.append(" and a.d_web_name like '%").append(entity.getName()).append("%'").append("\n");
 			}
 			if(null != entity.getStatus()){
@@ -221,7 +250,7 @@ public class WebsiteManager {
 					
 				}
 			}
-			sql.append(" order by d_id desc");
+			sql.append(" order by d_id asc");
 			if(null != entity.getStart() && null != entity.getLimit()){
 			}
 		}
