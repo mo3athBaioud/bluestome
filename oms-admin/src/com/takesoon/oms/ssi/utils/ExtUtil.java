@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ssi.common.utils.HttpClientUtils;
 import com.takesoon.oms.ssi.json.DateJsonValueProcessor;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -19,6 +20,13 @@ public class ExtUtil {
 	public static String TOTAL = "total";
 	
 	public static String RECORDS = "records";
+	
+	public static String SUCCESS = "success";
+	
+	public static String MESSAGE = "msg";
+	
+	public static String OBJECT = "object";
+	
 
 	/**
 	 * 将list对象转换为json格式的数据
@@ -34,6 +42,21 @@ public class ExtUtil {
 		return DateJsonValueProcessor.map2JSonStr(map);
 	}
 
+	/**
+	 * 将list对象转换为json格式的数据
+	 * 
+	 * @param totalNum，记录总数
+	 * @param inList，需要转换的list
+	 * @return
+	 */
+	public static String getJsonFromList(Boolean b,String msg,Object obj) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(SUCCESS, b);
+		map.put(MESSAGE, msg);
+		map.put(OBJECT, obj);
+		return DateJsonValueProcessor.map2JSonStr(map);
+	}
+	
 	/**
 	 * 将单个对象转换为json格式,此对象不能为集合类型
 	 * 
@@ -102,6 +125,9 @@ public class ExtUtil {
 	}
 
 	public static void main(String[] args) {
+		HashMap<String,String> map = HttpClientUtils.getHttpHeaderResponse("http://www.china.com/zh_cn/tu_image/46top_1584_1.jpg");
+		String json = getJsonFromList(true,"更新成功!",map);
+		System.out.println(" > \r\n"+json);
 	}
 }
 
