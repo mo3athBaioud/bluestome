@@ -8,6 +8,7 @@ Ext.onReady(function() {
 			Ext.QuickTips.init();
 			var panel = new Ext.Panel({
 						el : 'hello-tabs',
+						height:150,
 						autoTabs : true,
 						deferredRender : false,
 						border : false,
