@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+
+	<diskStore path="e:/hibernate/admin.core" />
+
+	<defaultCache maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="300" overflowToDisk="false" diskPersistent="false" />
+
+	<cache name="omsCache" overflowToDisk="false" eternal="false" diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600" maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU"/>
+
+    <!--  
+	 <cache name="com.skymobi.oms.acl.entity.Operatetype" 
+		maxElementsInMemory="50"
+		memoryStoreEvictionPolicy="LRU" 
+		eternal="true" 
+		diskPersistent="false" 
+		overflowToDisk="true"
+		maxElementsOnDisk="1000000"
+		timeToIdleSeconds="3600"   
+        timeToLiveSeconds="3600"/>
+
+
+    <cache name="com.skymobi.oms.acl.entity.Role" 
+		maxElementsInMemory="200"
+		memoryStoreEvictionPolicy="LRU" 
+		eternal="true" 
+		diskPersistent="false" 
+		overflowToDisk="true"
+		maxElementsOnDisk="1000000"
+		timeToIdleSeconds="3600"   
+        timeToLiveSeconds="3600"/>
+        
+ 
+           
+     <cache name="com.skymobi.oms.acl.entity.User" 
+		maxElementsInMemory="800"
+		memoryStoreEvictionPolicy="LRU" 
+		eternal="true" 
+		diskPersistent="false" 
+		overflowToDisk="true"
+		maxElementsOnDisk="1000000"
+		timeToIdleSeconds="3600"   
+        timeToLiveSeconds="3600"/>
+     
+       
+       
+        
+     <cache name="com.skymobi.oms.acl.entity.Resource" 
+		maxElementsInMemory="5000"
+		memoryStoreEvictionPolicy="LRU" 
+		eternal="true" 
+		diskPersistent="false" 
+		overflowToDisk="true"
+		maxElementsOnDisk="1000000"
+		timeToIdleSeconds="3600"   
+        timeToLiveSeconds="3600"/>
+        
+      <cache name="com.skymobi.oms.acl.entity.Roleresourcemap" 
+		maxElementsInMemory="5000"
+		memoryStoreEvictionPolicy="LRU" 
+		eternal="true" 
+		diskPersistent="false" 
+		overflowToDisk="true"
+		maxElementsOnDisk="1000000"
+		timeToIdleSeconds="3600"   
+        timeToLiveSeconds="3600"/>  
+
+     -->
+     
+</ehcache>
