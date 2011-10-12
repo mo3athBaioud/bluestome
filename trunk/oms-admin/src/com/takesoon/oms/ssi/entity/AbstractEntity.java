@@ -26,10 +26,10 @@ public abstract class AbstractEntity implements java.io.Serializable {
 	private Date endDate;
 	
 	@Transient
-	protected Integer start = 0;
+	protected Integer start;
 	
 	@Transient
-	protected Integer limit = 15;
+	protected Integer limit;
 	
 	@Override
 	public String toString() {
