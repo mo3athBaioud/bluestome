@@ -15,7 +15,7 @@ Ext.onReady(function(){
         //webId
         {header: "站点", width: 50, sortable: true, dataIndex: 'webId'},
         {header: "标题", width: 250, sortable: true, dataIndex: 'title'},
-        {header: "缩略图", width: 70, sortable: true, dataIndex: 'acticleXmlUrl',renderer:function(v){
+        {header: "缩略图", width: 70, sortable: true, dataIndex: 'acticleXmlUrl',renderer:function(v, cellMeta, record, rowIndex, columnIndex, store){
         	var index = v.lastIndexOf(".");
         	var b = false;
         	if(index != -1){
@@ -25,16 +25,19 @@ Ext.onReady(function(){
         		}
         	}
         	if(b){
-        		return '<img src='+v+' alt="img" height="50" width="50" />';
+        		return '<img src='+v+' title="'+record.get('title')+'" height="20" width="20" />';
         	}else{
-        		return '<a href='+v+'>访问</a>';
+        		return '<a href='+v+'><img src='+project+'/images/image-missing.png title="找不到图片" alt="找不到图片" height="20" width="20" /></a>';
         	}
         }},
-        {header: "状态", width: 70, sortable: true, dataIndex: 'text'},
+        {header: "状态", width: 70, sortable: true, dataIndex: 'text',renderer:function(v){
+        	if(v == 'FD'){
+        		return '<font color=blue>'+v+'</font>';
+        	}else{
+        		return '<font color=red>'+v+'</font>';
+        	}
+        }},
         {header: "收录时间", width: 130, sortable: true, dataIndex: 'createTime'}
-//        {header: "操作", width: 100, sortable: true, dataIndex: 'acticleXmlUrl',renderer:function(v){
-//        	return '<a href="#">删除</a>|<a href="#">编辑</a>|<a href="#">重载</a>';
-//        }}
     ]);
     
 	app.btn_search_code = new Ext.Button({
@@ -340,14 +343,16 @@ Ext.onReady(function(){
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
 		if(grid.getSelectionModel().isSelected(rowIndex)){
 			var record = grid.getSelectionModel().getSelected();
-//			app.aid = record.get('id');
-//			createImageListsWin(app.aid,record.get('title'));
+			app.aid = record.get('id');
+			createImageListsWin(app.aid,record.get('title'));
+			/**
 				Ext.Msg.show({
 					title : '系统提示',
 					msg : '由于显示界面问题，暂时屏蔽该功能!',
 					buttons : Ext.Msg.OK,
 					icon : Ext.Msg.ERROR
-				})
+				});
+			**/ 
 		}
 	});
 
@@ -432,119 +437,257 @@ function createResultWin(url,obj){
 	}).show();
 }
 
+var store = new Ext.data.JsonStore({
+	url:project+'/admin/images!list.cgi',
+	root: 'records',
+    fields: [
+    	{name:'id',type:'int'},
+    	{name:'articleId',type:'int'},
+    	'name', 
+    	'title', 
+    	'httpUrl',
+    	'imgUrl', 
+    	{name:'size', type: 'float'}, 
+    	{name:'createtime', type:'date', dateFormat:'timestamp'},
+    	{name : 'status',type : 'int'}
+	]
+});
+/**	
+**/ 
+
+/**
+var store = new Ext.data.JsonStore({
+	url : project + '/admin/images!list.cgi',
+	reader : new Ext.data.JsonReader({
+		totalProperty : 'total',
+		root : 'records'
+	}, [{name : 'id',type : 'int'
+	}, {name : 'articleId',type : 'int'
+	}, {name : 'name',type : 'string'
+	}, {name : 'httpUrl',type : 'string'
+	}, {name : 'imgUrl',type : 'string'
+	}, {name : 'commentshowurl',type : 'string'
+	}, {name : 'commentsuburl',type : 'string'
+	}, {name : 'title',type : 'string'
+	}, {name : 'link',type : 'string'
+	}, {name : 'intro',type : 'string'
+	}, {name : 'createtime',type:'date', dateFormat:'timestamp'
+	}, {name : 'size',type : 'float'
+	}, {name : 'status',type : 'int'
+	}])
+});
+**/
+
+var tpl = new Ext.XTemplate(
+	'<tpl for=".">',
+        '<div class="thumb-wrap" id="{id}">',
+	    '<div class="thumb"><img src="{imgUrl}" title="{title}"></div>',
+	    '<span>{sizeString}</span></div>',
+    '</tpl>',
+    '<div class="x-clear"></div>'
+);
+
+var ptb = new Ext.PagingToolbar({
+	pageSize:9,
+	store:store,
+	displayInfo:true,
+	displayMsg:'第 {0} - {1} 条  共 {2} 条',
+	emptyMsg:'没有记录'
+});
+
+var dataview = new Ext.DataView({
+    store: store,
+    tpl: tpl,
+    autoHeight:true,
+    multiSelect: true,
+    overClass:'x-view-over',
+    itemSelector:'div.thumb-wrap',
+    plugins: [
+        new Ext.DataView.DragSelector(),
+        new Ext.DataView.LabelEditor({dataIndex: 'title'})
+    ],
+
+    prepareData: function(data){
+        data.shortName = Ext.util.Format.ellipsis(data.title, 15);
+        data.sizeString = Ext.util.Format.fileSize(data.size);
+        data.dateString = data.createtime.format("m/d/Y g:i a");
+        return data;
+    },
+    
+    listeners: {
+    	selectionchange:function(dv, selections){
+    		/**
+    		fn: function(dv,nodes){
+    			var l = nodes.length;
+    			var s = l != 1 ? 's' : '';
+    			panel.setTitle('Simple DataView ('+l+' item'+s+' selected)');
+    		}
+    		**/ 
+            if (selections.length > 0) {
+                dataActions[0].enable();
+                dataActions[1].enable();
+                dataActions[2].enable();
+            }
+            else {
+                dataActions[0].disable();
+                dataActions[1].disable();
+                dataActions[2].disable();
+            }
+    	},
+    	dblclick:function(dv, index, node, e){
+			 var data = store.getAt(index);
+			 //当前所选图片的缩略图
+			 var iurl = data.data.imgUrl;
+			 //获取图片缩略图列表参数，即文章ID
+			 var aid = data.data.articleId;
+			 //请求获取xml数据
+			 /**
+			 Ext.Ajax.request({
+				url : project+'/admin/images!xmllist.cgi',
+				params : {
+					'entity.id' : aid
+				},
+				success:function(response,option){
+					var obj = Ext.util.JSON.decode(response.responseText);
+					if(obj.success){
+						createResultWin(record.get('articleUrl'),obj);
+					}else{
+						Ext.Msg.show({
+							title : '系统提示',
+							msg : obj.msg,
+							buttons : Ext.Msg.OK,
+							icon : Ext.MessageBox.ERROR
+						});
+					}
+				},
+                failure:function(response,option){
+					Ext.Msg.show({
+						title : '系统提示',
+						msg : '服务器内部错误',
+						buttons : Ext.Msg.OK,
+						icon : Ext.MessageBox.ERROR
+					});
+                }
+			 });
+			 **/
+    	}
+    }
+});
+
+var dataActions = [
+	new Ext.Action({
+	    id: 'viewSrcSmallImage',
+	    text: '查看原始缩略图',
+	    disabled: true,
+		iconCls : 'icon-search',
+	    handler: function(){}
+	}), 
+	new Ext.Action({
+	    id: 'viewbigimage',
+	    text: '查看大图',
+	    disabled: true,
+		iconCls : 'icon-picture_link',
+	    handler: function(){}
+	}),
+	new Ext.Action({
+	    id: 'viewimage',
+	    text: '查看',
+	    iconCls : 'icon-picture',
+	    disabled: true,
+	    handler: function(){
+	    	
+	    }
+	})
+];
+
+var viewpanel = new Ext.Panel({
+    id:'images-view',
+	loadMask : {
+		msg : '数据加载中...'
+	},
+    height:400,
+    autoScroll: true,
+    viewConfig: {
+        forceFit:true
+    },
+    items:[dataview],
+    tbar:dataActions,
+    bbar:ptb
+});
+
+var tplLarge = new Ext.XTemplate(
+        '<tpl for=".">',
+            '<div class="large-box" id="{id}">',
+                '<img src="{httpUrl}" title="{title}">',
+            '</div>',
+        '</tpl>'
+);
+
+var dvLarge = new Ext.DataView({
+    autoScroll: true, store: store, tpl: tplLarge,
+    autoHeight: false, height: 410, multiSelect: true,
+    overClass: 'x-view-over', itemSelector: 'div.thumb-wrap',
+    emptyText: 'No images to display',
+    border: false
+});
+
+// Panel for large images
+var panelLarge = new Ext.Panel({
+    region: 'center',
+    margins:'5 0 5 0',
+    items:[dvLarge]
+});
+    
+var imageWin = new Ext.Window({
+	id:'result_image_win',
+	title:'图片窗口',
+	width:500,
+	height: 450,
+    autoScroll: true,
+	iconCls:'icon-images',
+	resizable : false,
+	modal : true,
+	closable:false,
+	animCollapse : true,
+	animateTarget : Ext.getBody(),
+	constrain : true,
+	items:[viewpanel],
+	buttonAlign : 'center',
+	minButtonWidth : 60,
+	buttons : [
+		{
+			iconCls:'icon-cancel',
+			text : '关闭',
+			handler : function() {
+				var win = Ext.getCmp('result_image_win');
+				win.hide();
+			}
+		}
+	]
+});
+
 /**
  * aid 文章id
  */
 function createImageListsWin(aid,title){
+	store.removeAll();
+	//为store更新查询参数，以便在分页时能够使用最新的查询参数获取数据。
+	Ext.apply(store, {
+		baseParams: {
+			'entity.articleId':aid,
+		}
+	});
     store.load({
 		params:{
 			'entity.articleId':aid,
-			start:0,
-			limit:app.qp.limit
+			'entity.start':0,
+			'entity.limit':9
 		}
     });
-	var imageWin = new Ext.Window({
-		id:'result_image_win',
-		title:title,
-		width:535,
-		height:400,
-		iconCls:'icon-images',
-		resizable : false,
-		modal : true,
-		closable:false,
-		animCollapse : true,
-		pageY : 20,
-		pageX : document.body.clientWidth / 2 - 420 / 2,
-		animateTarget : Ext.getBody(),
-		constrain : true,
-		items:[
-			new Ext.Panel({
-		        id:'images-view',
-		        frame:true,
-		        width:535,
-		        autoHeight:true,
-	            layout:'fit',
-	            
-		        items: new Ext.DataView({
-		            store: store,
-		            tpl: tpl,
-		            autoHeight:true,
-		            multiSelect: true,
-		            overClass:'x-view-over',
-		            itemSelector:'div.thumb-wrap',
-		            plugins: [
-		                new Ext.DataView.DragSelector(),
-		                new Ext.DataView.LabelEditor({dataIndex: 'title'})
-		            ],
-		
-		            prepareData: function(data){
-		                data.shortName = Ext.util.Format.ellipsis(data.title, 15);
-		                data.sizeString = Ext.util.Format.fileSize(data.size);
-		                data.dateString = data.createtime.format("m/d/Y g:i a");
-		                return data;
-		            },
-		            
-		            listeners: {
-		            	selectionchange: {
-		            		fn: function(dv,nodes){
-		            			var l = nodes.length;
-		            			var s = l != 1 ? 's' : '';
-		            			panel.setTitle('Simple DataView ('+l+' item'+s+' selected)');
-		            		}
-		            	}
-		            }
-		        })
-		    })
-		],
-		buttonAlign : 'center',
-		minButtonWidth : 60,
-		buttons : [
-			{
-				iconCls:'icon-cancel',
-				text : '关闭',
-				handler : function() {
-					var win = Ext.getCmp('result_image_win');
-					win.close();
-				}
-			}
-		]
-	}).show();
+	if(imageWin){
+		//添加数据视图
+	    imageWin.setTitle(title);
+	    imageWin.show();
+	}
 }
 	
-	/**
-    var store = new Ext.data.JsonStore({
-		url : project + '/admin/images!list.cgi',
-		reader : new Ext.data.JsonReader({
-			totalProperty : 'total',
-			root : 'records'
-		}, [{name : 'id',type : 'int'
-		}, {name : 'articleId',type : 'int'
-		}, {name : 'name',type : 'string'
-		}, {name : 'httpUrl',type : 'string'
-		}, {name : 'imgUrl',type : 'string'
-		}, {name : 'commentshowurl',type : 'string'
-		}, {name : 'commentsuburl',type : 'string'
-		}, {name : 'title',type : 'string'
-		}, {name : 'link',type : 'string'
-		}, {name : 'intro',type : 'string'
-		}, {name : 'createtime',type:'date', dateFormat:'timestamp'
-		}, {name : 'size',type : 'float'
-		}, {name : 'status',type : 'int'
-		}])
-    });
-    **/
-
-    var store = new Ext.data.JsonStore({
-		url:project+'/admin/images!list.cgi',
-		root: 'records',
-        fields: ['title', 'imgUrl', {name:'size', type: 'float'}, {name:'createtime', type:'date', dateFormat:'timestamp'}]
-    });
-    
-    var tpl = new Ext.XTemplate(
-		'<tpl for=".">',
-            '<div class="thumb-wrap" id="{title}">',
-		    '<div class="thumb"><img src="{imgUrl}" title="{title}"></div>',
-		    '<span class="x-editable">{shortName}</span></div>',
-        '</tpl>',
-        '<div class="x-clear"></div>'
-	);
