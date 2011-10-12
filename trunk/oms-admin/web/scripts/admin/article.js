@@ -137,7 +137,23 @@ Ext.onReady(function(){
 		                    	fieldLabel: '文章标题',
 								name: 'entity.title',  
 								xtype:'textfield',
-								anchor: '80%'
+								anchor: '80%',
+								listeners : {
+									'specialkey' : function(field, e) {
+										if (e.getKey() == Ext.EventObject.ENTER) {
+											if(queryConditionPanel.form.isValid()){
+												app.qp = getComps2Object(queryConditionPanel);
+												app.qp.start = 0;
+												app.qp.limit = 20;
+												Ext.apply(app.ds_data, {
+													baseParams: app.qp
+												});
+												app.ds_data.removeAll();
+												app.ds_data.load();
+											}
+										}
+									}
+								}
 		                    }  
 		                ]  
 		            }),
@@ -154,8 +170,23 @@ Ext.onReady(function(){
 								name: 'entity.id',  
 								xtype:'textfield',
 								vtype:'integer',
-								anchor: '80%'
-								
+								anchor: '80%',
+								listeners : {
+									'specialkey' : function(field, e) {
+										if (e.getKey() == Ext.EventObject.ENTER) {
+											if(queryConditionPanel.form.isValid()){
+												app.qp = getComps2Object(queryConditionPanel);
+												app.qp.start = 0;
+												app.qp.limit = 20;
+												Ext.apply(app.ds_data, {
+													baseParams: app.qp
+												});
+												app.ds_data.removeAll();
+												app.ds_data.load();
+											}
+										}
+									}
+								}
 		                    }  
 		                ]  
 		            }),
@@ -172,8 +203,23 @@ Ext.onReady(function(){
 								name: 'entity.webId',  
 								xtype:'textfield',
 								vtype:'integer',
-								anchor: '80%'
-								
+								anchor: '80%',
+								listeners : {
+									'specialkey' : function(field, e) {
+										if (e.getKey() == Ext.EventObject.ENTER) {
+											if(queryConditionPanel.form.isValid()){
+												app.qp = getComps2Object(queryConditionPanel);
+												app.qp.start = 0;
+												app.qp.limit = 20;
+												Ext.apply(app.ds_data, {
+													baseParams: app.qp
+												});
+												app.ds_data.removeAll();
+												app.ds_data.load();
+											}
+										}
+									}
+								}
 		                    }  
 		                ]  
 		            }),
@@ -198,7 +244,21 @@ Ext.onReady(function(){
 						            fields: ['id','name'],
 						            data: [[null,'请选择'],['0','不可用'],['FD','完成'],['NED','需要下载'],['ENED','ENED'],['NND','NND'],['NNN','NNN'],['FNFE','FNFE'],['WFD','WFD']]
 						        }),
-					            editable:false
+					            editable:false,
+								listeners : {
+									'select': function() {
+										if(queryConditionPanel.form.isValid()){
+											app.qp = getComps2Object(queryConditionPanel);
+											app.qp.start = 0;
+											app.qp.limit = 20;
+											Ext.apply(app.ds_data, {
+												baseParams: app.qp
+											});
+											app.ds_data.removeAll();
+											app.ds_data.load();
+										}
+									}
+								}
 		                    }  
 		                ]  
 		            }),
@@ -343,16 +403,18 @@ Ext.onReady(function(){
 	app.grid.addListener('rowdblclick',function(grid, rowIndex){
 		if(grid.getSelectionModel().isSelected(rowIndex)){
 			var record = grid.getSelectionModel().getSelected();
-			app.aid = record.get('id');
-			createImageListsWin(app.aid,record.get('title'));
-			/**
-				Ext.Msg.show({
-					title : '系统提示',
-					msg : '由于显示界面问题，暂时屏蔽该功能!',
-					buttons : Ext.Msg.OK,
-					icon : Ext.Msg.ERROR
-				});
-			**/ 
+			if(record.get('text') == 'FD' ){
+				app.aid = record.get('id');
+				createImageListsWin(app.aid,record.get('title'));
+				/**
+					Ext.Msg.show({
+						title : '系统提示',
+						msg : '由于显示界面问题，暂时屏蔽该功能!',
+						buttons : Ext.Msg.OK,
+						icon : Ext.Msg.ERROR
+					});
+				**/ 
+			}
 		}
 	});
 
@@ -488,7 +550,7 @@ var tpl = new Ext.XTemplate(
 );
 
 var ptb = new Ext.PagingToolbar({
-	pageSize:9,
+	pageSize:10,
 	store:store,
 	displayInfo:true,
 	displayMsg:'第 {0} - {1} 条  共 {2} 条',
@@ -641,8 +703,8 @@ var panelLarge = new Ext.Panel({
 var imageWin = new Ext.Window({
 	id:'result_image_win',
 	title:'图片窗口',
-	width:500,
-	height: 450,
+	width:600,
+//	height: 450,
     autoScroll: true,
 	iconCls:'icon-images',
 	resizable : false,
@@ -681,7 +743,7 @@ function createImageListsWin(aid,title){
 		params:{
 			'entity.articleId':aid,
 			'entity.start':0,
-			'entity.limit':9
+			'entity.limit':10
 		}
     });
 	if(imageWin){

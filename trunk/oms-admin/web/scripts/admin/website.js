@@ -359,7 +359,23 @@ Ext.onReady(function(){
 		                    	fieldLabel: '站点名称',
 								name: 'entity.name',  
 								xtype:'textfield',
-								anchor: '80%'
+								anchor: '80%',
+								listeners : {
+									'specialkey' : function(field, e) {
+										if (e.getKey() == Ext.EventObject.ENTER) {
+											if(queryConditionPanel.form.isValid()){
+												app.qp = getComps2Object(queryConditionPanel);
+												app.qp.start = 0;
+												app.qp.limit = 20;
+												Ext.apply(app.ds_data, {
+													baseParams: app.qp
+												});
+												app.ds_data.removeAll();
+												app.ds_data.load();
+											}
+										}
+									}
+								}
 		                    }  
 		                ]  
 		            }),
@@ -376,7 +392,23 @@ Ext.onReady(function(){
 								name: 'entity.id',  
 								xtype:'textfield',
 								vtype:'integer',
-								anchor: '80%'
+								anchor: '80%',
+								listeners : {
+									'specialkey' : function(field, e) {
+										if (e.getKey() == Ext.EventObject.ENTER) {
+											if(queryConditionPanel.form.isValid()){
+												app.qp = getComps2Object(queryConditionPanel);
+												app.qp.start = 0;
+												app.qp.limit = 20;
+												Ext.apply(app.ds_data, {
+													baseParams: app.qp
+												});
+												app.ds_data.removeAll();
+												app.ds_data.load();
+											}
+										}
+									}
+								}
 		                    }  
 		                ]  
 		            }),
@@ -393,7 +425,23 @@ Ext.onReady(function(){
 								name: 'entity.parentId',  
 								xtype:'textfield',
 								vtype:'integer',
-								anchor: '80%'
+								anchor: '80%',
+								listeners : {
+									'specialkey' : function(field, e) {
+										if (e.getKey() == Ext.EventObject.ENTER) {
+											if(queryConditionPanel.form.isValid()){
+												app.qp = getComps2Object(queryConditionPanel);
+												app.qp.start = 0;
+												app.qp.limit = 20;
+												Ext.apply(app.ds_data, {
+													baseParams: app.qp
+												});
+												app.ds_data.removeAll();
+												app.ds_data.load();
+											}
+										}
+									}
+								}
 		                    }  
 		                ]  
 		            }),
@@ -418,7 +466,21 @@ Ext.onReady(function(){
 						            fields: ['id','name'],
 						            data: [[null,'请选择'],[0,'不可用'],[1,'可用']]
 						        }),
-					            editable:false
+					            editable:false,
+								listeners : {
+									'select': function() {
+										if(queryConditionPanel.form.isValid()){
+											app.qp = getComps2Object(queryConditionPanel);
+											app.qp.start = 0;
+											app.qp.limit = 20;
+											Ext.apply(app.ds_data, {
+												baseParams: app.qp
+											});
+											app.ds_data.removeAll();
+											app.ds_data.load();
+										}
+									}
+								}
 		                    }  
 		                ]  
 		            }),
@@ -444,7 +506,21 @@ Ext.onReady(function(){
 						            //[2,'解封'],
 						            data: [[null,'请选择'],[1,'图片类型'],[2,'文章类型']]
 						        }),
-					            editable:false
+					            editable:false,
+								listeners : {
+									'select': function() {
+										if(queryConditionPanel.form.isValid()){
+											app.qp = getComps2Object(queryConditionPanel);
+											app.qp.start = 0;
+											app.qp.limit = 20;
+											Ext.apply(app.ds_data, {
+												baseParams: app.qp
+											});
+											app.ds_data.removeAll();
+											app.ds_data.load();
+										}
+									}
+								}
 		                    }  
 		                ]  
 		            })
