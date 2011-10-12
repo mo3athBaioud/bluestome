@@ -140,10 +140,23 @@ public class ImageManager {
 	 * @return
 	 */
 	public List<Image> getListBySql(Image entity,int start,int limit){
-		if(null == entity.getStart() && start > 0)
+		if(null == entity.getStart())
 			entity.setStart(start);
-		if(null == entity.getLimit() && limit  > 0)
+		if(null == entity.getLimit())
 			entity.setLimit(limit);
+		String sql = buildSQL(entity);
+		return imageDao.getListBySQL(sql);
+	}
+	/**
+	 * 获取指定的列表数量
+	 * @param entity
+	 * @return
+	 */
+	public List<Image> getListBySql(Image entity){
+		if(null == entity.getStart())
+			entity.setStart(null);
+		if(null == entity.getLimit())
+			entity.setLimit(null);
 		String sql = buildSQL(entity);
 		return imageDao.getListBySQL(sql);
 	}
