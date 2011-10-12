@@ -10,6 +10,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.takesoon.oms.ssi.common.Constants;
 import com.takesoon.oms.ssi.entity.Article;
 import com.takesoon.oms.ssi.service.ArticleManager;
 import com.takesoon.oms.ssi.utils.ExtUtil;
@@ -33,6 +34,7 @@ public class ArticleAction extends CRUDActionSupport {
 
 	@Override
 	public void delete() throws IOException {
+		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
@@ -54,6 +56,7 @@ public class ArticleAction extends CRUDActionSupport {
 
 	@Override
 	public void list() throws IOException {
+		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
@@ -85,6 +88,7 @@ public class ArticleAction extends CRUDActionSupport {
 
 	@Override
 	public void save() throws IOException {
+		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
@@ -101,6 +105,7 @@ public class ArticleAction extends CRUDActionSupport {
 
 	@Override
 	public void update() throws IOException {
+		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);

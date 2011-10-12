@@ -11,6 +11,8 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.takesoon.oms.ssi.common.Constants;
+import com.takesoon.oms.ssi.entity.Article;
 import com.takesoon.oms.ssi.entity.Image;
 import com.takesoon.oms.ssi.service.ImageManager;
 import com.takesoon.oms.ssi.utils.ExtUtil;
@@ -35,6 +37,7 @@ public class ImageAction extends CRUDActionSupport {
 	
 	@Override
 	public void delete() throws IOException {
+		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
@@ -56,6 +59,7 @@ public class ImageAction extends CRUDActionSupport {
 
 	@Override
 	public void list() throws IOException {
+		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
@@ -85,7 +89,39 @@ public class ImageAction extends CRUDActionSupport {
 		}
 	}
 
+	public void xmllist() throws IOException {
+		response.setCharacterEncoding(Constants.CHARSET);
+		PrintWriter out = null;
+		try{
+			 out = getOut(response);
+			 if(null != imageManager){
+				 int c = imageManager.getTotalBySql(entity);
+				 if(c > 0){
+					 List<Image> list = imageManager.getListBySql(entity);
+					 if(null != list && list.size() > 0){
+						 String xml = ExtUtil.getXmlFromList(c, list);
+						 logger.info(" >> xml:" + xml);
+						 out.println(xml);
+					 }else{
+						 out.println("{success:false,msg:'列表数据为空!'}");
+					 }
+				 }else{
+					 out.println("{success:false,msg:'没有数据!'}");
+				 }
+			 }else{
+				 out.println("{success:false,msg:'业务类获取失败，请检查!'}"); 
+			 }
+		}catch(Exception e){
+			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
+		}finally{
+			if(null != out){
+				out.flush();
+				out.close();
+			}
+		}
+	}
 	public void root() throws IOException {
+		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
@@ -117,6 +153,7 @@ public class ImageAction extends CRUDActionSupport {
 	
 	@Override
 	public void save() throws IOException {
+		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
@@ -133,6 +170,7 @@ public class ImageAction extends CRUDActionSupport {
 
 	@Override
 	public void update() throws IOException {
+		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
@@ -152,6 +190,7 @@ public class ImageAction extends CRUDActionSupport {
 	 * @throws IOException
 	 */
 	public void enable() throws IOException{
+		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
@@ -174,6 +213,7 @@ public class ImageAction extends CRUDActionSupport {
 	 * @throws IOException
 	 */
 	public void disable() throws IOException{
+		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
