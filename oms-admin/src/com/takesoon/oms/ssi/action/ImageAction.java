@@ -12,8 +12,10 @@ import org.apache.struts2.convention.annotation.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.takesoon.oms.ssi.common.Constants;
+import com.takesoon.oms.ssi.common.JMagickScale;
 import com.takesoon.oms.ssi.entity.Article;
 import com.takesoon.oms.ssi.entity.Image;
+import com.takesoon.oms.ssi.service.ArticleManager;
 import com.takesoon.oms.ssi.service.ImageManager;
 import com.takesoon.oms.ssi.utils.ExtUtil;
 
@@ -32,7 +34,13 @@ public class ImageAction extends CRUDActionSupport {
 	@Autowired
 	private ImageManager imageManager;
 	
+		@Autowired
+	private ArticleManager articleManager;
+	
 	private Image entity;
+	
+	//图片处理类
+	private JMagickScale tp = JMagickScale.getInstance();
 	
 	
 	@Override
@@ -120,6 +128,7 @@ public class ImageAction extends CRUDActionSupport {
 			}
 		}
 	}
+	
 	public void root() throws IOException {
 		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
@@ -229,6 +238,51 @@ public class ImageAction extends CRUDActionSupport {
 				out.close();
 			}
 		}
+	}
+	
+	/**
+	 * 获取图片的宽高
+	 * @throws IOException
+	 */
+	public void wh() throws IOException{
+		response.setCharacterEncoding(Constants.CHARSET);
+		PrintWriter out = null;
+		try{
+			 out = getOut(response);
+			 Article art = articleManager.get(entity.getArticleId());
+			 if(null != art)
+			 {
+				 art.getArticleUrl();
+				 if(null != tp)
+				 {
+					 tp.process(art.getArticleUrl(),entity.getHttpUrl());
+					 out.println("{success:true,msg:'获取宽高成功!',width:"+tp.getWidth().intValue()+",height:"+tp.getHeight().intValue()+"}");
+				 }else{
+					 out.println("{success:false,msg:'获取图片处理对象失败!'}"); 
+				 }
+			 }
+			 else
+			 {
+				 out.println("{success:false,msg:'获取宽高失败!'}"); 
+			 }
+		}catch(Exception e)
+		{
+			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
+		}finally
+		{
+			if(null != out){
+				out.flush();
+				out.close();
+			}
+		}
+	}
+	
+	public JMagickScale getTp() {
+		return tp;
+	}
+
+	public void setTp(JMagickScale tp) {
+		this.tp = tp;
 	}
 
 	public Image getEntity() {
