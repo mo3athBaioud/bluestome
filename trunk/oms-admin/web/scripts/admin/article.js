@@ -543,7 +543,7 @@ var store = new Ext.data.JsonStore({
 var tpl = new Ext.XTemplate(
 	'<tpl for=".">',
         '<div class="thumb-wrap" id="{id}">',
-	    '<div class="thumb"><img src="{imgUrl}" title="{title}"></div>',
+	    '<div class="thumb"><img src="{imgUrl2}" title="{title}"></div>',
 	    '<span>{sizeString}</span></div>',
     '</tpl>',
     '<div class="x-clear"></div>'
@@ -570,6 +570,7 @@ var dataview = new Ext.DataView({
     ],
 
     prepareData: function(data){
+    	data.imgUrl2 =  project + '/admin/images!icon.cgi?entity.id='+data.id+'&entity.articleId='+data.articleId;
         data.shortName = Ext.util.Format.ellipsis(data.title, 15);
         data.sizeString = Ext.util.Format.fileSize(data.size);
         data.dateString = data.createtime.format("m/d/Y g:i a");
@@ -589,30 +590,40 @@ var dataview = new Ext.DataView({
                 dataActions[0].enable();
                 dataActions[1].enable();
                 dataActions[2].enable();
+                dataActions[3].enable();
             }
             else {
                 dataActions[0].disable();
                 dataActions[1].disable();
                 dataActions[2].disable();
+                dataActions[3].disable();
             }
     	},
     	dblclick:function(dv, index, node, e){
 			 var data = store.getAt(index);
-			 //当前所选图片的缩略图
-			 var iurl = data.data.imgUrl;
-			 //获取图片缩略图列表参数，即文章ID
-			 var aid = data.data.articleId;
-			 //请求获取xml数据
-			 /**
+			 //TODO 提示正在处理请求，显示请求进度
+			 //请求获取图片的宽高
 			 Ext.Ajax.request({
-				url : project+'/admin/images!xmllist.cgi',
+				waitTitle : '提示',
+				waitMsg : '正在请求服务器,请稍候...',
+				url : project+'/admin/images!wh.cgi',
 				params : {
-					'entity.id' : aid
+					'entity.articleId' : data.data.articleId,
+					'entity.httpUrl' : data.data.httpUrl
 				},
 				success:function(response,option){
 					var obj = Ext.util.JSON.decode(response.responseText);
 					if(obj.success){
-						createResultWin(record.get('articleUrl'),obj);
+						 Ext.Msg.show({
+							title : '系统提示',
+							msg : data.data.title,
+							buttons : Ext.Msg.OK,
+							fn:function(){
+								var turl = project + '/admin/images!image.cgi?entity.id='+data.data.id+'&entity.articleId='+data.data.articleId;
+								window.open(turl,data.data.id,'height='+obj.height+',width='+obj.width+',top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
+							},
+							icon : Ext.MessageBox.INFO
+						 });
 					}else{
 						Ext.Msg.show({
 							title : '系统提示',
@@ -631,12 +642,69 @@ var dataview = new Ext.DataView({
 					});
                 }
 			 });
-			 **/
     	}
     }
 });
 
 var dataActions = [
+	new Ext.Action({
+	    id: 'setIcon',
+	    text: '设置为文章缩略图',
+	    disabled: true,
+		iconCls : 'icon-anchor',
+	    handler: function(){
+            var obj = dataview;
+            if (obj.isSelected) {
+            	var datas = obj.getSelectedRecords();
+            	/**
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : datas[0].data.imgUrl,
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.INFO
+				});
+				**/
+				Ext.Ajax.request({
+					url : project+'/admin/article!previewicon.cgi',
+					params : {
+						'entity.id' : datas[0].data.articleId,
+						'entity.acticleXmlUrl' : datas[0].data.imgUrl
+					},
+					success:function(response,option){
+						var obj = Ext.util.JSON.decode(response.responseText);
+						if(obj.success){
+							Ext.Msg.show({
+								title : '系统提示',
+								msg : obj.msg,
+								buttons : Ext.Msg.OK,
+								fn:function(){
+									store.load();
+								},
+								icon : Ext.MessageBox.INFO
+							});
+						}else{
+							Ext.Msg.show({
+								title : '系统提示',
+								msg : obj.msg,
+								buttons : Ext.Msg.OK,
+								icon : Ext.MessageBox.ERROR
+							});
+						}
+					},
+		            failure:function(){
+						Ext.Msg.show({
+							title : '系统提示',
+							msg : '服务器内部错误',
+							buttons : Ext.Msg.OK,
+							icon : Ext.MessageBox.ERROR
+						});
+		            }
+				});
+			}else{
+				Ext.MessageBox.alert("提示信息!!", "请选择要获取URL的数据!!");
+			}
+	    }
+	}), 
 	new Ext.Action({
 	    id: 'viewSrcSmallImage',
 	    text: '查看原始缩略图',
