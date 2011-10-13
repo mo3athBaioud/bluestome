@@ -120,6 +120,36 @@ public class ArticleAction extends CRUDActionSupport {
 		}
 	}
 
+	/**
+	 *  
+	 *设置文章缩略图
+	 */
+	public void previewicon() throws Exception{
+		response.setCharacterEncoding(Constants.CHARSET);
+		PrintWriter out = null;
+		try {
+			out = getOut(response);
+			Article article = articleManager.get(entity.getId());
+			if(!article.getActicleXmlUrl().toLowerCase().endsWith(".xml"))
+			{
+					article.setActicleXmlUrl(entity.getActicleXmlUrl());
+					articleManager.save(article);
+					out.println("{success:true,msg:'设置文章缩略图成功!'}"); 
+			}
+			else
+			{
+				 out.println("{success:false,msg:'该类数据不允许设置缩略图!'}"); 
+			}
+		} catch (Exception e) {
+			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
+		}finally{
+			if(null != out){
+				out.flush();
+				out.close();
+			}
+		}
+	}
+	
 	public Article getEntity() {
 		return entity;
 	}
