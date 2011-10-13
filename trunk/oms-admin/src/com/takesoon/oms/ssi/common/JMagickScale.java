@@ -75,7 +75,7 @@ public class JMagickScale {
 		if(null != in)
 		{
 			//TODO 获取宽高
-			wh(in);
+			wh2(in);
 		}
 		clear(in);
 	}
@@ -133,6 +133,8 @@ public class JMagickScale {
 					width = dim.getWidth();
 					height = dim.getHeight();
 					
+					System.out.println(" > o.width:" + width);
+					System.out.println(" > o.height:" + height);
 					//TODO 是否需要等比算出宽和高
 					if(isScale)
 					{
@@ -143,7 +145,26 @@ public class JMagickScale {
 						height = pr*height;
 					}
 				}
+				System.out.println(" > img.type:"+image.getImageType());
 			}
+		}
+	}
+	
+	/**
+	 * 另一种获取图片宽高的算法
+	 * @param in
+	 */
+	public void wh2(String in){
+		float[] wh = ReduceImage.getImageWH(in);
+		width = Double.valueOf(wh[0]);
+		height = Double.valueOf(wh[1]);
+		if(isScale)
+		{
+			//缩放比率
+			double pr = width > height ? maxSize/width : maxSize/height;
+			//缩放后的宽高
+			width = pr*width;
+			height = pr*height;
 		}
 	}
 	
