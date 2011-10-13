@@ -126,6 +126,7 @@ Ext.onReady(function(){
 			app.data_form.form.findField('entity.id').setValue('');
 			app.data_form.form.findField('entity.parentId').setValue('');
 			app.data_form.form.findField('entity.name').setValue('');
+			app.data_form.form.findField('entity.url').setValue('');
 			app.data_form.form.findField('entity.type').setValue('');
 			app.data_form.form.findField('entity.remarks').setValue('');
 			app.data_form.form.findField('entity.status').setValue('');
@@ -153,6 +154,7 @@ Ext.onReady(function(){
 				app.data_form.form.findField('entity.id').setValue(record.get('id'));
 				app.data_form.form.findField('entity.parentId').setValue(record.get('parentId'));
 				app.data_form.form.findField('entity.name').setValue(record.get('name'));
+				app.data_form.form.findField('entity.url').setValue(record.get('url'));
 				app.data_form.form.findField('entity.type').setValue(record.get('type'));
 				app.data_form.form.findField('entity.remarks').setValue(record.get('remarks'));
 				app.data_form.form.findField('entity.status').setValue(record.get('status'));
@@ -603,6 +605,10 @@ Ext.onReady(function(){
 			},{ 
 				fieldLabel : '网站名称',
 				name : 'entity.name',
+				maxLength:32
+			},{ 
+				fieldLabel : '网站地址',
+				name : 'entity.url',
 				maxLength:32
 			},{
 				xtype:'combo',
