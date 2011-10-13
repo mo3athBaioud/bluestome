@@ -308,6 +308,7 @@ public class ImageAction extends CRUDActionSupport {
 				byte[] body = HttpClientUtils.getResponseBodyAsByte(art.getArticleUrl(), null, url);
 				if(null != body && body.length > 0)
 				{
+					response.setHeader("Cache-Control", "max-age="+24*3600*365);
 					response.setContentLength(body==null?0:body.length);
 					out.write(body);
 				}
@@ -350,6 +351,7 @@ public class ImageAction extends CRUDActionSupport {
 				byte[] body = HttpClientUtils.getResponseBodyAsByte(art.getArticleUrl(), null, url);
 				if(null != body && body.length > 0)
 				{
+					response.setHeader("Cache-Control", "max-age="+24*3600*365);
 					response.setContentLength(body==null?0:body.length);
 					out.write(body);
 					out.flush();
