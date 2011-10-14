@@ -67,17 +67,18 @@ public class ImageTest {
 		System.out.println(" > sql:" + sql);
 		int c = imageManager.getTotalBySql(entity);
 		System.out.println(" > c:"+c);
-		List<Image> list = imageManager.getListBySql(entity, 0, 200);
-		for(Image art:list){
-			System.out.println(" > art.toJson():"+art.toJson());
-		}
+		List<Image> list = imageManager.getListBySql(entity);
+//		for(Image art:list){
+//			System.out.println(" > art.toJson():"+art.toJson());
+//		}
 		
-		String json = ExtUtil.getJsonFromList(c, list);
-		System.out.println(" > json.length:"+json.length());
+//		String json = ExtUtil.getJsonFromList(c, list);
+//		System.out.println(" > json.length:"+json.length());
 		
 //		String json2 = DateJsonValueProcessor.obj2JsonObj(list);
 		
 		String xml = ExtUtil.getXmlFromList(c, list);
+		System.out.println(xml);
 		System.out.println(" > xml.length:"+xml.length());
 		
 		System.out.println(" > list.size:" + list.size());

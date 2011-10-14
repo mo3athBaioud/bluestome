@@ -59,7 +59,6 @@ public class WebsiteTest {
 		}
 	}
 	
-	@Test
 	public void get(){
 		Website entity = new Website();
 		entity = websiteManager.get(200);
@@ -67,5 +66,14 @@ public class WebsiteTest {
 			System.out.println(entity.toJson());
 		}
 		
+	}
+	
+	@Test
+	public void testTree2(){
+		Website entity = new Website();
+		entity.setParentId(700);
+		List<Website> list = websiteManager.getList(entity, 0, 200);
+		String tree = websiteManager.tree2(list,"/oms");
+		System.out.println(" > "+tree);
 	}
 }
