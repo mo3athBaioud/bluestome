@@ -7,6 +7,7 @@
            
 	<import resource="classpath:common/applicationContext-common.xml" />
 	<import resource="classpath:ds/applicationContext-ds.xml" />
+	<import resource="classpath:ehcache/applicationContext-ehcache.xml" />
 	<!-- 
 	 -->
 </beans>
