@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
 import java.text.RuleBasedCollator;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,21 +18,36 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.upload.FormFile;
 
 import com.ssi.common.Rules;
 import com.ssi.common.zip.ZipEntry;
 import com.ssi.common.zip.ZipInputStream;
 
 public class FileUtils extends org.apache.commons.io.FileUtils {
+	
 	private static Log logger = LogFactory.getLog(FileUtils.class);
 
 	private static final int BUFFER_SIZE = 10 * 1024;
 
+	/**
+	 * 随机生成文件名
+	 * @param fileName
+	 * @return
+	 */
+	private synchronized String generateFileName(String fileName) {
+		DateFormat format = new SimpleDateFormat("yyMMddHHmmss");
+		String formatDate = format.format(new Date());
+		int random = new Random().nextInt(10000);
+		int position = fileName.lastIndexOf(".");
+		String extension = fileName.substring(position);
+		return formatDate + random + extension;
+	}
+	
 	public static void copyStream(final InputStream _inputStream,
 			final OutputStream _ouputStream) throws IOException {
 		final byte[] buffer = new byte[BUFFER_SIZE];
@@ -78,64 +94,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 			return -2;
 		}
 		return 0;
-	}
-
-	/**
-	 * 复制单个文件
-	 * 
-	 * @param oldPath
-	 *            String 原文件路径 如：c:/fqf.txt
-	 * @param newPath
-	 *            String 复制后路径 如：f:/fqf.txt
-	 */
-//	public static void copyFile(String oldPath, String newPath) {
-//		try {
-//			int byteread = 0;
-//			File oldfile = new File(oldPath);
-//			if (oldfile.exists()) { // 文件存在时
-//				InputStream inStream = new FileInputStream(oldPath); // 读入原文件
-//				FileOutputStream fs = new FileOutputStream(newPath);
-//				byte[] buffer = new byte[1444];
-//				while ((byteread = inStream.read(buffer)) != -1) {
-//					fs.write(buffer, 0, byteread);
-//				}
-//				inStream.close();
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//
-//		}
-//
-//	}
-
-	public static void uploadFile(FormFile formFile, String targetFile)
-			throws Exception {
-		FileOutputStream fout = null;
-		InputStream input = null;
-
-		try {
-			File file = new File(targetFile);
-
-			fout = new FileOutputStream(file);
-
-			byte[] bytes = new byte[1024];
-			input = formFile.getInputStream();
-
-			int length = input.read(bytes);
-
-			while (length > 0) {
-				fout.write(bytes, 0, length);
-				length = input.read(bytes);
-			}
-
-		} catch (Exception e) {
-			logger.error("", e);
-		} finally {
-			fout.close();
-			fout = null;
-			input.close();
-			input = null;
-		}
 	}
 
 	public static void encoding(String filename, String sourcEncoding,
