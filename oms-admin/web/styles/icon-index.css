@@ -4059,3 +4059,24 @@
 .icon-zoom_out {
 	background-image: url(../images/zoom_out.png) !important;
 }
+.icon-image_missing {
+	background-image: url(../images/image_missing.png) !important;
+}
+.icon-image_waiting {
+	background-image: url(../images/image_waiting.png) !important;
+}
+.icon-article {
+	background-image: url(../images/article.png) !important;
+}
+.icon-article_add {
+	background-image: url(../images/article_add.png) !important;
+}
+.icon-article_delete {
+	background-image: url(../images/article_delete.png) !important;
+}
+.icon-article_edit {
+	background-image: url(../images/article_edit.png) !important;
+}
+.icon-article_anchor {
+	background-image: url(../images/article_anchor.png) !important;
+}
