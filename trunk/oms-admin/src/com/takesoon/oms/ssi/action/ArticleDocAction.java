@@ -11,16 +11,16 @@ import org.apache.struts2.convention.annotation.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.takesoon.oms.ssi.common.Constants;
-import com.takesoon.oms.ssi.entity.Article;
-import com.takesoon.oms.ssi.service.ArticleManager;
+import com.takesoon.oms.ssi.entity.ArticleDoc;
+import com.takesoon.oms.ssi.service.ArticleDocManager;
 import com.takesoon.oms.ssi.utils.ExtUtil;
 
 @Namespace("/admin")
-@Action("article")
+@Action("articledoc")
 @Results( {
-	@Result(name = "success", location = "/WEB-INF/pages/admin/article.jsp"),
+	@Result(name = "success", location = "/WEB-INF/pages/admin/articledoc.jsp"),
 })
-public class ArticleAction extends CRUDActionSupport {
+public class ArticleDocAction extends CRUDActionSupport {
 	
 	/**
 	 * 
@@ -28,9 +28,9 @@ public class ArticleAction extends CRUDActionSupport {
 	private static final long serialVersionUID = 1L;
 	
 	@Autowired
-	private ArticleManager articleManager;
+	private ArticleDocManager articleDocManager;
 	
-	private Article entity;
+	private ArticleDoc entity;
 	
 	private Integer webId = 0;
 
@@ -63,10 +63,10 @@ public class ArticleAction extends CRUDActionSupport {
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
-			 if(null != articleManager){
-				 int c = articleManager.getTotalBySql(entity);
+			 if(null != articleDocManager){
+				 int c = articleDocManager.getTotalBySql(entity);
 				 if(c > 0){
-					 List<Article> list = articleManager.getListBySql(entity, start, limit);
+					 List<ArticleDoc> list = articleDocManager.getListBySql(entity, start, limit);
 					 if(null != list && list.size() > 0){
 						 String json = ExtUtil.getJsonFromList(c, list);
 						 out.println(json);
@@ -123,41 +123,11 @@ public class ArticleAction extends CRUDActionSupport {
 		}
 	}
 
-	/**
-	 *  
-	 *设置文章缩略图
-	 */
-	public void previewicon() throws Exception{
-		response.setCharacterEncoding(Constants.CHARSET);
-		PrintWriter out = null;
-		try {
-			out = getOut(response);
-			Article article = articleManager.get(entity.getId());
-			if(!article.getActicleXmlUrl().toLowerCase().endsWith(".xml"))
-			{
-					article.setActicleXmlUrl(entity.getActicleXmlUrl());
-					articleManager.save(article);
-					out.println("{success:true,msg:'设置文章缩略图成功!'}"); 
-			}
-			else
-			{
-				 out.println("{success:false,msg:'该类数据不允许设置缩略图!'}"); 
-			}
-		} catch (Exception e) {
-			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
-		}finally{
-			if(null != out){
-				out.flush();
-				out.close();
-			}
-		}
-	}
-	
-	public Article getEntity() {
+	public ArticleDoc getEntity() {
 		return entity;
 	}
 
-	public void setEntity(Article entity) {
+	public void setEntity(ArticleDoc entity) {
 		this.entity = entity;
 	}
 

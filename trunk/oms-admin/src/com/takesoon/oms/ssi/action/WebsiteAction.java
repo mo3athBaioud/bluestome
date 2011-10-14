@@ -59,6 +59,41 @@ public class WebsiteAction extends CRUDActionSupport {
 	public String execute(){
 		return SUCCESS;
 	}
+	
+	/**
+	 * 树形列表
+	 * @throws IOException
+	 */
+	public void tree() throws IOException{
+		response.setCharacterEncoding(Constants.CHARSET);
+		PrintWriter out = null;
+		try{
+			 out = getOut(response);
+			 if(null != websiteManager){
+				 int c = websiteManager.getTotalBySql(entity);
+				 if(c > 0){
+					 List<Website> list = websiteManager.getList(entity);
+					 if(null != list && list.size() > 0){
+						 String tree = websiteManager.tree2(list,request.getContextPath());
+						 out.println(tree);
+					 }else{
+						 out.println("{success:false,msg:'列表数据为空!'}");
+					 }
+				 }else{
+					 out.println("{success:false,msg:'没有数据!'}");
+				 }
+			 }else{
+				 out.println("{success:false,msg:'业务类获取失败，请检查!'}"); 
+			 }
+		}catch(Exception e){
+			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
+		}finally{
+			if(null != out){
+				out.flush();
+				out.close();
+			}
+		}
+	}
 
 	@Override
 	public void list() throws IOException {

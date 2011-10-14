@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.hibernate.Criteria;
@@ -171,6 +173,17 @@ public class WebsiteManager {
 	/**
 	 * 获取指定的列表数量
 	 * @param entity
+	 * @return
+	 */
+	public List<Website> getList(Website entity){
+		Criteria criteria = getCriteria(entity);
+		criteria.addOrder(Order.asc("id"));
+		return websiteDao.getAll(criteria);
+	}
+	
+	/**
+	 * 获取指定的列表数量
+	 * @param entity
 	 * @param start
 	 * @param limit
 	 * @return
@@ -257,5 +270,60 @@ public class WebsiteManager {
 		sql.append(" limit ").append(limit);
 		sql.append(" offset ").append(start);
 		return sql.toString();
+	}
+	
+	public String tree2(List<Website> list,String ctx){
+		StringBuffer sb = new StringBuffer();
+		sb.append("[\n");
+		int i=0;
+		Website tmp = null;
+		for(Website bean:list){
+				sb.append("\t{\n");
+				sb.append("\t\t\"text\":\t\""+bean.getName()+"\",\n");
+				sb.append("\t\t\"id\":\"" + bean.getId()+"\",\n");
+				tmp = new Website();
+				tmp.setParentId(bean.getId());
+				int c = getCount(tmp);
+				if(c > 0){
+					switch(bean.getType()){
+						case 1:
+							sb.append("\t\t\"iconCls\":\"icon-images\",\n");
+							break;
+						case 2:
+							sb.append("\t\t\"iconCls\":\"icon-article\",\n");
+							break;
+						default:
+							sb.append("\t\t\"iconCls\":\"icon-images\",\n");
+							break;
+					}
+					sb.append("\t\t\"leaf\":false,\n");
+					sb.append("\t\t\"singleClickExpand\":true");
+				}else{
+						sb.append("\t\t\"tabicon\":\"/images/page.png\",\n");
+						sb.append("\t\t\"leaf\":true,\n");
+						switch(bean.getType()){
+							case 1:
+								sb.append("\t\t\"iconCls\":\"icon-image\",\n");
+								sb.append("\t\t\"ahref\":\"/admin/article.cgi?webId="+bean.getId()+"\",\n");
+								break;
+							case 2:
+								sb.append("\t\t\"iconCls\":\"icon-article_anchor\",\n");
+								sb.append("\t\t\"ahref\":\"/admin/articledoc.cgi?webId="+bean.getId()+"\",\n");
+								break;
+							default:
+								sb.append("\t\t\"iconCls\":\"icon-image\",\n");
+								sb.append("\t\t\"ahref\":\"/admin/article.cgi?webId="+bean.getId()+"\",\n");
+								break;
+						}
+						sb.append("\t\t\"hrefTarget\":\"center2\"");
+				}
+				sb.append("\n\t}");
+				if(i<list.size()-1){
+					sb.append(",\n");
+				}
+				i++;
+		}
+		sb.append("\n]");
+		return sb.toString();
 	}
 }

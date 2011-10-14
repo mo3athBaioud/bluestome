@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -112,7 +113,24 @@ public class ArticleDocManager {
 	 * @return
 	 */
 	public List<ArticleDoc> getList(ArticleDoc entity,int start,int limit){
-		return null;
+		Criteria criteria = getCriteria(entity);
+		criteria.setFirstResult(start);
+		criteria.setMaxResults(limit);
+		criteria.addOrder(Order.desc("id"));
+		return articleDocDao.getAll(criteria);
+	}
+	
+	/**
+	 * 获取指定的列表数量
+	 * @param entity
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	public List<ArticleDoc> getList(ArticleDoc entity){
+		Criteria criteria = getCriteria(entity);
+		criteria.addOrder(Order.desc("id"));
+		return articleDocDao.getAll(criteria);
 	}
 	
 	/**
@@ -123,9 +141,9 @@ public class ArticleDocManager {
 	 * @return
 	 */
 	public List<ArticleDoc> getListBySql(ArticleDoc entity,int start,int limit){
-		if(null == entity.getStart() && start > 0)
+		if(null == entity.getStart())
 			entity.setStart(start);
-		if(null == entity.getLimit() && limit  > 0)
+		if(null == entity.getLimit())
 			entity.setLimit(limit);
 		String sql = buildSQL(entity);
 		return articleDocDao.getListBySQL(sql);
@@ -219,7 +237,7 @@ public class ArticleDocManager {
 					
 				}
 			}
-			sql.append(" order by d_id asc");
+			sql.append(" order by d_id desc");
 			if(null != entity.getStart() && null != entity.getLimit()){
 				sql.append(" limit ").append(entity.getLimit());
 				sql.append(" offset ").append(entity.getStart());

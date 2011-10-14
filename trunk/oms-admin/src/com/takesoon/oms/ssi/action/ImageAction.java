@@ -19,6 +19,7 @@ import com.takesoon.oms.ssi.common.JMagickScale;
 import com.takesoon.oms.ssi.entity.Article;
 import com.takesoon.oms.ssi.entity.Image;
 import com.takesoon.oms.ssi.service.ArticleManager;
+import com.takesoon.oms.ssi.service.ImageCacheManager;
 import com.takesoon.oms.ssi.service.ImageManager;
 import com.takesoon.oms.ssi.utils.ExtUtil;
 
@@ -37,8 +38,11 @@ public class ImageAction extends CRUDActionSupport {
 	@Autowired
 	private ImageManager imageManager;
 	
-		@Autowired
+	@Autowired
 	private ArticleManager articleManager;
+		
+	@Autowired	
+	private ImageCacheManager imageCacheManager;
 	
 	private Image entity;
 	
@@ -250,6 +254,7 @@ public class ImageAction extends CRUDActionSupport {
 	public void wh() throws IOException{
 		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
+		byte[] body = null;
 		try{
 			 out = getOut(response);
 			 Article art = articleManager.get(entity.getArticleId());
@@ -258,7 +263,15 @@ public class ImageAction extends CRUDActionSupport {
 				 art.getArticleUrl();
 				 if(null != tp)
 				 {
-					 tp.process(art.getArticleUrl(),entity.getHttpUrl());
+					 //TODO 存在性能上的问题
+					 body = imageCacheManager.getByte(entity.getHttpUrl());
+					 if(null != body && body.length > 0)
+					 {
+						 //TODO 从缓存中获取对象字节流
+						 tp.process(body);
+					 }else{
+						 tp.process(art.getArticleUrl(),entity.getHttpUrl());
+					 }
 					 out.println("{success:true,msg:'获取宽高成功!',width:"+tp.getWidth().intValue()+",height:"+tp.getHeight().intValue()+"}");
 				 }else{
 					 out.println("{success:false,msg:'获取图片处理对象失败!'}"); 
@@ -288,12 +301,14 @@ public class ImageAction extends CRUDActionSupport {
 		response.setCharacterEncoding(Constants.CHARSET);
 		ServletOutputStream out = null;
 		//TODO可以使用缓存方式存储已经下载的图片
+		byte[] body = null;
+		boolean isOk = false;
 		try{
 			 out = response.getOutputStream();
 			 Article art = articleManager.get(entity.getArticleId());
 			 if(null != art)
 			 {
-				 entity = imageManager.get(entity.getId());
+				entity = imageManager.get(entity.getId());
 				 //TODO 设置图片类型
 			 	String url = entity.getHttpUrl();
 				if (url.toLowerCase().endsWith(".gif")) {
@@ -305,12 +320,24 @@ public class ImageAction extends CRUDActionSupport {
 				}else{
 					response.setContentType("image/jpg;");
 				}
-				byte[] body = HttpClientUtils.getResponseBodyAsByte(art.getArticleUrl(), null, url);
+				//缓存图片对象
+				if(null != imageCacheManager.getByte(url)){
+					body = imageCacheManager.getByte(url);
+					logger.info(" >> get body from cache by ["+url+"]");
+				}else{
+					body = HttpClientUtils.getResponseBodyAsByte(art.getArticleUrl(), null, url);
+					if(null != body && body.length > 0)
+					{
+						imageCacheManager.putByte(url, body);
+						logger.info(" >> put body to cache by ["+url+"]");
+					}
+				}
 				if(null != body && body.length > 0)
 				{
-					response.setHeader("Cache-Control", "max-age="+24*3600*365);
+					response.setHeader("Cache-Control", "max-age=0");
 					response.setContentLength(body==null?0:body.length);
 					out.write(body);
+					out.flush();
 				}
 			 }
 			 //TODO 图片类型
@@ -331,6 +358,7 @@ public class ImageAction extends CRUDActionSupport {
 	public void icon() throws IOException{
 		ServletOutputStream out = null;
 		//TODO可以使用缓存方式存储已经下载的图片
+		byte[] body = null;
 		try{
 			 out = response.getOutputStream();
 			 Article art = articleManager.get(entity.getArticleId());
@@ -348,10 +376,21 @@ public class ImageAction extends CRUDActionSupport {
 				}else{
 					response.setContentType("image/jpg;");
 				}
-				byte[] body = HttpClientUtils.getResponseBodyAsByte(art.getArticleUrl(), null, url);
+				//缓存图片对象
+				if(null != imageCacheManager.getByte(url)){
+					body = imageCacheManager.getByte(url);
+					logger.info(" >> get body from cache by ["+url+"]");
+				}else{
+					body = HttpClientUtils.getResponseBodyAsByte(art.getArticleUrl(), null, url);
+					if(null != body && body.length > 0)
+					{
+						imageCacheManager.putByte(url, body);
+						logger.info(" >> put body to cache by ["+url+"]");
+					}
+				}
 				if(null != body && body.length > 0)
 				{
-					response.setHeader("Cache-Control", "max-age="+24*3600*365);
+					response.setHeader("Cache-Control", "max-age=0");
 					response.setContentLength(body==null?0:body.length);
 					out.write(body);
 					out.flush();
