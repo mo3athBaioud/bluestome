@@ -57,6 +57,7 @@
 	</style>
 		<script type="text/javascript">
 	    	var project = '${ctx}';
+	    	var webId = '${webId}';
 	</script>
 		<script type="text/javascript"
 			src="${ctx}/scripts/extjs/ux/DataView-more.js"></script>
