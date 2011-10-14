@@ -2,9 +2,11 @@ package com.takesoon.oms.ssi.common;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
@@ -133,7 +135,7 @@ public class ReduceImage {
 	        if (!srcfile.exists()) {   
 	            return config;   
 	        }
-	        Image src = ImageIO.read(srcfile);   
+	        Image src = ImageIO.read(srcfile); 
 	        
 	        //原始图像高和宽
 	        float width  = src.getWidth(null);
@@ -149,6 +151,33 @@ public class ReduceImage {
 			System.err.print(" >> ReduceImage.Exception:"+e);
 		}
 		return config;
+	}
+	
+	/**
+	 * 从字节数组中获取图片对象
+	 * @param body
+	 * @return
+	 */
+	public static float[] getImageWH(byte[] body){
+		 float[] config = {0.0f,0.0f};
+		 try{
+			 InputStream sbs = new ByteArrayInputStream(body);		 
+	         Image src = ImageIO.read(sbs); 
+	        
+	        //原始图像高和宽
+	        float width  = src.getWidth(null);
+	        float height  = src.getHeight(null);
+			
+	        if(width > 0){
+	        	config[0] = width;
+	        }
+	        if(height > 0){
+	        	config[1] = height;
+	        }
+		 }catch(Exception e){
+			 System.err.print(" >> ReduceImage.Exception:"+e);
+		 }
+		 return config;
 	}
 	
 	/**

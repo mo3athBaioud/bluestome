@@ -80,6 +80,17 @@ public class JMagickScale {
 		clear(in);
 	}
 	
+	/**
+	 * 从字节流中获取图片属性
+	 * @param body
+	 */
+	public void process(byte[] body){
+		if(null != body && body.length > 0)
+		{
+			wh2(body);
+		}
+	}
+	
 	public static JMagickScale getInstance(){
 		if(null == instance){
 			instance = new JMagickScale();
@@ -165,6 +176,26 @@ public class JMagickScale {
 			//缩放后的宽高
 			width = pr*width;
 			height = pr*height;
+		}
+	}
+	
+	/**
+	 * 从字节数组中获取图片宽高
+	 * @param body
+	 */
+	public void wh2(byte[] body){
+		float[] wh = ReduceImage.getImageWH(body);
+		width = Double.valueOf(wh[0]);
+		height = Double.valueOf(wh[1]);
+		System.out.println("o.width:"+width+"|o.height:"+height);
+		if(isScale)
+		{
+			//缩放比率
+			double pr = width > height ? maxSize/width : maxSize/height;
+			//缩放后的宽高
+			width = pr*width;
+			height = pr*height;
+			System.out.println("pa.width:"+width+"|pa.height:"+height);
 		}
 	}
 	
