@@ -59,71 +59,72 @@ Ext.onReady(function() {
 				   region:'west',
 	               width: 220,
 	               collapsible: true,
+				   autoScroll:true, 
 	               minSize: 200,
 	               maxSize: 350,
 	               split: true,
-//	               iconCls:'book_previousIcon',
-//	               title: '系统导航',
 	               layout:'accordion',
 	               layoutConfig:{
 		               animate:true,
 		               activeOnTop :true
 	               },
-					tools : [{
+	               /**
+				   tools : [{
 						id : 'refresh',
 						handler : function() {
 							var tree = Ext.getCmp('menu_tree_id');
 							tree.root.reload()
 						}
-					}],
-	             	items: [
-                   /**
-                    {
-                    autoScroll:true,
-                    border:false,
-                    contentEl: 'div.card.0101',
-                    iconCls:'folder_wrenchIcon',
-                    title:'业务管理'
-                    }
-					**/
-					{
-						id:'menu_tree_id',
-						xtype : 'treepanel',
-						border : false,
-						rootVisible : true,
-						loader : new Ext.tree.TreeLoader({
-							dataUrl : project+'/tree.json'
-						}),
-						root : new Ext.tree.AsyncTreeNode({
-							id:'0',
-							text:'业务管理'
-						}), 
-						listeners : {
-							'click' : function(n) {
-								try{
-									//子节点点击事件，json中最好不要使用href这个参数，extjs会将该参数名转换为a链接，然后打开新的窗口。
-//									var sn = this.selModel.selNode || {};
-									if (n.leaf && (null != n.attributes.ahref && '' != n.attributes.ahref)) {
-										var url = project + n.attributes.ahref;
-										addTab(url,n.text,n.id,projectname+' -> '+n.parentNode.text+' -> '+n.text,n.attributes.tabicon);								
-									}
-								}catch(e){
-									Ext.Msg.show({
-										title : '提示',
-										msg:e.toString(),
-										buttons : Ext.Msg.OK,
-										icon : Ext.Msg.ERROR
-									});
-								}
-							}
-						}
-					}
-		            ]
+				   }],
+				   **/
+	               items: [
+	                treepanel
+		           ]
 	            }
            ]
        }); 
 });
 
+	var treepanel = new Ext.tree.TreePanel({
+			id:'menu_tree_id',
+			xtype : 'treepanel',
+			border : false,
+			rootVisible:true,
+			autoScroll:true, 
+			loader : new Ext.tree.TreeLoader({
+				dataUrl : project+'/tree.json'
+			}),
+			root : new Ext.tree.AsyncTreeNode({
+				id:'-1',
+				iconCls:'icon-page',
+				text:'业务管理'
+			}), 
+			listeners : {
+				'click' : function(n) {
+					try{
+						//子节点点击事件，json中最好不要使用href这个参数，extjs会将该参数名转换为a链接，然后打开新的窗口。
+						if (n.leaf && (null != n.attributes.ahref && '' != n.attributes.ahref)) {
+							var url = project + n.attributes.ahref;
+							addTab(url,n.text,n.id,projectname+' -> '+n.parentNode.text+' -> '+n.text,n.attributes.tabicon);								
+						}
+					}catch(e){
+						Ext.Msg.show({
+							title : '提示',
+							msg:e.toString(),
+							buttons : Ext.Msg.OK,
+							icon : Ext.Msg.ERROR
+						});
+					}
+				}
+			}
+	});
+
+	treepanel.on('beforeload',function(node){
+		if(node.id != -1){
+    		treepanel.loader.dataUrl = project+'/admin/website!tree.cgi?entity.parentId='+node.id;
+		}
+    });
+    
 	/**
 	 * 响应树节点单击事件
 	 */
