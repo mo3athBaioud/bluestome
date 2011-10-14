@@ -1,75 +1,28 @@
 [
 	{
-			"text":"群客房间管理",
-			"id":"01",
-			"children":[
-				{
-						"text":"创建房间",
-						"id":"0102",
-						"iconCls":"icon-script_go",
-						"tabicon":"/images/page.png",
-						"ahref":"/mydesk.jsp",
-						"leaf":true
-				},{
-						"text":"查看编辑房间",
-						"id":"0103",
-						"iconCls":"icon-script_go",
-						"tabicon":"/images/page.png",
-						"ahref":"/mydesk.jsp",
-						"leaf":true
-				},{
-						"text":"查封房间",
-						"id":"0104",
-						"iconCls":"icon-script_go",
-						"tabicon":"/images/page.png",
-						"ahref":"/mydesk.jsp",
-						"leaf":true
-				},{
-						"text":"解封房间",
-						"id":"0105",
-						"iconCls":"icon-script_go",
-						"tabicon":"/images/page.png",
-						"ahref":"/mydesk.jsp",
-						"leaf":true
-				},{
-						"text":"实时聊天",
-						"id":"0106",
-						"iconCls":"icon-script_go",
-						"tabicon":"/images/page.png",
-						"ahref":"/mydesk.jsp",
-						"leaf":true
-				},{
-						"text":"邀请好友",
-						"id":"0107",
-						"iconCls":"icon-script_go",
-						"tabicon":"/images/page.png",
-						"ahref":"/mydesk.jsp",
-						"leaf":true
-				}
-			]
-	},{
-			"text":"用户管理",
-			"id":"02",
-			"iconCls":"icon-folder",
-			"leaf":true,
-			"hrefTarget":"center2"
-	},{
-			"text":"全局管理",
-			"id":"03",
-			"iconCls":"icon-folder",
-			"leaf":true,
-			"hrefTarget":"mainFrame"
-	},{
 			"text":"文章管理",
-			"id":"04",
+			"id":"0",
+			"iconCls":"icon-folder",
+			"leaf":false
+	},{
+			"text":"图片管理",
+			"id":"02",
 			"iconCls":"icon-page",
 			"leaf":true,
 			"tabicon":"/images/page.png",
 			"ahref":"/admin/article.cgi",
 			"hrefTarget":"center2"
 	},{
+			"text":"文章管理2",
+			"id":"04",
+			"iconCls":"icon-page",
+			"leaf":true,
+			"tabicon":"/images/page.png",
+			"ahref":"/admin/articledoc.cgi",
+			"hrefTarget":"center2"
+	},{
 			"text":"网站管理",
-			"id":"05",
+			"id":"03",
 			"iconCls":"icon-page",
 			"leaf":true,
 			"tabicon":"/images/page.png",
