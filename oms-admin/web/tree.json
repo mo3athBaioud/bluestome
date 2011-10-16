@@ -13,12 +13,12 @@
 			"ahref":"/admin/article.cgi",
 			"hrefTarget":"center2"
 	},{
-			"text":"文章管理2",
+			"text":"图片文章集",
 			"id":"04",
 			"iconCls":"icon-page",
 			"leaf":true,
 			"tabicon":"/images/page.png",
-			"ahref":"/admin/articledoc.cgi",
+			"ahref":"/admin/particle.cgi",
 			"hrefTarget":"center2"
 	},{
 			"text":"网站管理",
