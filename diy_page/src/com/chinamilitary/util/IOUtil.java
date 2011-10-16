@@ -134,6 +134,31 @@ public class IOUtil {
 		return filePath;
 	}
 
+	public static synchronized String createFile(String content,String filePath,String fileName,String tmp){
+		String savePath = filePath+"/"+fileName;
+		File file = null;
+		OutputStream out = null;
+		try{
+			try{
+				file = new File(savePath);
+				if(!file.exists()){
+					file.getParentFile().mkdirs();
+				}else{
+					return savePath;
+				}
+				out = new BufferedOutputStream(new FileOutputStream(file),1024);
+				out.write(content.getBytes(), 0, content.getBytes().length);
+				out.close();
+			}finally{
+				if(out != null)
+					out.close();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return filePath;
+	}
+	
 	/**
 	 * 将二进制内容写入指定文件
 	 * @param bytes
