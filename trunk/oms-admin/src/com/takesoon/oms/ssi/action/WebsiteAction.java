@@ -164,7 +164,8 @@ public class WebsiteAction extends CRUDActionSupport {
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
-			 out.println("{success:false,msg:'该方法[save]还未启用!'}"); 
+			 websiteManager.save(entity);
+			 out.println("{success:true,msg:'保存成功!'}"); 
 		}catch(Exception e){
 			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
 		}finally{

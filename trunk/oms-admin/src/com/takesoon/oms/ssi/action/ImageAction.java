@@ -408,6 +408,62 @@ public class ImageAction extends CRUDActionSupport {
 		return;
 	}
 	
+	/**
+	 * 间接将图片发送给前台
+	 *
+	 */
+	public void icon2() throws IOException{
+		String iconUrl = request.getParameter("iconUrl");
+		String referUrl = request.getParameter("referUrl");
+		ServletOutputStream out = null;
+		//TODO可以使用缓存方式存储已经下载的图片
+		byte[] body = null;
+		try{
+			 if(null != iconUrl && (iconUrl.toLowerCase().endsWith(".gif") || iconUrl.toLowerCase().endsWith(".png") || iconUrl.toLowerCase().endsWith(".jpg"))){
+				 out = response.getOutputStream();
+				 //TODO 设置图片类型
+			 	String url = iconUrl;
+				if (url.toLowerCase().endsWith(".gif")) {
+					response.setContentType("image/gif;");
+				} else if (url.toLowerCase().endsWith(".png")) {
+					response.setContentType("image/png;");
+				} else if (url.toLowerCase().endsWith(".jpg")){
+					response.setContentType("image/jpg;");
+				}else{
+					response.setContentType("image/jpg;");
+				}
+				//缓存图片对象
+				if(null != imageCacheManager.getByte(url)){
+					body = imageCacheManager.getByte(url);
+					logger.info(" >> get body from cache by ["+url+"]");
+				}else{
+					body = HttpClientUtils.getResponseBodyAsByte(referUrl, null, url);
+					if(null != body && body.length > 0)
+					{
+						imageCacheManager.putByte(url, body);
+						logger.info(" >> put body to cache by ["+url+"]");
+					}
+				}
+				if(null != body && body.length > 0)
+				{
+					response.setHeader("Cache-Control", "max-age="+(3600*24));
+					response.setContentLength(body==null?0:body.length);
+					out.write(body);
+					out.flush();
+				}
+				 Thread.sleep(500);
+				 //TODO 图片类型
+			 }
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null != out){
+				out.close();
+			}
+		}
+		return;
+	}
+	
 	public JMagickScale getTp() {
 		return tp;
 	}
