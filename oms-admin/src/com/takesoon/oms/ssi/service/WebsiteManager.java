@@ -1,5 +1,6 @@
 package com.takesoon.oms.ssi.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -90,6 +91,9 @@ public class WebsiteManager {
 	 * @param entity
 	 */
 	public void save(Website entity){
+		if(null != entity.getId()){
+			entity.setModifytime(new Date());
+		}
 		websiteDao.save(entity);
 	}
 	
@@ -278,6 +282,9 @@ public class WebsiteManager {
 		int i=0;
 		Website tmp = null;
 		for(Website bean:list){
+				if(bean.getStatus() == 0){
+					continue;
+				}
 				sb.append("\t{\n");
 				sb.append("\t\t\"text\":\t\""+bean.getName()+"\",\n");
 				sb.append("\t\t\"id\":\"" + bean.getId()+"\",\n");
