@@ -94,7 +94,7 @@ Ext.onReady(function(){
 											if(queryConditionPanel.form.isValid()){
 												app.qp = getComps2Object(queryConditionPanel);
 												app.qp.start = 0;
-												app.qp.limit = 20;
+												app.qp.limit = 30;
 												Ext.apply(app.ds_data, {
 													baseParams: app.qp
 												});
@@ -127,7 +127,7 @@ Ext.onReady(function(){
 											if(queryConditionPanel.form.isValid()){
 												app.qp = getComps2Object(queryConditionPanel);
 												app.qp.start = 0;
-												app.qp.limit = 20;
+												app.qp.limit = 30;
 												Ext.apply(app.ds_data, {
 													baseParams: app.qp
 												});
@@ -160,7 +160,7 @@ Ext.onReady(function(){
 											if(queryConditionPanel.form.isValid()){
 												app.qp = getComps2Object(queryConditionPanel);
 												app.qp.start = 0;
-												app.qp.limit = 20;
+												app.qp.limit = 30;
 												Ext.apply(app.ds_data, {
 													baseParams: app.qp
 												});
@@ -200,7 +200,7 @@ Ext.onReady(function(){
 										if(queryConditionPanel.form.isValid()){
 											app.qp = getComps2Object(queryConditionPanel);
 											app.qp.start = 0;
-											app.qp.limit = 20;
+											app.qp.limit = 30;
 											Ext.apply(app.ds_data, {
 												baseParams: app.qp
 											});
@@ -227,7 +227,7 @@ Ext.onReady(function(){
 									if(queryConditionPanel.form.isValid()){
 										app.qp = getComps2Object(queryConditionPanel);
 										app.qp.start = 0;
-										app.qp.limit = 20;
+										app.qp.limit = 30;
 										Ext.apply(app.ds_data, {
 											baseParams: app.qp
 										});
