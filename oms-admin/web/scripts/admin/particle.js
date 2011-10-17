@@ -13,7 +13,7 @@ Ext.onReady(function(){
 		'<tpl for=".">',
 	        '<div class="thumb-wrap" id="{id}">',
 		    '<div class="thumb"><img src="{imgUrl2}" title="{title}" onError="imgErr(this);" ></div>',
-		    '</div>',
+		    '<span>{id}</span></div>',
 	    '</tpl>',
 	    '<div class="x-clear"></div>'
 	);
@@ -49,6 +49,7 @@ Ext.onReady(function(){
 	
 	    prepareData: function(data){
 	    	data.imgUrl2 =  project + '/admin/images!icon2.cgi?iconUrl='+data.acticleXmlUrl+'&referUrl='+data.articleUrl;
+        	data.shortName = Ext.util.Format.ellipsis(data.title, 10);
 	        return data;
 	    },
 	    
@@ -92,13 +93,13 @@ Ext.onReady(function(){
 									'specialkey' : function(field, e) {
 										if (e.getKey() == Ext.EventObject.ENTER) {
 											if(queryConditionPanel.form.isValid()){
+												app.ds_data.removeAll();
 												app.qp = getComps2Object(queryConditionPanel);
 												app.qp.start = 0;
 												app.qp.limit = 30;
 												Ext.apply(app.ds_data, {
 													baseParams: app.qp
 												});
-												app.ds_data.removeAll();
 												app.ds_data.load();
 											}
 										}
@@ -125,13 +126,13 @@ Ext.onReady(function(){
 									'specialkey' : function(field, e) {
 										if (e.getKey() == Ext.EventObject.ENTER) {
 											if(queryConditionPanel.form.isValid()){
+												app.ds_data.removeAll();
 												app.qp = getComps2Object(queryConditionPanel);
 												app.qp.start = 0;
 												app.qp.limit = 30;
 												Ext.apply(app.ds_data, {
 													baseParams: app.qp
 												});
-												app.ds_data.removeAll();
 												app.ds_data.load();
 											}
 										}
@@ -158,13 +159,13 @@ Ext.onReady(function(){
 									'specialkey' : function(field, e) {
 										if (e.getKey() == Ext.EventObject.ENTER) {
 											if(queryConditionPanel.form.isValid()){
+												app.ds_data.removeAll();
 												app.qp = getComps2Object(queryConditionPanel);
 												app.qp.start = 0;
 												app.qp.limit = 30;
 												Ext.apply(app.ds_data, {
 													baseParams: app.qp
 												});
-												app.ds_data.removeAll();
 												app.ds_data.load();
 											}
 										}
@@ -198,13 +199,13 @@ Ext.onReady(function(){
 								listeners : {
 									'select': function() {
 										if(queryConditionPanel.form.isValid()){
+											app.ds_data.removeAll();
 											app.qp = getComps2Object(queryConditionPanel);
 											app.qp.start = 0;
 											app.qp.limit = 30;
 											Ext.apply(app.ds_data, {
 												baseParams: app.qp
 											});
-											app.ds_data.removeAll();
 											app.ds_data.load();
 										}
 									}
@@ -225,13 +226,13 @@ Ext.onReady(function(){
 								iconCls : 'icon-search',
 								handler : function() {
 									if(queryConditionPanel.form.isValid()){
+										app.ds_data.removeAll();
 										app.qp = getComps2Object(queryConditionPanel);
 										app.qp.start = 0;
 										app.qp.limit = 30;
 										Ext.apply(app.ds_data, {
 											baseParams: app.qp
 										});
-										app.ds_data.removeAll();
 										app.ds_data.load();
 									}
 								}
@@ -493,7 +494,13 @@ var dataActions = [
 	    text: '查看原始缩略图',
 	    disabled: true,
 		iconCls : 'icon-search',
-	    handler: function(){}
+	    handler: function(){
+            var obj = dataview;
+            if (obj.isSelected) {
+            	var datas = obj.getSelectedRecords();
+				window.open(datas[0].data.imgUrl,datas[0].data.id,'height=400,width=300,top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
+            }
+	    }
 	}), 
 	new Ext.Action({
 	    id: 'viewbigimage',
@@ -544,7 +551,27 @@ var dataActions = [
 	    iconCls : 'icon-picture',
 	    disabled: true,
 	    handler: function(){
-	    	
+            var obj = dataview;
+            if (obj.isSelected) {
+            	var datas = obj.getSelectedRecords();
+				window.open(datas[0].data.httpUrl,datas[0].data.id,'height=400,width=300,top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
+            }
+	    }
+	}),
+	new Ext.Action({
+	    id: 'autoPlay',
+	    text: '自动播放',
+	    iconCls : 'icon-picture',
+	    handler: function(){
+	    	//TODO 自动播放
+	    	//思路 在新页面中讲图片URL展示出来。
+           var obj = dataview;
+            if (obj.isSelected) {
+            	var datas = obj.getSelectedRecords();
+				var turl = project + '/admin/images!autoplay.cgi?entity.articleId='+datas[0].data.articleId;
+//				window.open(turl,datas[0].data.id,'height=300,width=400,top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
+				window.open(turl);
+            }
 	    }
 	})
 ];
@@ -611,7 +638,7 @@ function createImageListsWin(aid,title){
     });
 	if(imageWin){
 		//添加数据视图
-	    imageWin.setTitle(title);
+	    imageWin.setTitle(aid+'|'+title);
 	    imageWin.show();
 	}
 }
@@ -622,6 +649,19 @@ function createImageListsWin(aid,title){
  */
 function imgErr(img)
 {
-	  img.src = project+'/images/image_missing.png';
-	  img.qtip = '载入图片失败!';
+  img.src = project+'/images/image_missing.png';
+//  img.qtip = '载入图片失败!';
+}
+
+/**
+ * 获取路径后的文件扩展名
+ */
+function endsWith(str)
+{
+	var result = 'no';
+	var end  = str.toLowerCase().lastIndexOf(".");
+	if(end != -1){
+		result = str.substring(end);
+	}
+	return result;
 }
