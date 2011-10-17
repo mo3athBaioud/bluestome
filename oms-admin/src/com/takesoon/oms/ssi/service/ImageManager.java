@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -129,7 +130,22 @@ public class ImageManager {
 	 * @return
 	 */
 	public List<Image> getList(Image entity,int start,int limit){
-		return null;
+		Criteria criteria = getCriteria(entity);
+		criteria.setFirstResult(start);
+		criteria.setMaxResults(limit);
+		criteria.addOrder(Order.asc("id"));
+		return imageDao.getAll(criteria);
+	}
+	
+	/**
+	 * 获取列表数量
+	 * @param entity
+	 * @return
+	 */
+	public List<Image> getList(Image entity){
+		Criteria criteria = getCriteria(entity);
+		criteria.addOrder(Order.asc("id"));
+		return imageDao.getAll(criteria);
 	}
 	
 	/**
