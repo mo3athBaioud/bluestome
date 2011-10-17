@@ -27,6 +27,7 @@ import com.takesoon.oms.ssi.utils.ExtUtil;
 @Action("images")
 @Results( {
 	@Result(name = "success", location = "/WEB-INF/pages/admin/images.jsp"),
+	@Result(name = "autoplay", location = "/WEB-INF/pages/autoplay.jsp"),
 })
 public class ImageAction extends CRUDActionSupport {
 	
@@ -43,6 +44,8 @@ public class ImageAction extends CRUDActionSupport {
 		
 	@Autowired	
 	private ImageCacheManager imageCacheManager;
+	
+	public static String AUTO_PLAY = "autoplay";
 	
 	private Image entity;
 	
@@ -464,6 +467,31 @@ public class ImageAction extends CRUDActionSupport {
 		return;
 	}
 	
+	/**
+	 * 展现自动播放列表
+	 * @return
+	 */
+	public String autoplay(){
+		request.setAttribute("title", "测试展现自动播放页面");
+		List<Image> list = imageManager.getListBySql(entity);
+		logger.info(" > list.size:" + list.size());
+		if(null != list && list.size() > 0){
+			request.setAttribute("list", list);
+		}else{
+			request.setAttribute("list", "无播放数据");
+		}
+		return AUTO_PLAY;
+	}
+	
+	
+	public String getAUTO_PLAY() {
+		return AUTO_PLAY;
+	}
+
+	public void setAUTO_PLAY(String auto_play) {
+		AUTO_PLAY = auto_play;
+	}
+
 	public JMagickScale getTp() {
 		return tp;
 	}
