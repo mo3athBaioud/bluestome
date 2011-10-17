@@ -9,36 +9,56 @@ Ext.onReady(function(){
 	app.qp.limit = 20;
     app.sm = new Ext.grid.CheckboxSelectionModel();
     
-    app.cm_utp = new Ext.grid.ColumnModel([
-		app.sm,
-        {header: "ID", width: 50, sortable: true, dataIndex: 'id'},
-        //webId
-        {header: "站点", width: 50, sortable: true, dataIndex: 'webId'},
-        {header: "标题", width: 250, sortable: true, dataIndex: 'title'},
-        {header: "缩略图", width: 70, sortable: true, dataIndex: 'acticleXmlUrl',renderer:function(v, cellMeta, record, rowIndex, columnIndex, store){
-        	var index = v.lastIndexOf(".");
-        	var b = false;
-        	if(index != -1){
-        		var ext = v.substring(index);
-        		if(ext != '.xml' && ext != '.html' && ext != '.htm'){
-        			b = true;
-        		}
-        	}
-        	if(b){
-        		return '<img src='+v+' title="'+record.get('title')+'" height="20" width="20" />';
-        	}else{
-        		return '<a href='+v+'><img src='+project+'/images/image_missing.png title="找不到图片" alt="找不到图片" height="20" width="20" onError="imgErr(this);"/></a>';
-        	}
-        }},
-        {header: "状态", width: 70, sortable: true, dataIndex: 'text',renderer:function(v){
-        	if(v == 'FD'){
-        		return '<font color=blue>'+v+'</font>';
-        	}else{
-        		return '<font color=red>'+v+'</font>';
-        	}
-        }},
-        {header: "收录时间", width: 130, sortable: true, dataIndex: 'createTime'}
-    ]);
+     var expander = new Ext.grid.RowExpander({
+        tpl : new Ext.Template(
+        	'<div class="thumb-wrap" id="{id}" style="pading:10px 100px 10px 100px;">',
+            '<div><img src="{acticleXmlUrl}" title={title} height="90" width="120" onError="imgErr(this);"/></div>',
+            '</div>'
+        )
+    });
+    
+    app.cm_utp = new Ext.grid.ColumnModel({
+	    columns:[
+				app.sm,
+		        {header: "ID", width: 50, sortable: true, dataIndex: 'id'},
+		        //webId
+		        {header: "站点", width: 50, sortable: true, dataIndex: 'webId'},
+		        {header: "标题", width: 250, sortable: true, dataIndex: 'title'},
+		        {header: "缩略图", width: 70, sortable: true, dataIndex: 'acticleXmlUrl',renderer:function(v, cellMeta, record, rowIndex, columnIndex, store){
+		        	var index = v.lastIndexOf(".");
+		        	var b = false;
+		        	if(index != -1){
+		        		var ext = v.substring(index);
+		        		if(ext != '.xml' && ext != '.html' && ext != '.htm'){
+		        			b = true;
+		        		}
+		        	}
+		        	if(b){
+		        		return '<img src='+v+' title="'+record.get('title')+'" height="20" width="20" />';
+		        	}else{
+		        		return '<a href='+v+'><img src='+project+'/images/image_missing.png title="找不到图片" alt="找不到图片" height="20" width="20" onError="imgErr(this);"/></a>';
+		        	}
+		        }},
+		        {header: "状态", width: 70, sortable: true, dataIndex: 'text',renderer:function(v){
+		        	if(v == 'FD'){
+		        		return '<font color=blue>'+v+'</font>';
+		        	}else{
+		        		return '<font color=red>'+v+'</font>';
+		        	}
+		        }},
+		        {header: "收录时间", width: 130, sortable: true, dataIndex: 'createTime'}
+	    ]
+//	    ,
+//	    listeners:{
+//	    	'dbrclick':function(cm, colIndex, hidden){
+//	    		//TODO 鼠标移到到此
+//	    		alert('双击事件');
+//	    	},
+//	    	dbrclick:function(){
+//	    		alert('单击事件');
+//	    	}
+//	    }
+    });
     
 	app.btn_search_code = new Ext.Button({
 		text : '查询',
@@ -393,6 +413,7 @@ Ext.onReady(function(){
 		ds: app.ds_data,
 	    height:500,
         autoScroll: true,
+        plugins: expander,
         viewConfig: {
             forceFit:true
         },

@@ -609,7 +609,7 @@ Ext.onReady(function(){
 			},{ 
 				fieldLabel : '网站地址',
 				name : 'entity.url',
-				maxLength:32
+				maxLength:256
 			},{
 				xtype:'combo',
 				fieldLabel : '网站类型',
