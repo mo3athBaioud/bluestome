@@ -286,7 +286,7 @@ public class WebsiteManager {
 					continue;
 				}
 				sb.append("\t{\n");
-				sb.append("\t\t\"text\":\t\""+bean.getName()+"\",\n");
+				sb.append("\t\t\"text\":\t\""+bean.getName()+"("+bean.getId()+")\",\n");
 				sb.append("\t\t\"id\":\"" + bean.getId()+"\",\n");
 				tmp = new Website();
 				tmp.setParentId(bean.getId());

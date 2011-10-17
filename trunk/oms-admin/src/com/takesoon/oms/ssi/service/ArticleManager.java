@@ -120,6 +120,7 @@ public class ArticleManager {
 	 */
 	public List<Article> getListBySql(Article entity,int start,int limit){
 		String sql = buildSQL(entity,start,limit);
+		System.out.println(" > sql:"+sql);
 		return articleDao.getListBySQL(sql);
 	}
 	
@@ -205,10 +206,10 @@ public class ArticleManager {
 					
 				}
 			}
-			sql.append(" order by d_id desc");
 			if(null != entity.getStart() && null != entity.getLimit()){
 			}
 		}
+		sql.append(" order by d_id desc");
 		sql.append(" limit ").append(limit);
 		sql.append(" offset ").append(start);
 		return sql.toString();
