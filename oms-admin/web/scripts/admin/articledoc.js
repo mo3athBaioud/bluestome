@@ -449,7 +449,8 @@ Ext.onReady(function(){
 		if(grid.getSelectionModel().isSelected(rowIndex)){
 			var record = app.grid.getSelectionModel().getSelected();
 			var url = record.get('url');
-			window.open(url,'doc','height=600,width=800,top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
+			//height=600,width=800,
+			window.open(url,record.get('id'),'top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
 		}
 	});
 
