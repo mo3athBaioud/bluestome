@@ -22,12 +22,25 @@
 		</property>
 	</bean>
 	
+	<bean id="fileImageCache"
+		class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheManager">
+			<ref local="ehcacheManager" />
+		</property>
+		<property name="cacheName">
+			<value>fileImageCache</value>
+		</property>
+	</bean>
+	
+	<!-- init-method="init" -->
 	<bean id="imageCacheManager"
-		class="com.takesoon.oms.ssi.service.ImageCacheManager"
-		init-method="init">
+		class="com.takesoon.oms.ssi.service.ImageCacheManager">
 		<property name="cacheManager" ref="ehcacheManager" />
 		<property name="cacheName">
 			<value>fileImageCache</value>
+		</property>
+		<property name="cache">
+			<ref bean="fileImageCache"/>
 		</property>
 	</bean>
 </beans>
