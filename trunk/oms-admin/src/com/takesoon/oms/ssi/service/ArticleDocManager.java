@@ -141,11 +141,7 @@ public class ArticleDocManager {
 	 * @return
 	 */
 	public List<ArticleDoc> getListBySql(ArticleDoc entity,int start,int limit){
-		if(null == entity.getStart())
-			entity.setStart(start);
-		if(null == entity.getLimit())
-			entity.setLimit(limit);
-		String sql = buildSQL(entity);
+		String sql = buildSQL(entity,start,limit);
 		return articleDocDao.getListBySQL(sql);
 	}
 	
@@ -160,26 +156,26 @@ public class ArticleDocManager {
 			if(null != entity.getWebId()){
 				sql.append(" and a.d_web_id = ").append(entity.getWebId()).append("\n");
 			}
-			if(null != entity.getTitle()){
+			if(null != entity.getTitle() && !entity.getTitle().equals("")){
 				sql.append(" and a.d_title like '%").append(entity.getTitle()).append("%'").append("\n");
 			}
-			if(null != entity.getUrl()){
+			if(null != entity.getUrl() && !entity.getUrl().equals("")){
 				sql.append(" and a.d_url like '%").append(entity.getUrl()).append("%'").append("\n");
 			}
-			if(null != entity.getAuthor()){
+			if(null != entity.getAuthor() && !entity.getAuthor().equals("")){
 				sql.append(" and a.d_author like '%").append(entity.getAuthor()).append("%'").append("\n");
 			}
-			if(null != entity.getTag()){
+			if(null != entity.getTag() && !entity.getTag().equals("")){
 				sql.append(" and a.d_tag like '%").append(entity.getTag()).append("%'").append("\n");
+			}
+			if(null != entity.getPublishTime() && !entity.getPublishTime().equals("")){
+				sql.append(" and a.d_publishtime like '%").append(entity.getPublishTime()).append("%'").append("\n");
 			}
 			if(null != entity.getStatus()){
 				sql.append(" and a.d_status = ").append(entity.getStatus()).append("\n");
 			}
 			if(null != entity.getGrade()){
 				sql.append(" and a.d_grade = ").append(entity.getGrade()).append("\n");
-			}
-			if(null != entity.getPublishTime()){
-				sql.append(" and a.d_publishtime like '%").append(entity.getPublishTime()).append("%'").append("\n");
 			}
 			if(null != entity.getStartDate() && null != entity.getEndDate()){
 //				sql.append(" and a.d_createtime between '").append()
@@ -195,7 +191,7 @@ public class ArticleDocManager {
 		return sql.toString();
 	}
 
-	public String buildSQL(ArticleDoc entity){
+	public String buildSQL(ArticleDoc entity,int start,int limit){
 		StringBuffer sql = new StringBuffer("select * from tbl_article_doc");
 		if(null != entity){
 			sql.append(" a");
@@ -206,26 +202,26 @@ public class ArticleDocManager {
 			if(null != entity.getWebId()){
 				sql.append(" and a.d_web_id = ").append(entity.getWebId()).append("\n");
 			}
-			if(null != entity.getTitle()){
+			if(null != entity.getTitle() && !entity.getTitle().equals("")){
 				sql.append(" and a.d_title like '%").append(entity.getTitle()).append("%'").append("\n");
 			}
-			if(null != entity.getUrl()){
+			if(null != entity.getUrl() && !entity.getUrl().equals("")){
 				sql.append(" and a.d_url like '%").append(entity.getUrl()).append("%'").append("\n");
 			}
-			if(null != entity.getAuthor()){
+			if(null != entity.getAuthor() && !entity.getAuthor().equals("")){
 				sql.append(" and a.d_author like '%").append(entity.getAuthor()).append("%'").append("\n");
 			}
-			if(null != entity.getTag()){
+			if(null != entity.getTag() && !entity.getTag().equals("")){
 				sql.append(" and a.d_tag like '%").append(entity.getTag()).append("%'").append("\n");
+			}
+			if(null != entity.getPublishTime() && !entity.getPublishTime().equals("")){
+				sql.append(" and a.d_publishtime like '%").append(entity.getPublishTime()).append("%'").append("\n");
 			}
 			if(null != entity.getStatus()){
 				sql.append(" and a.d_status = ").append(entity.getStatus()).append("\n");
 			}
 			if(null != entity.getGrade()){
 				sql.append(" and a.d_grade = ").append(entity.getGrade()).append("\n");
-			}
-			if(null != entity.getPublishTime()){
-				sql.append(" and a.d_publishtime like '%").append(entity.getPublishTime()).append("%'").append("\n");
 			}
 			if(null != entity.getStartDate() && null != entity.getEndDate()){
 //				sql.append(" and a.d_createtime between '").append()
@@ -237,12 +233,10 @@ public class ArticleDocManager {
 					
 				}
 			}
-			sql.append(" order by d_id desc");
-			if(null != entity.getStart() && null != entity.getLimit()){
-				sql.append(" limit ").append(entity.getLimit());
-				sql.append(" offset ").append(entity.getStart());
-			}
 		}
+		sql.append(" order by d_id desc");
+		sql.append(" limit ").append(limit);
+		sql.append(" offset ").append(start);
 		return sql.toString();
 	}
 }
