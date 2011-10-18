@@ -25,17 +25,22 @@
 			<ul class="slides">
 				<c:forEach items="${list}" var="row" varStatus="status">
 					<li>
-						<img src="${ctx}/images/loading32.gif" src2="${ctx}/admin/images!image.cgi?entity.id=${row.id}&entity.articleId=${row.articleId}" name="LazyloadImg"/>
+						<!--
+						    src="${ctx}/images/loading32.gif" 
+						-->
+						<img id="img_${row.id}"  src="${ctx}/admin/images!image.cgi?entity.id=${row.id}&entity.articleId=${row.articleId}" name="LazyloadImg"/>
 						<p class="flex-caption">${row.intro}</p>
 					</li>
 			   	</c:forEach>
 			</ul>
 		</div>
+		<!-- 
         <script type="text/javascript">
             var imgList = document.getElementsByName("LazyloadImg");
             lazyload = new Lazyload({ src2: "src2", ImgList: imgList, defaultimage: "" });
             lazyload.loaded();
         </script>
+         -->
 	</div>
 	<div style="clear:both"></div>
 </body>
