@@ -565,13 +565,9 @@ var dataActions = [
 	    handler: function(){
 	    	//TODO 自动播放
 	    	//思路 在新页面中讲图片URL展示出来。
-           var obj = dataview;
-            if (obj.isSelected) {
-            	var datas = obj.getSelectedRecords();
-				var turl = project + '/admin/images!autoplay.cgi?entity.articleId='+datas[0].data.articleId;
-//				window.open(turl,datas[0].data.id,'height=300,width=400,top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
-				window.open(turl);
-            }
+			var turl = project + '/admin/images!autoplay.cgi?entity.articleId='+app.aid;
+			//height=300,width=400,
+			window.open(turl,app.aid,'top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
 	    }
 	})
 ];
@@ -637,6 +633,7 @@ function createImageListsWin(aid,title){
 		}
     });
 	if(imageWin){
+		app.aid = aid;
 		//添加数据视图
 	    imageWin.setTitle(aid+'|'+title);
 	    imageWin.show();
