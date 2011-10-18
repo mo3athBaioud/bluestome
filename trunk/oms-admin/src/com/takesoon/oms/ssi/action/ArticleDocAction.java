@@ -2,7 +2,10 @@ package com.takesoon.oms.ssi.action;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.servlet.ServletOutputStream;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -10,15 +13,18 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.ssi.common.utils.HttpClientUtils;
 import com.takesoon.oms.ssi.common.Constants;
 import com.takesoon.oms.ssi.entity.ArticleDoc;
 import com.takesoon.oms.ssi.service.ArticleDocManager;
+import com.takesoon.oms.ssi.service.ImageCacheManager;
 import com.takesoon.oms.ssi.utils.ExtUtil;
 
 @Namespace("/admin")
 @Action("articledoc")
 @Results( {
 	@Result(name = "success", location = "/WEB-INF/pages/admin/articledoc.jsp"),
+	@Result(name = "alllist", location = "/WEB-INF/pages/admin/doclist.jsp"),
 })
 public class ArticleDocAction extends CRUDActionSupport {
 	
@@ -30,9 +36,14 @@ public class ArticleDocAction extends CRUDActionSupport {
 	@Autowired
 	private ArticleDocManager articleDocManager;
 	
+	@Autowired	
+	private ImageCacheManager imageCacheManager;
+	
 	private ArticleDoc entity;
 	
 	private Integer webId = 0;
+	
+	public static String ALLLIST = "alllist";
 
 	@Override
 	public void delete() throws IOException {
@@ -55,6 +66,11 @@ public class ArticleDocAction extends CRUDActionSupport {
 	public String execute(){
 		request.setAttribute("webId", webId);
 		return SUCCESS;
+	}
+	
+	
+	public String allList(){
+		return ALLLIST;
 	}
 
 	@Override
@@ -122,6 +138,55 @@ public class ArticleDocAction extends CRUDActionSupport {
 			}
 		}
 	}
+	
+	/**
+	 * 中转显示内容
+	 * @throws IOException
+	 */
+	public void doc() throws IOException{
+		//TODO 
+		response.setCharacterEncoding(Constants.CHARSET);
+		ServletOutputStream out = null;
+		byte[] body = null;
+		try{
+			 out = response.getOutputStream();
+			 entity = articleDocManager.get(id.intValue());
+			 if(null != entity){
+				 String url = entity.getUrl();
+				 if(HttpClientUtils.validationURL(url)){
+					 HashMap<String, Object> result = HttpClientUtils.getResponse(url);
+					 response.setContentType((String)result.get("contentType"));
+					//缓存图片对象
+					if(null != imageCacheManager.getByte(url))
+					{
+						body = imageCacheManager.getByte(url);
+						logger.info(" >> get body from cache by ["+url+"]");
+					}else
+					{
+						body = (byte[])result.get("body");
+						if(null != body && body.length > 0)
+						{
+							imageCacheManager.putByte(url, body);
+							logger.info(" >> put body to cache by ["+url+"]");
+						}
+					}
+					if(null != body && body.length > 0)
+					{
+						response.setHeader("Cache-Control", "max-age="+(3600*24*365));
+						response.setContentLength(body==null?0:body.length);
+						out.write(body);
+						out.flush();
+					}
+				}
+			 }
+		}catch(Exception e){
+		}finally{
+			if(null != out){
+				out.flush();
+				out.close();
+			}
+		}
+	}
 
 	public ArticleDoc getEntity() {
 		return entity;
@@ -139,4 +204,13 @@ public class ArticleDocAction extends CRUDActionSupport {
 		this.webId = webId;
 	}
 
+	public String getALLLIST() {
+		return ALLLIST;
+	}
+
+	public void setALLLIST(String alllist) {
+		ALLLIST = alllist;
+	}
+
+	
 }
