@@ -337,11 +337,12 @@ public class ImageAction extends CRUDActionSupport {
 				}
 				if(null != body && body.length > 0)
 				{
-					response.setHeader("Cache-Control", "max-age=0");
+					response.setHeader("Cache-Control", "max-age="+(3600*24*365));
 					response.setContentLength(body==null?0:body.length);
 					out.write(body);
 					out.flush();
 				}
+				Thread.sleep(1000);
 			 }
 			 //TODO 图片类型
 		}catch(Exception e){
@@ -393,13 +394,13 @@ public class ImageAction extends CRUDActionSupport {
 				}
 				if(null != body && body.length > 0)
 				{
-					response.setHeader("Cache-Control", "max-age=0");
+					response.setHeader("Cache-Control", "max-age="+(3600*24*365));
 					response.setContentLength(body==null?0:body.length);
 					out.write(body);
 					out.flush();
 				}
 			 }
-			 Thread.sleep(1500);
+			 Thread.sleep(500);
 			 //TODO 图片类型
 		}catch(Exception e){
 			e.printStackTrace();
@@ -449,7 +450,7 @@ public class ImageAction extends CRUDActionSupport {
 				}
 				if(null != body && body.length > 0)
 				{
-					response.setHeader("Cache-Control", "max-age="+(3600*24));
+					response.setHeader("Cache-Control", "max-age="+(3600*24*365));
 					response.setContentLength(body==null?0:body.length);
 					out.write(body);
 					out.flush();
