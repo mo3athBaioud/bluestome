@@ -14,11 +14,11 @@ public class ImageCacheManager {
 	
 	public void init(){
 		cache = cacheManager.getCache(cacheName);
-		if(null == cache){
-			System.err.println(" >> rebuild cache named ["+cacheName+"] ");
-			cache = new Cache(cacheName, 1, true, false, 5, 2);     
-			cacheManager.addCache(cache);
-		}
+//		if(null == cache){
+//			System.err.println(" >> rebuild cache named ["+cacheName+"] ");
+//			cache = new Cache(cacheName, 1, true, false, 5, 2);     
+//			cacheManager.addCache(cache);
+//		}
 	}
 	
 	/**
