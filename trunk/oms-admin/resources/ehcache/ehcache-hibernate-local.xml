@@ -1,71 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache>
 
-	<diskStore path="d:/tmp/hibernate/admin.core" />
-
-	<defaultCache maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="false"
-		timeToIdleSeconds="300" timeToLiveSeconds="300" overflowToDisk="false" diskPersistent="false" />
-
+	<diskStore path="d:/tmp/cache/hibernate/" />
+	
+	<defaultCache maxElementsInMemory="100" memoryStoreEvictionPolicy="LRU" eternal="true"
+		overflowToDisk="true" diskPersistent="true" />
 	<cache name="com.takesoon.oms.ssi.entity.Article" overflowToDisk="true" eternal="false" diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600" maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU"/>
 	<cache name="com.takesoon.oms.ssi.entity.Image" overflowToDisk="true" eternal="false" diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600" maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU"/>
-	<cache name="fileImageCache" overflowToDisk="true" eternal="false" diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600" maxElementsInMemory="1" memoryStoreEvictionPolicy="LRU"/>
-    <!--  
-	 <cache name="com.skymobi.oms.acl.entity.Operatetype" 
-		maxElementsInMemory="50"
-		memoryStoreEvictionPolicy="LRU" 
-		eternal="true" 
-		diskPersistent="false" 
-		overflowToDisk="true"
-		maxElementsOnDisk="1000000"
-		timeToIdleSeconds="3600"   
-        timeToLiveSeconds="3600"/>
-
-
-    <cache name="com.skymobi.oms.acl.entity.Role" 
-		maxElementsInMemory="200"
-		memoryStoreEvictionPolicy="LRU" 
-		eternal="true" 
-		diskPersistent="false" 
-		overflowToDisk="true"
-		maxElementsOnDisk="1000000"
-		timeToIdleSeconds="3600"   
-        timeToLiveSeconds="3600"/>
-        
- 
-           
-     <cache name="com.skymobi.oms.acl.entity.User" 
-		maxElementsInMemory="800"
-		memoryStoreEvictionPolicy="LRU" 
-		eternal="true" 
-		diskPersistent="false" 
-		overflowToDisk="true"
-		maxElementsOnDisk="1000000"
-		timeToIdleSeconds="3600"   
-        timeToLiveSeconds="3600"/>
-     
-       
-       
-        
-     <cache name="com.skymobi.oms.acl.entity.Resource" 
-		maxElementsInMemory="5000"
-		memoryStoreEvictionPolicy="LRU" 
-		eternal="true" 
-		diskPersistent="false" 
-		overflowToDisk="true"
-		maxElementsOnDisk="1000000"
-		timeToIdleSeconds="3600"   
-        timeToLiveSeconds="3600"/>
-        
-      <cache name="com.skymobi.oms.acl.entity.Roleresourcemap" 
-		maxElementsInMemory="5000"
-		memoryStoreEvictionPolicy="LRU" 
-		eternal="true" 
-		diskPersistent="false" 
-		overflowToDisk="true"
-		maxElementsOnDisk="1000000"
-		timeToIdleSeconds="3600"   
-        timeToLiveSeconds="3600"/>  
-
-     -->
-     
 </ehcache>
