@@ -1,19 +1,19 @@
 [
 	{
-			"text":"文章管理",
+			"text":"图文管理",
 			"id":"0",
 			"iconCls":"icon-folder",
 			"leaf":false
 	},{
-			"text":"图片管理",
+			"text":"文章集",
 			"id":"02",
-			"iconCls":"icon-page",
+			"iconCls":"icon-article",
 			"leaf":true,
-			"tabicon":"/images/page.png",
-			"ahref":"/admin/article.cgi",
+			"tabicon":"/images/article.png",
+			"ahref":"/admin/articledoc!allList.cgi",
 			"hrefTarget":"center2"
 	},{
-			"text":"图片文章集",
+			"text":"图片集",
 			"id":"04",
 			"iconCls":"icon-page",
 			"leaf":true,
