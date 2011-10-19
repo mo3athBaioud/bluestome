@@ -9,7 +9,9 @@
 	<bean id="ehcacheManager"
 		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
 		<property name="configLocation"
-			value="classpath:/ehcache/ehcache-hibernate-local.xml" />
+			value="classpath:ehcache/ehcache-file-local.xml" />
+		<!-- 
+		 -->	
 	</bean>
 
 	<bean id="methodCache"
@@ -35,7 +37,6 @@
 	<!-- init-method="init" -->
 	<bean id="imageCacheManager"
 		class="com.takesoon.oms.ssi.service.ImageCacheManager">
-		<property name="cacheManager" ref="ehcacheManager" />
 		<property name="cacheName">
 			<value>fileImageCache</value>
 		</property>
