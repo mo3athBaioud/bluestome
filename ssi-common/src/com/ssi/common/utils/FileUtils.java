@@ -39,7 +39,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 	 * @param fileName
 	 * @return
 	 */
-	private synchronized String generateFileName(String fileName) {
+	public static String generateFileName(String fileName) {
 		DateFormat format = new SimpleDateFormat("yyMMddHHmmss");
 		String formatDate = format.format(new Date());
 		int random = new Random().nextInt(10000);
