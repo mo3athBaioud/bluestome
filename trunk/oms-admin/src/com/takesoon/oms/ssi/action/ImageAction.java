@@ -473,7 +473,12 @@ public class ImageAction extends CRUDActionSupport {
 	 * @return
 	 */
 	public String autoplay(){
-		request.setAttribute("title", "测试展现自动播放页面");
+		Article art = articleManager.get(entity.getArticleId().intValue());
+		if(null != art){
+			request.setAttribute("title", art.getTitle());
+		}else{
+			request.setAttribute("title", "测试展现自动播放页面");
+		}
 		List<Image> list = imageManager.getListBySql(entity);
 		logger.info(" > list.size:" + list.size());
 		if(null != list && list.size() > 0){
