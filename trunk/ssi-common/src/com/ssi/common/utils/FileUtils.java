@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.logging.Log;
@@ -46,6 +47,37 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 		int position = fileName.lastIndexOf(".");
 		String extension = fileName.substring(position);
 		return formatDate + random + extension;
+	}
+	
+	/**
+	 * 生成UUID的文件名
+	 * @param fileName
+	 * @return
+	 */
+	public static String generateUUIDFileName(String fileName){
+		UUID uuid = UUID.randomUUID();
+		String namePrefix = uuid.toString();
+		int position = fileName.lastIndexOf(".");
+		String extension = fileName.substring(position);
+		return namePrefix + extension;
+	}
+	
+	/**
+	 * 根据时间生成文件名
+	 * @param ext
+	 * @return
+	 */
+	public static String createFileNameByTime(String ext) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		String filename = df.format(new Date());
+		String suffix = getNextInteger();
+
+		filename += suffix;
+		if (!ext.startsWith(".")) {
+			ext = "." + ext;
+		}
+		filename += ext;
+		return filename;
 	}
 	
 	public static void copyStream(final InputStream _inputStream,
@@ -367,19 +399,6 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 		return str.substring(str.length() - 3, str.length());
 	}
 
-	public static String createFileNameByTime(String ext) {
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-		String filename = df.format(new Date());
-		String suffix = getNextInteger();
-
-		filename += suffix;
-		if (!ext.startsWith(".")) {
-			ext = "." + ext;
-		}
-		filename += ext;
-		return filename;
-	}
-	
 	/**
 	 * 
 	 * 功能描述：复制单个文件，如果目标文件存在，则不覆盖
@@ -730,6 +749,5 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
 		}
 
 	}
-	
 
 }
