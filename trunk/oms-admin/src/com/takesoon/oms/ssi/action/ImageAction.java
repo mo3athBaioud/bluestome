@@ -337,7 +337,7 @@ public class ImageAction extends CRUDActionSupport {
 				}
 				if(null != body && body.length > 0)
 				{
-					response.setHeader("Cache-Control", "max-age="+(3600*24*365));
+					response.setHeader("Cache-Control", "max-age="+(3600*24*0));
 					response.setContentLength(body==null?0:body.length);
 					out.write(body);
 					out.flush();
@@ -394,7 +394,7 @@ public class ImageAction extends CRUDActionSupport {
 				}
 				if(null != body && body.length > 0)
 				{
-					response.setHeader("Cache-Control", "max-age="+(3600*24*365));
+					response.setHeader("Cache-Control", "max-age="+(3600*24*0));
 					response.setContentLength(body==null?0:body.length);
 					out.write(body);
 					out.flush();
@@ -450,7 +450,7 @@ public class ImageAction extends CRUDActionSupport {
 				}
 				if(null != body && body.length > 0)
 				{
-					response.setHeader("Cache-Control", "max-age="+(3600*24*365));
+					response.setHeader("Cache-Control", "max-age="+(3600*24*0));
 					response.setContentLength(body==null?0:body.length);
 					out.write(body);
 					out.flush();
