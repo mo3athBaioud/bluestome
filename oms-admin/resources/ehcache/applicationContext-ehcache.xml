@@ -44,4 +44,11 @@
 			<ref bean="fileImageCache"/>
 		</property>
 	</bean>
+
+	<!-- 本地缓存 -->
+	<bean id="nativeCache" class="com.takesoon.oms.ssi.common.NativeCache">
+		<property name="systemConfigManager">
+			<ref bean="systemConfigManager"/>
+		</property>
+	</bean>
 </beans>
