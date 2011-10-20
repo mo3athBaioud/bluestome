@@ -15,18 +15,26 @@
 	},{
 			"text":"图片集",
 			"id":"04",
-			"iconCls":"icon-page",
+			"iconCls":"icon-images",
 			"leaf":true,
-			"tabicon":"/images/page.png",
+			"tabicon":"/images/images.png",
 			"ahref":"/admin/particle.cgi",
 			"hrefTarget":"center2"
 	},{
 			"text":"网站管理",
 			"id":"03",
-			"iconCls":"icon-page",
+			"iconCls":"icon-web_site",
 			"leaf":true,
-			"tabicon":"/images/page.png",
+			"tabicon":"/images/web_site.png",
 			"ahref":"/admin/website.cgi",
+			"hrefTarget":"center2"
+	},{
+			"text":"系统配置管理",
+			"id":"05",
+			"iconCls":"icon-config",
+			"leaf":true,
+			"tabicon":"/images/config.png",
+			"ahref":"/admin/sysconfig.cgi",
 			"hrefTarget":"center2"
 	}
 ]
