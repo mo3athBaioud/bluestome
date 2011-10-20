@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <jmxConfigurator />
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%c]-[%p] %m%n</Pattern>
+    </layout>
+  </appender>
+  <appender name="R" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>../logs/takesoon-parser.log</File>
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%c]-[%p] %m%n</Pattern>
+    </layout>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <maxIndex>10</maxIndex>
+      <FileNamePattern>../logs/core.log.%i</FileNamePattern>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>300MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+
+    <logger name="com.takesoon">
+		<level value="INFO" />
+	</logger>
+	<logger name="com.skymobi.webframework">
+		<level value="INFO" />
+	</logger>
+	<logger name="oms.security">
+		<level value="WARN" />
+	</logger>
+	<logger name="org.apache">
+		<level value="ERROR" />
+	</logger>
+	<logger name="org.springframework">
+		<level value="ERROR" />
+	</logger>
+	<logger name="net.sf">
+		<level value="ERROR" />
+	</logger>
+	<logger name="org.hibernate">
+		<level value="ERROR" />
+	</logger>
+
+
+    <root level="INFO">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="R"/>
+    </root>
+</configuration>
+
