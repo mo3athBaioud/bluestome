@@ -554,7 +554,37 @@ var dataActions = [
             var obj = dataview;
             if (obj.isSelected) {
             	var datas = obj.getSelectedRecords();
-				window.open(datas[0].data.httpUrl,datas[0].data.id,'height=400,width=300,top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
+	 			 Ext.Ajax.request({
+					waitTitle : '提示',
+					waitMsg : '正在请求服务器,请稍候...',
+					url : project+'/admin/images!wh.cgi',
+					params : {
+						'entity.articleId' : datas[0].data.articleId,
+						'entity.httpUrl' : datas[0].data.httpUrl
+					},
+					success:function(response,option){
+						var obj = Ext.util.JSON.decode(response.responseText);
+						if(obj.success){
+							var turl = project + '/admin/images!image.cgi?entity.id='+datas[0].data.id+'&entity.articleId='+datas[0].data.articleId;
+							window.open(turl,datas[0].data.id,'height='+obj.height+',width='+obj.width+',top=200,left=300,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no, status=no');
+						}else{
+							Ext.Msg.show({
+								title : '系统提示',
+								msg : obj.msg,
+								buttons : Ext.Msg.OK,
+								icon : Ext.MessageBox.ERROR
+							});
+						}
+					},
+	                failure:function(response,option){
+						Ext.Msg.show({
+							title : '系统提示',
+							msg : '服务器内部错误',
+							buttons : Ext.Msg.OK,
+							icon : Ext.MessageBox.ERROR
+						});
+	                }
+				 });
             }
 	    }
 	}),
