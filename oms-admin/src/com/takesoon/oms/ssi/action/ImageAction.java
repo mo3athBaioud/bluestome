@@ -8,6 +8,8 @@ import java.util.List;
 import javax.servlet.ServletOutputStream;
 
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.InterceptorRef;
+import org.apache.struts2.convention.annotation.InterceptorRefs;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
@@ -273,6 +275,7 @@ public class ImageAction extends CRUDActionSupport {
 						 //TODO 从缓存中获取对象字节流
 						 tp.process(body);
 					 }else{
+						 //TODO 从原地址获取文件下载到本地，然后获取对应图片属性，之后删除保存的文件。
 						 tp.process(art.getArticleUrl(),entity.getHttpUrl());
 					 }
 					 out.println("{success:true,msg:'获取宽高成功!',width:"+tp.getWidth().intValue()+",height:"+tp.getHeight().intValue()+"}");
@@ -326,13 +329,11 @@ public class ImageAction extends CRUDActionSupport {
 				//缓存图片对象
 				if(null != imageCacheManager.getByte(url)){
 					body = imageCacheManager.getByte(url);
-					logger.info(" >> get body from cache by ["+url+"]");
 				}else{
 					body = HttpClientUtils.getResponseBodyAsByte(art.getArticleUrl(), null, url);
 					if(null != body && body.length > 0)
 					{
 						imageCacheManager.putByte(url, body);
-						logger.info(" >> put body to cache by ["+url+"]");
 					}
 				}
 				if(null != body && body.length > 0)
@@ -383,13 +384,11 @@ public class ImageAction extends CRUDActionSupport {
 				//缓存图片对象
 				if(null != imageCacheManager.getByte(url)){
 					body = imageCacheManager.getByte(url);
-					logger.info(" >> get body from cache by ["+url+"]");
 				}else{
 					body = HttpClientUtils.getResponseBodyAsByte(art.getArticleUrl(), null, url);
 					if(null != body && body.length > 0)
 					{
 						imageCacheManager.putByte(url, body);
-						logger.info(" >> put body to cache by ["+url+"]");
 					}
 				}
 				if(null != body && body.length > 0)
@@ -439,13 +438,12 @@ public class ImageAction extends CRUDActionSupport {
 				//缓存图片对象
 				if(null != imageCacheManager.getByte(url)){
 					body = imageCacheManager.getByte(url);
-					logger.info(" >> get body from cache by ["+url+"]");
+					logger.info(" >> get body from cache");
 				}else{
 					body = HttpClientUtils.getResponseBodyAsByte(referUrl, null, url);
 					if(null != body && body.length > 0)
 					{
 						imageCacheManager.putByte(url, body);
-						logger.info(" >> put body to cache by ["+url+"]");
 					}
 				}
 				if(null != body && body.length > 0)
