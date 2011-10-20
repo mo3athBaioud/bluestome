@@ -333,4 +333,15 @@ public class WebsiteManager {
 		sb.append("\n]");
 		return sb.toString();
 	}
+	
+	/**
+	 * 根据父ID查找网站记录
+	 * @param parentId
+	 * @return
+	 */
+	public List<Website> findByParsentId(Integer parentId){
+		Website entity = new Website();
+		entity.setParentId(parentId);
+		return getList(entity);
+	}
 }
