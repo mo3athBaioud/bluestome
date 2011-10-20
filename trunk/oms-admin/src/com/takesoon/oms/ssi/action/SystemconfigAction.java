@@ -13,8 +13,8 @@ import org.apache.struts2.convention.annotation.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.takesoon.oms.ssi.common.Constants;
-import com.takesoon.oms.ssi.entity.Article;
-import com.takesoon.oms.ssi.service.ArticleManager;
+import com.takesoon.oms.ssi.entity.SystemConfig;
+import com.takesoon.oms.ssi.service.SystemConfigManager;
 import com.takesoon.oms.ssi.utils.ExtUtil;
 
 @InterceptorRefs({
@@ -22,11 +22,11 @@ import com.takesoon.oms.ssi.utils.ExtUtil;
 	@InterceptorRef("defaultStack")
 })
 @Namespace("/admin")
-@Action("article")
+@Action("sysconfig")
 @Results( {
-	@Result(name = "success", location = "/WEB-INF/pages/admin/article.jsp"),
+	@Result(name = "success", location = "/WEB-INF/pages/admin/sysconfig.jsp"),
 })
-public class ArticleAction extends CRUDActionSupport {
+public class SystemconfigAction extends CRUDActionSupport {
 	
 	/**
 	 * 
@@ -34,9 +34,9 @@ public class ArticleAction extends CRUDActionSupport {
 	private static final long serialVersionUID = 1L;
 	
 	@Autowired
-	private ArticleManager articleManager;
+	private SystemConfigManager sysConfigManager;
 	
-	private Article entity;
+	private SystemConfig entity;
 	
 	private Integer webId = 0;
 
@@ -69,10 +69,10 @@ public class ArticleAction extends CRUDActionSupport {
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
-			 if(null != articleManager){
-				 int c = articleManager.getTotalBySql(entity);
+			 if(null != sysConfigManager){
+				 int c = sysConfigManager.getTotalBySql(entity);
 				 if(c > 0){
-					 List<Article> list = articleManager.getListBySql(entity, start, limit);
+					 List<SystemConfig> list = sysConfigManager.getListBySql(entity, start, limit);
 					 if(null != list && list.size() > 0){
 						 String json = ExtUtil.getJsonFromList(c, list);
 						 out.println(json);
@@ -100,10 +100,10 @@ public class ArticleAction extends CRUDActionSupport {
 		PrintWriter out = null;
 		try{
 			 out = getOut(response);
-			 if(null != articleManager){
-				 int c = articleManager.getTotalBySql(entity);
+			 if(null != sysConfigManager){
+				 int c = sysConfigManager.getTotalBySql(entity);
 				 if(c > 0){
-					 List<Article> list = articleManager.getListBySql(entity, start, limit);
+					 List<SystemConfig> list = sysConfigManager.getListBySql(entity, start, limit);
 					 if(null != list && list.size() > 0){
 						 String json = ExtUtil.getJsonFromList(c, list);
 						 out.println(json);
@@ -130,9 +130,29 @@ public class ArticleAction extends CRUDActionSupport {
 	public void save() throws IOException {
 		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
+		StringBuffer sb = new StringBuffer();
 		try{
+			 sb.append(entity.getType()).append("|").append(entity.getKey()).append("|").append(entity.getValue());
 			 out = getOut(response);
-			 out.println("{success:false,msg:'该方法[save]还未启用!'}"); 
+			 if(null != entity.getId() && entity.getId().intValue() > 0){
+				 sysConfigManager.save(entity);
+				 if(entity.getId().intValue() > 0 ){
+					 out.println("{success:true,msg:'添加["+sb.toString()+"]成功!'}"); 
+				 }else{
+					 out.println("{success:false,msg:'该键值["+sb.toString()+"]失败!'}"); 
+				 }
+			 }else{
+				 if(sysConfigManager.checkUnique(entity.getType(), entity.getKey(), entity.getValue())){
+					 sysConfigManager.save(entity);
+					 if(entity.getId().intValue() > 0 ){
+						 out.println("{success:true,msg:'添加["+sb.toString()+"]成功!'}"); 
+					 }else{
+						 out.println("{success:false,msg:'该键值["+sb.toString()+"]失败!'}"); 
+					 }
+				 }else{
+					 out.println("{success:false,msg:'该键值["+sb.toString()+"]已经存在,请输入其他键值!'}"); 
+				 }
+			 }
 		}catch(Exception e){
 			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
 		}finally{
@@ -161,26 +181,21 @@ public class ArticleAction extends CRUDActionSupport {
 	}
 
 	/**
-	 *  
-	 *设置文章缩略图
+	 * 启用
+	 * @throws IOException
 	 */
-	public void previewicon() throws Exception{
+	public void enable() throws IOException{
 		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
-		try {
-			out = getOut(response);
-			Article article = articleManager.get(entity.getId());
-			if(!article.getActicleXmlUrl().toLowerCase().endsWith(".xml"))
-			{
-					article.setActicleXmlUrl(entity.getActicleXmlUrl());
-					articleManager.save(article);
-					out.println("{success:true,msg:'设置文章缩略图成功!'}"); 
-			}
-			else
-			{
-				 out.println("{success:false,msg:'该类数据不允许设置缩略图!'}"); 
-			}
-		} catch (Exception e) {
+		try{
+			 out = getOut(response);
+			 for(Long id:ids){
+				 //TODO 启用记录
+				 logger.info(" >> id:"+id);
+				 sysConfigManager.enabled(id.intValue());
+			 }
+			 out.println("{success:true,msg:'启用成功!'}"); 
+		}catch(Exception e){
 			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
 		}finally{
 			if(null != out){
@@ -190,11 +205,35 @@ public class ArticleAction extends CRUDActionSupport {
 		}
 	}
 	
-	public Article getEntity() {
+	/**
+	 * 禁用
+	 * @throws IOException
+	 */
+	public void disable() throws IOException{
+		response.setCharacterEncoding(Constants.CHARSET);
+		PrintWriter out = null;
+		try{
+			 out = getOut(response);
+			 for(Long id:ids){
+				 //TODO 禁用记录
+				 sysConfigManager.disabled(id.intValue());
+			 }
+			 out.println("{success:true,msg:'禁用成功!'}"); 
+		}catch(Exception e){
+			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
+		}finally{
+			if(null != out){
+				out.flush();
+				out.close();
+			}
+		}
+	}
+	
+	public SystemConfig getEntity() {
 		return entity;
 	}
 
-	public void setEntity(Article entity) {
+	public void setEntity(SystemConfig entity) {
 		this.entity = entity;
 	}
 
