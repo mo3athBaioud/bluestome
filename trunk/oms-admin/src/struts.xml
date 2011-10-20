@@ -30,11 +30,29 @@
 	<package name="crud-default" extends="convention-default">
 		<!-- 基于paramsPrepareParamsStack,增加store interceptor保证actionMessage在redirect后不会丢失 -->
 		<interceptors>
+			<interceptor name="actionInterceptor"
+				class="com.takesoon.oms.ssi.interceptor.ActionInterceptor">
+					<param name="name">普通拦截器</param>
+					<param name="includeMethods">list</param>
+					<param name="excludeMethods">execute,previewicon</param>
+			</interceptor>
+			<interceptor name="imageInterceptor"
+				class="com.takesoon.oms.ssi.interceptor.ImageInterceptor">
+					<param name="name">大图拦截</param>
+					<param name="includeMethods">image</param>
+			</interceptor>
+			<interceptor name="imageIconInterceptor"
+				class="com.takesoon.oms.ssi.interceptor.ImageIconInterceptor">
+					<param name="name">缩略图拦截</param>
+					<param name="includeMethods">icon,icon2</param>
+			</interceptor>
 			<interceptor-stack name="crudStack">
 				<interceptor-ref name="store">
 					<param name="operationMode">AUTOMATIC</param>
 				</interceptor-ref>
 				<interceptor-ref name="paramsPrepareParamsStack" />
+				<interceptor-ref name="imageInterceptor" />
+				<interceptor-ref name="imageIconInterceptor" />
 			</interceptor-stack>
 		</interceptors>
 
