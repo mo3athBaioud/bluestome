@@ -34,7 +34,18 @@
 		</property>
 	</bean>
 	
+	<bean id="fileCache"
+		class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheManager">
+			<ref local="ehcacheManager" />
+		</property>
+		<property name="cacheName">
+			<value>fileCache</value>
+		</property>
+	</bean>
+	
 	<!-- init-method="init" -->
+	<!-- 保存图片格式文件 [缩略图,大图]  -->
 	<bean id="imageCacheManager"
 		class="com.takesoon.oms.ssi.service.ImageCacheManager">
 		<property name="cacheName">
@@ -45,4 +56,15 @@
 		</property>
 	</bean>
 
+	<!-- 保存非图片格式文件  -->
+	<bean id="fileCacheManager"
+		class="com.takesoon.oms.ssi.service.FileCacheManager">
+		<property name="cacheName">
+			<value>fileCache</value>
+		</property>
+		<property name="cache">
+			<ref bean="fileCache"/>
+		</property>
+	</bean>
+	
 </beans>
