@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 
-import com.takesoon.oms.ssi.service.ImageManager;
 import com.takesoon.ssi.parser.china.military.IndexParser;
 
 public class IndexParserTest {
@@ -28,6 +27,6 @@ public class IndexParserTest {
 	
 	@Test
 	public void start(){
-		indexParser.start();
+		indexParser.loopFillFile2Ehcache();
 	}
 }
