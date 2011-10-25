@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Mon Oct 24 15:01:37 CST 2011
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=monitor-xcms.jar
+manifest.mergeall=true
+manifest.mainclass=com.xcms.monitor.Main
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<po|ssi-common>~.svn/
+includes=
