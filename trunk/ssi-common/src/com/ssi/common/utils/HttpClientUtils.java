@@ -14,6 +14,7 @@ import java.util.Iterator;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -186,7 +187,6 @@ public class HttpClientUtils {
 		try {
 			httpclient = new HttpClient();
 			getMethod = new GetMethod(encodeURL(url,"UTF-8"));
-
 			int statusCode = httpclient.executeMethod(getMethod);
 			result.put("Response-Status", String.valueOf(statusCode));
 			if (statusCode == HttpStatus.SC_OK) {
@@ -208,16 +208,18 @@ public class HttpClientUtils {
 	}
 
 	/**
-	 * 获取响应头
+	 * 获取响应
 	 * 
 	 * @param url
 	 * @return
+	 * @throws IOException 
+	 * @throws HttpException 
 	 */
-	public synchronized static HashMap<String, Object> getResponse(String url) {
+	public synchronized static HashMap<String, Object> getResponse(String url) throws HttpException, IOException {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		try {
 			httpclient = new HttpClient();
-			getMethod = new GetMethod(encodeURL(url,"UTF-8"));
+			getMethod = new GetMethod(url);
 
 			int statusCode = httpclient.executeMethod(getMethod);
 			result.put("Response-Status", String.valueOf(statusCode));
@@ -227,10 +229,11 @@ public class HttpClientUtils {
 					// System.out.println(header.getName()+":"+header.getValue());
 					result.put(header.getName(), header.getValue());
 				}
-				result.put("body", getMethod.getResponseBody());
+				byte[] body = getMethod.getResponseBody();
+				if(null != body){ // && body.length > 0
+					result.put("body", getMethod.getResponseBody());
+				}
 			}
-		} catch (Exception e) {
-			System.err.println(e);
 		} finally {
 			if (null != getMethod)
 				getMethod.releaseConnection();
@@ -413,28 +416,35 @@ public class HttpClientUtils {
 
 	public static void main(String args[]) {
 		try {
-			HashMap<String,Object> map = getResponse("http://www.china.com");
-			Iterator it = map.keySet().iterator();
-			while(it.hasNext()){
-				String key = (String)it.next();
-				Object value = map.get(key);
-				if(value instanceof String){
-					value = (String)value;
+			
+			new Thread(new Runnable(){
+
+				public void run() {
+					while(true){
+						try{
+							HashMap<String,Object> result = getResponse("http://117.34.89.190:8080/staff/list.cgi?start=0&limit=15");
+							String code = "Response-Status";
+							if(null != result.get(code)){
+								String status = (String)result.get(code);
+								if(null != status && status.equals("200")){
+									byte[] body = (byte[])result.get("body");
+									if(null != body && body.length > 0){
+										System.out.println("正常:" + body.length);
+									}else{
+										//TODO 发邮件 内容未获取到
+									}
+								}else{
+									//TODO 发邮件 服务不响应
+								}
+							}
+							Thread.sleep(10000);
+						}catch(Exception e){
+							e.printStackTrace();
+						}
+					}
 				}
-				if(value instanceof byte[]){
-					int status = FileUtils.saveFile("d:"+File.separator+FileUtils.generateFileName("index.html"), (byte[])value, false);
-					System.out.println(" > status:"+status);
-				}
-//				int pos = key.lastIndexOf("-");
-//				if(pos != -1){
-//					String prex = key.substring(0,pos).toLowerCase();
-//					String ends = key.substring(pos+1);
-//					key = prex + ends;
-//				}else{
-//					key = key.toLowerCase();
-//				}
-				System.out.println(" > key["+key+"] | value["+value+"]");
-			}
+				
+			}).start();
 		} catch (Exception e) {
 			System.err.println(e);
 		} finally {
