@@ -878,6 +878,7 @@ function createImageListsWin(aid,title){
  */
 function imgErr(img)
 {
-	  img.src = project+'/images/image_waiting.png';
+//	  img.src = project+'/images/image_waiting.png';
+	  img.src = project + '/images/nopic.gif';
 	  img.qtip = '载入图片失败!';
 }
