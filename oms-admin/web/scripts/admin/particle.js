@@ -12,7 +12,7 @@ Ext.onReady(function(){
 	app.tpl = new Ext.XTemplate(
 		'<tpl for=".">',
 	        '<div class="thumb-wrap" id="{id}">',
-		    '<div class="thumb"><img src="{imgUrl2}" title="{title}" onError="imgErr(this);" ></div>',
+		    '<div class="thumb"><img src="{imgUrl2}" title="{title}|{createTime}" onError="imgErr(this);" ></div>',
 		    '<span>{id}</span></div>',
 	    '</tpl>',
 	    '<div class="x-clear"></div>'
@@ -50,6 +50,7 @@ Ext.onReady(function(){
 	    prepareData: function(data){
 	    	data.imgUrl2 =  project + '/admin/images!icon2.cgi?iconUrl='+data.acticleXmlUrl+'&referUrl='+data.articleUrl;
         	data.shortName = Ext.util.Format.ellipsis(data.title, 10);
+	        data.sizeString = Ext.util.Format.fileSize(data.size);
 	        return data;
 	    },
 	    
@@ -365,7 +366,6 @@ var dataview = new Ext.DataView({
     	data.imgUrl2 =  project + '/admin/images!icon.cgi?entity.id='+data.id+'&entity.articleId='+data.articleId;
         data.shortName = Ext.util.Format.ellipsis(data.title, 15);
         data.sizeString = Ext.util.Format.fileSize(data.size);
-        data.dateString = data.createtime.format("m/d/Y g:i a");
         return data;
     },
     
