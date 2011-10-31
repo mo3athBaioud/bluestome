@@ -590,7 +590,7 @@ Ext.onReady(function(){
 				mode:'remote',
 				store:new Ext.data.Store({
 					proxy : new Ext.data.HttpProxy({
-						url : project + '/admin/website!root.cgi?entity.parentId=0' 
+						url : project + '/admin/website!root.cgi?entity.parentId=0&limit=1000' 
 					}),
 					reader : new Ext.data.JsonReader({
 						root : 'records'
