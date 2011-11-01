@@ -5,18 +5,21 @@
         }
     }
 }
+
 Object.extend = function (destination, source) {
     for (var property in source) {
         destination[property] = source[property];
     }
     return destination;
 }
+
 Function.prototype.bind = function (bindObj, args) {
     var _self = this;
     return function () {
         return _self.apply(bindObj, [].concat(args));
     }
 }
+
 var Lazyload = function () { };
 Lazyload = Class.create();
 Lazyload.prototype = {
@@ -44,18 +47,22 @@ Lazyload.prototype = {
         }
         if (this.options.ImgList.length == 0) return;
         this.imageCount = this.options.ImgList.length;
-        Autohome.events.addEvent(window, this.loaded.bind(this), "scroll");
-        Autohome.events.addEvent(window, this.loaded.bind(this), "touchend");
+        TakeSoon.events.addEvent(window, this.loaded.bind(this), "scroll");
+        TakeSoon.events.addEvent(window, this.loaded.bind(this), "touchend");
     },
     loaded: function () {
-        var pageheight = getScrollPos()[0] + getPageSize()[3]; 
+        var pageheight = getScrlPosites()[0] + getPageSize()[3]; 
         var imgsrc = "";
         var flag = IsLazyLoad();
         for (var img = 0; img < this.options.ImgList.length; img++) {
             if (flag == true) {
                 if (this.getXY(this.options.ImgList[img]).Top < pageheight + 1500) {
                     //window.status = this.options.ImgList[img];
-                    if (this.options.ImgList[img].src == "" || IsLoading32(this.options.ImgList[img].src)) {
+					/* srct必须为一个绝对的URL地址 */
+					var srct = this.options.ImgList[img].src;
+					
+					//图片缩略图判断
+                    if (srct == "20111101120217918_easyicon_cn_48.png" || srct == "file:///D:/tmp/html/20111101120217918_easyicon_cn_48.png" || srct == "") {
                         imgsrc = this.options.ImgList[img].getAttribute(this.options.src2);
                         this.options.ImgList[img].src = imgsrc;
                         //delete this.options.ImgList[img];
@@ -72,7 +79,7 @@ Lazyload.prototype = {
                 this.imageCount--;
             }
         }
-        if (this.imageCount == 0) Autohome.events.removeEvent(window, this.loaded, "scroll");
+        if (this.imageCount == 0) TakeSoon.events.removeEvent(window, this.loaded, "scroll");
     },
     //得到对象的Left 和 Top
     getXY: function (element) {
@@ -90,13 +97,17 @@ Lazyload.prototype = {
 
 
 
-var Autohome = {};
-Autohome.events = {}; //事件
-Autohome.events.getEvent = function () {
+var TakeSoon = {};
+/* 事件集合 */
+TakeSoon.events = {};
+
+TakeSoon.events.getEvent = function () {
     return window.event
 };
+
+/* 浏览器判断 */
 if (!window.isIE) {
-    Autohome.events.getEvent = function () {
+    TakeSoon.events.getEvent = function () {
         var o = arguments.callee.caller;
         var e;
         var n = 0;
@@ -112,29 +123,29 @@ if (!window.isIE) {
     }
 }
 
-//删除事件
-Autohome.events.removeEvent = function (obj, func, evType) {
+/* 删除事件 */
+TakeSoon.events.removeEvent = function (obj, func, eventType) {
     var elm = obj;
     if ("function" != typeof func) return;
 
     if (elm.addEventListener) {
-        if (evType.substr(0, 2) == "on") evType = evType.substring(2);
-        elm.removeEventListener(evType, func, false)
+        if (eventType.substr(0, 2) == "on") eventType = eventType.substring(2);
+        elm.removeEventListener(eventType, func, false)
     } else if (elm.attachEvent) {
-        if (evType.substr(0, 2) != "on") evType = "on" + evType;
-        elm.detachEvent(evType, func)
+        if (eventType.substr(0, 2) != "on") eventType = "on" + eventType;
+        elm.detachEvent(eventType, func)
     }
 };
-//加事件
-Autohome.events.addEvent = function (obj, func, evType) {
+/* 添加事件 */
+TakeSoon.events.addEvent = function (obj, func, eventType) {
     if (obj.attachEvent) {
-        if (evType.substr(0, 2) != "on") evType = "on" + evType;
-        obj.attachEvent(evType, func);
+        if (eventType.substr(0, 2) != "on") eventType = "on" + eventType;
+        obj.attachEvent(eventType, func);
         return true;
     }
     if (obj.addEventListener) {
-        if (evType.substr(0, 2) == "on") evType = evType.substring(2);
-        obj.addEventListener(evType, func, false);
+        if (eventType.substr(0, 2) == "on") eventType = eventType.substring(2);
+        obj.addEventListener(eventType, func, false);
         return true;
     }
 };
@@ -179,39 +190,32 @@ getPageSize = function () {
     }
     return [pageWidth, pageHeight, windowWidth, windowHeight]
 };
-//获取页面的滚动条值[]
-getScrollPos = function (oDocument) {
-    var oDocument = oDocument || document;
+
+/* Scroll 获取页面的滚动条值[] */
+getScrlPosites = function (browseDocument) {
+    var browseDocument = browseDocument || document;
     return [
-			Math.max(oDocument.documentElement.scrollTop,
-					oDocument.body.scrollTop),
-			Math.max(oDocument.documentElement.scrollLeft,
-					oDocument.body.scrollLeft),
-			Math.max(oDocument.documentElement.scrollWidth,
-					oDocument.body.scrollWidth),
-			Math.max(oDocument.documentElement.scrollHeight,
-					oDocument.body.scrollHeight)]
+			Math.max(browseDocument.documentElement.scrollTop,
+					browseDocument.body.scrollTop),
+			Math.max(browseDocument.documentElement.scrollLeft,
+					browseDocument.body.scrollLeft),
+			Math.max(browseDocument.documentElement.scrollWidth,
+					browseDocument.body.scrollWidth),
+			Math.max(browseDocument.documentElement.scrollHeight,
+					browseDocument.body.scrollHeight)]
 };
 
+/**
+ * 判断是否需要执行懒加载
+ */
 function IsLazyLoad() {
+	/* 通过UA来判断浏览器版本 */
     var ua = navigator.userAgent.toLowerCase();
-    //document.getElementById("msg").innerHTML = ua + "Zhi Shi=" + s;
+    alert(' > ua:'+ua);
     if (ua.indexOf("ipad") > -1 || ua.indexOf("ipod") > -1 || ua.indexOf("iphone") > -1 || ua.indexOf("linux i686") > -1) {
-        //document.getElementById("msg").innerHTML = ua;
         return false;
     }
     else {
         return true;
     }
 };
-
-function IsLoading32(url){
-	var end = url.lastIndexOf("/");
-	if(end != -1){
-		url = url.substring(end+1);
-		if(url == 'loading32.gif'){
-			return true;
-		}
-	}
-	return false;
-}
