@@ -187,6 +187,43 @@ public class ArticleDocAction extends CRUDActionSupport {
 			}
 		}
 	}
+	
+	/**
+	 * 清理所选文章的缓存
+	 * @throws IOException
+	 */
+	public void clearCache() throws IOException{
+		//TODO 
+		response.setCharacterEncoding(Constants.CHARSET);
+		ServletOutputStream out = null;
+		int i = 0;
+		try{
+			 out = response.getOutputStream();
+			 for(Long id:ids)
+			 {
+				 entity = articleDocManager.get(id.intValue());
+				 if(null != entity){
+					 String url = entity.getUrl();
+					 imageCacheManager.removeByte(url);
+					 i++;
+				 }
+			 }
+			 if(i == ids.length)
+			 {
+				 out.println("{success:true,msg:'清理文章数为["+i+"]的缓存成功!'}");
+			 }else{
+				 out.println("{success:false,msg:'清理缓存失败,未找到文章ID["+id.intValue()+"]的数据'}");
+			 }
+		}catch(Exception e){
+			 out.println("{success:false,msg:'清理缓存出现异常，异常【"+e.getMessage()+"】'}");
+		}finally{
+			if(null != out){
+				out.flush();
+				out.close();
+			}
+			i = 0;
+		}
+	}
 
 	public ArticleDoc getEntity() {
 		return entity;
