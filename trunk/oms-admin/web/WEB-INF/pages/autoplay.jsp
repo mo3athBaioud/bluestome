@@ -56,7 +56,6 @@
         <script type="text/javascript">
 		<!--
             var imgList = document.getElementsByName("LazyloadImg");
-            alert('img.size:'+imgList.length);
             lazyload = new Lazyload({ src2: "src2", ImgList: imgList, defaultimage: "${fpath}/images/loading32.gif" });
             lazyload.loaded();
          -->
