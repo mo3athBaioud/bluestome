@@ -59,6 +59,75 @@ Ext.onReady(function(){
 		disabled:false
 	});
 	
+	app.btn_cache_clear = new Ext.Button({
+		text : '缓存清理',
+		iconCls : 'icon-delete',
+		disabled:false,
+		handler:function(){
+			var records = app.grid.getSelectionModel().getSelections();
+			if(records.length == 0){
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '请选择需要禁用的记录!',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.ERROR
+				});
+			}else{
+				var ids = [];
+				for(i = 0 ; i < records.length ; i ++){
+					ids.push(records[i].get('id'))
+				}
+				
+				if(ids.length == 0){
+					Ext.Msg.show({
+						title : '系统提示',
+						msg : '没有可禁用的记录，请检查记录是否无效!',
+						buttons : Ext.Msg.OK,
+						icon : Ext.MessageBox.ERROR
+					});
+					return;
+				}
+				
+				Ext.Msg.confirm('提示', '你确定禁用['+ids.length+']条记录?', function(btn) {
+					if (btn == 'yes') {
+						Ext.Ajax.request({
+							url : project+'/admin/articledoc!clearCache.action',
+							params : {
+								ids : ids
+							},
+							success:function(response,option){
+								var obj = Ext.util.JSON.decode(response.responseText);
+								if(obj.success){
+									Ext.Msg.show({
+										title : '系统提示',
+										msg : obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.MessageBox.INFO
+									});
+								}else{
+									Ext.Msg.show({
+										title : '系统提示',
+										msg : obj.msg,
+										buttons : Ext.Msg.OK,
+										icon : Ext.MessageBox.ERROR
+									});
+								}
+							},
+			                failure:function(response,option){
+								Ext.Msg.show({
+									title : '系统提示',
+									msg : '服务器内部错误',
+									buttons : Ext.Msg.OK,
+									icon : Ext.MessageBox.ERROR
+								});
+			                }
+						})
+					}
+				})
+			}
+		}
+	});
+	
 	app.btn_bug = new Ext.Button({
 		text : '页面测试',
 		iconCls : 'icon-bug',
@@ -422,7 +491,7 @@ Ext.onReady(function(){
 	});
 	
 	app.toolbaritems = [
-		app.btn_bug,'-',app.btn_create,'-',app.btn_export_xls
+		app.btn_bug,'-',app.btn_create,'-',app.btn_cache_clear,'-',app.btn_export_xls
 	]
 		
 	app.grid = new Ext.grid.GridPanel({
