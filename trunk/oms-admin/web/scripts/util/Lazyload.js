@@ -57,15 +57,12 @@ Lazyload.prototype = {
         for (var img = 0; img < this.options.ImgList.length; img++) {
             if (flag == true) {
                 if (this.getXY(this.options.ImgList[img]).Top < pageheight + 1500) {
-                    //window.status = this.options.ImgList[img];
 					/* srct必须为一个绝对的URL地址 */
 					var srct = this.options.ImgList[img].src;
-					
 					//图片缩略图判断
-                    if (srct == "20111101120217918_easyicon_cn_48.png" || srct == "file:///D:/tmp/html/20111101120217918_easyicon_cn_48.png" || srct == "") {
+                    if (srct== this.options.defaultimage || srct == "") {
                         imgsrc = this.options.ImgList[img].getAttribute(this.options.src2);
                         this.options.ImgList[img].src = imgsrc;
-                        //delete this.options.ImgList[img];
                         this.imageCount--;
                     }
                 }
@@ -211,7 +208,6 @@ getScrlPosites = function (browseDocument) {
 function IsLazyLoad() {
 	/* 通过UA来判断浏览器版本 */
     var ua = navigator.userAgent.toLowerCase();
-    alert(' > ua:'+ua);
     if (ua.indexOf("ipad") > -1 || ua.indexOf("ipod") > -1 || ua.indexOf("iphone") > -1 || ua.indexOf("linux i686") > -1) {
         return false;
     }
