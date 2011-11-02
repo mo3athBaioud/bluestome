@@ -10,9 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.convention.annotation.Results;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 import org.apache.struts2.interceptor.SessionAware;
@@ -22,10 +19,6 @@ import org.dom4j.io.XMLWriter;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-@Namespace("/admin")
-@Results({
-	@Result(name = "success", location = "/index.jsp")
-})
 public class BaseAction extends ActionSupport implements SessionAware,
 		ServletRequestAware, ServletResponseAware {
 
