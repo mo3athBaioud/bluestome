@@ -99,6 +99,10 @@
 		<filter-name>GzipJsFilter</filter-name>
 		<url-pattern>*.gzjs</url-pattern>
 	</filter-mapping>
+	<filter-mapping>
+		<filter-name>GzipJsFilter</filter-name>
+		<url-pattern>*.gzcss</url-pattern>
+	</filter-mapping>
 	
 	<taglib>
 		<taglib-uri>/tags/c.tld</taglib-uri>
