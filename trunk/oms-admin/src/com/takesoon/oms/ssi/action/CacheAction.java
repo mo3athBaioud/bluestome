@@ -111,8 +111,8 @@ public class CacheAction extends BaseAction {
 				 }
 			 }
 			 logger.debug("cache.json:"+json.toString());
-			 String tmp = ExtUtil.getJsonFromList(CACHE_SIZE_LIST.size(), CACHE_SIZE_LIST);
-			 System.out.println("cache.tmp:"+tmp);
+//			 String tmp = ExtUtil.getJsonFromList(CACHE_SIZE_LIST.size(), CACHE_SIZE_LIST);
+			 Thread.sleep(500);
 			 out.println("{success:true,total:"+CACHE_SIZE_LIST.size()+",cache:["+json.toString()+"]}"); 
 		}catch(Exception e){
 			 out.println("{success:false,total:"+CACHE_SIZE_LIST.size()+",msg:'异常【"+e.getMessage()+"】'}");
