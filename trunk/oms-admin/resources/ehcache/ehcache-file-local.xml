@@ -3,7 +3,7 @@
 
 	<diskStore path="d:/tmp/cache/file/local/" />
 	
-	<defaultCache maxElementsInMemory="100" memoryStoreEvictionPolicy="LRU" eternal="true"
+	<defaultCache maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU" eternal="true"
 		overflowToDisk="true" diskPersistent="true" />
-	<cache name="fileImageCache" overflowToDisk="true" eternal="true" diskPersistent="true" maxElementsInMemory="10" memoryStoreEvictionPolicy="LRU"/>
+	<cache name="fileImageCache" overflowToDisk="true" eternal="true" diskPersistent="true" maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU"/>
 </ehcache>
