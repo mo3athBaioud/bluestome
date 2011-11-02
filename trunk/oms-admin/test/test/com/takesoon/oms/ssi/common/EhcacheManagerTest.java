@@ -57,7 +57,6 @@ public class EhcacheManagerTest {
 		}
 	}
 	
-	@Test
 	public void testImageCacheManager(){
 		String url = "http://www.easyicon.cn/image/mini_logo_new.gif";
 		for(int i=0;i<100;i++)
@@ -71,6 +70,17 @@ public class EhcacheManagerTest {
 			{
 				System.out.println(" SUccess!");
 			}
+		}
+	}
+	
+	@Test
+	public void cacheSize() throws InterruptedException {
+		int[] sizes = imageCacheManager.getCacheElementSize();
+		for(int size:sizes)
+		{
+			imageCacheManager.putByte(String.valueOf(System.currentTimeMillis()), new String(""+System.currentTimeMillis()).getBytes());
+			System.out.println(" > :"+size);
+			Thread.sleep(100);
 		}
 	}
 }
