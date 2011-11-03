@@ -1,12 +1,9 @@
 package com.ssi.common.cache;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.concurrent.Future;
-import net.spy.memcached.MemcachedClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.danga.MemCached.MemCachedClient;
 
 /**
  * memcached实现类
@@ -14,18 +11,14 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class MemCached implements Cache {
 
-	private static Log logger = LogFactory.getLog(MemCached.class);
+	private static Logger logger = LoggerFactory.getLogger(MemCached.class);
 
-	private MemcachedClient mc = null;
+	private MemCachedClient mc = null;
 
 	// 有效期默认一天
 	private int timeToLive = 60 * 60 * 24 * 1;
 
 	private boolean isConnected = false;
-
-	private String server;
-
-	private int port;
 
 	public MemCached() {
 		super();
@@ -64,15 +57,7 @@ public abstract class MemCached implements Cache {
 			return;
 		}
 
-		Future<Boolean> ret = mc.set(key.toString(), TTL, value);
-		// 下面这段不予执行，应该每次等待完成没有意义。因为net.spy.memcached.MemcachedClient是异步的
-		// 如果出错了就让它下次跑的时候再插入key
-		/*
-		 * try{ if (ret.get().booleanValue()==false) { //if (!ret.isDone()) {
-		 * throw new CacheException("Memcached set Object Error."); } }
-		 * catch(Exception e){ throw new CacheException("Memcached set Object
-		 * Error."); }
-		 */
+		mc.set(key.toString(),value, TTL);
 	}
 
 	public void update(Object key, Object value) throws CacheException {
@@ -89,12 +74,7 @@ public abstract class MemCached implements Cache {
 			logger.warn("Memcached not initialized");
 			return;
 		}
-
-		Future<Boolean> isSuccess = mc.delete(key.toString());
-		/*
-		 * if (!isSuccess.isDone()) { throw new CacheException("Memcached delete
-		 * Object Error."); }
-		 */
+		mc.delete(key.toString());
 	}
 
 	public void clear() throws CacheException {
@@ -103,15 +83,14 @@ public abstract class MemCached implements Cache {
 			return;
 		}
 
-		Future<Boolean> isSuccess = mc.flush();
-		/*
-		 * if (!isSuccess.isDone()) { throw new CacheException("Memcached clean
-		 * Object Error."); }
-		 */
+		mc.flushAll();
 	}
 
 	public void destroy() throws CacheException {
-		mc = null;
+		if(null != mc)
+		{
+			mc = null;
+		}
 	}
 
 	public boolean containsKey(Object key) throws CacheException {
@@ -124,36 +103,20 @@ public abstract class MemCached implements Cache {
 	}
 
 	public long incr(Object key, int inc) {
-
 		return mc.incr((String) key, inc);
 	}
 
 	public boolean flushAll() {
-		try {
-			return mc.flush().get();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public void init() {
-		new Thread() {
-			public void run() {
-				logger.info("初始化Memcached...");
-
-				if (mc == null) {
-					try {
-						mc = new MemcachedClient(getBindAddress());
-						isConnected = true;
-						logger.info(">>>> Initialize MemCached [" + getCacheRegion() + "] completed.");
-					} catch (IOException e) {
-						logger.error(">>>> Initialize MemCached [" + getCacheRegion() + "] failure:", e);
-					}
-
-				}
+		boolean b = false;
+		if(isConnected())
+		{
+			try {
+				b = mc.flushAll();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		}.start();
+		}
+		return b;
 	}
 
 	public void setTimeToLive(int timeToLive) {
@@ -161,20 +124,29 @@ public abstract class MemCached implements Cache {
 	}
 
 	public boolean isConnected() {
+		if(!isConnected)
+		{
+			logger.warn("Memcached not connect");
+		}
 		return isConnected;
 	}
 
-	public void setServer(String server) {
-		this.server = server;
+	public MemCachedClient getMc() {
+		return mc;
 	}
 
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	private InetSocketAddress getBindAddress() {
-		return new InetSocketAddress(server, port);
+	public void setMc(MemCachedClient mc) {
+		if(null != mc)
+		{
+			this.mc = mc;
+			isConnected = true;
+		}
 	}
 	
+	/**
+	 * 抽象方法用于获取缓存的KEY名称前缀
+	 * @return
+	 */
 	protected abstract String getCacheRegion();
+
 }
