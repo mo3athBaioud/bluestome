@@ -5,3 +5,4 @@
 <%@ page contentType="text/html;charset=utf-8"%>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/ext-all.gzcss" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/styles/icon-index.gzcss" >
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/scripts/extjs/ux/css/Ext.ux.form.LovCombo.css">
