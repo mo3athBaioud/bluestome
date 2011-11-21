@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+
+	<diskStore path="d:/tmp/cache/xian/hibernate/" />
+	
+	<defaultCache maxElementsInMemory="100" memoryStoreEvictionPolicy="LRU" eternal="true"
+		overflowToDisk="true" diskPersistent="true" />
+	<cache name="com.xian.support.entity.BDistrict" overflowToDisk="true" eternal="false" diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600" maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU"/>
+	<cache name="com.xian.support.entity.Staff" overflowToDisk="true" eternal="false" diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600" maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU"/>
+	<cache name="com.xian.support.entity.Bussiness" overflowToDisk="true" eternal="false" diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600" maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU"/>
+	<cache name="com.xian.support.entity.BussinessSimplify" overflowToDisk="true" eternal="false" diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600" maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU"/>
+	<cache name="com.xian.support.entity.Channel" overflowToDisk="true" eternal="false" diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600" maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU"/>
+	<cache name="com.xian.support.entity.Noplog" overflowToDisk="true" eternal="false" diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600" maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU"/>
+</ehcache>
