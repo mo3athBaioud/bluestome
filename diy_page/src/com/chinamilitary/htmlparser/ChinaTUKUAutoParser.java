@@ -457,6 +457,7 @@ public class ChinaTUKUAutoParser {
 							acticle.setWebId(bean.getId());
 							boolean b = articleDao.update(acticle);
 							if(b){
+								getImage(acticle.getId(), bean.getUrl());
 								System.out.println(" >>  更新文章["+acticle.getTitle()+"]所属站点为["+bean.getId()+"|"+bean.getName()+"] 成功!");
 							}
 						}
@@ -759,8 +760,8 @@ public class ChinaTUKUAutoParser {
 //			catalogWorld("http://tuku.auto.china.com/auto/html/4466/4466-4468_1.html");
 
 			update2();
-			getArticleImages();
-			downloadImages();
+//			getArticleImages();
+//			downloadImages();
 
 		}catch(Exception e){
 			e.printStackTrace();
