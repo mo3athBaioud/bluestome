@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+
+	<diskStore path="d:/tmp/cache/hibernate/" />
+	
+	<defaultCache maxElementsInMemory="100" memoryStoreEvictionPolicy="LRU" eternal="true"
+		overflowToDisk="true" diskPersistent="true" />
+	<cache name="com.takesoon.oms.ssi.entity.Article" overflowToDisk="true" eternal="false" diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600" maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU"/>
+	<cache name="com.takesoon.oms.ssi.entity.Image" overflowToDisk="true" eternal="false" diskPersistent="false" timeToLiveSeconds="3600" timeToIdleSeconds="3600" maxElementsInMemory="1000" memoryStoreEvictionPolicy="LRU"/>
+</ehcache>
