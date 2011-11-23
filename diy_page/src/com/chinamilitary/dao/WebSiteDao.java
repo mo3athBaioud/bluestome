@@ -1,6 +1,7 @@
 package com.chinamilitary.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.chinamilitary.bean.WebsiteBean;
 import com.chinamilitary.db.ICommonDao;
@@ -53,4 +54,12 @@ public interface WebSiteDao extends ICommonDao{
 	 * @throws Exception
 	 */
 	WebsiteBean findByUrl(String url) throws Exception;
+	
+	/**
+	 * 根据站点URL查找web对象
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 */
+	Map<String,WebsiteBean> findUrlList(String url) throws Exception;
 }
