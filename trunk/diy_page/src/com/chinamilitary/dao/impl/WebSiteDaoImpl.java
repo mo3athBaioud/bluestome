@@ -1,7 +1,9 @@
 package com.chinamilitary.dao.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -207,6 +209,33 @@ public class WebSiteDaoImpl extends CommonDB implements WebSiteDao {
 		}
 		return bean;
 	}
+
+	/**
+	 * 根据站点URL查找web对象
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String,WebsiteBean> findUrlList(String url) throws Exception{
+		List<WebsiteBean>  list = null;
+		Map<String,WebsiteBean> wmap = new HashMap<String,WebsiteBean>();
+		try{
+			list = findAll();
+			for(WebsiteBean tmp:list){
+				if(url.startsWith(tmp.getUrl())){
+					wmap.put(tmp.getUrl(), tmp);
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			rs.close();
+			pstmt.close();
+		}
+		return wmap;
+	}
+	
+
 //	public WebsiteBean findByUrl(String url) throws Exception{
 //		WebsiteBean bean = null;
 //		try{
