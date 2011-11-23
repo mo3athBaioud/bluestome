@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC
+          "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<description>Memcached配置文件</description>
+
+	<!-- 实例化链接类 -->
+   <bean id="com.danga.MemCached.SockIOPool" class="com.danga.MemCached.SockIOPool"
+    	factory-method="getInstance"
+    	init-method="initialize"
+    	destroy-method="shutDown">
+    	<constructor-arg>
+    		<value>memCached</value>
+    	</constructor-arg>
+    	<property name="servers">
+    		<list>
+    			<value>${memCached.server}</value>
+    		</list>
+    	</property>
+    	<property name="initConn">
+    		<value>${memCached.initConn}</value>
+    	</property>
+    	<property name="minConn">
+    		<value>${memCached.minConn}</value>
+    	</property>
+    	<property name="maxConn">
+    		<value>${memCached.maxConn}</value>
+    	</property>
+    	<property name="maintSleep">
+    		<value>${memCached.maintSleep}</value>
+    	</property>
+    	<property name="nagle">
+    		<value>${memCached.nagle}</value>
+    	</property>
+    	<property name="socketTO">
+    		<value>${memCached.socketTO}</value>
+    	</property>
+    </bean>
+
+	<!-- 实例化MemCachedClient类  -->
+    <bean id="memCachedClient" class="com.danga.MemCached.MemCachedClient">
+        <constructor-arg value="memCached"/>
+    </bean>
+    
+	<bean id="memcached" abstract="true"
+		class="com.xian.support.cms.cache.MemCached">
+		<property name="timeToLive">
+			<value>${memCached.timeToLive}</value>
+		</property>
+		 <property name="mc">
+		 	<ref bean="memCachedClient"/>
+		 </property>
+	</bean>
+
+</beans>

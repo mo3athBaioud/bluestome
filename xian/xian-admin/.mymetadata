@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="xian-admin"
+  id="myeclipse.1314680999907"
+  context-root="/xian-admin"
+  j2ee-spec="5.0"
+  archive="xian-admin.war">
+  <attributes>
+    <attribute name="webrootdir" value="/web" />
+  </attributes>
+</project-module>
+

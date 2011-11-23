@@ -1,0 +1,35 @@
+[
+	{
+			"text":"业务区管理",
+			"id":"02",
+			"iconCls":"icon-district",
+			"leaf":true,
+			"tabicon":"/images/district.png",
+			"ahref":"/admin/bdistrict.cgi",
+			"hrefTarget":"center2"
+	},{
+			"text":"渠道管理",
+			"id":"04",
+			"iconCls":"icon-shop",
+			"leaf":true,
+			"tabicon":"/images/shop.png",
+			"ahref":"/admin/channel.cgi",
+			"hrefTarget":"center2"
+	},{
+			"text":"员工管理",
+			"id":"05",
+			"iconCls":"icon-user",
+			"leaf":true,
+			"tabicon":"/images/user_go.png",
+			"ahref":"/admin/staff.cgi",
+			"hrefTarget":"center2"
+	},{
+			"text":"谷歌",
+			"id":"06",
+			"iconCls":"icon-html",
+			"leaf":true,
+			"tabicon":"/images/html.png",
+			"ahref":"http://www.google.com.hk",
+			"hrefTarget":"center2"
+	}
+]
