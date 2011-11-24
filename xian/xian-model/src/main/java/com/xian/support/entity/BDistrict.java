@@ -30,16 +30,16 @@ public class BDistrict extends AbstractEntity {
 	private String name;
 	
 	@Column(name="d_parent_code")
-	private String parentcode = "0000";
+	private String parentcode;
 	
 	@Column(name="d_description")
 	private String description;
 	
 	@Column(name="d_status")
-	private Integer status = 1;
+	private Integer status;
 	
 	@Column(name="d_createtime")
-	private Date createtime = new Date();
+	private Date createtime;
 
 	public String getCode() {
 		return code;
