@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 
+import com.ssi.common.utils.MD5;
 import com.xian.support.entity.Staff;
 import com.xian.support.service.StaffManager;
 
@@ -42,6 +43,17 @@ public class StaffManagerTest {
 	public void getTotal(){
 		Staff entity = new Staff();
 		int t = staffManager.getTotalBySql(entity);
+		if(t > 0)
+		{
+			List<Staff> list = staffManager.getList(entity);
+			for(Staff stf:list)
+			{
+				String md5 = MD5.getInstance().getMD5ofStr(stf.getPassword());
+				stf.setPassword(md5);
+				staffManager.save(stf);
+				System.out.println(" > "+stf.getUsername()+"|"+stf.getChannel().getAddress()+"|"+stf.getPassword());
+			}
+		}
 		System.out.println(" > t:" + t);
 	}
 	
