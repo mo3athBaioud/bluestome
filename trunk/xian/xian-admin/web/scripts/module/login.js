@@ -29,11 +29,11 @@ Ext.onReady(function() {
 										labelWidth : 80,
 										labelSeparator : '：',
 										items : [{
+													id : 'account',
 													xtype:'textfield',
 													fieldLabel : '帐&nbsp;号',
 													iconCls : 'icon-user',
 													name : 'username',
-													id : 'account',
 													blankText : '帐号不能为空,请输入!',
 													maxLength : 20,
 													maxLengthText : '账号的最大长度为20个字符',
@@ -46,11 +46,11 @@ Ext.onReady(function() {
 														}
 													}
 												}, {
+													id : 'password',
 													xtype:'textfield',
 													fieldLabel : '密&nbsp;码',
 													iconCls : 'icon-key',
 													name : 'password',
-													id : 'password',
 													inputType : 'password',
 													blankText : '密码不能为空,请输入!',
 													maxLength : 20,
@@ -60,6 +60,7 @@ Ext.onReady(function() {
 														specialkey : function(field, e) {
 															if (e.getKey() == Ext.EventObject.ENTER) {
 																login();
+//																Ext.getCmp('checkcode').focus();
 															}
 														}
 													}
@@ -68,7 +69,7 @@ Ext.onReady(function() {
 												, {
 													fieldLabel : '验证码',
 													baseCls : 'x-plain',
-													bodyStyle : 'padding:0 10px 0 0',
+													bodyStyle : 'padding:0 0 0 0',
 													layout:'column',
 													items:[
 														{
@@ -138,7 +139,7 @@ Ext.onReady(function() {
 				renderTo : Ext.getBody(),
 				layout : 'fit',
 				width : 460,
-	//						height : 300,
+	//			height : 300,
 				autoHeight : true,
 				closeAction : 'hide',
 				plain : true,
@@ -175,16 +176,19 @@ Ext.onReady(function() {
 			 */
 			function login() {
 				if (Ext.getCmp('loginForm').form.isValid()) {
+					/**
 					window.location.href = project+'/index.jsp';
 					//临时注释掉 该部分由后台逻辑实现
-					/**
+					 **/
 					Ext.getCmp('loginForm').form.submit({
-						url : project+'/login.cgi',
+						url : project+'/admin/login!exec.cgi',
 						waitTitle : '提示',
 						method : 'POST',
 						waitMsg : '正在验证您的身份,请稍候.....',
 						success : function(form, action) {
-							window.location.href = action.result.url;
+							var token = action.result.token;
+							window.location.href = project+'/index.jsp?token='+token;
+//							window.location.href = action.result.url;
 						},
 						failure : function(form, action) {
 							var errmsg = action.result.msg;
@@ -198,11 +202,14 @@ Ext.onReady(function() {
 								} else if(errtype == '2'){
 									var form = Ext.getCmp('loginForm').form;
 									form.reset();
+								} else if(errtype == '3'){
+									var password = Ext.getCmp('loginForm').findById('password');
+									password.focus();
+									password.validate();
 								}
 							});
 						}
 					});
-					 **/
 				}
 			}
 			/**
