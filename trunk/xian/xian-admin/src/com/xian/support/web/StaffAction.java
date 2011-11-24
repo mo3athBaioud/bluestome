@@ -10,6 +10,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.ssi.common.utils.MD5;
 import com.xian.support.cms.common.Constants;
 import com.xian.support.cms.utils.ExtUtil;
 import com.xian.support.entity.Staff;
@@ -142,10 +143,40 @@ public class StaffAction extends CRUDActionSupport {
 	public void save() throws IOException {
 		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
+		boolean b = false;
 		try{
 			 out = getOut(response);
-			 staffManager.save(entity);
-			 out.println("{success:true,msg:'保存成功!'}"); 
+			 if(null == entity){
+				out.println("{success:false,msg:'未获取到前台参数!'}");
+				return;
+			 }
+			 if(null != mtype && mtype.equals("add"))
+			 {
+				 //TODO　新增数据 密码是否需要进行MD5加密？
+				 String md5 = MD5.getInstance().getMD5ofStr(entity.getPassword());
+				 entity.setPassword(md5);
+				 staffManager.save(entity);
+				 b = true;
+			 }else{
+				 //TODO 编辑数据
+				 /*
+				  * 1.验证密码是否输入正确
+				  */
+				 Staff staff = staffManager.get(entity.getId());
+				 if(staff.getPassword().equals(entity.getPassword())){
+					 //TODO 验证用户密码是否一致
+					 staffManager.save(entity);
+					 b = true;
+				 }else{
+					 message = "密码不正确，请重新输入";
+				 }
+			 }
+			 if(b)
+			 {
+				 out.println("{success:true,msg:'保存成功!'}"); 
+			 }else{
+				 out.println("{success:false,msg:'"+message+"!'}"); 
+			 }
 		}catch(Exception e){
 			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
 		}finally{
@@ -180,16 +211,24 @@ public class StaffAction extends CRUDActionSupport {
 	public void enable() throws IOException{
 		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
+		int i = 0;
 		try{
 			 out = getOut(response);
 			 for(Long id:ids){
 				 //TODO 启用记录
-				 logger.info(" >> id:"+id);
+				 if(staffManager.enabled(id.intValue())){
+					 i++;
+				 }
 			 }
-			 out.println("{success:true,msg:'启用成功!'}"); 
+			 if(i == ids.length){
+				 out.println("{success:true,msg:'启用成功!'}");
+			 }else{
+				 out.println("{success:true,msg:'部分启用成功!'}");
+			 }
 		}catch(Exception e){
 			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
 		}finally{
+			i = 0;
 			if(null != out){
 				out.flush();
 				out.close();
@@ -205,15 +244,24 @@ public class StaffAction extends CRUDActionSupport {
 	public void disable() throws IOException{
 		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
+		int i = 0;
 		try{
 			 out = getOut(response);
 			 for(Long id:ids){
 				 //TODO 禁用记录
+				 if(staffManager.disabled(id.intValue())){
+					 i ++;
+				 }
 			 }
-			 out.println("{success:true,msg:'禁用成功!'}"); 
+			 if(i == ids.length){
+				 out.println("{success:true,msg:'禁用成功!'}"); 
+			 }else{
+				 out.println("{success:true,msg:'部分禁用成功!'}"); 
+			 }
 		}catch(Exception e){
 			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
 		}finally{
+			i = 0;
 			if(null != out){
 				out.flush();
 				out.close();

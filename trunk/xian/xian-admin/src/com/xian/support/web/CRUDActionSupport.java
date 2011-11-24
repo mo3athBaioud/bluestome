@@ -69,7 +69,13 @@ public abstract class CRUDActionSupport<T> extends ActionSupport implements
 	
 	protected Long[] ids = {};
 	
+	protected String[] codes = {};
+	
 	protected Long id = null;
+	
+	protected String mtype = null;
+	
+	protected String message = null;
 	
 	public String execute() throws Exception {
 		try {
@@ -248,6 +254,30 @@ public abstract class CRUDActionSupport<T> extends ActionSupport implements
 
 	public void setIds(Long[] ids) {
 		this.ids = ids;
+	}
+	
+	public String[] getCodes() {
+		return codes;
+	}
+
+	public void setCodes(String[] codes) {
+		this.codes = codes;
+	}
+
+	public String getMtype() {
+		return mtype;
+	}
+
+	public void setMtype(String mtype) {
+		this.mtype = mtype;
+	}
+	
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	/**
