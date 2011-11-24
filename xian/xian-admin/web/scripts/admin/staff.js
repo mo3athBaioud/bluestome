@@ -27,20 +27,16 @@ Ext.onReady(function(){
         }},
         {header: "状态", width: 100, sortable: true, dataIndex: 'status',renderer:function(v){
         	var x = parseInt(v);
-        	var note = "<font color=blue>可用</font>";
         	switch(x){
         		case 0:
-        			note="<font color=red>不可用</font>";
-        			break;
+        			return "<font color=red>不可用</font>";
         		case 1:
-        			break;
+        			return "<font color=blue>可用</font>";
         		case 2:
-        			note="<font color=yellow>未知</font>";
-        			break;
+        			return "<font color=yellow>未知</font>";
         		default:
-        			break;
+        			return "<font color=blue>可用</font>";
         	}
-        	return note;
         }},
         {header: "收录时间", width: 100, sortable: true, dataIndex: 'createtime'},
     ]);
@@ -365,7 +361,7 @@ Ext.onReady(function(){
 	 */
 	var bdistrict_combo = new Ext.form.ComboBox({
 			fieldLabel : '业务区',
-			hiddenName:'entity.unknow',
+			hiddenName:'unknow',
 			name: 'bdcode', 
 			anchor: '80%',
 			xtype:'combo',
@@ -860,8 +856,9 @@ Ext.onReady(function(){
 		}, {name : 'officephone',type : 'string'
 		}, {name : 'createtime',type : 'string'
 		}, {name : 'admin',type : 'int'
+		}, {name : 'status',type : 'int'
 		}, {name : 'channelcode',type : 'string',mapping:'channel.channelcode'
-		}, {name : 'channelname',type : 'string',mapping:'channel.channlename'
+		}, {name : 'channelname',type : 'string',mapping:'channel.channelname'
 		}])
 	});
 	
