@@ -321,6 +321,7 @@ Ext.onReady(function(){
 		                    }  
 		                ]  
 		            }),
+		            /**
 		            new Ext.Panel({  
 		                columnWidth: .2,  
 		                layout: 'form',
@@ -354,6 +355,7 @@ Ext.onReady(function(){
 		                    }  
 		                ]  
 		            }),
+		            **/
 		            new Ext.Panel({  
 		                columnWidth: .2,  
 		                layout: 'form',
@@ -363,8 +365,8 @@ Ext.onReady(function(){
 		                labelAlign: 'right',  
 		                items: [  
 		                    {  
-		                    	fieldLabel: '站点父ID',
-								name: 'entity.parentId',  
+		                    	fieldLabel: '手机号码',
+								name: 'entity.mobile',  
 								xtype:'textfield',
 								vtype:'integer',
 								anchor: '80%',
@@ -426,6 +428,7 @@ Ext.onReady(function(){
 		                    }  
 		                ]  
 		            }),
+		            /**
 		            new Ext.Panel({  
 		                columnWidth: .2,  
 		                layout: 'form',
@@ -466,6 +469,7 @@ Ext.onReady(function(){
 		                    }  
 		                ]  
 		            })
+		            **/
 		        ]  
 		    }),
 			new Ext.Panel({
@@ -727,7 +731,7 @@ Ext.onReady(function(){
 	app.ds_data = new Ext.data.Store({
 		url : project + '/admin/staff!list.cgi',
 		baseParams:{
-			'entity.parentId':app.values
+			'entity.username':app.values
 		},
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'total',
