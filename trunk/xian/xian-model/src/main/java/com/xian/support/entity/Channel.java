@@ -4,8 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 
 /**
@@ -27,7 +31,7 @@ public class Channel extends AbstractEntity {
 	private String channelcode;
 
 	@Column(name="d_channel_name")
-	private String channlename;
+	private String channelname;
 
 	@Column(name="d_address")
 	private String address;
@@ -35,13 +39,14 @@ public class Channel extends AbstractEntity {
 	@Column(name="d_status")
 	private Integer status = 1;
 
-	@Column(name="d_bdcode")
+	@Transient
 	private String bdcode;
 
 	@Column(name="d_createtime")
 	private Date createtime = new Date();
 	
-//	@One(target = BDistrict.class,field = "bdcode")
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "d_bdcode", referencedColumnName = "d_code")
 	private BDistrict bdistrict;
 
 	public String getAddress() {
@@ -67,13 +72,13 @@ public class Channel extends AbstractEntity {
 	public void setChannelcode(String channelcode) {
 		this.channelcode = channelcode;
 	}
-
-	public String getChannlename() {
-		return channlename;
+	
+	public String getChannelname() {
+		return channelname;
 	}
 
-	public void setChannlename(String channlename) {
-		this.channlename = channlename;
+	public void setChannelname(String channelname) {
+		this.channelname = channelname;
 	}
 
 	public Date getCreatetime() {
