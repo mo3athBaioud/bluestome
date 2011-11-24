@@ -10,7 +10,6 @@ Ext.onReady(function(){
     
     app.cm_utp = new Ext.grid.ColumnModel([
 		app.sm,
-        {header: "ID", width: 100, sortable: true, dataIndex: 'id'},
         {header: "业务区代码", width: 100, sortable: true, dataIndex: 'code'},
         {header: "业务区名称", width: 100, sortable: true, dataIndex: 'name'},
         {header: "父代码", width: 100, sortable: true, dataIndex: 'parentcode'},

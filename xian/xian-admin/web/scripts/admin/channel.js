@@ -10,13 +10,12 @@ Ext.onReady(function(){
     
     app.cm_utp = new Ext.grid.ColumnModel([
 		app.sm,
-        {header: "ID", width: 100, sortable: true, dataIndex: 'id'},
         {header: "渠道代码", width: 100, sortable: true, dataIndex: 'channelcode'},
-        {header: "渠道名称", width: 100, sortable: true, dataIndex: 'channelname'},
-        {header: "地址", width: 100, sortable: true, dataIndex: 'address'},
-        {header: "业务区代码", width: 100, sortable: true, dataIndex: 'bdcode'},
-        {header: "业务区名称", width: 100, sortable: true, dataIndex: 'bdname'},
-        {header: "状态", width: 100, sortable: true, dataIndex: 'status',renderer:function(v){
+        {header: "渠道名称", width: 200, sortable: true, dataIndex: 'channelname'},
+//        {header: "地址", width: 100, sortable: true, dataIndex: 'address'},
+        {header: "业务区代码", width: 60, sortable: true, dataIndex: 'bdcode'},
+        {header: "业务区名称", width: 60, sortable: true, dataIndex: 'bdname'},
+        {header: "状态", width: 60, sortable: true, dataIndex: 'status',renderer:function(v){
         	var x = parseInt(v);
         	var note = "<font color=green>可用</font>";
         	switch(x){
@@ -769,7 +768,7 @@ Ext.onReady(function(){
 	app.ds_data = new Ext.data.Store({
 		url : project + '/admin/channel!list.cgi',
 		baseParams:{
-			'entity.parentId':app.values
+			'entity.channelcode':app.values
 		},
 		reader : new Ext.data.JsonReader({
 			totalProperty : 'total',
@@ -778,8 +777,8 @@ Ext.onReady(function(){
 		}, {name : 'channelcode',type : 'string'
 		}, {name : 'channelname',type : 'string'
 		}, {name : 'address',type : 'string'
-		}, {name : 'bdcode',type : 'string',mapping:'bdcode.code'
-		}, {name : 'bdname',type : 'string',mapping:'bdcode.name'
+		}, {name : 'bdcode',type : 'string',mapping:'bdistrict.code'
+		}, {name : 'bdname',type : 'string',mapping:'bdistrict.name'
 		}, {name : 'status',type : 'int'
 		}, {name : 'createtime',type : 'string'
 		}])
