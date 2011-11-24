@@ -92,7 +92,7 @@ public class BDistrictManager {
 		Criteria criteria = getCriteria(entity);
 		criteria.setFirstResult(start);
 		criteria.setMaxResults(limit);
-		criteria.addOrder(Order.desc("id"));
+		criteria.addOrder(Order.desc("code"));
 		return BDistrictDao.getAll(criteria);
 	}
 	
@@ -105,7 +105,7 @@ public class BDistrictManager {
 	 */
 	public List<BDistrict> getList(BDistrict entity){
 		Criteria criteria = getCriteria(entity);
-		criteria.addOrder(Order.desc("id"));
+		criteria.addOrder(Order.desc("code"));
 		return BDistrictDao.getAll(criteria);
 	}
 	
