@@ -93,7 +93,7 @@ public class ChannelManager {
 		Criteria criteria = getCriteria(entity);
 		criteria.setFirstResult(start);
 		criteria.setMaxResults(limit);
-		criteria.addOrder(Order.desc("id"));
+		criteria.addOrder(Order.desc("channelcode"));
 		return channelDao.getAll(criteria);
 	}
 	
@@ -106,7 +106,7 @@ public class ChannelManager {
 	 */
 	public List<Channel> getList(Channel entity){
 		Criteria criteria = getCriteria(entity);
-		criteria.addOrder(Order.desc("id"));
+		criteria.addOrder(Order.desc("channelcode"));
 		return channelDao.getAll(criteria);
 	}
 	
@@ -177,7 +177,7 @@ public class ChannelManager {
 				}
 			}
 		}
-		sql.append(" order by d_id desc");
+		sql.append(" order by d_channel_code desc");
 		if(null != limit && null != start)
 		{
 			sql.append(" limit ").append(limit);
