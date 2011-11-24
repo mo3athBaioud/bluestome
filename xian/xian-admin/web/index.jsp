@@ -11,6 +11,7 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/scripts/module/login.js"></script>
 	<script type="text/javascript">
 	    	var project = '${ctx}';
+			var token = '${param.token}';
 	</script>
   </head>
   
@@ -44,7 +45,7 @@
 				    		var val = combo.value;
 				    		if(val == '1')
 				    		{
-								window.location.href = project+'/pages/admin/index.jsp';
+								window.location.href = project+'/pages/admin/index.jsp?token='+token;
 				    		}
 				    		if(val == '2')
 				    		{
