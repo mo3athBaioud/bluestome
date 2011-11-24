@@ -206,6 +206,37 @@ public class StaffManager {
 //		}
 		return sql.toString();
 	}
+	
+	/**
+	 * 根据用户名查找员工对象
+	 * @param username
+	 * @return
+	 */
+	public Staff getStaffByUsername(String username){
+		Staff entity = new Staff();
+		entity.setUsername(username);
+		List<Staff> list = getList(entity);
+		if(null != list && list.size() > 0){
+			entity = list.get(0);
+			return entity;
+		}
+		return null;
+	}
+	
+	/**
+	 * 检查用户名是否被占用
+	 * @param username
+	 * @return
+	 */
+	public boolean checkUserName(String username){
+		Staff entity = new Staff();
+		entity.setUsername(username);
+		int c = getTotalBySql(entity);
+		if(c > 0){
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * 禁用数据记录
