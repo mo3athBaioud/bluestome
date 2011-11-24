@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssi.common.utils.DateUtils;
 import com.xian.support.dao.StaffDao;
 import com.xian.support.entity.Staff;
+import com.xian.support.entity.Staff;
 
 @Component
 @Transactional
@@ -137,6 +138,12 @@ public class StaffManager {
 			if(null != entity.getStatus()){
 				sql.append(" and a.d_status = ").append(entity.getStatus()).append("\n");
 			}
+			if(null != entity.getChannelcode() && !entity.getChannelcode().equals("")){
+				sql.append(" and a.d_channel_code = '").append(entity.getChannelcode()).append("'\n");
+			}
+			if(null != entity.getUsername() && !entity.getUsername().equals("")){
+				sql.append(" and a.d_username like '%").append(entity.getUsername()).append("%'\n");
+			}
 			if(null != entity.getStartDate() && null != entity.getEndDate()){
 				sql.append(" and a.d_createtime between '"+DateUtils.formatDate(entity.getStartDate(), DateUtils.FULL_STANDARD_PATTERN_2)).append("'");
 				sql.append(" and '"+DateUtils.formatDate(entity.getEndDate(), DateUtils.FULL_STANDARD_PATTERN_2)).append("'");
@@ -166,6 +173,12 @@ public class StaffManager {
 			if(null != entity.getStatus()){
 				sql.append(" and a.d_status = ").append(entity.getStatus()).append("\n");
 			}
+			if(null != entity.getChannelcode() && !entity.getChannelcode().equals("")){
+				sql.append(" and a.d_channel_code = '").append(entity.getChannelcode()).append("'\n");
+			}
+			if(null != entity.getUsername() && !entity.getUsername().equals("")){
+				sql.append(" and a.d_username like '%").append(entity.getUsername()).append("%'\n");
+			}
 			if(null != entity.getStartDate() && null != entity.getEndDate()){
 				sql.append(" and a.d_createtime between '"+DateUtils.formatDate(entity.getStartDate(), DateUtils.FULL_STANDARD_PATTERN_2)).append("'");
 				sql.append(" and '"+DateUtils.formatDate(entity.getEndDate(), DateUtils.FULL_STANDARD_PATTERN_2)).append("'");
@@ -186,11 +199,46 @@ public class StaffManager {
 		{
 			sql.append(" limit ").append(limit);
 			sql.append(" offset ").append(start);
-		}else{
-			sql.append(" limit ").append(10);
-			sql.append(" offset ").append(0);
 		}
+//		else{
+//			sql.append(" limit ").append(10);
+//			sql.append(" offset ").append(0);
+//		}
 		return sql.toString();
+	}
+
+	/**
+	 * 禁用数据记录
+	 * @param code
+	 * @return
+	 */
+	public boolean disabled(Integer id){
+		Staff entity = get(id);
+		if(null != entity)
+		{
+			if(entity.getStatus() != 0){
+				entity.setStatus(0);
+				save(entity);
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 启用数据记录
+	 * @param code
+	 * @return
+	 */
+	public boolean enabled(Integer id){
+		Staff entity = get(id);
+		if(null != entity)
+		{
+			if(entity.getStatus() != 1){
+				entity.setStatus(1);
+				save(entity);
+			}
+		}
+		return true;
 	}
 
 }

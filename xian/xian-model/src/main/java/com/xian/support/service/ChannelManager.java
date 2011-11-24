@@ -22,7 +22,7 @@ public class ChannelManager {
 	@Autowired
 	private ChannelDao channelDao;
 	
-	public Channel get(Integer id) {
+	public Channel get(String id) {
 		return channelDao.getting(id);
 	}
 	
@@ -78,7 +78,7 @@ public class ChannelManager {
 	 * 删除对象
 	 * @param id
 	 */
-	public void delete(Integer id){
+	public void delete(String id){
 		channelDao.delete(id);
 	}
 	
@@ -122,13 +122,31 @@ public class ChannelManager {
 		return channelDao.getListBySQL(sql);
 	}
 	
+	/**
+	 * 获取指定的列表数量
+	 * @param entity
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	public List<Channel> getListBySql(Channel entity){
+		String sql = buildSQL(entity,null,null);
+		return channelDao.getListBySQL(sql);
+	}
+	
 	public String buildCountSQL(Channel entity){
 		StringBuffer sql = new StringBuffer("select count(*) as total from tbl_channel");
 		if(null != entity){
 			sql.append(" a");
 			sql.append(" where 1 = 1").append("\n");
 			if(null != entity.getChannelcode() && !entity.getChannelcode().equals("")){
-				sql.append(" and a.d_channel_code = ").append(entity.getChannelcode()).append("\n");
+				sql.append(" and a.d_channel_code = '").append(entity.getChannelcode()).append("'\n");
+			}
+			if(null != entity.getChannelname() && !entity.getChannelname().equals("")){
+				sql.append(" and a.d_channel_name like '%").append(entity.getChannelname()).append("%'\n");
+			}
+			if(null != entity.getBdcode() && !entity.getBdcode().equals("")){
+				sql.append(" and a.d_bdcode = '").append(entity.getBdcode()).append("'\n");
 			}
 			if(null != entity.getStatus()){
 				sql.append(" and a.d_status = ").append(entity.getStatus()).append("\n");
@@ -157,7 +175,13 @@ public class ChannelManager {
 			sql.append(" a");
 			sql.append(" where 1 = 1").append("\n");
 			if(null != entity.getChannelcode() && !entity.getChannelcode().equals("")){
-				sql.append(" and a.d_channel_code = ").append(entity.getChannelcode()).append("\n");
+				sql.append(" and a.d_channel_code = '").append(entity.getChannelcode()).append("'\n");
+			}
+			if(null != entity.getChannelname() && !entity.getChannelname().equals("")){
+				sql.append(" and a.d_channel_name like '%").append(entity.getChannelname()).append("%'\n");
+			}
+			if(null != entity.getBdcode() && !entity.getBdcode().equals("")){
+				sql.append(" and a.d_bdcode = '").append(entity.getBdcode()).append("'\n");
 			}
 			if(null != entity.getStatus()){
 				sql.append(" and a.d_status = ").append(entity.getStatus()).append("\n");
@@ -182,11 +206,46 @@ public class ChannelManager {
 		{
 			sql.append(" limit ").append(limit);
 			sql.append(" offset ").append(start);
-		}else{
-			sql.append(" limit ").append(10);
-			sql.append(" offset ").append(0);
 		}
+//		else{
+//			sql.append(" limit ").append(10);
+//			sql.append(" offset ").append(0);
+//		}
 		return sql.toString();
+	}
+	
+	/**
+	 * 禁用数据记录
+	 * @param code
+	 * @return
+	 */
+	public boolean disabled(String code){
+		Channel entity = get(code);
+		if(null != entity)
+		{
+			if(entity.getStatus() != 0){
+				entity.setStatus(0);
+				save(entity);
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 启用数据记录
+	 * @param code
+	 * @return
+	 */
+	public boolean enabled(String code){
+		Channel entity = get(code);
+		if(null != entity)
+		{
+			if(entity.getStatus() != 1){
+				entity.setStatus(1);
+				save(entity);
+			}
+		}
+		return true;
 	}
 
 }

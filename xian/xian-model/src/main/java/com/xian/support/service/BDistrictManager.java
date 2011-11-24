@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssi.common.utils.DateUtils;
 import com.xian.support.dao.BDistrictDao;
 import com.xian.support.entity.BDistrict;
+import com.xian.support.entity.Channel;
 
 @Component
 @Transactional
@@ -21,7 +22,7 @@ public class BDistrictManager {
 	@Autowired
 	private BDistrictDao BDistrictDao;
 	
-	public BDistrict get(Integer id) {
+	public BDistrict get(String id) {
 		return BDistrictDao.getting(id);
 	}
 	
@@ -59,6 +60,9 @@ public class BDistrictManager {
 		if (entity.getCode() != null && !entity.getCode().equals("")) {
 			criteria.add(Restrictions.eq("code", entity.getCode()));
 		}
+		if (entity.getParentcode() != null && !entity.getParentcode().equals("")) {
+			criteria.add(Restrictions.eq("parentcode", entity.getParentcode()));
+		}
 		if (null != entity.getStatus()) {
 			criteria.add(Restrictions.eq("status", entity.getStatus()));
 		}
@@ -77,7 +81,7 @@ public class BDistrictManager {
 	 * 删除对象
 	 * @param id
 	 */
-	public void delete(Integer id){
+	public void delete(String id){
 		BDistrictDao.delete(id);
 	}
 	
@@ -121,13 +125,31 @@ public class BDistrictManager {
 		return BDistrictDao.getListBySQL(sql);
 	}
 	
+	/**
+	 * 获取指定的列表数量
+	 * @param entity
+	 * @param start
+	 * @param limit
+	 * @return
+	 */
+	public List<BDistrict> getListBySql(BDistrict entity){
+		String sql = buildSQL(entity,null,null);
+		return BDistrictDao.getListBySQL(sql);
+	}
+	
 	public String buildCountSQL(BDistrict entity){
 		StringBuffer sql = new StringBuffer("select count(*) as total from tbl_bdistrict");
 		if(null != entity){
 			sql.append(" a");
 			sql.append(" where 1 = 1").append("\n");
 			if(null != entity.getCode() && !entity.getCode().equals("")){
-				sql.append(" and a.d_code = ").append(entity.getCode()).append("\n");
+				sql.append(" and a.d_code = '").append(entity.getCode()).append("'\n");
+			}
+			if(null != entity.getName() && !entity.getName().equals("")){
+				sql.append(" and a.d_name like '%").append(entity.getName()).append("%'\n");
+			}
+			if(null != entity.getParentcode() && !entity.getParentcode().equals("")){
+				sql.append(" and a.d_parent_code = '").append(entity.getParentcode()).append("'\n");
 			}
 			if(null != entity.getStatus()){
 				sql.append(" and a.d_status = ").append(entity.getStatus()).append("\n");
@@ -156,7 +178,13 @@ public class BDistrictManager {
 			sql.append(" a");
 			sql.append(" where 1 = 1").append("\n");
 			if(null != entity.getCode() && !entity.getCode().equals("")){
-				sql.append(" and a.d_code = ").append(entity.getCode()).append("\n");
+				sql.append(" and a.d_code = '").append(entity.getCode()).append("'\n");
+			}
+			if(null != entity.getName() && !entity.getName().equals("")){
+				sql.append(" and a.d_name like '%").append(entity.getName()).append("%'\n");
+			}
+			if(null != entity.getParentcode() && !entity.getParentcode().equals("")){
+				sql.append(" and a.d_parent_code = '").append(entity.getParentcode()).append("'\n");
 			}
 			if(null != entity.getStatus()){
 				sql.append(" and a.d_status = ").append(entity.getStatus()).append("\n");
@@ -181,11 +209,45 @@ public class BDistrictManager {
 		{
 			sql.append(" limit ").append(limit);
 			sql.append(" offset ").append(start);
-		}else{
-			sql.append(" limit ").append(10);
-			sql.append(" offset ").append(0);
 		}
+//		else{
+//			sql.append(" limit ").append(10);
+//			sql.append(" offset ").append(0);
+//		}
 		return sql.toString();
 	}
+	
+	/**
+	 * 禁用数据记录
+	 * @param code
+	 * @return
+	 */
+	public boolean disabled(String code){
+		BDistrict entity = get(code);
+		if(null != entity)
+		{
+			if(entity.getStatus() != 0){
+				entity.setStatus(0);
+				save(entity);
+			}
+		}
+		return true;
+	}
 
+	/**
+	 * 启用数据记录
+	 * @param code
+	 * @return
+	 */
+	public boolean enabled(String code){
+		BDistrict entity = get(code);
+		if(null != entity)
+		{
+			if(entity.getStatus() != 1){
+				entity.setStatus(1);
+				save(entity);
+			}
+		}
+		return true;
+	}
 }
