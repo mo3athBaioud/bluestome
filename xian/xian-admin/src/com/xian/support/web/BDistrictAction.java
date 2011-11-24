@@ -89,6 +89,47 @@ public class BDistrictAction extends CRUDActionSupport {
 	}
 
 	/**
+	 * 显示所有区域数据
+	 * @throws IOException
+	 */
+	public void combo() throws IOException {
+		response.setCharacterEncoding(Constants.CHARSET);
+		PrintWriter out = null;
+		try{
+			if(null == entity)
+			{
+				//设置当前记录状态可用
+				entity = new BDistrict();
+				entity.setStart(1);
+			}
+			 out = getOut(response);
+			 if(null != BDistrictManager){
+				 int c = BDistrictManager.getTotalBySql(entity);
+				 if(c > 0){
+					 List<BDistrict> list = BDistrictManager.getListBySql(entity);
+					 if(null != list && list.size() > 0){
+						 String json = ExtUtil.getJsonFromList(c, list);
+						 out.println(json);
+					 }else{
+						 out.println("{success:false,msg:'列表数据为空!'}");
+					 }
+				 }else{
+					 out.println("{success:false,msg:'没有数据!'}");
+				 }
+			 }else{
+				 out.println("{success:false,msg:'业务类获取失败，请检查!'}"); 
+			 }
+		}catch(Exception e){
+			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
+		}finally{
+			if(null != out){
+				out.flush();
+				out.close();
+			}
+		}
+	}
+	
+	/**
 	 * 查询记录
 	 * @throws IOException
 	 */
@@ -127,10 +168,34 @@ public class BDistrictAction extends CRUDActionSupport {
 	public void save() throws IOException {
 		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
+		boolean b = false;
 		try{
 			 out = getOut(response);
-			 BDistrictManager.save(entity);
-			 out.println("{success:true,msg:'保存成功!'}"); 
+			 if(null == entity){
+				 out.println("{success:false,msg:'未获取相关参数!'}");
+				 return;
+			 }
+			 if(null != mtype){
+				 if(mtype.equals("add")){
+					 //TODO 新增数据
+					 BDistrictManager.save(entity);
+					 b = true;
+				 }else if(mtype.equals("edit")){
+					 //TODO　修改数据
+					 BDistrictManager.save(entity);
+					 b = true;
+				 }
+			 }else{
+				 //TODO 未获取操作类型
+				 message = "未获取操作类型";
+			 }
+			 if(b){
+				 //TODO
+				 out.println("{success:true,msg:'保存成功!'}"); 
+			 }else{
+				 //TODO　
+				 out.println("{success:false,msg:'保存失败,原因:["+message+"]!'}"); 
+			 }
 		}catch(Exception e){
 			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
 		}finally{
@@ -165,16 +230,24 @@ public class BDistrictAction extends CRUDActionSupport {
 	public void enable() throws IOException{
 		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
+		int i = 0;
 		try{
 			 out = getOut(response);
-			 for(Long id:ids){
+			 for(String code:codes){
 				 //TODO 启用记录
-				 logger.info(" >> id:"+id);
+				 if(BDistrictManager.enabled(code)){
+					 i++;
+				 }
 			 }
-			 out.println("{success:true,msg:'启用成功!'}"); 
+			 if(i == codes.length){
+				 out.println("{success:true,msg:'启用成功!'}");
+			 }else{
+				 out.println("{success:true,msg:'部分启用成功!'}");
+			 }
 		}catch(Exception e){
 			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
 		}finally{
+			i = 0;
 			if(null != out){
 				out.flush();
 				out.close();
@@ -190,15 +263,24 @@ public class BDistrictAction extends CRUDActionSupport {
 	public void disable() throws IOException{
 		response.setCharacterEncoding(Constants.CHARSET);
 		PrintWriter out = null;
+		int i = 0;
 		try{
 			 out = getOut(response);
-			 for(Long id:ids){
+			 for(String code:codes){
 				 //TODO 禁用记录
+				 if(BDistrictManager.disabled(code)){
+					 i ++;
+				 }
 			 }
-			 out.println("{success:true,msg:'禁用成功!'}"); 
+			 if(i == codes.length){
+				 out.println("{success:true,msg:'禁用成功!'}"); 
+			 }else{
+				 out.println("{success:true,msg:'部分禁用成功!'}"); 
+			 }
 		}catch(Exception e){
 			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
 		}finally{
+			i = 0;
 			if(null != out){
 				out.flush();
 				out.close();
