@@ -7,6 +7,7 @@ Ext.onReady(function(){
     app.qp = {};
 	app.qp.limit = 20;
     app.sm = new Ext.grid.CheckboxSelectionModel();
+    app.myMask = new Ext.LoadMask(Ext.getBody(), {msg:"Loading...",msgCls:'x-mask-loading'});
     
     app.cm_utp = new Ext.grid.ColumnModel([
 		app.sm,
@@ -44,26 +45,113 @@ Ext.onReady(function(){
 		}
 	});
 	
-	app.btn_bug = new Ext.Button({
-		text : '页面测试',
-		iconCls : 'icon-bug',
+	app.btn_create = new Ext.Button({
+		text : '创建',
+		iconCls : 'icon-add',
+		disabled:false,
+		handler:function(){
+			app.data_form.form.reset();
+			
+			app.data_form.form.findField('mtype').setValue('add');
+			app.data_form.form.findField('entity.channelcode').setValue(null);
+			app.data_form.form.findField('entity.channelname').setValue(null);
+			app.data_form.form.findField('entity.address').setValue(null);
+			app.data_form.form.findField('entity.bdistrict.code').setValue(null);
+			app.data_form.form.findField('entity.status').setValue(null);
+			app.data_form.form.findField('entity.createtime').setValue(null);
+			
+			Ext.getCmp('data_form_reset').show();
+			var win = Ext.getCmp('add_win');
+			win.setTitle("创建站点");
+			win.show();
+		}
+	});
+	
+	app.btn_edit = new Ext.Button({
+		text : '编辑',
+		iconCls : 'icon-world_edit',
 		disabled:false,
 		handler:function(){
 			if(app.grid.getSelectionModel().getSelected()){
+				Ext.getCmp('data_form_reset').hide();
+				app.data_form.form.findField('mtype').setValue('edit');
 				var record = app.grid.getSelectionModel().getSelected();
-				//TODO 测试返回的内容 1.页面大小 2.响应时间
-				Ext.Msg.confirm('提示', '你确定测试该页面吗?', function(btn) {
+				
+				app.data_form.form.findField('entity.channelcode').setValue(record.get('channelcode'));
+				app.data_form.form.findField('entity.channelname').setValue(record.get('channelname'));
+				app.data_form.form.findField('entity.address').setValue(record.get('address'));
+				app.data_form.form.findField('entity.bdistrict.code').setValue(record.get('bdcode'));
+				app.data_form.form.findField('entity.status').setValue(record.get('status'));
+				app.data_form.form.findField('entity.createtime').setValue(record.get('createtime'));
+				
+				var win = Ext.getCmp('add_win');
+				win.setTitle("编辑站点");
+				win.show();
+			}else{
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '请选择需要编辑的站点!',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.ERROR
+				});
+			}
+		}
+	});
+	
+	app.btn_delete = new Ext.Button({
+		text : '删除',
+		iconCls : 'icon-cross',
+		disabled:false,
+		handler:function(){
+			var records = app.grid.getSelectionModel().getSelections();
+			if(records.length == 0){
+				Ext.Msg.show({
+					title : '系统提示',
+					msg : '请选择需要删除的记录!',
+					buttons : Ext.Msg.OK,
+					icon : Ext.MessageBox.ERROR
+				});
+			}else{
+				var ids = [];
+				for(i = 0 ; i < records.length ; i ++){
+					var code = records[i].get('code');
+					ids.push(code)
+				}
+				
+				if(ids.length == 0){
+					Ext.Msg.show({
+						title : '系统提示',
+						msg : '没有可删除的记录，请检查记录是否无效!',
+						buttons : Ext.Msg.OK,
+						icon : Ext.MessageBox.ERROR
+					});
+					return;
+				}
+				Ext.Msg.confirm('提示', '你确定删除['+ids.length+']条记录?', function(btn) {
 					if (btn == 'yes') {
 						Ext.Ajax.request({
-							url : project+'/admin/channel!debug.action',
+							url : project+'/admin/channel!delete.cgi',
 							params : {
-								id : record.get('id'),
-								turl: record.get('url')
+								codes : ids
 							},
 							success:function(response,option){
 								var obj = Ext.util.JSON.decode(response.responseText);
 								if(obj.success){
-									createResultWin(record.get('url'),obj);
+									Ext.Msg.show({
+										title : '系统提示',
+										msg : obj.msg,
+										buttons : Ext.Msg.OK,
+										fn:function(){
+											app.ds_data.removeAll();
+											app.ds_data.load({
+												params:{
+													start:0,
+													limit:app.qp.limit
+												}
+											})
+										},
+										icon : Ext.MessageBox.INFO
+									});
 								}else{
 									Ext.Msg.show({
 										title : '系统提示',
@@ -83,83 +171,9 @@ Ext.onReady(function(){
 			                }
 						})
 					}
-				});
-			}else{
-				Ext.Msg.show({
-					title : '系统提示',
-					msg : '请选择需要测试的站点!',
-					buttons : Ext.Msg.OK,
-					icon : Ext.MessageBox.ERROR
-				});
+				})
 			}
 		}
-	});
-	
-	app.btn_create = new Ext.Button({
-		text : '创建',
-		iconCls : 'icon-add',
-		disabled:false,
-		handler:function(){
-			app.data_form.form.reset();
-			
-			/**
-			app.data_form.form.findField('mtype').setValue('add');
-			app.data_form.form.findField('entity.id').setValue('');
-			app.data_form.form.findField('entity.parentId').setValue('');
-			app.data_form.form.findField('entity.name').setValue('');
-			app.data_form.form.findField('entity.url').setValue('');
-			app.data_form.form.findField('entity.type').setValue('');
-			app.data_form.form.findField('entity.remarks').setValue('');
-			app.data_form.form.findField('entity.status').setValue('');
-			app.data_form.form.findField('entity.createtime').setValue('');
-			app.data_form.form.findField('entity.modifytime').setValue('');
-			**/
-			
-			Ext.getCmp('data_form_reset').show();
-			var win = Ext.getCmp('add_win');
-			win.setTitle("创建站点");
-			win.show();
-		}
-	});
-	
-	app.btn_edit = new Ext.Button({
-		text : '编辑',
-		iconCls : 'icon-world_edit',
-		disabled:false,
-		handler:function(){
-			if(app.grid.getSelectionModel().getSelected()){
-				Ext.getCmp('data_form_reset').hide();
-				app.data_form.form.findField('mtype').setValue('edit');
-				var record = app.grid.getSelectionModel().getSelected();
-				
-				app.data_form.form.findField('entity.id').setValue(record.get('id'));
-				app.data_form.form.findField('entity.parentId').setValue(record.get('parentId'));
-				app.data_form.form.findField('entity.name').setValue(record.get('name'));
-				app.data_form.form.findField('entity.url').setValue(record.get('url'));
-				app.data_form.form.findField('entity.type').setValue(record.get('type'));
-				app.data_form.form.findField('entity.remarks').setValue(record.get('remarks'));
-				app.data_form.form.findField('entity.status').setValue(record.get('status'));
-				app.data_form.form.findField('entity.createtime').setValue(record.get('createtime'));
-				app.data_form.form.findField('entity.modifytime').setValue(record.get('modifytime'));
-				
-				var win = Ext.getCmp('add_win');
-				win.setTitle("编辑站点");
-				win.show();
-			}else{
-				Ext.Msg.show({
-					title : '系统提示',
-					msg : '请选择需要编辑的站点!',
-					buttons : Ext.Msg.OK,
-					icon : Ext.MessageBox.ERROR
-				});
-			}
-		}
-	});
-	
-	app.btn_delete = new Ext.Button({
-		text : '删除',
-		iconCls : 'icon-cross',
-		disabled:false
 	});
 	
 	app.btn_disabled = new Ext.Button({
@@ -179,10 +193,10 @@ Ext.onReady(function(){
 				var ids = [];
 				for(i = 0 ; i < records.length ; i ++){
 					var status = records[i].get('status');
-					if(status != 1){
+					if(status == 0){
 						continue;
 					}
-					ids.push(records[i].get('id'))
+					ids.push(records[i].get('channelcode'))
 				}
 				
 				if(ids.length == 0){
@@ -198,9 +212,9 @@ Ext.onReady(function(){
 				Ext.Msg.confirm('提示', '你确定禁用['+ids.length+']条记录?', function(btn) {
 					if (btn == 'yes') {
 						Ext.Ajax.request({
-							url : project+'/admin/channel!disable.action',
+							url : project+'/admin/channel!disable.cgi',
 							params : {
-								ids : ids
+								codes : ids
 							},
 							success:function(response,option){
 								var obj = Ext.util.JSON.decode(response.responseText);
@@ -261,10 +275,10 @@ Ext.onReady(function(){
 				var ids = [];
 				for(i = 0 ; i < records.length ; i ++){
 					var status = records[i].get('status');
-					if(status != 0){
+					if(status == 1){
 						continue;
 					}
-					ids.push(records[i].get('id'))
+					ids.push(records[i].get('channelcode'))
 				}
 				
 				if(ids.length == 0){
@@ -280,9 +294,9 @@ Ext.onReady(function(){
 				Ext.Msg.confirm('提示', '你确定启用['+ids.length+']条记录?', function(btn) {
 					if (btn == 'yes') {
 						Ext.Ajax.request({
-							url : project+'/admin/channel!enable.action',
+							url : project+'/admin/channel!enable.cgi',
 							params : {
-								ids : ids
+								codes : ids
 							},
 							success:function(response,option){
 								var obj = Ext.util.JSON.decode(response.responseText);
@@ -316,11 +330,53 @@ Ext.onReady(function(){
 		}
 	});
 	
+	var bdistrict_store = new Ext.data.Store({
+		proxy : new Ext.data.HttpProxy({
+			url : project + '/admin/bdistrict!combo.cgi' 
+		}),
+		reader : new Ext.data.JsonReader({
+			root : 'records'
+		}, [
+			{name : 'code',type : 'string'},
+			{name : 'name',type : 'string'}
+		])
+	})
+	/**
+	 * 业务区下拉框
+	 */
+	var bdistrict_combo = new Ext.form.ComboBox({
+			fieldLabel : '业务区',
+			hiddenName:'entity.bdcode',
+			name: 'bdcode', 
+			anchor: '80%',
+			xtype:'combo',
+	        valueField: 'code',
+	        displayField: 'name',
+	        triggerAction:'all',
+	        mode: 'remote',
+			store:bdistrict_store,
+            editable:false,
+			listeners : {
+				'select': function() {
+					if(queryConditionPanel.form.isValid()){
+						app.qp = getComps2Object(queryConditionPanel);
+						app.qp.start = 0;
+						app.qp.limit = 20;
+						Ext.apply(app.ds_data, {
+							baseParams: app.qp
+						});
+						app.ds_data.removeAll();
+						app.ds_data.load();
+					}
+				}
+			}
+	});
+	
 	var queryConditionPanel = new Ext.form.FormPanel({
 		border: false,
 		layout: 'form', 
 		width: '100%', 
-		height: 60,
+		height: 40,
 		autoScroll: false,
 		renderTo:'grid-query',
 		bodyStyle: 'padding:10px',
@@ -337,10 +393,19 @@ Ext.onReady(function(){
 		                style: 'text-align: left; ',
 		      	        labelWidth: 80,  
 		                labelAlign: 'right',  
+		                items: [bdistrict_combo]  
+		            }),
+		            new Ext.Panel({  
+		                columnWidth: .2,  
+		                layout: 'form',
+		                border: false,  
+		                style: 'text-align: left; ',
+		      	        labelWidth: 80,  
+		                labelAlign: 'right',  
 		                items: [  
 		                    {  
-		                    	fieldLabel: '站点名称',
-								name: 'entity.name',  
+		                    	fieldLabel: '渠道代码',
+								name: 'entity.channelcode',  
 								xtype:'textfield',
 								anchor: '80%',
 								listeners : {
@@ -371,43 +436,9 @@ Ext.onReady(function(){
 		                labelAlign: 'right',  
 		                items: [  
 		                    {  
-		                    	fieldLabel: '站点ID',
-								name: 'entity.id',  
+		                    	fieldLabel: '渠道名称',
+								name: 'entity.channelname',  
 								xtype:'textfield',
-								vtype:'integer',
-								anchor: '80%',
-								listeners : {
-									'specialkey' : function(field, e) {
-										if (e.getKey() == Ext.EventObject.ENTER) {
-											if(queryConditionPanel.form.isValid()){
-												app.qp = getComps2Object(queryConditionPanel);
-												app.qp.start = 0;
-												app.qp.limit = 20;
-												Ext.apply(app.ds_data, {
-													baseParams: app.qp
-												});
-												app.ds_data.removeAll();
-												app.ds_data.load();
-											}
-										}
-									}
-								}
-		                    }  
-		                ]  
-		            }),
-		            new Ext.Panel({  
-		                columnWidth: .2,  
-		                layout: 'form',
-		                border: false,  
-		                style: 'text-align: left; ',
-		      	        labelWidth: 80,  
-		                labelAlign: 'right',  
-		                items: [  
-		                    {  
-		                    	fieldLabel: '站点父ID',
-								name: 'entity.parentId',  
-								xtype:'textfield',
-								vtype:'integer',
 								anchor: '80%',
 								listeners : {
 									'specialkey' : function(field, e) {
@@ -467,72 +498,49 @@ Ext.onReady(function(){
 		                    }  
 		                ]  
 		            }),
-		            new Ext.Panel({  
-		                columnWidth: .2,  
-		                layout: 'form',
-		                border: false,  
-		                style: 'text-align: left; ',
-		      	        labelWidth: 80,  
-		                labelAlign: 'right',  
-		                items: [  
-		                    {  
-		                    	fieldLabel: '站点类型',
-								name: 'entity.type', 
-								anchor: '80%',
-								xtype:'combo',
-						        valueField: 'id',
-						        displayField: 'name',
-						        triggerAction:'all',
-						        mode: 'local',
-						        store: new Ext.data.SimpleStore({
-						            fields: ['id','name'],
-						            //[2,'解封'],
-						            data: [[null,'请选择'],[1,'图片类型'],[2,'文章类型']]
-						        }),
-					            editable:false,
-								listeners : {
-									'select': function() {
-										if(queryConditionPanel.form.isValid()){
-											app.qp = getComps2Object(queryConditionPanel);
-											app.qp.start = 0;
-											app.qp.limit = 20;
-											Ext.apply(app.ds_data, {
-												baseParams: app.qp
-											});
-											app.ds_data.removeAll();
-											app.ds_data.load();
-										}
+					new Ext.Panel({
+		                columnWidth: .1,  
+						border: false,  
+				        layout: 'form',  
+		                style: 'text-align: center; ',
+						bodyStyle: 'padding:0 30px',
+				        items: [
+							new Ext.Button({
+								text : '查询',
+								iconCls : 'icon-search',
+								handler : function() {
+									if(queryConditionPanel.form.isValid()){
+										app.qp = getComps2Object(queryConditionPanel);
+										app.qp.start = 0;
+										app.qp.limit = 20;
+										Ext.apply(app.ds_data, {
+											baseParams: app.qp
+										});
+										app.ds_data.removeAll();
+										app.ds_data.load();
 									}
 								}
-		                    }  
-		                ]  
-		            })
+							})
+				        ]
+					}), 
+					new Ext.Panel({
+						columnWidth: .1,
+						border: false,  
+				        layout: 'form',  
+		                style: 'text-align: center; ',
+						bodyStyle: 'padding:0 30px',
+				        items: [
+							new Ext.Button({
+								text : '重置',
+								iconCls : 'icon-arrow_refresh_small',
+								handler : function() {
+									queryConditionPanel.form.reset();
+								}
+							})
+				        ]
+					}) 
 		        ]  
-		    }),
-			new Ext.Panel({
-				border: false,  
-		        layout: 'form',  
-                style: 'text-align: center; ',
-				bodyStyle: 'padding:0 30px',
-		        items: [
-					new Ext.Button({
-						text : '查询',
-						iconCls : 'icon-search',
-						handler : function() {
-							if(queryConditionPanel.form.isValid()){
-								app.qp = getComps2Object(queryConditionPanel);
-								app.qp.start = 0;
-								app.qp.limit = 20;
-								Ext.apply(app.ds_data, {
-									baseParams: app.qp
-								});
-								app.ds_data.removeAll();
-								app.ds_data.load();
-							}
-						}
-					})
-		        ]
-			}) 
+		    })
 		]
 	});
 	
@@ -558,62 +566,47 @@ Ext.onReady(function(){
 				name : 'mtype',
 				value:'add'
 			},{
-				xtype:'hidden',
-				fieldLabel : '站点ID',
-				name : 'entity.id'
-			},{
 				xtype:'combo',
-				fieldLabel : '父站点',
-				hiddenName:'entity.parentId',
-		        valueField: 'id',
+				fieldLabel : '所属',
+				hiddenName:'entity.bdistrict.code',
+		        valueField: 'code',
 		        displayField: 'name',
 		        triggerAction:'all',
 				mode:'remote',
-				store:new Ext.data.Store({
-					proxy : new Ext.data.HttpProxy({
-						url : project + '/admin/channel!root.cgi?entity.parentId=0&limit=1000' 
-					}),
-					reader : new Ext.data.JsonReader({
-						root : 'records'
-					}, [
-						{name : 'id',type : 'int'},
-						{name : 'name',type : 'string'}
-					])
-				}),
+				store:bdistrict_store,
 	            editable:false,
 				emptyText : '请选择!',
 				allowBlank:false
 			},{ 
-				fieldLabel : '网站名称',
-				name : 'entity.name',
-				maxLength:32
+				fieldLabel : '渠道名称',
+				name : 'entity.channelname',
+				maxLength:32,
+				allowBlank:false
 			},{ 
-				fieldLabel : '网站地址',
-				name : 'entity.url',
+				fieldLabel : '渠道代码',
+				name : 'entity.channelcode',
+				maxLength:32,
+				allowBlank:false,
+				listeners:{
+					'change':function(){
+						var mtype = app.data_form.form.findField('mtype').getValue();
+						var channelcode = app.data_form.form.findField('entity.channelcode').getValue();
+						if(mtype == 'add' || mtype == ''){
+							app.myMask.show();
+							//TODO 后台检查渠道代码是否被占用 AJAX
+							app.myMask.hide();
+					        Ext.Msg.alert("提示", "渠道代码["+channelcode+"]可用!");
+						}
+					}
+				}
+			},{
+				fieldLabel : '地址',
+				name : 'entity.address',
 				maxLength:256
-			},{
-				xtype:'combo',
-				fieldLabel : '网站类型',
-				hiddenName : 'entity.type',
-		        valueField: 'id',
-		        displayField: 'name',
-		        triggerAction:'all',
-		        mode: 'local',
-		        store: new Ext.data.SimpleStore({
-		            fields: ['id','name'],
-		            data: [[1,'图片'],[2,'文章'],[3,'其他']]
-		        }),
-	            editable:false,
-				emptyText : '请选择!',
-				allowBlank:false
-			},{
-				xtype: 'textarea',
-				fieldLabel : '网站介绍',
-				name : 'entity.remarks'
 			},{
 				//下拉选择框
 				xtype:'combo',
-				fieldLabel : '网站状态',
+				fieldLabel : '渠道状态',
 				hiddenName:'entity.status',
 		        valueField: 'id',
 		        displayField: 'name',
@@ -621,15 +614,11 @@ Ext.onReady(function(){
 		        mode: 'local',
 		        store: new Ext.data.SimpleStore({
 		            fields: ['id','name'],
-		            data: [[1,'可用'],[0,'禁用']]
+		            data: [[null,'请选择'],[1,'可用'],[0,'禁用']]
 		        }),
 	            editable:false,
 				emptyText : '请选择!',
 				allowBlank:false
-			},{ 
-				xtype:'hidden',
-				name:'entity.modifytime',
-				value:'true'
 			},{ 
 				xtype:'hidden',
 				name:'entity.createtime',
@@ -814,7 +803,7 @@ Ext.onReady(function(){
         },
 		sm:app.sm,
 		//'标题：','-',app.text_phone_number,app.btn_search_code,'-',
-		tbar : [app.btn_bug,'-',app.btn_create,'-',app.btn_edit,'-',app.btn_delete,'-',app.btn_enabled,'-',app.btn_disabled],
+		tbar : [app.btn_create,'-',app.btn_edit,'-',app.btn_delete,'-',app.btn_enabled,'-',app.btn_disabled],
 		bbar : app.ptb
 	});
 	
@@ -838,81 +827,3 @@ Ext.onReady(function(){
 
     app.grid.render('grid-div');
 });
-
-function createResultWin(url,obj){
-	var win = new Ext.Window({
-		id:'result_win',
-		title:'测试结果',
-		width:500,
-		iconCls:'icon-bug_go',
-		resizable : false,
-		autoHeight : true,
-		modal : true,
-		closable:false,
-		animCollapse : true,
-		pageY : 20,
-		pageX : document.body.clientWidth / 2 - 420 / 2,
-		animateTarget : Ext.getBody(),
-		constrain : true,
-		items:[
-			new Ext.FormPanel({
-				id:'result_form',
-				labelWidth : 110,
-				labelAlign : 'right',
-				border : false,
-				baseCls : 'x-plain',
-				bodyStyle : 'padding:5px 5px 0',
-				anchor : '100%',
-				defaults : {
-					width : 300,
-					msgTarget : 'side'
-				},
-				defaultType : 'textfield',
-				items : [
-					{
-						fieldLabel : '网址',
-						name : 'entity.Content-Type',
-						value:url
-					},{
-						fieldLabel : '响应代码',
-						name : 'entity.responseStatus',
-						value:obj.object.responseStatus
-					},{
-						fieldLabel : '页面类型',
-						name : 'entity.contentType',
-						value:obj.object.contentType
-					},{
-						fieldLabel : '页面大小',
-						name : 'entity.contentLength',
-						value:obj.object.contentLength
-					},{
-						fieldLabel : '修改时间',
-						name : 'entity.lastModified',
-						value:obj.object.lastModified
-					},{
-						fieldLabel : '缓存时长',
-						name : 'entity.cacheControl',
-						value:obj.object.cacheControl
-					},{
-						fieldLabel : '响应时间',
-						name : 'entity.endDate',
-						value:'暂无'
-					}		
-				],
-				buttonAlign : 'center',
-				minButtonWidth : 60,
-				buttons : [
-					{
-						iconCls:'icon-cancel',
-						text : '关闭',
-						handler : function() {
-							Ext.getCmp('result_form').form.reset();
-							var win = Ext.getCmp('result_win');
-							win.close();
-						}
-					}
-				]
-			})
-		]
-	}).show();
-}
