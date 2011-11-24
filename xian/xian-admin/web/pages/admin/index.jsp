@@ -6,6 +6,7 @@
 		<title>首页</title>
 		<script type="text/javascript">
 			var project = '${ctx}';
+			var token = '${param.token}';
 		</script>
 		<link href="${pageContext.request.contextPath}/styles/eredg4.css" rel="stylesheet" type="text/css">		
 		<script type="text/javascript" src="${pageContext.request.contextPath}/scripts/other/extTabCloseMenu.js"></script>	
