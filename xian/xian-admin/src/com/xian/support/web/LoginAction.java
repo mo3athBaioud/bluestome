@@ -30,6 +30,8 @@ public class LoginAction extends BaseAction {
 	
 	private String password;
 	
+	private String checkcode;
+	
 	@Autowired
 	private StaffManager staffManager;
 	
@@ -44,22 +46,27 @@ public class LoginAction extends BaseAction {
 			 logger.info(" > username:"+username);
 			 logger.info(" > password:"+password);
 			 out = getOut(response);
-			 Staff staff = staffManager.getStaffByUsername(username);
-			 if(null != staff){
-			 	String md5 = MD5.getInstance().getMD5ofStr(password);
-			 	if(md5.equals(staff.getPassword())){
-			 		//TODO 设置SESSION属性
-			 		 String token = UUID.randomUUID().toString();
-			 		 request.getSession().setAttribute(token, staff);
-			 		 logger.info(" > token:{}",token);
-					 out.println("{success:true,msg:'登录成功!',token:'"+token+"'}"); 
-			 	}else{
-			 		//TODO 密码不正确
-					 out.println("{success:false,msg:'密码不正确!',errorType:1}"); 
-			 	}
+			 String code = (String)request.getSession().getAttribute("rand");
+			 if(!code.equals(checkcode)){
+				 out.println("{success:false,msg:'验证码错误!',errorType:4}"); 
 			 }else{
-				 //TODO 用户名不存在
-				 out.println("{success:false,msg:'用户名不存在!',errorType:1}"); 
+				 Staff staff = staffManager.getStaffByUsername(username);
+				 if(null != staff){
+				 	String md5 = MD5.getInstance().getMD5ofStr(password);
+				 	if(md5.equals(staff.getPassword())){
+				 		//TODO 设置SESSION属性
+				 		 String token = UUID.randomUUID().toString();
+				 		 request.getSession().setAttribute(token, staff);
+				 		 logger.info(" > token:{}",token);
+						 out.println("{success:true,msg:'登录成功!',token:'"+token+"'}"); 
+				 	}else{
+				 		//TODO 密码不正确
+						 out.println("{success:false,msg:'密码不正确!',errorType:1}"); 
+				 	}
+				 }else{
+					 //TODO 用户名不存在
+					 out.println("{success:false,msg:'用户名不存在!',errorType:1}"); 
+				 }
 			 }
 		}catch(Exception e){
 			 out.println("{success:false,msg:'异常【"+e.getMessage()+"】'}");
@@ -85,6 +92,14 @@ public class LoginAction extends BaseAction {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getCheckcode() {
+		return checkcode;
+	}
+
+	public void setCheckcode(String checkcode) {
+		this.checkcode = checkcode;
 	}
 	
 	
