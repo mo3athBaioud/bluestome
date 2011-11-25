@@ -68,7 +68,7 @@ Ext.onReady(function() {
 												, {
 													fieldLabel : '验证码',
 													baseCls : 'x-plain',
-													bodyStyle : 'padding:0 0 0 0',
+//													bodyStyle : 'padding:0 0 0 0',
 													layout:'column',
 													items:[
 														{
@@ -87,7 +87,7 @@ Ext.onReady(function() {
 															columnWidth:.3,
 															items:[{
 																xtype:'panel',
-																html:'<img src='+project+'/checkcode.cgi?d='+new Date()+'" >'
+																html:'<a href="#" ><img src='+project+'/checkcode.cgi?d='+new Date()+'" ></a>'
 															}]
 														}
 													]
