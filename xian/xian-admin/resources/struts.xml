@@ -29,11 +29,20 @@
 	<!-- 用于CRUD Action的parent package -->
 	<package name="crud-default" extends="convention-default">
 		<interceptors>
+			<!-- 
+			<interceptor name="visitInterceptor"
+				class="com.xian.support.cms.interceptor.VisitInterceptor">
+					<param name="name">访问控制拦截</param>
+			</interceptor>
+			 -->
 			<interceptor-stack name="crudStack">
 				<interceptor-ref name="store">
 					<param name="operationMode">AUTOMATIC</param>
 				</interceptor-ref>
 				<interceptor-ref name="paramsPrepareParamsStack" />
+				<!-- 
+				<interceptor-ref name="visitInterceptor" />
+				 -->
 			</interceptor-stack>
 		</interceptors>
 
