@@ -61,3 +61,44 @@ PCPOPHtmlParser.java
 		}
 		
 	}
+	
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 */
+	static String author2(String url) throws Exception{
+		Parser parser = new Parser();
+		parser.setURL(url);
+		parser.setEncoding("GB2312");
+
+		NodeFilter fileter = new NodeClassFilter(Div.class);
+		NodeList list = parser.extractAllNodesThatMatch(fileter).extractAllNodesThatMatch(
+				new HasAttributeFilter("class", "otb14"));
+		String author = null;
+		if (list != null && list.size() > 0) {
+			Div div = (Div)list.elementAt(0);
+			String tmp = div.getStringText();
+			author = tmp;
+		}
+		
+		if(null == author){
+//			logger.debug("重新解析作者栏");
+			parser = new Parser();
+			parser.setURL(url);
+			parser.setEncoding("GB2312");
+			
+			NodeFilter fileter1 = new NodeClassFilter(Div.class);
+			NodeList list1 = parser.extractAllNodesThatMatch(fileter1).extractAllNodesThatMatch(
+					new HasAttributeFilter("class", "pop_2_1_2"));
+			if(null != list1 && list1.size() > 0){
+				Div div = (Div)list1.elementAt(1);
+				String tmp = div.getStringText();
+				author = tmp.substring(tmp.indexOf("</a>")+4);
+				logger.debug("author:"+author);
+			}
+		}
+		return author;
+	}
+	
