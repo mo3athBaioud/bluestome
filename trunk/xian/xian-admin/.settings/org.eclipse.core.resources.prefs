@@ -1,4 +1,4 @@
-#Wed Nov 23 14:34:26 CST 2011
+#Fri Nov 25 13:06:40 CST 2011
 eclipse.preferences.version=1
 encoding//resources/application.properties=UTF-8
 encoding//web/commons/extjs.jsp=UTF-8
@@ -14,5 +14,6 @@ encoding//web/scripts/other/Tab.js=UTF-8
 encoding//web/scripts/other/eredg4.js=UTF-8
 encoding//web/scripts/other/extTabCloseMenu.js=UTF-8
 encoding//web/scripts/util/Lazyload.js=UTF-8
+encoding//web/scripts/util/MD5.js=UTF-8
 encoding//web/scripts/util/VType.js=UTF-8
 encoding//web/scripts/util/utils-panel.js=UTF-8
