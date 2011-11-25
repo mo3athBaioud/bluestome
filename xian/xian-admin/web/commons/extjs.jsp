@@ -14,4 +14,5 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/scripts/other/TitleBar.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/scripts/other/PageSizePlugin.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/scripts/extjs/ux/Ext.ux.form.LovCombo.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/scripts/util/MD5.js"></script>
 
