@@ -11,9 +11,9 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TcpMessageEncoder implements ProtocolEncoder {
+public class SkyAndroidEncoder implements ProtocolEncoder {
 
-	private static final Logger logger = LoggerFactory.getLogger(TcpMessageEncoder.class);
+	private static final Logger logger = LoggerFactory.getLogger(SkyAndroidEncoder.class);
 	private final Charset charset = Charset.forName("UTF-8"); 
 	
 	/**
@@ -21,23 +21,7 @@ public class TcpMessageEncoder implements ProtocolEncoder {
 	 */
 	public void encode(IoSession session, Object message, ProtocolEncoderOutput out)
 			throws Exception {
-		IoBuffer buf = IoBuffer.allocate(1024);
-//        CharsetEncoder ce = charset.newEncoder();  
-        if( message instanceof byte[])
-        {
-        	byte[] bs = (byte[])message;
-        	for(byte b:bs){
-            	buf.put(b);
-        	}
-            buf.flip();  
-        	logger.debug(" > encoder.body:{}",bs);
-        }
-//        if(message instanceof String)
-//        {
-//        	buf.putString((String)message, ce);
-//        }
-        out.write(buf.array());
-        out.flush();
+		
 	}
 
 	public void dispose(IoSession arg0) throws Exception {
