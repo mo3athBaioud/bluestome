@@ -1,8 +1,5 @@
 package com.skymobi.android.transport.codec;
 
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 
@@ -20,16 +17,31 @@ import org.slf4j.LoggerFactory;
 public class TcpMessageDecoder implements ProtocolDecoder {
 	private static final Logger logger = LoggerFactory.getLogger(TcpMessageDecoder.class);
 	
+	/**
+	 * 对输入内容的解码
+	 */
 	public void decode(IoSession session, IoBuffer in, ProtocolDecoderOutput out)
 			throws Exception {
+		/*
+		//字符串解码
 		IoBuffer buf = IoBuffer.allocate(100).setAutoExpand(true);  
         CharsetDecoder cd = Charset.forName("UTF-8").newDecoder();  
-          
         while(in.hasRemaining()){
         	buf.put(in.get());
     	}
-        buf.flip();  
+        buf.flip();
         out.write(buf.getString(cd));
+        */
+		IoBuffer buf = IoBuffer.allocate(1024);    
+        while(in.hasRemaining()){
+        	buf.put(in.get());
+    	}
+        buf.flip();
+        byte[] bs = buf.array();
+        logger.info(" > decode.buf.length:{}",bs.length);
+        logger.info(" > decode.buf.conent:{}",bs);
+        out.write(bs);
+//        out.write(in);
     }
 
 	public static String WritebyteToString(byte[] data, byte fillbyte) {
