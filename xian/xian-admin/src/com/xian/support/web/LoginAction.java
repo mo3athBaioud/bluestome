@@ -1,5 +1,6 @@
 package com.xian.support.web;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.UUID;
 
@@ -54,9 +55,14 @@ public class LoginAction extends BaseAction {
 				 if(null != staff){
 				 	String md5 = MD5.getInstance().getMD5ofStr(password);
 				 	if(md5.equals(staff.getPassword())){
+				 		//移除验证码SESSION
+				 		request.getSession().removeAttribute("rand");
+				 		//移除原有的用户会话
+				 		request.getSession().removeAttribute(Constants.USER_SESSION);
+				 		
 				 		//TODO 设置SESSION属性
 				 		 String token = UUID.randomUUID().toString();
-				 		 request.getSession().setAttribute(token, staff);
+				 		 request.getSession().setAttribute(Constants.USER_SESSION, staff);
 				 		 logger.info(" > token:{}",token);
 						 out.println("{success:true,msg:'登录成功!',token:'"+token+"'}"); 
 				 	}else{
@@ -78,6 +84,31 @@ public class LoginAction extends BaseAction {
 		}
 	}
 
+	/**
+	 * 退出系统
+	 * @throws IOException
+	 */
+	public void logout() throws IOException{
+		response.setCharacterEncoding(Constants.CHARSET);
+		PrintWriter out = null;
+		try{
+			out = getOut(response);
+			Object obj = request.getSession().getAttribute(Constants.USER_SESSION);
+			if(null != obj){
+				request.getSession().removeAttribute(Constants.USER_SESSION);
+			}
+			out.print("{success:true,msg:'退出成功',url:'"+request.getContextPath()+"/login3.jsp'}");
+		}catch(Exception e){
+			out.println("{success:false,msg:'退出系统出现异常【"+e.getMessage()+"】'}");
+		}finally{
+			if(null != out){
+				out.flush();
+				out.close();
+			}
+			
+		}
+	}
+	
 	public String getPassword() {
 		return password;
 	}
