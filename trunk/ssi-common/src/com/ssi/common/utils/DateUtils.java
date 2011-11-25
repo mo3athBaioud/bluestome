@@ -49,6 +49,11 @@ public class DateUtils {
 
 	public static final String FULL_STANDARD_PATTERN = "yyyyMMdd HH:mm:ss";
 
+	public static final String FULL_STANDARD_PATTERN_2 = "yyyy-MM-dd HH:mm:ss";
+	
+	public static final String FULL_STANDARD_PATTERN_3 = "yyyy-MM-dd HH:mm:ss";
+	
+	public static final String FULL_STANDARD_PATTERN_4 = "yyyyMMdd HH:mm:ss";
 	/**
 	 * 返回中文格式的当前日期
 	 * 
