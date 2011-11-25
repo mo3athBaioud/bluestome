@@ -65,7 +65,6 @@ Ext.onReady(function() {
 														}
 													}
 												}
-												/**
 												, {
 													fieldLabel : '验证码',
 													baseCls : 'x-plain',
@@ -76,9 +75,9 @@ Ext.onReady(function() {
 															columnWidth:.7,
 															items:[
 																{
+												                	id:'checkcode',
 																	width:200,
 												                	xtype:'textfield',
-												                	id:'checkcode',
 																	name:'checkcode',
 																	blankText : '请输入验证码!',
 																	allowBlank : false
@@ -88,12 +87,11 @@ Ext.onReady(function() {
 															columnWidth:.3,
 															items:[{
 																xtype:'panel',
-																html:'<img src="/servlet/CheckCodeServlet?d'+new Date()+'" >'
+																html:'<img src='+project+'/checkcode.cgi?d='+new Date()+'" >'
 															}]
 														}
 													]
 												}
-												**/
 												]
 									},{
 										title : '关于',
@@ -206,6 +204,10 @@ Ext.onReady(function() {
 									var password = Ext.getCmp('loginForm').findById('password');
 									password.focus();
 									password.validate();
+								} else if(errtype == '4'){
+									var checkcode = Ext.getCmp('loginForm').findById('checkcode');
+									checkcode.focus();
+									checkcode.validate();
 								}
 							});
 						}
