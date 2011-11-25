@@ -39,7 +39,6 @@ public class StaffManagerTest {
 		}
 	}
 	
-	@Test
 	public void getTotal(){
 		Staff entity = new Staff();
 		int t = staffManager.getTotalBySql(entity);
@@ -55,6 +54,26 @@ public class StaffManagerTest {
 			}
 		}
 		System.out.println(" > t:" + t);
+	}
+	
+	@Test
+	public void getStaffByUsername(){
+		String username = "bluestome";
+		Staff staff = staffManager.getStaffByUsername(username);
+		if(null != staff){
+			System.out.println(" > "+staff.getUsername()+"|"+staff.getPassword());
+		}
+	}
+	
+	@Test
+	public void checkUsername(){
+		String username = "bluestome1";
+		boolean b = staffManager.checkUserName(username);
+		if(b){
+			System.err.println(" > username["+username+"] is already exists!");
+		}else{
+			System.out.println(" > username["+username+"] can use!");
+		}
 	}
 	
 }
