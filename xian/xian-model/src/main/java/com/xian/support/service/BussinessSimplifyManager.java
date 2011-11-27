@@ -153,7 +153,7 @@ public class BussinessSimplifyManager {
 				sql.append(" and a.d_id = ").append(entity.getId()).append("\n");
 			}
 			if(null != entity.getBtype()){
-				sql.append(" and a.getBtype = ").append(entity.getBtype()).append("\n");
+				sql.append(" and a.d_btype = ").append(entity.getBtype()).append("\n");
 			}
 			if(null != entity.getBdistrict() && !entity.getBdistrict().equals("")){
 				sql.append(" and a.d_bdistrict = '").append(entity.getBdistrict()).append("'\n");
@@ -205,7 +205,7 @@ public class BussinessSimplifyManager {
 				sql.append(" and a.d_id = ").append(entity.getId()).append("\n");
 			}
 			if(null != entity.getBtype()){
-				sql.append(" and a.getBtype = ").append(entity.getBtype()).append("\n");
+				sql.append(" and a.d_btype = ").append(entity.getBtype()).append("\n");
 			}
 			if(null != entity.getBdistrict() && !entity.getBdistrict().equals("")){
 				sql.append(" and a.d_bdistrict = '").append(entity.getBdistrict()).append("'\n");
