@@ -41,6 +41,15 @@ public class BussinessSimplify extends AbstractEntity {
 	@Column(name="d_support_type")
 	private Integer suuporttype;
 
+	@Column(name="d_ismarketing")
+	private Integer isMarketing;
+	
+	@Column(name="d_msuccess")
+	private Integer mSuccess;
+	
+	@Column(name="d_platsell")
+	private Integer platsell;
+	
 	public String getBdistrict() {
 		return bdistrict;
 	}
@@ -88,7 +97,29 @@ public class BussinessSimplify extends AbstractEntity {
 	public void setSuuporttype(Integer suuporttype) {
 		this.suuporttype = suuporttype;
 	}
-	
-	
 
+	public Integer getIsMarketing() {
+		return isMarketing;
+	}
+
+	public void setIsMarketing(Integer isMarketing) {
+		this.isMarketing = isMarketing;
+	}
+
+	public Integer getMSuccess() {
+		return mSuccess;
+	}
+
+	public void setMSuccess(Integer success) {
+		mSuccess = success;
+	}
+
+	public Integer getPlatsell() {
+		return platsell;
+	}
+
+	public void setPlatsell(Integer platsell) {
+		this.platsell = platsell;
+	}
+	
 }
