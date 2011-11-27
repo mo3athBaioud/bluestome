@@ -62,8 +62,11 @@ public class StaffManager {
 		if (entity.getId() != null && entity.getId() != 0) {
 			criteria.add(Restrictions.eq("id", entity.getId()));
 		}
+		if (StringUtils.isNotBlank(entity.getUsername())) {
+			criteria.add(Restrictions.eq("username", entity.getUsername()));
+		}
 		if (StringUtils.isNotBlank(entity.getChannelcode())) {
-			criteria.add(Restrictions.like("title", "%"+entity.getId()+"%"));
+			criteria.add(Restrictions.like("title", "%"+entity.getChannelcode()+"%"));
 		}
 		if (null != entity.getStatus()) {
 			criteria.add(Restrictions.eq("status", entity.getStatus()));
@@ -142,7 +145,7 @@ public class StaffManager {
 				sql.append(" and a.d_channel_code = '").append(entity.getChannelcode()).append("'\n");
 			}
 			if(null != entity.getUsername() && !entity.getUsername().equals("")){
-				sql.append(" and a.d_username like '%").append(entity.getUsername()).append("%'\n");
+				sql.append(" and a.d_username = '").append(entity.getUsername()).append("'\n");
 			}
 			if(null != entity.getStartDate() && null != entity.getEndDate()){
 				sql.append(" and a.d_createtime between '"+DateUtils.formatDate(entity.getStartDate(), DateUtils.FULL_STANDARD_PATTERN_2)).append("'");
@@ -177,7 +180,7 @@ public class StaffManager {
 				sql.append(" and a.d_channel_code = '").append(entity.getChannelcode()).append("'\n");
 			}
 			if(null != entity.getUsername() && !entity.getUsername().equals("")){
-				sql.append(" and a.d_username like '%").append(entity.getUsername()).append("%'\n");
+				sql.append(" and a.d_username = '").append(entity.getUsername()).append("'\n");
 			}
 			if(null != entity.getStartDate() && null != entity.getEndDate()){
 				sql.append(" and a.d_createtime between '"+DateUtils.formatDate(entity.getStartDate(), DateUtils.FULL_STANDARD_PATTERN_2)).append("'");
