@@ -67,7 +67,7 @@ public class LoginAction extends BaseAction {
 						 out.println("{success:true,msg:'登录成功!',token:'"+token+"'}"); 
 				 	}else{
 				 		//TODO 密码不正确
-						 out.println("{success:false,msg:'密码不正确!',errorType:1}"); 
+						 out.println("{success:false,msg:'密码不正确!',errorType:3}"); 
 				 	}
 				 }else{
 					 //TODO 用户名不存在
