@@ -29,7 +29,7 @@ public class BussinessSimplifylManagerTest {
 			bussinessSimplifyManager = null;
 	}
 	
-	@Test
+//	@Test
 	public void test(){
 		BussinessSimplify entity = new BussinessSimplify();
 		if(null != bussinessSimplifyManager)
@@ -52,4 +52,12 @@ public class BussinessSimplifylManagerTest {
 		}
 	}
 	
+	@Test
+	public void test2(){
+		StringBuffer sb = new StringBuffer();
+		for(int i=1;i<13;i++){
+			sb.append(",["+i+",'"+i+"']");
+		}
+		System.out.println(sb.toString());
+	}
 }
