@@ -24,12 +24,12 @@
 			"ahref":"/admin/staff.cgi",
 			"hrefTarget":"center2"
 	},{
-			"text":"谷歌",
+			"text":"业务数据管理",
 			"id":"06",
 			"iconCls":"icon-html",
 			"leaf":true,
 			"tabicon":"/images/html.png",
-			"ahref":"http://www.google.com.hk",
+			"ahref":"/data/bussinessSimplify.cgi",
 			"hrefTarget":"center2"
 	}
 ]
