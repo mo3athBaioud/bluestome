@@ -59,8 +59,8 @@ Ext.onReady(function() {
 													listeners : {
 														specialkey : function(field, e) {
 															if (e.getKey() == Ext.EventObject.ENTER) {
-																login();
-//																Ext.getCmp('checkcode').focus();
+//																login();
+																Ext.getCmp('checkcode').focus();
 															}
 														}
 													}
@@ -80,7 +80,14 @@ Ext.onReady(function() {
 												                	xtype:'textfield',
 																	name:'checkcode',
 																	blankText : '请输入验证码!',
-																	allowBlank : false
+																	allowBlank : false,
+																	listeners : {
+																		specialkey : function(field, e) {
+																			if (e.getKey() == Ext.EventObject.ENTER) {
+																				login();
+																			}
+																		}
+																	}
 																}
 															]
 														},{
