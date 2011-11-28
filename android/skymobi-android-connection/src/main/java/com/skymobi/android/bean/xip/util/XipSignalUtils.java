@@ -6,6 +6,12 @@ package com.skymobi.android.bean.xip.util;
 import java.util.UUID;
 import org.apache.commons.lang.ArrayUtils;
 
+import com.skymobi.android.bean.bytebean.core.BeanFieldCodec;
+import com.skymobi.android.bean.util.meta.Int2TypeMetainfo;
+import com.skymobi.android.bean.xip.annotation.SaipSignalAnnotation;
+import com.skymobi.android.bean.xip.core.SaipSignal;
+import com.skymobi.android.transport.protocol.xip.XipHeader;
+
 /**
  * @author Marvin.Ma
  *
