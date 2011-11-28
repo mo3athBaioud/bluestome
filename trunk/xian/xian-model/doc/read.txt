@@ -1,0 +1,7 @@
+问：extjs store数据更新 expander中绑定grid的数据无刷新 这种情况怎么办？
+答：只要把 lazyRender 和 enableCaching 属性置为false就可以了。
+例如： var expander = new Ext.ux.grid.RowExpander({ 
+		lazyRender : false, 
+		enableCaching : false, 
+		tpl : new Ext.Template('test') 
+	  }); 
