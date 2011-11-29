@@ -31,5 +31,13 @@
 			"tabicon":"/images/html.png",
 			"ahref":"/data/bussinessSimplify.cgi",
 			"hrefTarget":"center2"
+	},{
+			"text":"日志数据管理",
+			"id":"07",
+			"iconCls":"icon-html",
+			"leaf":true,
+			"tabicon":"/images/html.png",
+			"ahref":"/admin/noplog.cgi",
+			"hrefTarget":"center2"
 	}
 ]
