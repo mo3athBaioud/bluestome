@@ -12,7 +12,64 @@ Ext.onReady(function(){
     app.cm_utp = new Ext.grid.ColumnModel([
 		app.sm,
         {header: "ID", width: 100, sortable: true, dataIndex: 'id'},
-        {header: "业务类型", width: 100, sortable: true, dataIndex: 'btype'},
+        {header: "业务类型", width: 150, sortable: true, dataIndex: 'btype',renderer:function(v){
+			var x = parseInt(v);
+			var name = "未知业务代码";
+			switch(x){
+				case 1:
+					name = '无线音乐高级俱乐部会员推荐查询';
+					break;
+				case 2:
+					name = '139邮箱推荐查询';
+					break;
+				case 3:
+					name = '飞信会员推荐查询';
+					break;
+				case 4:
+					name = '号簿管家推荐查询';
+					break;
+				case 5:
+					name = '全曲下载推荐查询';
+					break;
+				case 6:
+					name = '手机报推荐查询';
+					break;
+				case 7:
+					name = '手机视频推荐查询';
+					break;
+				case 8:
+					name = '手机阅读推荐查询';
+					break;
+				case 9:
+					name = '手机游戏推荐查询';
+					break;
+				case 10:
+					name = '手机电视推荐查询';
+					break;
+				case 11:
+					name = '移动MM推荐查询';
+					break;
+				case 12:
+					name = 'GPRS流量包推荐查询';
+					break;
+				case 13:
+					name = '彩信包推荐查询';
+					break;
+				case 14:
+					name = '手机支付推荐查询';
+					break;
+				case 15:
+					name = 'WIFI推荐查询';
+					break;
+				case 16:
+					name = '手机地图推荐查询';
+					break;
+				default:
+					name = '默认';
+					break;
+			}
+			return name;
+        }},
         {header: "业务区代码", width: 100, sortable: true, dataIndex: 'bdistrict'},
         {header: "手机号码", width: 100, sortable: true, dataIndex: 'phonenum'},
         {header: "是否支持", width: 100, sortable: true, dataIndex: 'support',renderer:function(v){
@@ -491,6 +548,45 @@ Ext.onReady(function(){
 		      	        labelWidth: 80,  
 		                labelAlign: 'right',  
 		                items: [bdistrict_combo]  
+		            }),
+		            new Ext.Panel({  
+		                columnWidth: .2,  
+		                layout: 'form',
+		                border: false,  
+		                style: 'text-align: left; ',
+		      	        labelWidth: 80,  
+		                labelAlign: 'right',  
+		                items: [  
+		                    {  
+		                    	fieldLabel: '业务类型',
+								name: 'entity.btype',
+								anchor: '80%',
+								xtype:'combo',
+						        valueField: 'id',
+						        displayField: 'name',
+						        triggerAction:'all',
+						        mode: 'local',
+						        store: new Ext.data.SimpleStore({
+						            fields: ['id','name'],
+						            data: [[null,'请选择'],[0,'0'],[1,'1'],[2,'2'],[3,'3'],[4,'4'],[5,'5'],[6,'6'],[7,'7'],[8,'8'],[9,'9'],[10,'10'],[11,'11'],[12,'12']]
+						        }),
+					            editable:false,
+								listeners : {
+									'select': function() {
+										if(queryConditionPanel.form.isValid()){
+											app.qp = getComps2Object(queryConditionPanel);
+											app.qp.start = 0;
+											app.qp.limit = 20;
+											Ext.apply(app.ds_data, {
+												baseParams: app.qp
+											});
+											app.ds_data.removeAll();
+											app.ds_data.load();
+										}
+									}
+								}
+		                    }  
+		                ]  
 		            }),
 		            new Ext.Panel({  
 		                columnWidth: .2,  
