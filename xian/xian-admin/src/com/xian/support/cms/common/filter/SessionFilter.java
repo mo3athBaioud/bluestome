@@ -32,7 +32,7 @@ public class SessionFilter implements Filter {
 	FilterConfig config;
 
 	public void destroy() {
-		config = null;
+		this.config = null;
 	}
 
 	public void doFilter(ServletRequest servletRequest,
@@ -54,25 +54,30 @@ public class SessionFilter implements Filter {
 		// 取得根目录所对应的绝对路径:
 		String targetURL = currentURL.substring(currentURL.indexOf("/", 1),
 				currentURL.length()); // 截取到当前文件名用于比较
-		logger.info(" > targetURL:" + targetURL);
+		logger.debug(" > targetURL:" + targetURL);
 		if (!"/login3.jsp".equals(targetURL) && !"/checkcode.cgi".equals(targetURL)) {
 			//获取当前访问资源的扩展名
 			if(currentURL.indexOf(".") != -1){
 				String targetExt = currentURL.substring(currentURL.indexOf(".", 1),currentURL.length());
 				// 判断当前页是否是重定向以后的登录页面页面，如果是就不做session的判断，防止出现死循环
-				if (request.getSession().getAttribute(Constants.USER_SESSION) == null) {
+				HttpSession session = request.getSession();
+				if (null == session || session.getAttribute(Constants.USER_SESSION) == null) {
 					logger.debug("session is null,pls login!");
 					// *用户登录以后需手动添加session
+					response.setContentType("text/html");
+					response.setCharacterEncoding("utf-8");
 					response.getWriter().write(
-							"<script>parent.location.href='"
+							"<script>alert('您还没有登录,请登录!');parent.location.href='"
 									+ request.getContextPath()
 									+ "/login3.jsp'</script>");
 					response.getWriter().flush();
 					response.getWriter().close();
 					// 如果session为空表示用户没有登录就重定向到login.jsp页面
 					return;
+				}else{
+					System.out.println(" > session:"+session.getAttribute(Constants.USER_SESSION).getClass());
 				}
-			logger.info(" > targetExt:" + targetExt);
+				logger.debug(" > targetExt:" + targetExt);
 			}
 		}
 		// 加入filter链继续向下执行
@@ -86,11 +91,11 @@ public class SessionFilter implements Filter {
 
 	public void init(FilterConfig config) throws ServletException {
 		this.config = config;
-		String headersStr = config.getInitParameter("exts");
-		String[] headers = headersStr.split(",");
-		for (int i = 0; i < headers.length; i++) {
-			String temp = headers[i];
-			extsList.add(temp);
-		}
+//		String headersStr = config.getInitParameter("exts");
+//		String[] headers = headersStr.split(",");
+//		for (int i = 0; i < headers.length; i++) {
+//			String temp = headers[i];
+//			extsList.add(temp);
+//		}
 	}
 }
