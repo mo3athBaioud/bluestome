@@ -110,9 +110,8 @@
 	<!-- GZJS 过滤器 结束 -->	
 	
 	<!-- 会话过滤器 开始 -->
-	<!-- 
 	<filter>
-		<filter-name>XIANSessionFilter</filter-name>
+		<filter-name>sessionFilter</filter-name>
 		<filter-class>
 			com.xian.support.cms.common.filter.SessionFilter
 		</filter-class>
@@ -122,12 +121,13 @@
 		</init-param>
 	</filter>
 	<filter-mapping>
-		<filter-name>XIANSessionFilter</filter-name>
-		<url-pattern>*.cgi</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>XIANSessionFilter</filter-name>
+		<filter-name>sessionFilter</filter-name>
 		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	<!--
+	<filter-mapping>
+		<filter-name>sessionFilter</filter-name>
+		<url-pattern>*.cgi</url-pattern>
 	</filter-mapping>
 	 -->
 	<!-- 会话过滤器 结束 -->	
