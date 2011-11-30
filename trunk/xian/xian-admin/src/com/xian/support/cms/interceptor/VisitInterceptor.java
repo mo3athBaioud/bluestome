@@ -2,6 +2,7 @@ package com.xian.support.cms.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.StrutsStatics;
 import org.slf4j.Logger;
@@ -46,12 +47,24 @@ public class VisitInterceptor extends AbstractInterceptor {
 			//获取当前访问资源的扩展名
 			if(currentURL.indexOf(".") != -1){
 				String targetExt = currentURL.substring(currentURL.indexOf(".", 1),currentURL.length());
-				// 判断当前页是否是重定向以后的登录页面页面，如果是就不做session的判断，防止出现死循环
-				if (request.getSession().getAttribute(Constants.USER_SESSION) == null) {
-					logger.debug("session is null,pls login!");
-					// *用户登录以后需手动添加session
-					// 如果session为空表示用户没有登录就重定向到login.jsp页面
-					return LOGIN_PAGE;
+				//对扩展名进行判断
+				if(targetExt.toLowerCase().endsWith(".cgi") || targetExt.toLowerCase().endsWith(".action")){
+					// 判断当前页是否是重定向以后的登录页面页面，如果是就不做session的判断，防止出现死循环
+					HttpSession session = request.getSession();
+					if (null == session || session.getAttribute(Constants.USER_SESSION) == null) {
+						logger.debug("session is null,pls login!");
+						response.setContentType("text/html");
+						response.setCharacterEncoding("utf-8");
+						// *用户登录以后需手动添加session
+						response.getWriter().write(
+								"<script>alert('您还没有登录,请登录!');parent.location.href='"
+										+ request.getContextPath()
+										+ "/login3.jsp'</script>");
+						response.getWriter().flush();
+						response.getWriter().close();
+						// 如果session为空表示用户没有登录就重定向到login.jsp页面
+						return null;
+					}
 				}
 			}
 		}
