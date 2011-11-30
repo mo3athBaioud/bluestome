@@ -43,7 +43,7 @@ public class VisitInterceptor extends AbstractInterceptor {
 		String targetURL = currentURL.substring(currentURL.indexOf("/", 1),
 				currentURL.length()); // 截取到当前文件名用于比较
 		logger.info(" > targetURL:" + targetURL);
-		if (!"/login3.jsp".equals(targetURL) && !"/checkcode.cgi".equals(targetURL)) {
+		if (!"/login3.jsp".equals(targetURL) && !"/checkcode.cgi".equals(targetURL) && !"/admin/login!exec.cgi".equals(targetURL)) {
 			//获取当前访问资源的扩展名
 			if(currentURL.indexOf(".") != -1){
 				String targetExt = currentURL.substring(currentURL.indexOf(".", 1),currentURL.length());
