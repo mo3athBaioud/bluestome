@@ -5,3 +5,17 @@
 		enableCaching : false, 
 		tpl : new Ext.Template('test') 
 	  }); 
+
+
+数据分页参数	  
+if(queryConditionPanel.form.isValid()){
+	app.qp = getComps2Object(queryConditionPanel);
+	app.qp.start = 0;
+	app.qp.limit = 20;
+	Ext.apply(app.ds_data, {
+		baseParams: app.qp
+	});
+	app.ds_data.removeAll();
+	app.ds_data.load();
+}
+	  
