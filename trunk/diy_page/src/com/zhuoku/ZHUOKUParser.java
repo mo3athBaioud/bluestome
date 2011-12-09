@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -530,10 +531,10 @@ public class ZHUOKUParser {
 					
 					imgSrc = getImageURL(url);
 					if (null != imgSrc) {
+						imgBean = new ImageBean();
+						imgBean.setArticleId(artId);
+						imgBean.setHttpUrl(imgSrc);
 						if (null == client.get(imgSrc)) {
-							imgBean = new ImageBean();
-							imgBean.setArticleId(artId);
-							imgBean.setHttpUrl(imgSrc);
 							NodeList tmp = ltmp.getChildren();
 							if (tmp != null && tmp.size() > 0) {
 								ImageTag imgTag = (ImageTag) tmp.elementAt(0);
@@ -812,9 +813,11 @@ public class ZHUOKUParser {
 //				public void run() {
 //					while(isRun){
 //						try{
+//							test();
+//							index();
 							update();
 							loadImg();
-							imgDownload();
+//							imgDownload();
 //							Thread.sleep(86400000);
 //						}catch(Exception e){
 //							e.printStackTrace();
@@ -829,6 +832,105 @@ public class ZHUOKUParser {
 			e.printStackTrace();
 		}
 	}
+	
+	static void getLink(String url) throws Exception {
+		Parser p1 = new Parser();
+		p1.setURL(url);
+		p1.setEncoding("UTF-8");
+
+		NodeFilter filter = new NodeClassFilter(LinkTag.class);
+		NodeList list = p1.extractAllNodesThatMatch(filter);
+		LinkBean bean = null;
+		if (list != null && list.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				LinkTag link = (LinkTag) list.elementAt(i);
+				log.debug(link.getLinkText() + "\t" + link.getLink());
+				bean = new LinkBean();
+				bean.setLink(link.getLink());
+				String name = StringUtils
+						.illageString(link.getAttribute("title") == null ? (link
+								.getLinkText() == null ? "无话题" : link
+								.getLinkText())
+								: link.getAttribute("title"));
+				if (name.indexOf("“") != -1 || name.indexOf("”") != -1) {
+					name = name.replaceAll("“", "");
+					name = name.replace("”", "");
+				}
+				// 判断连接中是否存在创建文件夹时的非法字符
+				if (name.indexOf("\"") != -1 && name.indexOf("\"") != -1) {
+					name = name.replace("\"", "");
+				}
+
+				bean.setName(name);
+				LINKHASH.put(bean.getLink(), bean);
+			}
+		}
+		p1 = null;
+	}
+	
+	private static void index(){
+		try {
+			getLink(URL);
+			Iterator it = LINKHASH.keySet().iterator();
+			while (it.hasNext()) {
+				String key = (String) it.next();
+				if(key.equals("http://www.zhuoku.com/") || key.equals("http://www.zhuoku.com/#")){
+					continue;
+				}
+				Map<String,WebsiteBean> tmps = webSiteDao.findUrlList(key);
+				tmps.remove("http://www.zhuoku.com");
+				String[] keys = toStringArray(tmps);
+				sort(keys);
+				
+//				if(keys.length > 0){
+//					System.out.println("key:"+key+"|keys[0]:"+keys[0]);
+//				}
+				for(String tk:keys)
+				{
+					System.out.println(" > index.tk:\t"+tk);
+				}
+				
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 字符长度从大到小排序
+	 * @param s1
+	 */
+	static void sort(String[] s1){
+		String tmp;
+		for(int i=0;i<s1.length;i++){
+			for(int j=0;j<s1.length-i-1;j++){
+				if(s1[j].length() < s1[j+1].length() ){
+					tmp = s1[j];
+					s1[j] = s1[j+1];
+					s1[j+1] = tmp;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 将Map中的键取出放入数组中
+	 * @param map
+	 * @return
+	 */
+	static String[] toStringArray(Map map){
+		String[] keys = new String[map.size()];
+		Iterator it = map.keySet().iterator();
+		int i=0;
+		while(it.hasNext()){
+			String key = (String)it.next();
+			keys[i] = key;
+			i++;
+		}
+		return keys;
+	}
+	
 	/**
 	 * 获取二级菜单地址 基本上是第一次使用而已
 	 * @throws Exception
@@ -1061,17 +1163,24 @@ public class ZHUOKUParser {
 	 * @throws Exception
 	 */
 	static void test() throws Exception{
-		ResultBean result = hasPaging2("http://desk.tpzj.com/html/260/index.html");
-		if (result.isBool()) {
-			Iterator it = result.getMap().keySet().iterator();
-			while (it.hasNext()) {
-				String key = (String) it.next();
-				log.debug("key:" + key);
-				LinkBean link = (LinkBean) result.getMap().get(key);
-				secondURL(link, 0);
+		List<WebsiteBean> list = webSiteDao.findByParentId(D_PARENT_ID);
+		if(null != list && list.size() > 0){
+			for(WebsiteBean web:list){
+				System.out.println("--"+web.getName()+"|"+web.getUrl());
+				List<WebsiteBean> slist = webSiteDao.findByParentId(web.getId());
+				if(null != slist && slist.size() > 0){
+					for(WebsiteBean ws:slist){
+//						String url = ws.getUrl().replace("index-1.htm", "");
+						String url = ws.getUrl()+"index-1.htm";
+						ws.setUrl(url);
+						System.out.println("\t--|"+web.getId()+"|"+ws.getName()+"|"+ws.getUrl());
+//						if(webSiteDao.update(ws)){
+//							System.out.println("修改成功!");
+//						}
+					}
+				}
 			}
 		}
-		
 	}
 	
 }
