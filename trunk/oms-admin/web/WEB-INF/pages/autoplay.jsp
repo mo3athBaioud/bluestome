@@ -28,51 +28,40 @@
 			${row.title}
 		</h2>
 		<!--
-		<div class="flexslider">
-			<ul class="slides">
-				<c:forEach items="${list}" var="row" varStatus="status">
-					<li>
-						<img src="${ctx}/images/loading32.gif" src2="${ctx}/admin/images!image.cgi?entity.id=${row.id}&entity.articleId=${row.articleId}" name="LazyloadImg"/>
-						<p class="flex-caption">${row.intro}</p>
-					</li>
-			   	</c:forEach>
-			</ul>
-		</div>
 		begin="0" end="10" step="1"
 		-->
 		<!-- 
-		<ul class="slides">
-			<c:forEach items="${list}" var="row" varStatus="status" >
-				<li>
-					<img src="${ctx}/images/loading32.gif" src2="${ctx}/admin/images!image.cgi?entity.id=${row.id}&entity.articleId=${row.articleId}" name="LazyloadImg"/>
-					<p>${row.intro}</p>
-					<span>&nbsp;&nbsp;</span>
-					<br/>
-					<br/>
-				</li>
-		   	</c:forEach>
-		</ul>
+		<img src="${ctx}/images/loading32.gif" src2="${ctx}/admin/images!image.cgi?entity.id=${row.id}&entity.articleId=${row.articleId}" name="LazyloadImg"/>
 		 -->
 		 <div id="gallery">
 			<c:forEach items="${list}" var="row" varStatus="status" >
-				<!-- 
-				<img src="${ctx}/images/loading32.gif" src2="${ctx}/admin/images!image.cgi?entity.id=${row.id}&entity.articleId=${row.articleId}" name="LazyloadImg"/>
-				 -->
-				<img src="${row.imgUrl}" src2="${row.httpUrl}" name="LazyloadImg"/>
+				<img src="${row.imgUrl}" src2="${row.httpUrl}" name="LazyloadImg" onError="imgErr(this);" />
 		   	</c:forEach>
 	     </div>	
 		<script src="${ctx}/scripts/util/Lazyload.js"></script>
         <script type="text/javascript">
 		<!--
+			/**
+			 * 懒加载方式展现图片
+			 */
+            var imgList = document.getElementsByName("LazyloadImg");
+            lazyload = new Lazyload({ src2: "src2", ImgList: imgList, defaultimage: "${fpath}/images/loading32.gif" });
+            lazyload.loaded();
+            
 			Galleria.loadTheme('${ctx}/scripts/galleria/themes/classic/galleria.classic.min.js');
 			$("#gallery").galleria({
 				width: 800,
 				height: 600
 			});
-            var imgList = document.getElementsByName("LazyloadImg");
-            lazyload = new Lazyload({ src2: "src2", ImgList: imgList, defaultimage: "${fpath}/images/loading32.gif" });
-            lazyload.loaded();
-         -->
+			/**
+			 * 图片载入失败时调用的方法
+			 * <img onError="imgErr(this)" />
+			 */
+			function imgErr(img)
+			{
+				img.src = '${ctx}/images/loading32.gif';
+			}         
+			-->
         </script>
 	</div>
 	<div style="clear:both"></div>
