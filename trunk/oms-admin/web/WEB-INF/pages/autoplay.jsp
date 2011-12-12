@@ -16,10 +16,8 @@
 			media="screen" />
 		<script src="${ctx}/scripts/jquery/jquery.min.js"></script>
 		<script src="${ctx}/scripts/jquery/jquery.flexslider-min.js"></script>
+		<script src="${ctx}/scripts/galleria/galleria-1.2.5.gzjs"></script>
 		<script type="text/javascript">
-//		$(window).load(function() {
-//			$('.flexslider').flexslider();
-//		});
 	</script>
 	 <c:set var="fpath" scope="page" value="<%=hurl%>" />
 	</head>
@@ -40,21 +38,34 @@
 			   	</c:forEach>
 			</ul>
 		</div>
+		begin="0" end="10" step="1"
 		-->
+		<!-- 
 		<ul class="slides">
-			<c:forEach items="${list}" var="row" varStatus="status" begin="0" end="10" step="1">
+			<c:forEach items="${list}" var="row" varStatus="status" >
 				<li>
 					<img src="${ctx}/images/loading32.gif" src2="${ctx}/admin/images!image.cgi?entity.id=${row.id}&entity.articleId=${row.articleId}" name="LazyloadImg"/>
-					<p class="flex-caption">${row.intro}</p>
+					<p>${row.intro}</p>
 					<span>&nbsp;&nbsp;</span>
 					<br/>
 					<br/>
 				</li>
 		   	</c:forEach>
 		</ul>
+		 -->
+		 <div id="gallery">
+			<c:forEach items="${list}" var="row" varStatus="status" >
+				<img src="${ctx}/images/loading32.gif" src2="${ctx}/admin/images!image.cgi?entity.id=${row.id}&entity.articleId=${row.articleId}" name="LazyloadImg"/>
+		   	</c:forEach>
+	     </div>	
 		<script src="${ctx}/scripts/util/Lazyload.js"></script>
         <script type="text/javascript">
 		<!--
+			Galleria.loadTheme('${ctx}/scripts/galleria/themes/classic/galleria.classic.min.js');
+			$("#gallery").galleria({
+				width: 800,
+				height: 600
+			});
             var imgList = document.getElementsByName("LazyloadImg");
             lazyload = new Lazyload({ src2: "src2", ImgList: imgList, defaultimage: "${fpath}/images/loading32.gif" });
             lazyload.loaded();
