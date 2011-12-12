@@ -55,7 +55,10 @@
 		 -->
 		 <div id="gallery">
 			<c:forEach items="${list}" var="row" varStatus="status" >
+				<!-- 
 				<img src="${ctx}/images/loading32.gif" src2="${ctx}/admin/images!image.cgi?entity.id=${row.id}&entity.articleId=${row.articleId}" name="LazyloadImg"/>
+				 -->
+				<img src="${row.imgUrl}" src2="${row.httpUrl}" name="LazyloadImg"/>
 		   	</c:forEach>
 	     </div>	
 		<script src="${ctx}/scripts/util/Lazyload.js"></script>
