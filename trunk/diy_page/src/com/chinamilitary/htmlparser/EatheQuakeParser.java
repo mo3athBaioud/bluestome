@@ -8,6 +8,7 @@ import org.htmlparser.*;
 import org.htmlparser.util.*;
 import org.htmlparser.tags.*;
 
+import com.chinamilitary.memcache.MemcacheClient;
 import com.chinamilitary.util.CommonUtil;
 import com.chinamilitary.util.IOUtil;
 
@@ -18,7 +19,8 @@ public class EatheQuakeParser {
 	final static String USGS_LATEST_LIST = "http://neic.usgs.gov/neis/qed/";
 	final static String USGS_REALTIME_LIST_URL = "http://earthquake.usgs.gov/earthquakes/recenteqsww/";
 	final static HashMap<String, Integer> SYS_HASH = new HashMap<String, Integer>();
-	final static String FILE_DIR_PATH = "E:\\3.[资料]\\3.代码\\1.JAVA\\java\\20110301_USGS\\";
+	final static String FILE_DIR_PATH = "D:\\tools\\1.JAVA\\java\\20110301_USGS\\";
+	static MemcacheClient client = MemcacheClient.getInstance();
 
 	static {
 		SYS_HASH.put("Magnitude", 1);
@@ -35,46 +37,95 @@ public class EatheQuakeParser {
 	}
 
 	public static void main(String[] args) {
+		String name = "ak10414214";
+		System.out.println(" > 1:"+name.substring(0,2));
+		System.out.println(" > 2:"+name.substring(2,5));
+		showRegionList();
+//		showLatestEarthQuake();
+	}
+	
+	/**
+	 * 显示最新的地震
+	 *
+	 */
+	private static void showLatestEarthQuake(){
+		 List<EarthQuakeInfo> list = getLatestEarthQuake();
+		 for(EarthQuakeInfo info:list){
+			 if(null == info.getUrl() ||"null".equals(info.getUrl())){ 
+				 continue; 
+			 } 
+			 System.out.println(" >> url:"+info.getUrl()); 
+			 getEarthQuakeDetail(info.getUrl()); 
+		 }
+		
+	}
+	
+	/**
+	 * 显示区域数据
+	 *
+	 */
+	private static void showRegionList(){
 		StringBuffer buffer = null;
-		/**
-		 * List<EarthQuakeInfo> list = getLatestEarthQuake();
-		 * for(EarthQuakeInfo info:list){ if(null == info.getUrl() ||
-		 * "null".equals(info.getUrl())){ continue; } System.out.println(" >>
-		 * url:"+info.getUrl()); getEarthQuakeDetail(info.getUrl()); }
-		 */
 		HashMap<String, String> umap = getRegionListUrl();
 		Iterator it = umap.keySet().iterator();
 		while (it.hasNext()) {
-			buffer = new StringBuffer();
-			String url = (String) it.next();
-			String name = getNameFromUrl(url);
-			System.out.println("name:"+name+"\t url:"+url);
-			/**
-			 **/
-//			List<EarthQuakeInfo> earthlist = getRegionRealTimeQuake(url);
-//			System.out.println(" >> start to get info from url[" + url + "]");
-//			buffer.append(" >> url:").append(url).append("\r\n");
-//			for (EarthQuakeInfo info : earthlist) {
-//				buffer.append(" >> info.Magnitude:" + info.getMagnitude())
-//						.append("\r\n");
-//				buffer.append(" >> info.Url:" + info.getUrl()).append("\r\n");
-//				buffer.append(" >> info.Date:" + info.getDate()).append("\r\n");
-//				buffer.append(" >> info.Depth:" + info.getDepth()).append(
-//						"\r\n");
-//				buffer.append(" >> info.Latitude" + info.getLatitude()).append(
-//						"\r\n");
-//				buffer.append(" >> info.Longitude" + info.getLongitude())
-//						.append("\r\n");
-//				buffer.append(" >> info.Comments:" + info.getComments())
-//						.append("\r\n");
-//				buffer.append("\r\n");
-//				getEarthQuakeDetail(info.getUrl());
-//			}
-//			// IOUtil.createFile(buffer.toString(),FILE_DIR_PATH+CommonUtil.getDate("-"),name+".txt");
-//			buffer = null;
-//			break;
+				buffer = new StringBuffer();
+				String url = (String) it.next();
+				String name = getNameFromUrl(url);
+				System.out.println("name:"+name+"\t url:"+url);
+				List<EarthQuakeInfo> earthlist = getRegionRealTimeQuake(url);
+				System.out.println(" >> start to get info from url[" + url + "]");
+				buffer.append(" >> url:").append(url).append("\r\n");
+				for (EarthQuakeInfo info : earthlist) {
+					buffer.append(" >> info.Magnitude:" + info.getMagnitude())
+							.append("\r\n");
+					buffer.append(" >> info.Url:" + info.getUrl()).append("\r\n");
+					buffer.append(" >> info.Date:" + info.getDate()).append("\r\n");
+					buffer.append(" >> info.Depth:" + info.getDepth()).append(
+							"\r\n");
+					buffer.append(" >> info.Latitude" + info.getLatitude()).append(
+							"\r\n");
+					buffer.append(" >> info.Longitude" + info.getLongitude())
+							.append("\r\n");
+					buffer.append(" >> info.Comments:" + info.getComments())
+							.append("\r\n");
+					buffer.append("\r\n");
+					try{
+						getEarthQuakeDetail(info.getUrl());
+					}catch(Exception e){
+						continue;
+					}
+				}
+				buffer = null;
+//				break;
 		}
 		umap.clear();
+		
+	}
+	
+	private static void RegionRealTimeQuake(String url){
+		StringBuffer buffer = new StringBuffer();
+		List<EarthQuakeInfo> earthlist = getRegionRealTimeQuake(url);
+		System.out.println(" >> start to get info from url[" + url + "]");
+		buffer.append(" >> url:").append(url).append("\r\n");
+		for (EarthQuakeInfo info : earthlist) {
+			buffer.append(" >> info.Magnitude:" + info.getMagnitude())
+					.append("\r\n");
+			buffer.append(" >> info.Url:" + info.getUrl()).append("\r\n");
+			buffer.append(" >> info.Date:" + info.getDate()).append("\r\n");
+			buffer.append(" >> info.Depth:" + info.getDepth()).append(
+					"\r\n");
+			buffer.append(" >> info.Latitude" + info.getLatitude()).append(
+					"\r\n");
+			buffer.append(" >> info.Longitude" + info.getLongitude())
+					.append("\r\n");
+			buffer.append(" >> info.Comments:" + info.getComments())
+					.append("\r\n");
+			buffer.append("\r\n");
+			getEarthQuakeDetail(info.getUrl());
+		}
+		System.out.println(buffer);
+		buffer = null;
 	}
 
 	/**
@@ -372,128 +423,134 @@ public class EatheQuakeParser {
 		Parser p1 = null;
 		StringBuffer buffer = null;
 		String name = null;
-		try {
-			buffer = new StringBuffer(url).append("\r\n");
-			p1 = new Parser();
-			p1.setURL(url);
-			NodeFilter fileter = new NodeClassFilter(TableTag.class);
-			NodeList list = p1.extractAllNodesThatMatch(fileter)
-					.extractAllNodesThatMatch(
-							new HasAttributeFilter("id", "parameters"));
-			if (null != list && list.size() > 0) {
-				TableTag table = (TableTag) list.elementAt(0);
-				if (null != table) {
-					int rows = table.getRowCount();
-					for (int i = 0; i < rows; i++) {
-						TableRow row = table.getRow(i);
-						if (null != row) {
-							TableColumn[] cols = row.getColumns();
-							Node node = row.getChild(0);
-							if (null != node) {
-								String key = null;
-								Integer id = -1;
-								String value = null;
-								try {
-									NodeList nl = node.getChildren();
-									// System.out.println(" >>
-									// nl:"+nl.toHtml());
-									if (nl.elementAt(1) instanceof LinkTag) {
-										LinkTag link = (LinkTag) nl
-												.elementAt(1);
-										if (null != link) {
-											key = link.getLinkText().trim();
+		if(null == client.get(url)){
+			try {
+				buffer = new StringBuffer(url).append("\r\n");
+				p1 = new Parser();
+				p1.setURL(url);
+				NodeFilter fileter = new NodeClassFilter(TableTag.class);
+				NodeList list = p1.extractAllNodesThatMatch(fileter)
+						.extractAllNodesThatMatch(
+								new HasAttributeFilter("id", "parameters"));
+				if (null != list && list.size() > 0) {
+					TableTag table = (TableTag) list.elementAt(0);
+					if (null != table) {
+						int rows = table.getRowCount();
+						for (int i = 0; i < rows; i++) {
+							TableRow row = table.getRow(i);
+							if (null != row) {
+								TableColumn[] cols = row.getColumns();
+								Node node = row.getChild(0);
+								if (null != node) {
+									String key = null;
+									Integer id = -1;
+									String value = null;
+									try {
+										NodeList nl = node.getChildren();
+										// System.out.println(" >>
+										// nl:"+nl.toHtml());
+										if (nl.elementAt(1) instanceof LinkTag) {
+											LinkTag link = (LinkTag) nl
+													.elementAt(1);
+											if (null != link) {
+												key = link.getLinkText().trim();
+											} else {
+												key = node.toPlainTextString()
+														.trim();
+											}
 										} else {
-											key = node.toPlainTextString()
-													.trim();
+											key = node.toPlainTextString().trim();
 										}
-									} else {
-										key = node.toPlainTextString().trim();
+										// System.out.println("key:"+key);
+										id = SYS_HASH.get(key);
+										for (TableColumn col : cols) {
+											value = col.toPlainTextString();
+										}
+										// System.out.println(" >> id:"+id);
+										if (null == id) {
+											break;
+										}
+										switch (id) {
+										case 1:
+											buffer.append(" >> " + id + "\t" + key
+													+ "\t" + value);
+											break;
+										case 2:
+											buffer.append(" >> " + id + "\t" + key
+													+ "\t" + value);
+											break;
+										case 3:
+											buffer.append(" >> " + id + "\t" + key
+													+ "\t" + value);
+											break;
+										case 4:
+											buffer.append(" >> " + id + "\t" + key
+													+ "\t" + value);
+											break;
+										case 5:
+											buffer.append(" >> " + id + "\t" + key
+													+ "\t" + value);
+											break;
+										case 6:
+											buffer.append(" >> " + id + "\t" + key
+													+ "\t" + value);
+											break;
+										case 7:
+											buffer.append(" >> " + id + "\t" + key
+													+ "\t" + value);
+											break;
+										case 8:
+											buffer.append(" >> " + id + "\t" + key
+													+ "\t" + value);
+											break;
+										case 9:
+											buffer.append(" >> " + id + "\t" + key
+													+ "\t" + value);
+											break;
+										case 10:
+											buffer.append(" >> " + id + "\t" + key
+													+ "\t" + value);
+											break;
+										case 11:
+											buffer.append(" >> " + id + "\t" + key
+													+ "\t" + value);
+											name = value;
+											break;
+										default:
+											buffer.append(" >> " + id
+													+ " no action");
+											break;
+										}
+										buffer.append("\r\n");
+									} catch (Exception e) {
+										e.printStackTrace();
 									}
-									// System.out.println("key:"+key);
-									id = SYS_HASH.get(key);
-									for (TableColumn col : cols) {
-										value = col.toPlainTextString();
-									}
-									// System.out.println(" >> id:"+id);
-									if (null == id) {
-										break;
-									}
-									switch (id) {
-									case 1:
-										buffer.append(" >> " + id + "\t" + key
-												+ "\t" + value);
-										break;
-									case 2:
-										buffer.append(" >> " + id + "\t" + key
-												+ "\t" + value);
-										break;
-									case 3:
-										buffer.append(" >> " + id + "\t" + key
-												+ "\t" + value);
-										break;
-									case 4:
-										buffer.append(" >> " + id + "\t" + key
-												+ "\t" + value);
-										break;
-									case 5:
-										buffer.append(" >> " + id + "\t" + key
-												+ "\t" + value);
-										break;
-									case 6:
-										buffer.append(" >> " + id + "\t" + key
-												+ "\t" + value);
-										break;
-									case 7:
-										buffer.append(" >> " + id + "\t" + key
-												+ "\t" + value);
-										break;
-									case 8:
-										buffer.append(" >> " + id + "\t" + key
-												+ "\t" + value);
-										break;
-									case 9:
-										buffer.append(" >> " + id + "\t" + key
-												+ "\t" + value);
-										break;
-									case 10:
-										buffer.append(" >> " + id + "\t" + key
-												+ "\t" + value);
-										break;
-									case 11:
-										buffer.append(" >> " + id + "\t" + key
-												+ "\t" + value);
-										name = value;
-										break;
-									default:
-										buffer.append(" >> " + id
-												+ " no action");
-										break;
-									}
-									buffer.append("\r\n");
-								} catch (Exception e) {
-									e.printStackTrace();
 								}
 							}
+							// break;
 						}
-						// break;
+						buffer.append("\r\n");
 					}
-					buffer.append("\r\n");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (null != p1) {
+					p1 = null;
+				}
+				if (null == name) {
+					name = CommonUtil.GenerateSequence(0);
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (null != p1) {
-				p1 = null;
-			}
-			if (null == name) {
-				name = CommonUtil.GenerateSequence(0);
-			}
+		
+			// System.out.println(" >> name:"+name+"\tbuffer:"+buffer.toString());CommonUtil.getDate("-") + 
+			IOUtil.createFile(buffer.toString(), FILE_DIR_PATH
+					+ "\\DETAIL\\"+name.substring(0,2)+File.separator, name + ".txt");
+			client.add(url, buffer);
+			System.out.println("Finish [" + url + "]");
+		}else{
+			System.err.println( " 缓存中已经存在:" + url);
 		}
-		// System.out.println(" >> name:"+name+"\tbuffer:"+buffer.toString());
-		IOUtil.createFile(buffer.toString(), FILE_DIR_PATH
-				+ CommonUtil.getDate("-") + "\\DETAIL\\", name + ".txt");
-		System.out.println("Finish [" + url + "]");
 	}
 
 	static String getNameFromUrl(String url) {
