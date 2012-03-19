@@ -207,6 +207,32 @@ public class ArticleDocDaoImpl extends CommonDB implements ArticleDocDao {
 		return list;
 	}
 
+	public List<ArticleDoc> findByWebId(Integer webId,Integer status) throws Exception {
+		List<ArticleDoc> list = new ArrayList<ArticleDoc>();
+		ArticleDoc bean = null;
+		pstmt = conn.prepareStatement("select d_id,d_web_id,d_url,d_title,d_status,d_author from tbl_article_doc where d_web_id = ? and d_status = ? order by d_id ");
+		pstmt.setInt(1, webId);
+		pstmt.setInt(2, status);
+		rs = pstmt.executeQuery();
+		while(rs.next()){
+			bean = new ArticleDoc();
+			bean.setId(rs.getInt("d_id"));
+			bean.setWebId(rs.getInt("d_web_id"));
+			bean.setUrl(rs.getString("d_url"));
+			bean.setTitle(rs.getString("d_title"));
+//			bean.setGrade(rs.getInt("d_grade"));
+//			bean.setTag(rs.getString("d_tag"));
+			bean.setStatus(rs.getInt("d_status"));
+//			bean.setContent(rs.getString("d_content"));
+			bean.setAuthor(rs.getString("d_author"));
+//			bean.setCreateTime(rs.getDate("d_createtime"));
+//			bean.setPublishTime(rs.getString("d_publish_time"));
+			list.add(bean);
+		}
+		releaseLink();
+		return list;
+	}
+	
 	public List<ArticleDoc> findDoc(Integer webId, Integer status, Integer id) throws Exception {
 		List<ArticleDoc> list = new ArrayList<ArticleDoc>();
 		ArticleDoc bean = null;
