@@ -120,12 +120,10 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 	public int insert(Article bean) throws Exception{
 		int key = -1;
 		if(checkExists(bean.getTitle(),bean.getWebId())){
-			log.debug("已存在相同标题："+bean.getTitle());
 			return key;
 		}
 		
 		if(getCountByURL(bean.getArticleUrl()) > 0){
-			log.debug("已存在相同URL："+bean.getTitle());
 			return key;
 		}
 		
@@ -152,7 +150,6 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 			pstmt.close();
 		if(rs != null)
 			rs.close();
-//		releaseSLink();
 		return key;
 	}
 	
@@ -164,7 +161,6 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 		if(title == null && title.equalsIgnoreCase("")){
 			return b;
 		}
-//		String sql = "select count(*) from tbl_article where d_acticle_url = '"+url+"' and d_title = '"+title+"'"; //d_web_id = "+webId+" and 
 		if(getCount(url,title) > 0){
 			b = true;
 		}
