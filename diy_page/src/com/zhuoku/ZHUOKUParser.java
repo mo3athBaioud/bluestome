@@ -41,15 +41,13 @@ import com.chinamilitary.dao.ImageDao;
 import com.chinamilitary.dao.PicFileDao;
 import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.factory.DAOFactory;
+import com.chinamilitary.lucene.LuceneIndex;
 import com.chinamilitary.memcache.MemcacheClient;
-import com.chinamilitary.test.TestHttpClient;
 import com.chinamilitary.util.CacheUtils;
-import com.chinamilitary.util.CommonUtil;
-import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
 import com.common.Constants;
-import com.zol.zoldesk.ZOLDESKParser;
+import com.utils.HttpClientUtils;
 
 public class ZHUOKUParser {
 
@@ -402,21 +400,13 @@ public class ZHUOKUParser {
 							}
 							article.setTitle(imgTag.getAttribute("alt") == null ? "NT" : imgTag.getAttribute("alt"));
 						}
-//						log.debug("*****************Start***************");
-//						log.debug("ArticleUrl:"+article.getArticleUrl());
-//						log.debug("ActicleXmlUrl:"+article.getActicleXmlUrl());
-//						log.debug("Title:"+article.getTitle());
-//						log.debug("Text:"+article.getText());
-//						log.debug("*****************End***************\n");
 						int key = articleDao.insert(article);
 						if (key > 0) {
-							log.info(" >> 文章:"+article.toString());
 							client.add(url, url);
+							article.setId(key);
+							LuceneIndex.getInstance().addIndex(article);
 							getImage(article);
 						}
-					} else {
-						log.error(">> 已存在相同的内容 [" + ltmp.getLinkText()
-								+ "]");
 					}
 				}
 
@@ -477,8 +467,6 @@ public class ZHUOKUParser {
 						log.error(e);
 						continue;
 					}
-				}else{
-					log.info(" >> key:"+key);
 				}
 			}
 		}
@@ -549,30 +537,29 @@ public class ZHUOKUParser {
 							imgBean.setCommentshowurl(url);
 							imgBean.setLink("NED");
 							try {
+								length = HttpClientUtils.getHttpHeaderResponse(imgSrc, HttpClientUtils.CONTENTLENGTH);
+								if(null == length || length.equals("")){
+									length = "0";
+								}
+								log.debug(">> Content-Length:" + length);
 								size = Integer.parseInt(length);
 								imgBean.setFileSize(Long.valueOf(size));
 								imgBean.setStatus(3);
 							} catch (Exception e) {
-								e.printStackTrace();
 								log.error(">> IMAGE SIZE ERROR");
 								size = 0;
 								imgBean.setFileSize(0l);
 								imgBean.setStatus(1);
 							}
-//							log.debug("Title:"+imgBean.getTitle());
-//							log.debug("ArticleId:"+imgBean.getArticleId());
-//							log.debug("大图地址:"+imgBean.getHttpUrl());
-//							log.debug("小图地址:"+imgBean.getImgUrl());
 							int key = imageDao.insert(imgBean);
 							if (key > 0) {
-								log.info("添加图片记录:["+imgBean.getTitle() + "]\t|" + url+"\n");
+								log.info(" >\t添加图片记录:["+imgBean.getTitle() + "]\t|" + url);
 								client.add(imgSrc, imgSrc);
 							}else{
 								ImageBean tmpImg = imageDao.findByHttpUrl(imgBean.getHttpUrl());
 								if(null != tmpImg){
 									tmpImg.setCommentshowurl(url);
 									if(imageDao.update(tmpImg)){
-										log.info("更新图片记录:["+tmpImg.getArticleId()+"|"+tmpImg.getTitle() + "]\t|" + url+"\t成功");
 										client.add(imgSrc, imgSrc);
 									}
 								}
@@ -582,14 +569,12 @@ public class ZHUOKUParser {
 							if(null != tmpImg){
 								tmpImg.setCommentshowurl(url);
 								if(imageDao.update(tmpImg)){
-									log.info("更新图片记录:["+tmpImg.getArticleId()+"|"+tmpImg.getTitle() + "]\t|" + url+"\t成功");
 									client.add(imgSrc, imgSrc);
 								}
 							}
 						}
 					} else {
 						resultB = false;
-						log.error(">> 出现异常，文章ID["+imgBean.getArticleId()+"|"+imgBean.getArticleId()+"]\t返回False");
 						break;
 					}
 				}
@@ -958,7 +943,7 @@ public class ZHUOKUParser {
 				List<Article> list = articleDao.findByWebId(website.getId(),"NED");
 				log.debug("文章列表:"+list.size());
 				for (Article art : list) {
-					log.debug(" :"+art.getTitle()+"|"+art.getText());
+					log.debug(" > "+art.getTitle()+"|"+art.getText());
 //					List<ImageBean> imgList = imageDao.findImage(art.getId());
 //					if(imgList.size() == 0){
 						if (getImage(art)) {
