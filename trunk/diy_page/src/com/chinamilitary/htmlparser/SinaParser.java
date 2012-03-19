@@ -1,4 +1,5 @@
 package com.chinamilitary.htmlparser;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +25,8 @@ public class SinaParser {
 	private static final String URL = "http://www.sina.com.cn";
 
 	private static HashMap<String, LinkBean> LINKHASH = new HashMap<String, LinkBean>();
+	
+	private static Integer D_PARENT_ID = 54;
 	static ArticleDocDao articleDocDao = DAOFactory.getInstance().getArticleDocDao();	
 
 	/**
@@ -179,9 +182,33 @@ public class SinaParser {
 			NodeFilter divFilter = new NodeClassFilter(Div.class);
 			NodeList linkList = p1.extractAllNodesThatMatch(divFilter);
 			if (linkList != null && linkList.size() > 0) {
+				//记者
+				List<String> reportList = new ArrayList<String>();
+				//回答
+				List<String> answerList = new ArrayList<String>();
 				for (int i = 0; i < linkList.size(); i++) {
 					Div div = (Div) linkList.elementAt(i);
-					System.out.println(div.getStringText());
+					String content = div.toPlainTextString().trim().replace(" ","");
+					String[] sc = content.split("\n");
+					for(String s:sc){
+						if(null != s.trim() && !"".equals(s.trim())){
+							if(s.startsWith("　　记者：")){
+								reportList.add(s);
+							}else if(s.startsWith("　　国务院新闻办发言人：")){
+								answerList.add(s);
+							}
+						}
+					}
+				}
+				
+				System.out.println("记者提问列表");
+				for(String rs:reportList){
+					System.out.println(rs);
+				}
+				System.out.println("\r\n");
+				System.out.println("回答列表");
+				for(String rs:answerList){
+					System.out.println(rs);
 				}
 			}
 		}
@@ -202,31 +229,31 @@ public class SinaParser {
 //				e.printStackTrace();
 //			}
 			
-			List<WebsiteBean>  webList = dao.findByParentId(54);
-			for(WebsiteBean bean:webList){
-				try{
-					news(bean.getUrl(),"UTF-8");
-				}catch(org.htmlparser.util.EncodingChangeException e){
-					System.out.println("编码失败，使用GB2312编码");
-					news(bean.getUrl(),"GB2312");
-				}
-				Iterator it = LINKHASH.keySet().iterator();
-				ArticleDoc doc = null;
-				while (it.hasNext()) {
-					doc = new ArticleDoc();
-					String key = (String) it.next();
-					LinkBean link = (LinkBean) LINKHASH.get(key);
-					doc.setTitle(link.getName());
-					doc.setUrl(link.getLink());
-					doc.setWebId(bean.getId());
-					int id = articleDocDao.insert(doc);
-					if(!(id>0)){
-						System.out.println("失败，\t链接名称：" + link.getName() + "\n链接地址："+ link.getLink());
-					}
-				}
-				LINKHASH.clear();
-			}
-			
+//			List<WebsiteBean>  webList = dao.findByParentId(54);
+//			for(WebsiteBean bean:webList){
+//				try{
+//					news(bean.getUrl(),"UTF-8");
+//				}catch(org.htmlparser.util.EncodingChangeException e){
+//					System.out.println("编码失败，使用GB2312编码");
+//					news(bean.getUrl(),"GB2312");
+//				}
+//				Iterator it = LINKHASH.keySet().iterator();
+//				ArticleDoc doc = null;
+//				while (it.hasNext()) {
+//					doc = new ArticleDoc();
+//					String key = (String) it.next();
+//					LinkBean link = (LinkBean) LINKHASH.get(key);
+//					doc.setTitle(link.getName());
+//					doc.setUrl(link.getLink());
+//					doc.setWebId(bean.getId());
+//					int id = articleDocDao.insert(doc);
+//					if(!(id>0)){
+//						System.out.println("失败，\t链接名称：" + link.getName() + "\n链接地址："+ link.getLink());
+//					}
+//				}
+//				LINKHASH.clear();
+//			}
+			newsContent();
 //			System.out.println(author("http://ent.sina.com.cn/s/m/2010-06-18/06132990753.shtml","GB2312"));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
