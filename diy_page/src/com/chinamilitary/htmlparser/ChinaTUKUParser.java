@@ -686,7 +686,7 @@ public class ChinaTUKUParser {
 	}
 
 	private static void doProcess(WebsiteBean bean) throws Exception {
-		log.debug(" >> web.id[" + bean.getId() + "] web.url["+ bean.getUrl() + "]");
+		log.debug(" >> web.id[" + bean.getId() + "] web.name["+bean.getName()+"] web.url["+ bean.getUrl() + "]");
 		try {
 			getLink(bean.getUrl());
 		} catch (Exception e) {
