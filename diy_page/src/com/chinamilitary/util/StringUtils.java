@@ -107,6 +107,25 @@ public class StringUtils {
 		return sb.toString();
 	 }
 	 
+	/**
+	 * 生成保存目录
+	 * @param input
+	 * @return
+	 */
+	 public static String gerDir2(String input,int depth){
+		StringBuffer sb = new StringBuffer();
+		if(input.length() <= 2){
+			for(int i=0;i<input.length();i++){
+				sb.append(input.charAt(i)+File.separator);
+			}
+		}else{
+			for(int i=0;i<input.length()-depth;i++){
+				sb.append(input.charAt(i)+File.separator);
+			}
+		}
+		return sb.toString();
+	 }
+	 
 	public static void main(String args[]){
 		String articleId = "1234567";
 //		String fileName = "20100902/56261/suyang001.jpg";
