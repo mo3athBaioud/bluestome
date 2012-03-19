@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,6 +59,7 @@ public class PCPOPHtmlParser {
 	
 	static Integer UCOUNT = 0;
 	
+    private static ScheduledExecutorService EXEC_THREAD = Executors.newSingleThreadScheduledExecutor();
 	/**
 	 * 获取分类链接
 	 * 
@@ -149,6 +154,27 @@ public class PCPOPHtmlParser {
 	
 	static void html(String url) throws Exception{
 		Long start = System.currentTimeMillis();
+	}
+	
+	/**
+	 * 获取指定站点下的页面源码
+	 * @param webList
+	 */
+	static void initHTML(WebsiteBean bean){
+		Long start = System.currentTimeMillis();
+		try{
+			Long start1 = System.currentTimeMillis();
+			String content = ViewSourceFrame(bean.getUrl());
+			if(null != content && !"".equalsIgnoreCase(content)){
+				processWithDoc(bean.getId(), content);
+				Long end1 = System.currentTimeMillis();
+				logger.info(" >> 站点["+bean.getName()+"|"+bean.getUrl()+"] 单条耗时:"+(end1-start1)+"长度："+content.getBytes().length);
+			}
+		}catch(Exception e){
+			logger.debug("Exception:"+e.getMessage());
+		}
+		Long end = System.currentTimeMillis();
+		logger.info("总耗时:"+(end-start));
 	}
 	
 	/**
@@ -249,7 +275,6 @@ public class PCPOPHtmlParser {
 			if (linkList != null && linkList.size() > 0) {
 				for (int i = 0; i < linkList.size(); i++) {
 					LinkTag link = (LinkTag) linkList.elementAt(i);
-//					logger.debug("title:"+link.getLinkText()+"\t"+link.getLink());
 					LinkBean bean = null;
 					if (link.getLink().toLowerCase().startsWith(pre) && !link.getLinkText().equalsIgnoreCase("详细内容")){
 						if(null == client.get(getKey(link.getLink()))){
@@ -258,11 +283,6 @@ public class PCPOPHtmlParser {
 							bean.setName(link.getLinkText());
 							LINKHASH.put(link.getLink(), bean);
 						}
-//						else{
-//							client.add(link.getLink(), link);
-//							ResourceQueneInsert.getInstance().setElement(link.getLink());
-//							logger.debug(">> 已存在 ["+link.getLink()+"] 地址");
-//						}
 					}
 				}
 			}
@@ -282,7 +302,7 @@ public class PCPOPHtmlParser {
 
 		NodeFilter fileter = new NodeClassFilter(Div.class);
 		NodeList list = parser.extractAllNodesThatMatch(fileter).extractAllNodesThatMatch(
-				new HasAttributeFilter("class", "otb14"));
+				new HasAttributeFilter("class", "title"));
 		String author = null;
 		if (list != null && list.size() > 0) {
 			Div div = (Div)list.elementAt(0);
@@ -291,7 +311,7 @@ public class PCPOPHtmlParser {
 		}
 		
 		if(null == author){
-//			logger.debug("重新解析作者栏");
+			logger.debug(" > 早版标题格式解析");
 			parser = new Parser();
 			parser.setURL(url);
 			parser.setEncoding("GB2312");
@@ -299,6 +319,23 @@ public class PCPOPHtmlParser {
 			NodeFilter fileter1 = new NodeClassFilter(Div.class);
 			NodeList list1 = parser.extractAllNodesThatMatch(fileter1).extractAllNodesThatMatch(
 					new HasAttributeFilter("class", "pop_2_1_2"));
+			if(null != list1 && list1.size() > 0){
+				Div div = (Div)list1.elementAt(1);
+				String tmp = div.getStringText();
+				author = tmp.substring(tmp.indexOf("</a>")+4);
+				logger.debug("author:"+author);
+			}
+		}
+		
+		if(null == author){
+			logger.debug(" > 新版标题格式解析");
+			parser = new Parser();
+			parser.setURL(url);
+			parser.setEncoding("GBK");
+			
+			NodeFilter fileter1 = new NodeClassFilter(Div.class);
+			NodeList list1 = parser.extractAllNodesThatMatch(fileter1).extractAllNodesThatMatch(
+					new HasAttributeFilter("class", "cotent"));
 			if(null != list1 && list1.size() > 0){
 				Div div = (Div)list1.elementAt(1);
 				String tmp = div.getStringText();
@@ -327,7 +364,6 @@ public class PCPOPHtmlParser {
 		if(null != list && list.size() > 0){
 			Div div = (Div)list.elementAt(0);
 			String tmp = div.getStringText();
-//			logger.debug("author:"+tmp);
 			content = tmp;
 		}
 		return content;
@@ -335,47 +371,22 @@ public class PCPOPHtmlParser {
 
 	public static void main(String args[]) {
 		try{
-//		content("http://www.pcpop.com/doc/0/543/543944_3.shtml");
-			
-//		List<WebsiteBean> weblist = webSiteDao.findByParentId(166);
-//		initHTML(weblist);
-//		logger.debug("数量："+HTMLHASH.size());
-		
-//		init();
-			
-//		Thread th = new Thread(new RequestRecordThread(),"recordupdate");
-//		th.start();
-		
-//		process();
-//		processAuthor();
-		new Thread(new Runnable(){
-			private boolean isRun = true;
-			public void run() {
-				while(isRun){
-					try{
-						process();
-						processAuthor();
-						downloadArticleDoc();
-						logger.info(" >> End Of One Parser PCPOP " +DateUtils.getNow()+",GET "+UCOUNT+" Articles");
-//						isRun = false;
-//						System.exit(-1);
-						//休眠半小时
-						UCOUNT=0;
-						Thread.sleep(20000000);
-					}catch(Exception e){
-						isRun = false;
-						logger.error(e);
-						try {
-							Thread.sleep(600000l);
-							isRun = true;
-						} catch (InterruptedException e1) {
-							logger.error(e1);
+			//指定父ID下的网站列表
+			final List<WebsiteBean> weblist = webSiteDao.findByParentId(166);
+			EXEC_THREAD.schedule(new Runnable(){
+					public void run(){
+						for(WebsiteBean bean:weblist){
+							initHTML(bean);
+							try {
+								processAuthor(bean.getId());
+							} catch (Exception e) {
+								e.printStackTrace();
+								logger.error(e);
+							}
 						}
 					}
-				}
-			}
-		 }).start();
-		HTMLHASH.clear();
+			}, 2000l, TimeUnit.MILLISECONDS);
+			logger.info(" >> End Of One Parser PCPOP " +DateUtils.getNow()+",GET "+UCOUNT+" Articles");
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -429,7 +440,6 @@ public class PCPOPHtmlParser {
 	static boolean download(ArticleDoc doc) throws Exception{
 		boolean b = false;
 		if(null != doc){
-			System.out.println(" >> doc.url:"+doc.getUrl());
 			String fileName = String.valueOf(doc.getId());
 			IOUtil.createPicFile(doc.getUrl(), Constants.DOC_FILE_SERVER + doc.getWebId()+File.separator
 					+ StringUtils.gerDir(String.valueOf(doc.getId())) 
@@ -535,28 +545,122 @@ public class PCPOPHtmlParser {
 				doc.setTitle(link.getName());
 				doc.setUrl(link.getLink());
 				doc.setWebId(webid);
-//				ResourceQueneInsert.getInstance().setElement(doc);
 				int id = articleDocDao.insert(doc);
 				if(id > 0){
-					UCOUNT ++;
+					client.add(getKey(doc.getUrl()), doc);
 					doc.setId(id);
 					doc.setStatus(1);
-					client.add(getKey(doc.getUrl()), doc);
-//					logger.debug("Memcached now store this object");
 				}
-				
-//				if(!(id>0)){
-//					logger.debug("失败，\t链接名称：" + link.getName() + "\n链接地址："+ link.getLink());
-//					client.add(getKey(doc.getUrl()), doc);
-//				}else{
-//					doc.setId(id);
-//					doc.setStatus(1);
-//					client.add(getKey(doc.getUrl()), doc);
-//					logger.debug("Memcached now store this object");
-//				}
 			}
 		}
 		LINKHASH.clear();
+	}
+	/**
+	 * 获取文章作者，发布时间等数据
+	 *
+	 */
+	static void processAuthor(int webId) throws Exception{
+		List<ArticleDoc> list = articleDocDao.findDoc(webId, 1);
+		for(ArticleDoc bean : list){
+			
+			if(!bean.getUrl().startsWith("http://www.pcpop.com/doc/")){
+				continue;
+			}
+			//更新文章的作者和发布时间
+			try{
+				String author = author(bean.getUrl());
+
+				if(null == author){
+					author = author2(bean.getUrl());
+				}
+				if(null == author){
+					logger.debug(" > url:["+bean.getUrl()+"] get author is null!");
+					continue;
+				}
+				String tmp1 = author.substring(author.lastIndexOf("作者")+3,author.lastIndexOf("编辑")-1);
+				String tmp2 = author.substring(0,author.indexOf(":")-2);
+				if(null == tmp1 || null ==  tmp2){
+					break;
+				}
+				bean.setAuthor(tmp1);
+				bean.setPublishTime(tmp2);
+				bean.setStatus(2);
+				if(!articleDocDao.update(bean)){
+					logger.error("更新作者失败:"+bean.getUrl());
+				}else{
+					logger.debug("["+bean.getId()+"]更新成功:"+bean.getUrl());
+				}
+			}catch(java.io.FileNotFoundException e){
+				bean.setStatus(10);
+				if(!articleDocDao.update(bean)){
+					logger.error("更新作者失败:"+bean.getUrl());
+				}else{
+					logger.error("["+bean.getId()+"]更新记录状态为10[文件或地址查找找不到]:"+bean.getUrl());
+				}
+				continue;
+			}catch(org.htmlparser.util.ParserException e){
+				bean.setStatus(10);
+				if(!articleDocDao.update(bean)){
+					logger.error("更新作者失败:"+bean.getUrl());
+				}else{
+					logger.error("["+bean.getId()+"]更新记录状态为10[URL解析失败]:"+bean.getUrl());
+				}
+				continue;
+			}catch(Exception e){
+				bean.setStatus(11);
+				bean.setContent(e.getMessage());
+//				ResourceQueneUpdate.getInstance().setElement(bean);
+				e.printStackTrace();
+				if(!articleDocDao.update(bean)){
+					logger.error("更新作者和文章发布时间失败:"+bean.getUrl());
+				}else{
+					logger.error("["+bean.getId()+"]更新记录状态为11[其他异常情况]:"+bean.getUrl());
+				}
+				logger.error(" > Error:"+bean.getUrl());
+				continue;
+			}
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 * @throws Exception
+	 */
+	static String author2(String url) throws Exception{
+		Parser parser = new Parser();
+		parser.setURL(url);
+		parser.setEncoding("GB2312");
+
+		NodeFilter fileter = new NodeClassFilter(Div.class);
+		NodeList list = parser.extractAllNodesThatMatch(fileter).extractAllNodesThatMatch(
+				new HasAttributeFilter("class", "otb14"));
+		String author = null;
+		if (list != null && list.size() > 0) {
+			Div div = (Div)list.elementAt(0);
+			String tmp = div.getStringText();
+			author = tmp;
+		}
+		
+		if(null == author){
+//			logger.debug("重新解析作者栏");
+			parser = new Parser();
+			parser.setURL(url);
+			parser.setEncoding("GB2312");
+			
+			NodeFilter fileter1 = new NodeClassFilter(Div.class);
+			NodeList list1 = parser.extractAllNodesThatMatch(fileter1).extractAllNodesThatMatch(
+					new HasAttributeFilter("class", "title"));
+			if(null != list1 && list1.size() > 0){
+				Div div = (Div)list1.elementAt(1);
+				String tmp = div.getStringText();
+				author = tmp.substring(tmp.indexOf("</a>")+4);
+				logger.debug("author:"+author);
+			}
+		}
+		return author;
 	}
 	
 	/**
