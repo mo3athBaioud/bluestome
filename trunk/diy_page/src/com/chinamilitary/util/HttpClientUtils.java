@@ -25,6 +25,9 @@ public class HttpClientUtils {
 
 	private static PostMethod postMethod = null;
 
+	//HTTP响应头中的文件大小描述
+	public static String CONTENTLENGTH = "Content-Length";
+	
 	public static boolean validationURL(String url) {
 		boolean success = true;
 		try {
