@@ -101,7 +101,7 @@ public class Article implements java.io.Serializable{
 	@Override
 	public String toString(){
 		String body = null;
-		body = this.getWebId()+"|"+this.getTitle()+"|"+this.getArticleUrl();
+		body = this.getId()+"|"+this.getWebId()+"|"+this.getTitle()+"|"+this.getArticleUrl();
 		return body;
 	}
 	
