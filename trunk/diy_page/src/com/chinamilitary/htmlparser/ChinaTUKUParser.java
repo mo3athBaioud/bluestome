@@ -30,6 +30,7 @@ import com.chinamilitary.dao.ImageDao;
 import com.chinamilitary.dao.PicFileDao;
 import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.factory.DAOFactory;
+import com.chinamilitary.lucene.LuceneIndex;
 import com.chinamilitary.memcache.MemcacheClient;
 import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.CommonUtil;
@@ -473,6 +474,7 @@ public class ChinaTUKUParser {
 						if (result > 0) {
 							client.add(bean.getLink(), bean.getLink());
 							acticle.setId(result);
+							LuceneIndex.getInstance().addIndex(acticle);
 							String aKey = CacheUtils.getArticleKey(result);
 							if (null == client.get(aKey)) {
 								client.add(aKey, acticle);
