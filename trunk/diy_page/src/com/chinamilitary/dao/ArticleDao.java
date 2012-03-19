@@ -104,4 +104,13 @@ public interface ArticleDao extends ICommonDao{
 	 */
 	public List<Article> findByWebId(Integer webId,String text,boolean desc) throws Exception;
 	
+	/**
+	 * 分页方法
+	 * @param asc 排序方式
+	 * @param limit 每页显示的数据量
+	 * @param offset 分页偏移量
+	 * @return
+	 */
+	List<Article> findByPage(boolean asc,int limit, int offset) throws Exception;
+	
 }
