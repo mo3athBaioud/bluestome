@@ -551,4 +551,43 @@ public class ArticleDaoImpl extends CommonDB implements ArticleDao {
 		}
 		return list;
 	}
+	
+	/**
+	 * 分页方法
+	 * @param limit 每页显示的数据量
+	 * @param offset 分页偏移量
+	 * @return
+	 */
+	public List<Article> findByPage(boolean asc,int limit, int offset) throws Exception{
+		List<Article> list = new ArrayList<Article>();
+		Article bean = null;
+		try{
+			pstmt = conn.prepareStatement(QUERY_SQL+" order by d_id"+(asc?" asc":" desc") +" limit ? offset ?");
+			pstmt.setInt(1, limit);
+			pstmt.setInt(2, offset);
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				bean = new Article();
+				bean.setId(rs.getInt("d_id"));
+				bean.setWebId(rs.getInt("d_web_id"));
+				bean.setArticleUrl(rs.getString("d_acticle_url"));
+				bean.setActicleRealUrl(rs.getString("d_article_real_url"));
+				bean.setActicleXmlUrl(rs.getString("d_article_xml_url"));
+				bean.setText(rs.getString("d_text"));
+				bean.setTitle(rs.getString("d_title"));
+				bean.setIntro(rs.getString("d_intro"));
+				bean.setCreateTime(rs.getDate("d_createtime"));
+				list.add(bean);
+			}
+		}catch(Exception e){
+			return list;
+		}finally{
+			if(pstmt !=null)
+				pstmt.close();
+			if(rs !=null)
+				rs.close();
+		}
+		return list;
+	}
+
 }
