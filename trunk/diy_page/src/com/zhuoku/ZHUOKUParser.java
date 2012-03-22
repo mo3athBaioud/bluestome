@@ -537,7 +537,7 @@ public class ZHUOKUParser {
 							imgBean.setCommentshowurl(url);
 							imgBean.setLink("NED");
 							try {
-								length = HttpClientUtils.getHttpHeaderResponse(imgSrc, HttpClientUtils.CONTENTLENGTH);
+								length = HttpClientUtils.getHttpConentLength(imgSrc);
 								if(null == length || length.equals("")){
 									length = "0";
 								}
@@ -660,9 +660,7 @@ public class ZHUOKUParser {
 								String url = IMAGE_URL
 										+ getImageUrl(nl.getLink());
 								if (null == client.get(url)) {
-									length = HttpClientUtils
-											.getHttpHeaderResponse(url,
-													"Content-Length");
+									length = HttpClientUtils.getHttpConentLength(url);
 									imgBean = new ImageBean();
 									imgBean.setArticleId(articleId);
 									imgBean.setHttpUrl(url);
