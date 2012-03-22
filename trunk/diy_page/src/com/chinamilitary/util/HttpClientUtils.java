@@ -2,6 +2,8 @@ package com.chinamilitary.util;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -144,6 +146,31 @@ public class HttpClientUtils {
 		return result;
 	}
 
+	/**
+	 * 调用HttpURLConnection获取文件大小
+	 * @param url
+	 * @return
+	 */
+	public static String getHttpConentLength(String url){
+		long start = System.currentTimeMillis();
+		String result = null;
+		try{
+			URL urlc = new URL(url);
+			HttpURLConnection conn = (HttpURLConnection)urlc.openConnection();
+			conn.setDoInput(true);
+			conn.connect();
+			int code = conn.getResponseCode();
+			if(code == HttpURLConnection.HTTP_OK){
+				result = String.valueOf(conn.getContentLength());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			System.out.println(" > 获取文件大小耗时:["+(System.currentTimeMillis()-start)+"]ms");
+		}
+		return result;
+	}
+	
 	/**
 	 * 从url中获取响应头的内容
 	 * 
