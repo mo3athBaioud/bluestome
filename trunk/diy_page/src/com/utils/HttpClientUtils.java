@@ -2,6 +2,8 @@ package com.utils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -100,7 +102,6 @@ public class HttpClientUtils {
 	 * @return
 	 */
 	public static String getHttpHeaderResponse(String url, String headerName) {
-		System.out.println("in");
 		String result = null;
 		long start = System.currentTimeMillis();
 		try {
@@ -120,10 +121,34 @@ public class HttpClientUtils {
 				httpclient = null;
 		}
 		long end = System.currentTimeMillis();
-		System.out.println("耗时:" + (end - start));
 		return result;
 	}
-
+	
+	/**
+	 * 调用HttpURLConnection获取文件大小
+	 * @param url
+	 * @return
+	 */
+	public static String getHttpConentLength(String url){
+		long start = System.currentTimeMillis();
+		String result = null;
+		try{
+			URL urlc = new URL(url);
+			HttpURLConnection conn = (HttpURLConnection)urlc.openConnection();
+			conn.setDoInput(true);
+			conn.connect();
+			int code = conn.getResponseCode();
+			if(code == HttpURLConnection.HTTP_OK){
+				result = String.valueOf(conn.getContentLength());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			System.out.println(" > 获取文件大小耗时:["+(System.currentTimeMillis()-start)+"]ms");
+		}
+		return result;
+	}
+	
 	/**
 	 * 获取响应体
 	 * 
@@ -152,18 +177,45 @@ public class HttpClientUtils {
 	}
 
 	/**
+	 * 获取响应体
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public static String getResponseBody(String url,String charset) {
+		String value = "";
+		try {
+			httpclient = new HttpClient();
+			getMethod = new GetMethod(url);
+			int statusCode = httpclient.executeMethod(getMethod);
+			if (statusCode == HttpStatus.SC_OK) {
+				value = new String(getMethod.getResponseBody(), charset);
+			}
+		} catch (Exception e) {
+			System.err.println(e);
+		} finally {
+			if (null != getMethod)
+				getMethod.releaseConnection();
+			if (null != httpclient)
+				httpclient = null;
+		}
+		return value;
+	}
+	/**
 	 * 获取页面的最后修改时间
 	 * @param url
 	 * @return
 	 */
 	public static String getLastModifiedByUrl(String url){
-		String value = null;
+		String value = "1977-01-01 00:00:00";
 		try{
 			String time = getHttpHeaderResponse(url, "Last-Modified");
-			Date date = DateUtils.parserDate(time);
-			value = DateUtils.formatDate(date, DateUtils.FULL_STANDARD_PATTERN2);
+			if(null != time ){
+				Date date = DateUtils.parserDate(time);
+				value = DateUtils.formatDate(date, DateUtils.FULL_STANDARD_PATTERN2);
+			}
 		}catch(Exception e){
-			e.printStackTrace();
+			System.err.println(e);
 		}		
 		return value;
 	}
@@ -268,9 +320,10 @@ public class HttpClientUtils {
 		String url = "http://tuku.military.china.com/military/html/2010-04-02/139456.xml";
 		String pushUrl = "http://localhost:8080/mrpmusicfs/mrpmusic.do";
 		String imgurl = "http://bizhi.zhuoku.com/2009//03/25/lvye/Lvye43.jpg";
+		String website = "http://www.sky-mobi.com/";
 		try {
 			
-			String length = getHttpHeaderResponse(imgurl,CONTENTLENGTH);
+			String length = getHttpHeaderResponse(website,CONTENTLENGTH);
 			
 			System.out.println(length == null ? "NULL" : length );
 			
