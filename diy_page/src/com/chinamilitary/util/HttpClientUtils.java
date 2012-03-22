@@ -153,23 +153,23 @@ public class HttpClientUtils {
 	 */
 	public static String getHttpConentLength(String url){
 		long start = System.currentTimeMillis();
-		String result = null;
+		String result = "0";
 		try{
 			URL urlc = new URL(url);
 			HttpURLConnection conn = (HttpURLConnection)urlc.openConnection();
 			conn.setDoInput(true);
 			conn.connect();
-			int code = conn.getResponseCode();
-			if(code == HttpURLConnection.HTTP_OK){
+			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
 				result = String.valueOf(conn.getContentLength());
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			System.err.println(" > ERROR:"+e);
 		}finally{
 			System.out.println(" > 获取文件大小耗时:["+(System.currentTimeMillis()-start)+"]ms");
 		}
 		return result;
 	}
+	
 	
 	/**
 	 * 从url中获取响应头的内容
