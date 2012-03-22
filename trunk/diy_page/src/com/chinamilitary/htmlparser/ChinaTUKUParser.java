@@ -215,9 +215,7 @@ public class ChinaTUKUParser {
 								.readXmlFromURL(article.getActicleXmlUrl());
 						int offset = 0;
 						for (ImageBean bean : imgList) {
-							String length = HttpClientUtils
-									.getHttpHeaderResponse(bean.getHttpUrl(),
-											HttpClientUtils.CONTENTLENGTH);
+							String length = HttpClientUtils.getHttpConentLength(bean.getHttpUrl());
 //							String length = "0";
 							log.debug(">> Content-Length:" + length);
 							if (null != length) {
