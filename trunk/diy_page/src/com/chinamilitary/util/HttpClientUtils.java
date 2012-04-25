@@ -18,6 +18,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.io.IOUtils;
 
 public class HttpClientUtils {
 
@@ -368,22 +369,29 @@ public class HttpClientUtils {
 	 * @return
 	 */
 	public static byte[] getBody(String url,String headerName,String headerValue){
-		byte[] value = null;
-		try {
-			httpclient = new HttpClient();
-			getMethod = new GetMethod(encodeURL(url,"UTF-8"));
-			getMethod.addRequestHeader(headerName, headerValue);
-			int statusCode = httpclient.executeMethod(getMethod);
-			if (statusCode == HttpStatus.SC_OK) {
-				value = getMethod.getResponseBody();
+		byte[] value =null;
+		URL cURL = null;
+		URLConnection connection = null;
+		InputStream is = null;
+		try{
+			cURL = new URL(url);
+			connection = cURL.openConnection();
+			//获取输出流
+			connection.setDoOutput(true);
+			connection.setConnectTimeout(5*1000);
+			connection.addRequestProperty(headerName, headerValue);
+			connection.connect();
+			int length = connection.getContentLength();
+			is = connection.getInputStream();
+			if(length > 0){
+				value = IOUtils.toByteArray(is);
 			}
-		} catch (Exception e) {
-			System.err.println(e);
-		} finally {
-			if (null != getMethod)
-				getMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
+		}catch(Exception e){
+			System.err.println("ERROR:"+e);
+		}finally{
+			if(null != is){
+				IOUtils.closeQuietly(is);
+			}
 		}
 		return value;
 	}
@@ -394,22 +402,29 @@ public class HttpClientUtils {
 	 * @return
 	 */
 	public static byte[] getBody(String url){
-		byte[] value = null;
-		try {
-			httpclient = new HttpClient();
-			getMethod = new GetMethod(encodeURL(url,"UTF-8"));
-			getMethod.addRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
-			int statusCode = httpclient.executeMethod(getMethod);
-			if (statusCode == HttpStatus.SC_OK) {
-				value = getMethod.getResponseBody();
+		byte[] value =null;
+		URL cURL = null;
+		URLConnection connection = null;
+		InputStream is = null;
+		try{
+			cURL = new URL(url);
+			connection = cURL.openConnection();
+			//获取输出流
+			connection.setDoOutput(true);
+			connection.setConnectTimeout(5*1000);
+			connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
+			connection.connect();
+			int length = connection.getContentLength();
+			is = connection.getInputStream();
+			if(length > 0){
+				value = IOUtils.toByteArray(is);
 			}
-		} catch (Exception e) {
-			System.err.println(e);
-		} finally {
-			if (null != getMethod)
-				getMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
+		}catch(Exception e){
+			System.err.println("ERROR:"+e);
+		}finally{
+			if(null != is){
+				IOUtils.closeQuietly(is);
+			}
 		}
 		return value;
 	}
