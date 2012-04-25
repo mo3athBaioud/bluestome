@@ -402,7 +402,30 @@ public class ChinaTUKUParser {
 	}
 
 	public static void main(String args[]) {
-		start();
+//		start();
+		final String url = "http://pic.6188.com/upload_6188s/flashAll/20120425/1335318189tdRPLz.jpg"; 
+		new Thread(new Runnable(){
+			public void run(){
+				try {
+					long start = System.currentTimeMillis();
+					int length = HttpClientUtils.getBodyLength(url,
+							"User-Agent","Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
+					System.out.println(" > 获取文件长度耗时:" + (System.currentTimeMillis() - start));
+					if(length != -1){
+						start = System.currentTimeMillis();
+						System.out.println(" body.length:"+length);
+						byte[] body = HttpClientUtils.getBody(url);
+						if(null != body){
+							long spend = (System.currentTimeMillis() - start)/1000;
+							System.out.println(" >　耗时:" + (spend) + " 下载["+body.length+"]的文件,下载速度:"+((length/1024)/spend)+" kb/s");
+						}
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 
 	public static void index() {
