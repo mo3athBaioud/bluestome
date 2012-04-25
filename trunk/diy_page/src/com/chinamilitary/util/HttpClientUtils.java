@@ -1,11 +1,12 @@
 package com.chinamilitary.util;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -17,7 +18,6 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.commons.io.IOUtils;
 
 public class HttpClientUtils {
 
@@ -306,6 +306,113 @@ public class HttpClientUtils {
 		}
 		return sb.toString();
 	}
+	
+	/**
+	 * 获取指定URL的内容
+	 * @param url 
+	 * @param header 请求头名
+	 * @param headerValue 请求头值
+	 * @return
+	 */
+	public static int getBodyLength(String url){
+		int value = -1;
+		URL cURL = null;
+		URLConnection connection = null;
+		try{
+			cURL = new URL(url);
+			connection = cURL.openConnection();
+			//获取输出流
+			connection.setDoOutput(true);
+			connection.setConnectTimeout(5*1000);
+			connection.connect();
+			
+			value = connection.getContentLength();
+		}catch(Exception e){
+			System.err.println("ERROR:"+e);
+		}
+		return value;
+	}
+	
+	/**
+	 * 获取指定URL的内容
+	 * @param url 
+	 * @param header 请求头名
+	 * @param headerValue 请求头值
+	 * @return
+	 */
+	public static int getBodyLength(String url,String header,String headerValue){
+		int value = -1;
+		URL cURL = null;
+		URLConnection connection = null;
+		try{
+			cURL = new URL(url);
+			connection = cURL.openConnection();
+			//获取输出流
+			connection.setDoOutput(true);
+			connection.addRequestProperty(header, headerValue);
+			connection.setConnectTimeout(5*1000);
+			connection.connect();
+			
+			value = connection.getContentLength();
+		}catch(Exception e){
+			System.err.println("ERROR:"+e);
+		}
+		return value;
+	}
+	
+	/**
+	 * 获取指定URL内容
+	 * @param url
+	 * @param headerName 请求头名
+	 * @param headerValue 请求头内容
+	 * @return
+	 */
+	public static byte[] getBody(String url,String headerName,String headerValue){
+		byte[] value = null;
+		try {
+			httpclient = new HttpClient();
+			getMethod = new GetMethod(encodeURL(url,"UTF-8"));
+			getMethod.addRequestHeader(headerName, headerValue);
+			int statusCode = httpclient.executeMethod(getMethod);
+			if (statusCode == HttpStatus.SC_OK) {
+				value = getMethod.getResponseBody();
+			}
+		} catch (Exception e) {
+			System.err.println(e);
+		} finally {
+			if (null != getMethod)
+				getMethod.releaseConnection();
+			if (null != httpclient)
+				httpclient = null;
+		}
+		return value;
+	}
+	
+	/**
+	 * 获取指定URL内容
+	 * @param url
+	 * @return
+	 */
+	public static byte[] getBody(String url){
+		byte[] value = null;
+		try {
+			httpclient = new HttpClient();
+			getMethod = new GetMethod(encodeURL(url,"UTF-8"));
+			getMethod.addRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
+			int statusCode = httpclient.executeMethod(getMethod);
+			if (statusCode == HttpStatus.SC_OK) {
+				value = getMethod.getResponseBody();
+			}
+		} catch (Exception e) {
+			System.err.println(e);
+		} finally {
+			if (null != getMethod)
+				getMethod.releaseConnection();
+			if (null != httpclient)
+				httpclient = null;
+		}
+		return value;
+	}
 
 	/**
 	 * 获取响应体
@@ -382,13 +489,22 @@ public class HttpClientUtils {
 	 * @return
 	 */
 	public static String getLastModifiedByUrl(String url){
-		String value = null;
+		String value = "1970-01-01 00:00:00";
+		URL cURL = null;
 		try{
-			String time = getHttpHeaderResponse(url, "Last-Modified");
+			cURL = new URL(url);
+			URLConnection connection = cURL.openConnection();
+			//获取输出流
+			connection.setDoOutput(true);
+			connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
+			connection.setConnectTimeout(5*1000);
+			connection.connect();
+			
+			String time = connection.getHeaderField("Last-Modified");
 			Date date = DateUtils.parserDate(time);
 			value = DateUtils.formatDate(date, DateUtils.FULL_STANDARD_PATTERN2);
 		}catch(Exception e){
-			e.printStackTrace();
+			System.err.println("ERROR:"+e);
 		}		
 		return value;
 	}
