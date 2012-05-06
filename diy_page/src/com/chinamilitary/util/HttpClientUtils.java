@@ -155,9 +155,11 @@ public class HttpClientUtils {
 	public static String getHttpConentLength(String url){
 		long start = System.currentTimeMillis();
 		String result = "0";
+		URL urlc = null;
+		HttpURLConnection conn = null;
 		try{
-			URL urlc = new URL(url);
-			HttpURLConnection conn = (HttpURLConnection)urlc.openConnection();
+			urlc = new URL(url);
+			conn = (HttpURLConnection)urlc.openConnection();
 			conn.setDoInput(true);
 			conn.connect();
 			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
@@ -167,6 +169,9 @@ public class HttpClientUtils {
 			System.err.println(" > ERROR:"+e);
 		}finally{
 			System.out.println(" > 获取文件大小耗时:["+(System.currentTimeMillis()-start)+"]ms");
+			if(null != conn){
+				conn.disconnect();
+			}
 		}
 		return result;
 	}
