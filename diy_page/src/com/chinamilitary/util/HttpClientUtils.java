@@ -1,6 +1,5 @@
 package com.chinamilitary.util;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -32,56 +31,53 @@ public class HttpClientUtils {
 	public static String CONTENTLENGTH = "Content-Length";
 	
 	public static boolean validationURL(String url) {
-		boolean success = true;
+		boolean success = false;
+		URL sUrl = null;
+		HttpURLConnection conn = null;
 		try {
-			httpclient = new HttpClient();
-			getMethod = new GetMethod(url);
-			// 请求次数
-			// getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,new
-			// DefaultHttpMethodRetryHandler());
-			int statusCode = httpclient.executeMethod(getMethod);
-			if (statusCode != HttpStatus.SC_OK) {
-				success = false;
+			sUrl = new URL(url);
+			conn = (HttpURLConnection)sUrl.openConnection();
+			conn.setConnectTimeout(5*1000);
+			conn.connect();
+			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+				success = true;
 			}
-		} catch (IOException ioe) {
-			// System.err.println("HttpClient.validationURL.IOException:"+ioe.getMessage());
-			success = false;
-			return false;
 		} catch (Exception e) {
-			// System.err.println("HttpClient.validationURL.Exception:"+e.getMessage());
-			success = false;
-			return false;
 		} finally {
-			if (null != getMethod)
-				getMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
+			if(null != conn){
+				conn.disconnect();
+				conn = null;
+			}
+			if(null != sUrl){
+				sUrl = null;
+			}
 		}
 		return success;
 	}
 
 	public static boolean urlValidation(String url) {
+		boolean success = false;
+		URL sUrl = null;
+		HttpURLConnection conn = null;
 		try {
-			httpclient = new HttpClient();
-			getMethod = new GetMethod(url);
-
-			getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
-					new DefaultHttpMethodRetryHandler());
-			// 执行getMethod
-			int statusCode = httpclient.executeMethod(getMethod);
-			if (statusCode != HttpStatus.SC_OK) {
-				System.err.println("地址[" + url + "],状态码[" + statusCode + "]");
-				return false;
+			sUrl = new URL(url);
+			conn = (HttpURLConnection)sUrl.openConnection();
+			conn.setConnectTimeout(5*1000);
+			conn.connect();
+			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+				success = true;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
-			if (!getMethod.isAborted())
-				getMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
+			if(null != conn){
+				conn.disconnect();
+				conn = null;
+			}
+			if(null != sUrl){
+				sUrl = null;
+			}
 		}
-		return true;
+		return success;
 	}
 
 	static void test1(String url) {
