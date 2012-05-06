@@ -4,19 +4,17 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.HashMap;
 
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 
 import com.chinamilitary.util.DateUtils;
 
@@ -132,9 +130,11 @@ public class HttpClientUtils {
 	public static String getHttpConentLength(String url){
 		long start = System.currentTimeMillis();
 		String result = null;
+		URL urlc = null;
+		HttpURLConnection conn = null;
 		try{
-			URL urlc = new URL(url);
-			HttpURLConnection conn = (HttpURLConnection)urlc.openConnection();
+			urlc = new URL(url);
+			conn = (HttpURLConnection)urlc.openConnection();
 			conn.setDoInput(true);
 			conn.connect();
 			int code = conn.getResponseCode();
@@ -145,6 +145,9 @@ public class HttpClientUtils {
 			e.printStackTrace();
 		}finally{
 			System.out.println(" > 获取文件大小耗时:["+(System.currentTimeMillis()-start)+"]ms");
+			if(null != conn){
+				conn.disconnect();
+			}
 		}
 		return result;
 	}
@@ -207,15 +210,21 @@ public class HttpClientUtils {
 	 * @return
 	 */
 	public static String getLastModifiedByUrl(String url){
-		String value = "1977-01-01 00:00:00";
+		String value = "1970-01-01 00:00:00";
+		URL cURL = null;
 		try{
-			String time = getHttpHeaderResponse(url, "Last-Modified");
-			if(null != time ){
-				Date date = DateUtils.parserDate(time);
-				value = DateUtils.formatDate(date, DateUtils.FULL_STANDARD_PATTERN2);
-			}
+			cURL = new URL(url);
+			URLConnection connection = cURL.openConnection();
+			//获取输出流
+			connection.setDoOutput(true);
+			connection.setConnectTimeout(5*1000);
+			connection.connect();
+			
+			String time = connection.getHeaderField("Last-Modified");
+			Date date = DateUtils.parserDate(time);
+			value = DateUtils.formatDate(date, DateUtils.FULL_STANDARD_PATTERN2);
 		}catch(Exception e){
-			System.err.println(e);
+			System.err.println("ERROR:"+e);
 		}		
 		return value;
 	}
