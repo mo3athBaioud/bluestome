@@ -1,5 +1,7 @@
 package com.chinamilitary.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -8,24 +10,20 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
 
 public class HttpClientUtils {
-
-	private static HttpClient httpclient = null;
-
-	private static GetMethod getMethod = null;
-
-	private static PostMethod postMethod = null;
 
 	//HTTP响应头中的文件大小描述
 	public static String CONTENTLENGTH = "Content-Length";
@@ -39,7 +37,9 @@ public class HttpClientUtils {
 			conn = (HttpURLConnection)sUrl.openConnection();
 			conn.setConnectTimeout(5*1000);
 			conn.connect();
+			long ss = System.currentTimeMillis();
 			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+				System.out.println("\t>>>>> 获取状态码耗时:[" + (System.currentTimeMillis()-ss)+"]ms");
 				success = true;
 			}
 		} catch (Exception e) {
@@ -80,38 +80,6 @@ public class HttpClientUtils {
 		return success;
 	}
 
-	static void test1(String url) {
-		long start = System.currentTimeMillis();
-		try {
-			httpclient = new HttpClient();
-			getMethod = new GetMethod(url);
-			// getMethod.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,new
-			// DefaultHttpMethodRetryHandler());
-			// 执行getMethod
-			int statusCode = httpclient.executeMethod(getMethod);
-			System.out.println("URL:" + url + ",状态码:" + statusCode);
-			if (statusCode != HttpStatus.SC_OK) {
-				// System.err.println("Method failed: "+
-				// getMethod.getStatusLine());
-				// System.err.println("URL: "+ url);
-				// System.out.println();
-			}
-			if (null != getMethod)
-				getMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (null != getMethod)
-				getMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
-		}
-		long end = System.currentTimeMillis();
-		System.out.println("耗时:" + (end - start));
-	}
-
 	/**
 	 * 获取响应头
 	 * 
@@ -120,25 +88,33 @@ public class HttpClientUtils {
 	 */
 	static HashMap<String, String> getHttpHeaderResponse(String url) {
 		HashMap<String, String> result = new HashMap<String, String>();
+		URL urlO = null;
+		HttpURLConnection http = null;
 		try {
-			httpclient = new HttpClient();
-			getMethod = new GetMethod(url);
-
-			int statusCode = httpclient.executeMethod(getMethod);
-			if (statusCode == HttpStatus.SC_OK) {
-				Header[] headers = getMethod.getResponseHeaders();
-				for (Header header : headers) {
-					// System.out.println(header.getName()+":"+header.getValue());
-					result.put(header.getName(), header.getValue());
+			urlO = new URL(url);
+			http = (HttpURLConnection)urlO.openConnection();
+			http.connect();
+			int code = http.getResponseCode();
+			if(code == HttpURLConnection.HTTP_OK){
+				Map<String, List<String>> responseHeader = http.getHeaderFields();
+				Set<String> keySet = responseHeader.keySet();
+				Iterator iterator = keySet.iterator();
+				while(iterator.hasNext()){
+					String key = (String)iterator.next();
+					if(null != key){
+						List<String> valueList = responseHeader.get(key);
+						for(String value:valueList){
+							result.put(key, value);
+						}
+					}
 				}
 			}
 		} catch (Exception e) {
 			System.err.println(e);
 		} finally {
-			if (null != getMethod)
-				getMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
+			if(null != http){
+				http.disconnect();
+			}
 		}
 		return result;
 	}
@@ -181,29 +157,37 @@ public class HttpClientUtils {
 	 * @return
 	 */
 	public static String getHttpHeaderResponse(String url, String headerName) {
-		String result = "";
+		String result = null;
+		URL urlO = null;
+		HttpURLConnection http = null;
 		try {
-			httpclient = new HttpClient();
-			getMethod = new GetMethod(url);
-
-			int statusCode = httpclient.executeMethod(getMethod);
-			if (statusCode == HttpStatus.SC_OK) {
-				Header[] headers = getMethod.getResponseHeaders();
-				for (Header header : headers) {
-//					System.out.println(header.getName()+":"+header.getValue());
-					if(headerName.equals(header.getName())){
-						 result = header.getValue();
-						 break;
+			urlO = new URL(url);
+			http = (HttpURLConnection)urlO.openConnection();
+			http.connect();
+			int code = http.getResponseCode();
+			if(code == HttpURLConnection.HTTP_OK){
+				Map<String, List<String>> responseHeader = http.getHeaderFields();
+				Set<String> keySet = responseHeader.keySet();
+				Iterator iterator = keySet.iterator();
+				while(iterator.hasNext()){
+					String key = (String)iterator.next();
+					if(null != key && key.trim().length() > 0){
+						if(headerName.equals(key)){
+							List<String> valueList = responseHeader.get(key);
+							for(String value:valueList){
+								result = value;
+								break;
+							}
+						}
 					}
 				}
 			}
 		} catch (Exception e) {
 			System.err.println(e);
 		} finally {
-			if (null != getMethod)
-				getMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
+			if(null != http){
+				http.disconnect();
+			}
 		}
 		return result;
 	}
@@ -215,23 +199,35 @@ public class HttpClientUtils {
 	 * @return
 	 */
 	public static String getResponseBody(String url) {
-		String value = "";
+		String result = null;
+		URL urlO = null;
+		HttpURLConnection http = null;
+		InputStream is = null;
 		try {
-			httpclient = new HttpClient();
-			getMethod = new GetMethod(url);
-			int statusCode = httpclient.executeMethod(getMethod);
-			if (statusCode == HttpStatus.SC_OK) {
-				value = new String(getMethod.getResponseBody(), "UTF-8");
+			urlO = new URL(url);
+			http = (HttpURLConnection)urlO.openConnection();
+			http.connect();
+			int code = http.getResponseCode();
+			if(code == HttpURLConnection.HTTP_OK){
+				is = http.getInputStream();
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				int ch;
+				while((ch = is.read()) != -1){
+					out.write(ch);
+				}
+				out.flush();
+				//默认使用当前系统的字符集
+				result = out.toString();
+				out.close();
 			}
 		} catch (Exception e) {
 			System.err.println(e);
 		} finally {
-			if (null != getMethod)
-				getMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
+			if(null != http){
+				http.disconnect();
+			}
 		}
-		return value;
+		return result;
 	}
 
 	/**
@@ -241,23 +237,34 @@ public class HttpClientUtils {
 	 * @return
 	 */
 	public static String getResponseBody(String url,String charset) {
-		String value = "";
+		String result = null;
+		URL urlO = null;
+		HttpURLConnection http = null;
+		InputStream is = null;
 		try {
-			httpclient = new HttpClient();
-			getMethod = new GetMethod(url);
-			int statusCode = httpclient.executeMethod(getMethod);
-			if (statusCode == HttpStatus.SC_OK) {
-				value = new String(getMethod.getResponseBody(), charset);
+			urlO = new URL(url);
+			http = (HttpURLConnection)urlO.openConnection();
+			http.connect();
+			int code = http.getResponseCode();
+			if(code == HttpURLConnection.HTTP_OK){
+				is = http.getInputStream();
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				int ch;
+				while((ch = is.read()) != -1){
+					out.write(ch);
+				}
+				out.flush();
+				result = out.toString(charset);
+				out.close();
 			}
 		} catch (Exception e) {
 			System.err.println(e);
 		} finally {
-			if (null != getMethod)
-				getMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
+			if(null != http){
+				http.disconnect();
+			}
 		}
-		return value;
+		return result;
 	}
 	
 	/**
@@ -412,8 +419,9 @@ public class HttpClientUtils {
 			connection = cURL.openConnection();
 			//获取输出流
 			connection.setDoOutput(true);
-			connection.setConnectTimeout(5*1000);
-			connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
+			connection.setConnectTimeout(10*1000);
+//			connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
+			connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.0.3; de-ch; HTC Sensation Build/IML74K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
 			connection.connect();
 			int length = connection.getContentLength();
 			is = connection.getInputStream();
@@ -442,63 +450,52 @@ public class HttpClientUtils {
 	 */
 	public static byte[] getResponseBodyAsByte(String refence, String cookie,
 			String url) {
-		byte[] value = null;
-		HttpClientParams params = null;
-		Header charset = null;
+		byte[] result = null;
+		URL urlO = null;
+		HttpURLConnection http = null;
+		InputStream is = null;
+		ByteArrayOutputStream out = null;
 		try {
-			httpclient = new HttpClient();
-			// params.setContentCharset("GBK");
-			getMethod = new GetMethod(encodeURL(url,"UTF-8"));
-			// getMethod.setParams(params);
-
-			// 破解防盗链配置
-			if (null != refence)
-				getMethod.addRequestHeader("Referer", refence);
-			if (null != cookie)
-				getMethod.setRequestHeader("Cookie", cookie);
-			int statusCode = httpclient.executeMethod(getMethod);
-			if (statusCode == HttpStatus.SC_OK) {
-//				charset = getMethod.getResponseHeader("charset");
-//				if(null ==  charset){
-//					
-//				}else{
-					value = getMethod.getResponseBody();
-//				}
+			urlO = new URL(url);
+			http = (HttpURLConnection) urlO.openConnection();
+			if (null != refence) {
+				http.addRequestProperty("Referer", refence);
+			}
+			if (null != cookie) {
+				http.addRequestProperty("Cookie", cookie);
+			}
+			http.connect();
+			int code = http.getResponseCode();
+			if (code == HttpURLConnection.HTTP_OK) {
+				int length = http.getContentLength();
+				System.out.println("\t>>>>>> 响应体内容大小：" + length);
+				if (length > 0) {
+					out = new ByteArrayOutputStream();
+					is = http.getInputStream();
+					int ch;
+					while ((ch = is.read()) != -1) {
+						out.write(ch);
+					}
+					out.flush();
+					result = out.toByteArray();
+				}
 			}
 		} catch (Exception e) {
 			System.err.println(e);
 		} finally {
-			if (null != getMethod)
-				getMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
+			if (null != http) {
+				http.disconnect();
+			}
+			if (null != out) {
+				try {
+					out.close();
+				} catch (IOException e) {
+				}
+			}
 		}
-		return value;
+		return result;
 	}
 
-	public static boolean referTest(String referUrl, String url)
-			throws Exception {
-		try {
-			httpclient = new HttpClient();
-			getMethod = new GetMethod(url);
-			getMethod.setRequestHeader("Referer", referUrl);
-			int statusCode = httpclient.executeMethod(getMethod);
-			if (statusCode != HttpStatus.SC_OK) {
-				System.err.println("地址[" + url + "],状态码[" + statusCode + "]");
-				return false;
-			}
-			return true;
-		} catch (Exception e) {
-			System.err.println(e);
-			return false;
-		} finally {
-			if (null != getMethod)
-				getMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
-		}
-	}
-	
 	/**
 	 * 获取页面的最后修改时间
 	 * @param url
@@ -530,74 +527,37 @@ public class HttpClientUtils {
 	 *
 	 */
 	static void post(){
+		long start = System.currentTimeMillis();
 		String url = "http://172.18.1.21:8081/upload/upload.cgi";
+		URL urlO = null;
+		HttpURLConnection http = null;
 		try{
-			httpclient = new HttpClient();
-			postMethod = new PostMethod(encodeURL(url,"UTF-8"));
-			
-			int statusCode = httpclient.executeMethod(postMethod);
-			Thread.sleep(2000);
+			urlO = new URL(url);
+			http = (HttpURLConnection)urlO.openConnection();
+			http.setConnectTimeout(15*1000);
+			http.setReadTimeout(15*1000);
+			http.setRequestMethod("POST");
+			http.connect();
+			int statusCode = http.getResponseCode();
 			System.out.println(" >> :"+statusCode);
 		}catch(Exception e){
-			
+			e.printStackTrace();
 		}finally {
-			if (null != postMethod)
-				postMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
+			System.out.println("\t>>>> HTTP连接耗时:"+(System.currentTimeMillis()-start));
+			if(null != http){
+				http.disconnect();
+			}
 		}
 	}
 	
 	public static void main(String args[]) {
-		String url = "http://www.showimg.com/other/jingxuan20101102/big/jingxuan003[1].jpg";
+		String url = "http://bizhi.zhuoku.com/2012/06/16/zhuoku/Zhuoku004.jpg";
 		try {
-//			 url = url.replace("[", URLEncoder.encode("[", "utf-8")).replace("]", URLEncoder.encode("]", "utf-8"));
-//			 System.out.println("url:"+url);
-//			 if(null == url)
-//				 return;
-//			 byte[] value2 = getResponseBodyAsByte(null,
-//			 null,url);
-//			 if(null != value2){
-//			 System.out.println("未增加破解防盗链引用文件长度:"+value2.length);
-//			 }
-			//			
-			// long start = System.currentTimeMillis();
-			// byte[] value =
-			// getResponseBodyAsByte("http://www.bizhizhan.com//renwenjijiabizhi/shoujitupian-30-4598.html",
-			// "rtime=2; ltime=1282990509523;
-			// cnzz_eid=5808015-1282816593-http%3A//www.tuku.cn/;
-			// virtualwall=vsid=0c8cafa6001de309645c11edffa3aa43",
-			// "http://www.bizhizhan.com/uploads/allimg/090830/1-0ZS0102521.jpg");
-			// if(null != value){
-			// long end = System.currentTimeMillis();
-			// System.out.println("增加破解防盗链引用后的文件长度:"+value.length);
-			// System.out.println("耗时:"+(end-start));
-			// IOUtil.createFile(value,
-			// System.getProperty("user.dir")+"/"+"1-0ZS0102521.jpg");
-			// }
-
-			// http://www.china.com/zh_cn/ 长度[2010-09-06 18:52]：173574
-//			String length = getHttpHeaderResponse(
-//					"http://www.china.com/zh_cn/", "Content-Length");
-//			System.out.println("网页长度：" + length);
-			// System.out.println("isTRUE:"+urlValidation("http://www.bizhi.com/wallpaper/1150_2.html"));
-			
-			//Last-Modified
-//			String time = getHttpHeaderResponse("http://www.tupian.com/", "Last-Modified");
-//			System.out.println(" >> ora:"+time);
-//			Date date = DateUtils.parserDate(time);
-//			System.out.println(" >> time:"+DateUtils.formatDate(date, DateUtils.FULL_STANDARD_PATTERN2));
-			
-			
-			//2011-06-11
 			post();
+			getResponseBodyAsByte("http://www.zhuoku.com",null,url);
 		} catch (Exception e) {
 			System.err.println(e);
 		} finally {
-			if (null != getMethod)
-				getMethod.releaseConnection();
-			if (null != httpclient)
-				httpclient = null;
 		}
 	}
 
