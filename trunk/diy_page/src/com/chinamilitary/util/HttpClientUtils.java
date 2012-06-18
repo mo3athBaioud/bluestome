@@ -15,13 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.params.HttpClientParams;
 import org.apache.commons.io.IOUtils;
+
+import com.utils.ByteUtils;
 
 public class HttpClientUtils {
 
@@ -36,6 +32,10 @@ public class HttpClientUtils {
 			sUrl = new URL(url);
 			conn = (HttpURLConnection)sUrl.openConnection();
 			conn.setConnectTimeout(5*1000);
+			conn.addRequestProperty("Cache-Control", "no-cache");
+			conn.addRequestProperty("Connection", "keep-alive");
+			conn.setConnectTimeout(10*1000);
+			conn.setReadTimeout(2*1000);
 			conn.connect();
 			long ss = System.currentTimeMillis();
 			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
@@ -63,6 +63,10 @@ public class HttpClientUtils {
 			sUrl = new URL(url);
 			conn = (HttpURLConnection)sUrl.openConnection();
 			conn.setConnectTimeout(5*1000);
+			conn.addRequestProperty("Cache-Control", "no-cache");
+			conn.addRequestProperty("Connection", "keep-alive");
+			conn.setConnectTimeout(10*1000);
+			conn.setReadTimeout(2*1000);
 			conn.connect();
 			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
 				success = true;
@@ -93,6 +97,10 @@ public class HttpClientUtils {
 		try {
 			urlO = new URL(url);
 			http = (HttpURLConnection)urlO.openConnection();
+			http.addRequestProperty("Cache-Control", "no-cache");
+			http.addRequestProperty("Connection", "keep-alive");
+			http.setConnectTimeout(10*1000);
+			http.setReadTimeout(2*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if(code == HttpURLConnection.HTTP_OK){
@@ -133,6 +141,10 @@ public class HttpClientUtils {
 			urlc = new URL(url);
 			conn = (HttpURLConnection)urlc.openConnection();
 			conn.setDoInput(true);
+			conn.addRequestProperty("Cache-Control", "no-cache");
+			conn.addRequestProperty("Connection", "keep-alive");
+			conn.setConnectTimeout(10*1000);
+			conn.setReadTimeout(2*1000);
 			conn.connect();
 			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
 				result = String.valueOf(conn.getContentLength());
@@ -163,6 +175,10 @@ public class HttpClientUtils {
 		try {
 			urlO = new URL(url);
 			http = (HttpURLConnection)urlO.openConnection();
+			http.addRequestProperty("Cache-Control", "no-cache");
+			http.addRequestProperty("Connection", "keep-alive");
+			http.setConnectTimeout(10*1000);
+			http.setReadTimeout(2*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if(code == HttpURLConnection.HTTP_OK){
@@ -206,6 +222,10 @@ public class HttpClientUtils {
 		try {
 			urlO = new URL(url);
 			http = (HttpURLConnection)urlO.openConnection();
+			http.addRequestProperty("Cache-Control", "no-cache");
+			http.addRequestProperty("Connection", "keep-alive");
+			http.setConnectTimeout(10*1000);
+			http.setReadTimeout(2*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if(code == HttpURLConnection.HTTP_OK){
@@ -244,6 +264,10 @@ public class HttpClientUtils {
 		try {
 			urlO = new URL(url);
 			http = (HttpURLConnection)urlO.openConnection();
+			http.addRequestProperty("Cache-Control", "no-cache");
+			http.addRequestProperty("Connection", "keep-alive");
+			http.setConnectTimeout(10*1000);
+			http.setReadTimeout(2*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if(code == HttpURLConnection.HTTP_OK){
@@ -332,7 +356,10 @@ public class HttpClientUtils {
 			connection = cURL.openConnection();
 			//获取输出流
 			connection.setDoOutput(true);
-			connection.setConnectTimeout(5*1000);
+			connection.addRequestProperty("Cache-Control", "no-cache");
+			connection.addRequestProperty("Connection", "keep-alive");
+			connection.setConnectTimeout(10*1000);
+			connection.setReadTimeout(2*1000);
 			connection.connect();
 			
 			value = connection.getContentLength();
@@ -359,7 +386,8 @@ public class HttpClientUtils {
 			//获取输出流
 			connection.setDoOutput(true);
 			connection.addRequestProperty(header, headerValue);
-			connection.setConnectTimeout(5*1000);
+			connection.setConnectTimeout(10*1000);
+			connection.setReadTimeout(2*1000);
 			connection.connect();
 			
 			value = connection.getContentLength();
@@ -388,6 +416,8 @@ public class HttpClientUtils {
 			connection.setDoOutput(true);
 			connection.setConnectTimeout(5*1000);
 			connection.addRequestProperty(headerName, headerValue);
+			connection.setConnectTimeout(10*1000);
+			connection.setReadTimeout(2*1000);
 			connection.connect();
 			int length = connection.getContentLength();
 			is = connection.getInputStream();
@@ -422,6 +452,10 @@ public class HttpClientUtils {
 			connection.setConnectTimeout(10*1000);
 //			connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
 			connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.0.3; de-ch; HTC Sensation Build/IML74K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
+			connection.addRequestProperty("Cache-Control", "no-cache");
+			connection.addRequestProperty("Connection", "keep-alive");
+			connection.setConnectTimeout(10*1000);
+			connection.setReadTimeout(2*1000);
 			connection.connect();
 			int length = connection.getContentLength();
 			is = connection.getInputStream();
@@ -464,11 +498,14 @@ public class HttpClientUtils {
 			if (null != cookie) {
 				http.addRequestProperty("Cookie", cookie);
 			}
+			http.addRequestProperty("Cache-Control", "no-cache");
+			http.addRequestProperty("Connection", "keep-alive");
+			http.setConnectTimeout(10*1000);
+			http.setReadTimeout(2*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if (code == HttpURLConnection.HTTP_OK) {
 				int length = http.getContentLength();
-				System.out.println("\t>>>>>> 响应体内容大小：" + length);
 				if (length > 0) {
 					out = new ByteArrayOutputStream();
 					is = http.getInputStream();
@@ -510,7 +547,8 @@ public class HttpClientUtils {
 			//获取输出流
 			connection.setDoOutput(true);
 			connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
-			connection.setConnectTimeout(5*1000);
+			connection.setConnectTimeout(10*1000);
+			connection.setReadTimeout(2*1000);
 			connection.connect();
 			
 			String time = connection.getHeaderField("Last-Modified");
@@ -523,38 +561,26 @@ public class HttpClientUtils {
 	}
 
 	/**
-	 * 执行POST
-	 *
+	 * 入口函数
+	 * @param args
 	 */
-	static void post(){
-		long start = System.currentTimeMillis();
-		String url = "http://172.18.1.21:8081/upload/upload.cgi";
-		URL urlO = null;
-		HttpURLConnection http = null;
-		try{
-			urlO = new URL(url);
-			http = (HttpURLConnection)urlO.openConnection();
-			http.setConnectTimeout(15*1000);
-			http.setReadTimeout(15*1000);
-			http.setRequestMethod("POST");
-			http.connect();
-			int statusCode = http.getResponseCode();
-			System.out.println(" >> :"+statusCode);
-		}catch(Exception e){
-			e.printStackTrace();
-		}finally {
-			System.out.println("\t>>>> HTTP连接耗时:"+(System.currentTimeMillis()-start));
-			if(null != http){
-				http.disconnect();
-			}
-		}
-	}
-	
 	public static void main(String args[]) {
-		String url = "http://bizhi.zhuoku.com/2012/06/16/zhuoku/Zhuoku004.jpg";
 		try {
-			post();
-			getResponseBodyAsByte("http://www.zhuoku.com",null,url);
+			//这个URL是一个验证码地址
+			byte[] body = getResponseBodyAsByte(null,null,"http://www.hzti.com/government/CreateCheckCode.aspx?d="+System.currentTimeMillis());
+			if(null != body){
+				String print = ByteUtils.bytesAsHexString(body, Short.MAX_VALUE);
+				System.out.println(print);
+			}else{
+				System.out.println("没有返回内容");
+			}
+			
+			body = getResponseBodyAsByte(null, null, "http://www.hzti.com/service/qry/violation_veh.aspx?type=2&node=249");
+			if(null != body){
+				System.out.println("页面内容大小:"+body.length);
+			}else{
+				System.out.println("没有返回内容");
+			}
 		} catch (Exception e) {
 			System.err.println(e);
 		} finally {
