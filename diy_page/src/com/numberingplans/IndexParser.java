@@ -213,7 +213,7 @@ public class IndexParser {
 					if(!file.exists()){
 						file.getParentFile().mkdir();
 					}
-					IOUtil.createFile(content, SAVE_PATH+type, type+"_"+pageNum+".html", null);
+					IOUtil.createFile(content, SAVE_PATH+type, type+"_"+pageNum+".html");
 					client.add(url, new NumberingPlansFile(url,content.length(),file));
 				}
 				return true;
@@ -231,7 +231,7 @@ public class IndexParser {
 					if(!npf.getFile().exists()){
 						npf.getFile().getParentFile().mkdir();
 					}
-					IOUtil.createFile(content, SAVE_PATH+type, type+"_"+pageNum+".html", null);
+					IOUtil.createFile(content, SAVE_PATH+type, type+"_"+pageNum+".html");
 					client.remove(url);
 					client.add(url, new NumberingPlansFile(url,content.length(),npf.getFile()));
 					return true;
