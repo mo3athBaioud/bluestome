@@ -552,7 +552,7 @@ public class MobileParser {
 				if(!file.exists()){
 					file.getParentFile().mkdir();
 				}
-				IOUtil.createFile(content, file.getParentFile().getAbsolutePath(),file.getName(),null );
+				IOUtil.createFile(content, file.getParentFile().getAbsolutePath(),file.getName());
 			}
 			return true;
 		}catch(Exception e){
