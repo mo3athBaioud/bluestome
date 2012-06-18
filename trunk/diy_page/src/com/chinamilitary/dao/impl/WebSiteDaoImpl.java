@@ -114,6 +114,7 @@ public class WebSiteDaoImpl extends CommonDB implements WebSiteDao {
 			bean = new WebsiteBean();
 			bean.setId(rs.getInt("d_id"));
 			bean.setParentId(rs.getInt("d_parent_id"));
+			bean.setType(rs.getInt("d_web_type"));
 			bean.setName(rs.getString("d_web_name"));
 			bean.setUrl(rs.getString("d_web_url"));
 			bean.setCreatetme(rs.getDate("d_createtime"));
@@ -143,6 +144,7 @@ public class WebSiteDaoImpl extends CommonDB implements WebSiteDao {
 			bean.setId(rs.getInt("d_id"));
 			bean.setName(rs.getString("d_web_name"));
 			bean.setParentId(rs.getInt("d_parent_id"));
+			bean.setType(rs.getInt("d_web_type"));
 			bean.setUrl(rs.getString("d_web_url"));
 			bean.setCreatetme(rs.getDate("d_createtime"));
 			bean.setStatus(rs.getInt("d_status"));
@@ -171,6 +173,7 @@ public class WebSiteDaoImpl extends CommonDB implements WebSiteDao {
 			bean.setId(rs.getInt("d_id"));
 			bean.setParentId(rs.getInt("d_parent_id"));
 			bean.setName(rs.getString("d_web_name"));
+			bean.setType(rs.getInt("d_web_type"));
 			bean.setUrl(rs.getString("d_web_url"));
 			bean.setCreatetme(rs.getDate("d_createtime"));
 			bean.setStatus(rs.getInt("d_status"));
