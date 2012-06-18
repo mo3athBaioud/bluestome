@@ -13,6 +13,7 @@ public class WebsiteBean implements Serializable {
 	private static final long serialVersionUID = 9138376143415042891L;
 	private Integer id;
 	private Integer parentId;
+	private Integer type;
 	private String url;
 	private String name;
 	private Date createtme;
@@ -104,7 +105,14 @@ public class WebsiteBean implements Serializable {
 	public  void setLastModifyTime(String lastModifyTime) {
 		this.lastModifyTime = lastModifyTime;
 	}
-	
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
 	
 	
 	
