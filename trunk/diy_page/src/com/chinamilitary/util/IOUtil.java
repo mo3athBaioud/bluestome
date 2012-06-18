@@ -2,6 +2,11 @@ package com.chinamilitary.util;
 import java.io.*;
 import java.net.URL;
 public class IOUtil {
+	
+	/**
+	 * 创建文件
+	 * @param content 文件内容
+	 */
 	public synchronized static void createFile(String content){
 		File file = null;
 		OutputStream out = null;
@@ -50,9 +55,8 @@ public class IOUtil {
 	/**
 	 * 复制文件到指定目录
 	 * 
-	 * @param src
-	 * @param dst
-	 * @param BUFFER_SIZE
+	 * @param url 文件地址
+	 * @param fileName 文件名（绝对路径）
 	 */
 	public static synchronized void createPicFile(String url,String fileName) throws IOException{ //File src, File dst, int BUFFER_SIZE
 			InputStream in = null;
@@ -78,13 +82,14 @@ public class IOUtil {
 				
 				out = new BufferedOutputStream(new FileOutputStream(file),
 						1024);
-				byte[] buffer = new byte[1024];
-
 				int bytesRead = 0;
-
-			    while((bytesRead = in.read(buffer,0,1024))!=-1){
-				  out.write(buffer,0,bytesRead);
+				ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+			    while((bytesRead = in.read())!=-1){
+			    	byteBuffer.write(bytesRead);
 				}
+			    byteBuffer.flush();
+			    byteBuffer.writeTo(out);
+			    byteBuffer.close();
 			} finally {
 				if (null != in) {
 					in.close();
@@ -95,6 +100,11 @@ public class IOUtil {
 			}
 	}
 
+	/**
+	 * 创建文件
+	 * @param content  文件内容
+	 * @param fileName 文件名 [默认保存在用户目录下]
+	 */
 	public static synchronized void createFile(String content,String fileName){
 		File file = null;
 		OutputStream out = null;
@@ -114,6 +124,13 @@ public class IOUtil {
 
 	}
 	
+	/**
+	 * 创建文件
+	 * @param content 文件内容
+	 * @param fileName 文件名
+	 * @param ext 文件扩展名
+	 * @return
+	 */
 	public static synchronized String createFile(String content,String fileName,String ext){
 		String filePath = System.getProperty("user.dir")+"/"+fileName+ext;
 		File file = null;
@@ -137,31 +154,6 @@ public class IOUtil {
 		return filePath;
 	}
 
-	public static synchronized String createFile(String content,String filePath,String fileName,String tmp){
-		String savePath = filePath+"/"+fileName;
-		File file = null;
-		OutputStream out = null;
-		try{
-			try{
-				file = new File(savePath);
-				if(!file.exists()){
-					file.getParentFile().mkdirs();
-				}else{
-					return savePath;
-				}
-				out = new BufferedOutputStream(new FileOutputStream(file),1024);
-				out.write(content.getBytes(), 0, content.getBytes().length);
-				out.close();
-			}finally{
-				if(out != null)
-					out.close();
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return filePath;
-	}
-	
 	/**
 	 * 将二进制内容写入指定文件
 	 * @param bytes
@@ -224,7 +216,9 @@ public class IOUtil {
 	}
 	
 	/**
-	 * 获取当前CLASSPATH下的文件
+	 * 读取文件内容
+	 * @param fileName 文件名
+	 * @return
 	 */
 	public static String readFile(String fileName){
 		InputStreamReader read = null;
@@ -257,36 +251,8 @@ public class IOUtil {
 	}
 	
 	public static void main(String[] args){
-		try{
-		System.out.println("Hello World!");
-		createFile("Fuck!"+new java.sql.Timestamp(System.currentTimeMillis()).toString());
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 
-	public static void createFile(String content, String filePath, String fileName, Object object) {
-		String savePath = filePath+"\\"+fileName;
-		File file = null;
-		OutputStream out = null;
-		try{
-			try{
-				file = new File(savePath);
-				if(file.exists()){
-					return;
-				}
-				out = new BufferedOutputStream(new FileOutputStream(file),1024);
-				out.write(content.getBytes(), 0, content.getBytes().length);
-				out.close();
-			}finally{
-				if(out != null)
-					out.close();
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-	
 	/**
 	 * 将字节数组保存在指定文件中
 	 * 
@@ -306,7 +272,6 @@ public class IOUtil {
 		if (!dir.isDirectory())
 			dir.mkdirs();// 创建不存在的目录
 		try {
-			// writeln the file to the file specified
 			OutputStream bos = new FileOutputStream(pathname, append);
 			bos.write(buffer);
 			bos.close();
