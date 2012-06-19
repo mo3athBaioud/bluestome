@@ -35,7 +35,7 @@ public class HttpClientUtils {
 			conn.addRequestProperty("Cache-Control", "no-cache");
 			conn.addRequestProperty("Connection", "keep-alive");
 			conn.setConnectTimeout(10*1000);
-			conn.setReadTimeout(2*1000);
+			conn.setReadTimeout(15*1000);
 			conn.connect();
 			long ss = System.currentTimeMillis();
 			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
@@ -66,7 +66,7 @@ public class HttpClientUtils {
 			conn.addRequestProperty("Cache-Control", "no-cache");
 			conn.addRequestProperty("Connection", "keep-alive");
 			conn.setConnectTimeout(10*1000);
-			conn.setReadTimeout(2*1000);
+			conn.setReadTimeout(15*1000);
 			conn.connect();
 			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
 				success = true;
@@ -100,7 +100,7 @@ public class HttpClientUtils {
 			http.addRequestProperty("Cache-Control", "no-cache");
 			http.addRequestProperty("Connection", "keep-alive");
 			http.setConnectTimeout(10*1000);
-			http.setReadTimeout(2*1000);
+			http.setReadTimeout(15*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if(code == HttpURLConnection.HTTP_OK){
@@ -144,7 +144,7 @@ public class HttpClientUtils {
 			conn.addRequestProperty("Cache-Control", "no-cache");
 			conn.addRequestProperty("Connection", "keep-alive");
 			conn.setConnectTimeout(10*1000);
-			conn.setReadTimeout(2*1000);
+			conn.setReadTimeout(15*1000);
 			conn.connect();
 			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
 				result = String.valueOf(conn.getContentLength());
@@ -178,7 +178,7 @@ public class HttpClientUtils {
 			http.addRequestProperty("Cache-Control", "no-cache");
 			http.addRequestProperty("Connection", "keep-alive");
 			http.setConnectTimeout(10*1000);
-			http.setReadTimeout(2*1000);
+			http.setReadTimeout(15*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if(code == HttpURLConnection.HTTP_OK){
@@ -225,7 +225,7 @@ public class HttpClientUtils {
 			http.addRequestProperty("Cache-Control", "no-cache");
 			http.addRequestProperty("Connection", "keep-alive");
 			http.setConnectTimeout(10*1000);
-			http.setReadTimeout(2*1000);
+			http.setReadTimeout(15*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if(code == HttpURLConnection.HTTP_OK){
@@ -267,7 +267,7 @@ public class HttpClientUtils {
 			http.addRequestProperty("Cache-Control", "no-cache");
 			http.addRequestProperty("Connection", "keep-alive");
 			http.setConnectTimeout(10*1000);
-			http.setReadTimeout(2*1000);
+			http.setReadTimeout(15*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if(code == HttpURLConnection.HTTP_OK){
@@ -359,7 +359,7 @@ public class HttpClientUtils {
 			connection.addRequestProperty("Cache-Control", "no-cache");
 			connection.addRequestProperty("Connection", "keep-alive");
 			connection.setConnectTimeout(10*1000);
-			connection.setReadTimeout(2*1000);
+			connection.setReadTimeout(15*1000);
 			connection.connect();
 			
 			value = connection.getContentLength();
@@ -387,7 +387,7 @@ public class HttpClientUtils {
 			connection.setDoOutput(true);
 			connection.addRequestProperty(header, headerValue);
 			connection.setConnectTimeout(10*1000);
-			connection.setReadTimeout(2*1000);
+			connection.setReadTimeout(15*1000);
 			connection.connect();
 			
 			value = connection.getContentLength();
@@ -417,7 +417,7 @@ public class HttpClientUtils {
 			connection.setConnectTimeout(5*1000);
 			connection.addRequestProperty(headerName, headerValue);
 			connection.setConnectTimeout(10*1000);
-			connection.setReadTimeout(2*1000);
+			connection.setReadTimeout(15*1000);
 			connection.connect();
 			int length = connection.getContentLength();
 			is = connection.getInputStream();
@@ -455,7 +455,7 @@ public class HttpClientUtils {
 			connection.addRequestProperty("Cache-Control", "no-cache");
 			connection.addRequestProperty("Connection", "keep-alive");
 			connection.setConnectTimeout(10*1000);
-			connection.setReadTimeout(2*1000);
+			connection.setReadTimeout(15*1000);
 			connection.connect();
 			int length = connection.getContentLength();
 			is = connection.getInputStream();
@@ -501,7 +501,7 @@ public class HttpClientUtils {
 			http.addRequestProperty("Cache-Control", "no-cache");
 			http.addRequestProperty("Connection", "keep-alive");
 			http.setConnectTimeout(10*1000);
-			http.setReadTimeout(2*1000);
+			http.setReadTimeout(15*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if (code == HttpURLConnection.HTTP_OK) {
@@ -548,7 +548,7 @@ public class HttpClientUtils {
 			connection.setDoOutput(true);
 			connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
 			connection.setConnectTimeout(10*1000);
-			connection.setReadTimeout(2*1000);
+			connection.setReadTimeout(15*1000);
 			connection.connect();
 			
 			String time = connection.getHeaderField("Last-Modified");
