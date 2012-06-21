@@ -1,6 +1,7 @@
 package com.google.geolocationapi;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -63,6 +64,7 @@ public class Demo {
 		HttpURLConnection connection = null;
 		OutputStream out = null;
 		InputStream in = null;
+		ByteArrayOutputStream tmp = null;
 		try{
 			url = new URL("http://www.google.com/loc/json");
 			connection = (HttpURLConnection)url.openConnection();
@@ -79,7 +81,7 @@ public class Demo {
 			int code = connection.getResponseCode();
 			if(code ==  HttpURLConnection.HTTP_OK){
 				in = connection.getInputStream();
-				ByteArrayOutputStream tmp = new ByteArrayOutputStream();
+				tmp = new ByteArrayOutputStream();
 				int ch;
 				while((ch = in.read()) != -1){
 					tmp.write(ch);
@@ -94,6 +96,14 @@ public class Demo {
 		}catch(Exception e){
 			
 		}finally{
+			if(null != tmp){
+				try {
+					tmp.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			if(null != connection){
 				connection.disconnect();
 				connection = null;
