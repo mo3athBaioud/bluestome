@@ -8,6 +8,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Demo {
+	
+	public static final String LOC_URL = "http://www.google.com/loc/json";
 
 	private static StringBuffer sb = new StringBuffer();
 	static{
@@ -66,7 +68,7 @@ public class Demo {
 		InputStream in = null;
 		ByteArrayOutputStream tmp = null;
 		try{
-			url = new URL("http://www.google.com/loc/json");
+			url = new URL(LOC_URL);
 			connection = (HttpURLConnection)url.openConnection();
 			connection.setRequestMethod("POST");
 			connection.setConnectTimeout(10*1000);
