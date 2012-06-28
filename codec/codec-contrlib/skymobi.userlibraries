@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<eclipse-userlibraries version="1">
+ <library name="skymobi-contrlib" systemlibrary="false">
+		<archive path="/codec-contrlib/lib/commons-codec-1.5.jar"/>
+		<archive path="/codec-contrlib/lib/commons-logging-1.0.4.jar"/>
+		<archive path="/codec-contrlib/lib/httpmime-4.1.2.jar"/>
+		<archive path="/codec-contrlib/lib/httpcore-4.0.jar"/>
+		<archive path="/codec-contrlib/lib/httpclient-4.0.jar"/>
+</library>
+</eclipse-userlibraries>
