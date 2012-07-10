@@ -18,6 +18,11 @@ import org.slf4j.LoggerFactory;
 
 import com.chinamilitary.memcache.MemcacheClient;
 
+/**
+ * 汽车之家论坛
+ * @author Bluestome.Zhang
+ *
+ */
 public class BBSParser {
 
 	private static Logger logger = LoggerFactory.getLogger(BBSParser.class);
@@ -53,7 +58,6 @@ public class BBSParser {
 					for (int i = 0; i < list.size(); i++) {
 						LinkTag lt = (LinkTag) list.elementAt(i);
 						logger.info("{}\t【{}】", lt.getLinkText().trim(),lt.getLink());
-//						logger.info("{}", lt.getLink());
 					}
 				}
 			}
@@ -67,11 +71,11 @@ public class BBSParser {
 	}
 
 	public static void main(String args[]) {
+		  //每个N长时间执行一次
 	       exec.scheduleWithFixedDelay(new Runnable() {
-
 	            public void run() {
 	            	try {
-						bbslist("http://club.autohome.com.cn/bbs/forum-c-362-{page}.html",
+						bbslist("http://club.autohome.com.cn/bbs/forum-c-529-{page}.html",
 								1);
 					} catch (ParserException e) {
 						// TODO Auto-generated catch block
@@ -82,6 +86,6 @@ public class BBSParser {
 					}
 	            }
 	        },
-	       500, 5 * 1000, TimeUnit.MILLISECONDS);
+	       1000, 60 * 1000, TimeUnit.MILLISECONDS);
 	}
 }
