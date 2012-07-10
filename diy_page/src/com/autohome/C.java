@@ -24,11 +24,12 @@ import org.htmlparser.tags.CompositeTag;
 import org.htmlparser.util.NodeList;
 
 public class C {
-
+	
+	static String BSS_URL = "http://club.autohome.com.cn/bbs/forum-c-{id}-{page}.html";
 	BlockingQueue<byte[]> byteQuene = new LinkedBlockingQueue<byte[]>(100);
 
 	static Map<String, Integer> SIZEHASH = new HashMap<String, Integer>();
-
+	
 	public void timeout(String webSite, Callback call) {
 		URL cURL = null;
 		HttpURLConnection connection = null;
@@ -57,7 +58,7 @@ public class C {
 			System.out.println("\t 获取响应码耗时: "
 					+ (System.currentTimeMillis() - start) + " ms");
 			start = System.currentTimeMillis();
-
+			connection.setReadTimeout(60*1000);
 			in = connection.getInputStream();
 			ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
 			int ch;
@@ -79,7 +80,8 @@ public class C {
 		}
 	}
 
-	public void executorPoll() {
+	public void executorPoll(final String carId,final String page) {
+		System.out.println("ThreadID:"+Thread.currentThread().getId());
 		final long pollTime = 30 * 1000L;
 		final long timeout = 500L;
 		final ScheduledExecutorService pool = Executors
@@ -94,7 +96,7 @@ public class C {
 						long end = System.currentTimeMillis() - start;
 						if (end <= pollTime + (timeout * 5)) {
 							timeout(
-									"http://club.autohome.com.cn/bbs/forum-c-2001-1.html",
+									BSS_URL.replace("{id}", carId).replace("{page}", page),
 									new Callback() {
 										@Override
 										public void work(final byte[] body) {
@@ -105,7 +107,7 @@ public class C {
 													if(null == value){
 														SIZEHASH.put(key, 1);
 														String content = new String(body);
-														parserBbs(content);
+														parserBbs(content,"2001");
 													}else{
 														SIZEHASH.put(key, (value+1));
 													}
@@ -130,7 +132,8 @@ public class C {
 		}, 100L, pollTime, TimeUnit.MILLISECONDS);
 	}
 	
-	private void parserBbs(String content){
+	private void parserBbs(String content,String carId){
+		long start = System.currentTimeMillis();
 		Parser p1 = null;
 		try{
 			p1 = new Parser();
@@ -144,7 +147,10 @@ public class C {
 			/**
 			 * c|2001|16099453|3|2012-07-10 13:36|2012-07-10 20:02|5385276|1048731|0|0|0|tnwwzh 
 			 * 格式说明:
-			 * 论坛标识|论坛编号|帖子编号|回复数|发帖时间|最后跟帖时间|未知|未知|未知|未知|未知|发帖人
+			 * 论坛标识|论坛编号|帖子编号|回复数|发帖时间|最后跟帖时间|发帖人ID|最后跟帖人ID|帖子推荐类型|提问|有无图片|发帖人昵称
+			 * 帖子推荐类型： 1:推荐  3:精华
+			 * 帖子属性: 18:提问
+			 * 有无图片: 1:有 0:没有
 			 */
 			if(null != list && list.size() > 0){
 				int i =0;
@@ -152,7 +158,7 @@ public class C {
 					CompositeTag tag = (CompositeTag)list.elementAt(i);
 					String lang = tag.getAttribute("lang");
 					String[] paras = lang.split("\\|");
-					if(paras.length > 0 && paras[0].trim().equals("c") && paras[1].trim().equals("2001")){
+					if(paras.length > 0 && paras[1].trim().equals(carId)){
 						System.out.println(lang);
 					}
 					i++;
@@ -164,11 +170,12 @@ public class C {
 			if(null != p1){
 				p1 = null;
 			}
+			System.out.println("耗时:"+(System.currentTimeMillis()-start)+"ms");
 		}
 	}
 
 	public static void main(String args[]) {
 		C c = new C();
-		c.executorPoll();
+		c.executorPoll("2001","1");
 	}
 }
