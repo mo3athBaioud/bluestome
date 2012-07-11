@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimerTask;
@@ -38,6 +39,7 @@ public class C {
 	static String BSS_URL = "http://club.autohome.com.cn/bbs/forum-c-{id}-{page}.html";
 	static String BBS_POST_URL = "http://club.autohome.com.cn/bbs/thread-c-{cid}-{pid}-1.html";
 	BlockingQueue<byte[]> byteQuene = new LinkedBlockingQueue<byte[]>(100);
+	BlockingQueue<String[]> replyQuene = new LinkedBlockingQueue<String[]>(Short.MAX_VALUE);
 
 	static Map<String, Integer> SIZEHASH = new HashMap<String, Integer>();
 	
@@ -61,13 +63,13 @@ public class C {
 			connection.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.8");
 			connection.setRequestProperty("Connection", "close");
 			connection.connect();
-			System.out.println("\t 连接耗时: "
-					+ (System.currentTimeMillis() - start) + " ms");
+//			System.out.println("\t 连接耗时: "
+//					+ (System.currentTimeMillis() - start) + " ms");
 			start = System.currentTimeMillis();
 			int code = connection.getResponseCode();
 			System.out.println("\t 响应码:" + code);
-			System.out.println("\t 获取响应码耗时: "
-					+ (System.currentTimeMillis() - start) + " ms");
+//			System.out.println("\t 获取响应码耗时: "
+//					+ (System.currentTimeMillis() - start) + " ms");
 			start = System.currentTimeMillis();
 			connection.setReadTimeout(60*1000);
 			in = connection.getInputStream();
@@ -78,11 +80,13 @@ public class C {
 			}
 			byteBuffer.flush();
 			int size = byteBuffer.size();
+			System.out.println("输出流大小:"+size);
 			if (size > 0) {
 				call.work(byteBuffer.toByteArray());
-				System.out.println("\t 获取内容提耗时: "
-						+ (System.currentTimeMillis() - start) + " ms");
+//				System.out.println("\t 获取内容提耗时: "
+//						+ (System.currentTimeMillis() - start) + " ms");
 			}
+			byteBuffer.close();
 			start = System.currentTimeMillis();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -92,7 +96,7 @@ public class C {
 	}
 
 	public void executorPoll(final String carId,final String page) {
-		final long pollTime = 30 * 1000L;
+		final long pollTime = 35 * 1000L;
 		final long timeout = 500L;
 		final ScheduledExecutorService pool = Executors
 				.newSingleThreadScheduledExecutor();
@@ -136,7 +140,7 @@ public class C {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.println("\t 方法执行耗时:"+ (System.currentTimeMillis() - start) + "ms");
+//				System.out.println("\t 方法执行耗时:"+ (System.currentTimeMillis() - start) + "ms");
 				System.out.println("\r\n");
 			}
 
@@ -148,7 +152,7 @@ public class C {
 	 * @param content
 	 * @param carId
 	 */
-	private void parserBbs(String content,String carId){
+	private void parserBbs(String content,final String carId){
 		long start = System.currentTimeMillis();
 		Parser p1 = null;
 		try{
@@ -175,12 +179,9 @@ public class C {
 					String lang = tag.getAttribute("lang");
 					String[] paras = lang.split("\\|");
 					if(paras.length > 0 && paras[1].trim().equals(carId) && paras[3].trim().equals("0")){
+						replyQuene.add(paras);
 						//播放提示音
 						MediaPlayCase.play();
-						String pid = paras[2].trim();
-						String postURL = BBS_POST_URL.replace("{cid}", carId).replace("{pid}", pid);
-						System.out.println("\t>>>>>>新帖:["+lang+"]<<<<<<");
-						System.out.println("\t>>>>>>"+postURL+"<<<<<<");
 						c++;
 					}
 					i++;
@@ -199,10 +200,136 @@ public class C {
 		}
 	}
 
-	public static void main(String args[]) {
-		C c = new C();
-		c.executorPoll("2001","1");
+	/**
+	 * 自动回复消息网络代码
+	 */
+	private void doReply(String carId,String topicId,String content){
+		URL url = null;
+		HttpURLConnection connection = null;
+		OutputStream out = null;
+		InputStream in = null;
+		ByteArrayOutputStream byteArray = null;
+		StringBuffer sb = new StringBuffer();
+		try{
+			url = new URL("http://club.autohome.com.cn/Detail/AddReply");
+			connection = (HttpURLConnection)url.openConnection();
+			connection.addRequestProperty("Accept-Charset", "GBK,utf-8;q=0.7,*;q=0.3");
+			connection.addRequestProperty("Accept-Encoding", "gzip,deflate,sdch");
+			connection.addRequestProperty("Accept", "*/*");
+			connection.addRequestProperty("Origin", "http://club.autohome.com.cn");
+			connection.addRequestProperty("Referer", "http://club.autohome.com.cn/bbs/thread-c-2001-16106870-1.html");
+			connection.addRequestProperty("Cookie", "ASP.NET_SessionId=i5rklwmtposzhh55egotym55; isLoginedWeb=T");
+			connection.addRequestProperty("Cache-Control", "no-cache");
+			connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
+			connection.addRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+			connection.addRequestProperty("Cookie", "__utma=37235314.1856846134.1321246603.1323769135.1323772004.40; area=330199; sessionip=115.238.91.226; UP=30; CKVER=1; samemappingcookie=m; UN=%e6%9b%be%e7%bb%8fde%e6%b5%81%e6%98%9f%e9%9b%a8; UID=4212192; UC=2001; MISUSER=2; CKVER=1; Roleid=0; isCarOwnerCamp=1; bbsOfMaster=; picture=userheaders/2012/6/13/300500d0-c220-487b-af1e-c109cd251b23_b30422f7-1475-4086-9d06-7060b5e5497b_120X120_545X800_22X1_138X138.jpg; pcpopclub=74A96643E4093218E0C894DE59BB26867805001F132A69E43148C00EEF0F442A4CD7E5D16513441D16E6547DFD0418FE6D3CAE74251FEDC996782D332205DC0F046E705C501C389AC1D62785E17032201565324A14C4E602EB9FD8CE2D82283E6C71AB5C002248455D6443513F1A843549A722D62E760EB6E6F6B82479885432F2C9F002EE3A8E97708BA0BA815C7A0F1A684815B556E89A20647A31A152CBFA4069CBF5EA29368870FFB4D1815C87F6DA6A9639816F76B9A346CDF5877B224465D8F864; ssoUN=186*****690|4212192|3; Hm_lvt_90ad5679753bd2b5dec95c4eb965145d=1340602656708; cookieKnow=1; sessionid=ef1989f3-d75e-45a4-ae9a-178bcdc5b599; smsso=oDA2TQEmTgY7YqU4qYbsCGIS52JmdH-bxuAf66uvrEE7XYCsbFK8jg; historybbsName2=c-2001%7C%E5%93%88%E5%BC%97M2%2Cc-2476%7C%E4%BC%98%E4%BC%98%2Cc-2002%7C%E8%B5%B7%E4%BA%9AMagentis%2Cc-2003%7C%E6%96%AF%E6%9F%AF%E8%BE%BERoomster%20; __utma=1.1484792975.1322543017.1341971128.1341974893.279; __utmb=1.0.10.1341974893; __utmc=1; __utmz=1.1341827251.272.30.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=Android%20%E6%93%8D%E6%8E%A7%E6%B1%BD%E8%BD%A6; Hm_lvt_a14e5f772a500c6bc3f506e86c3567c2=1341976175989; Hm_lpvt_a14e5f772a500c6bc3f506e86c3567c2=1341976175989; sessionprovince=36; sessioncity=538; sessionvid=DE23DFE2-95ED-13CB-E3BB-17FB55789DFA");
+			connection.setConnectTimeout(15*1000);
+			connection.setRequestMethod("POST");
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.connect();
+			
+			sb.append(URLEncoder.encode("bbs", "UTF-8")+"="+URLEncoder.encode("c", "UTF-8"));
+			sb.append("&");
+			sb.append(URLEncoder.encode("bbsid", "UTF-8")+"="+URLEncoder.encode(carId, "UTF-8"));
+			sb.append("&");
+			sb.append(URLEncoder.encode("topicId", "UTF-8")+"="+URLEncoder.encode(topicId, "UTF-8"));
+			sb.append("&");
+			sb.append(URLEncoder.encode("content", "UTF-8")+"="+URLEncoder.encode(content, "UTF-8"));
+			
+			String requestBody = sb.toString();
+			System.out.println(requestBody);
+			out = connection.getOutputStream();
+			out.write(requestBody.getBytes());
+			out.flush();
+			out.close();
+			
+			int code = connection.getResponseCode();
+			switch(code){
+				case 200:
+					in = connection.getInputStream();
+					byteArray = new ByteArrayOutputStream();
+					int ch;
+					while((ch = in.read()) != -1){
+						byteArray.write(ch);
+					}
+					byteArray.flush();
+					String result = byteArray.toString("GB2312");
+					System.out.println(result);
+					break;
+				default:
+					System.err.println(connection.getResponseCode()+":"+connection.getResponseMessage());
+					break;
+			}
+			
+			if(null != out){
+				out.close();
+			}
+			if(null != in){
+				in.close();
+			}
+		}catch(Exception e){
+			if(null != byteArray){
+				try {
+					byteArray.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+			if(null != connection){
+				connection.disconnect();
+				connection = null;
+			}
+			
+			if(null != url){
+				url = null;
+			}
+			sb = null;
+			e.printStackTrace();
+		}
 	}
+	
+	/**
+	 * 自动回复功能
+	 *
+	 */
+	public void replayQueueAction(){
+		try{
+			String[] paras = replyQuene.poll(500L, TimeUnit.MILLISECONDS);
+			if(null != paras){
+				final String carId = paras[1].trim();
+				final String pid = paras[2].trim();
+				final int rid = new java.util.Random().nextInt(30);
+				String postURL = BBS_POST_URL.replace("{cid}", carId).replace("{pid}", pid);
+				System.out.println("\t>>>>>>"+postURL+"<<<<<<");
+				doReply(carId,pid,"占个沙发，楼下的来回答吧! <img style=\";\" src=\"http://img.autohome.com.cn/Album/kindeditor/smiles/"+rid+".gif\">");
+				try {
+					Thread.sleep(5*1000L);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			replayQueueAction();
+		}
+	}
+	
+	public static void main(String args[]) {
+		final C c = new C();
+		c.executorPoll("2001","1");
+		final ExecutorService taskPool = Executors.newFixedThreadPool(3);
+		taskPool.submit(new Runnable(){
+			public void run(){
+				c.replayQueueAction();
+			}
+		});
+	}
+	
 }
 
 /**
