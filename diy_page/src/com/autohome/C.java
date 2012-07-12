@@ -34,6 +34,8 @@ import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.tags.CompositeTag;
 import org.htmlparser.util.NodeList;
 
+import com.utils.DateUtils;
+
 public class C {
 	
 	static String BSS_URL = "http://club.autohome.com.cn/bbs/forum-c-{id}-{page}.html";
@@ -42,8 +44,10 @@ public class C {
 	BlockingQueue<String[]> replyQuene = new LinkedBlockingQueue<String[]>(Short.MAX_VALUE);
 
 	static Map<String, Integer> SIZEHASH = new HashMap<String, Integer>();
+	static Map<String, Integer> REPLAYED = new HashMap<String, Integer>();
 	
 	public void timeout(String webSite, Callback call) {
+		System.err.println("执行时间:"+DateUtils.getNow());
 		URL cURL = null;
 		HttpURLConnection connection = null;
 		OutputStream out = null;
@@ -67,31 +71,34 @@ public class C {
 //					+ (System.currentTimeMillis() - start) + " ms");
 			start = System.currentTimeMillis();
 			int code = connection.getResponseCode();
-			System.out.println("\t 响应码:" + code);
-//			System.out.println("\t 获取响应码耗时: "
-//					+ (System.currentTimeMillis() - start) + " ms");
-			start = System.currentTimeMillis();
-			connection.setReadTimeout(60*1000);
-			in = connection.getInputStream();
-			ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-			int ch;
-			while ((ch = in.read()) != -1) {
-				byteBuffer.write(ch);
+			System.out.println("响应码:" + code);
+			switch(code){
+				case 200:
+					start = System.currentTimeMillis();
+					connection.setReadTimeout(60*1000);
+					in = connection.getInputStream();
+					ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+					int ch;
+					while ((ch = in.read()) != -1) {
+						byteBuffer.write(ch);
+					}
+					byteBuffer.flush();
+					int size = byteBuffer.size();
+					System.out.println("输出流大小:"+size);
+					if (size > 0) {
+						call.work(byteBuffer.toByteArray());
+					}
+					byteBuffer.close();
+					start = System.currentTimeMillis();
+					break;
+				default:
+					System.err.println("错误码:"+code);
+					break;
 			}
-			byteBuffer.flush();
-			int size = byteBuffer.size();
-			System.out.println("输出流大小:"+size);
-			if (size > 0) {
-				call.work(byteBuffer.toByteArray());
-//				System.out.println("\t 获取内容提耗时: "
-//						+ (System.currentTimeMillis() - start) + " ms");
-			}
-			byteBuffer.close();
-			start = System.currentTimeMillis();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println(e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println(e);
 		}
 	}
 
@@ -132,16 +139,14 @@ public class C {
 									});
 							isOk = true;
 						} else {
-							System.out.println("\t Timeout["+ (pollTime / 1000) + "s]");
+							System.err.println("超时:["+ (pollTime / 1000) + "s]");
 							break;
 						}
 					}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.err.println(e);
 				}
-//				System.out.println("\t 方法执行耗时:"+ (System.currentTimeMillis() - start) + "ms");
-				System.out.println("\r\n");
+				System.out.println("方法执行耗时:"+ (System.currentTimeMillis() - start) + "ms");
 			}
 
 		}, 100L, pollTime, TimeUnit.MILLISECONDS);
@@ -179,10 +184,20 @@ public class C {
 					String lang = tag.getAttribute("lang");
 					String[] paras = lang.split("\\|");
 					if(paras.length > 0 && paras[1].trim().equals(carId) && paras[3].trim().equals("0")){
-						replyQuene.add(paras);
-						//播放提示音
-						MediaPlayCase.play();
-						c++;
+						final String pid = paras[2].trim();
+						synchronized(REPLAYED){
+							if(!REPLAYED.containsKey(pid)){
+								//播放提示音
+								MediaPlayCase.play();
+								final int rid = new java.util.Random().nextInt(30);
+								String postURL = BBS_POST_URL.replace("{cid}", carId).replace("{pid}", pid);
+								System.out.println("发帖时间:"+paras[4]);
+								System.out.println(">>>>>>"+postURL+"<<<<<<");
+								doReply(carId,pid,"占个沙发，楼下的来回答吧! <img style=\";\" src=\"http://img.autohome.com.cn/Album/kindeditor/smiles/"+rid+".gif\">");
+								System.err.println(">> 新帖子来了 ");
+								c++;
+							}
+						}
 					}
 					i++;
 				}while(i<list.size());
@@ -191,7 +206,7 @@ public class C {
 				System.err.println("获取列表失败");
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			System.err.println(e);
 		}finally{
 			if(null != p1){
 				p1 = null;
@@ -203,7 +218,7 @@ public class C {
 	/**
 	 * 自动回复消息网络代码
 	 */
-	private void doReply(String carId,String topicId,String content){
+	private synchronized void doReply(String carId,String topicId,String content){
 		URL url = null;
 		HttpURLConnection connection = null;
 		OutputStream out = null;
@@ -247,6 +262,7 @@ public class C {
 			int code = connection.getResponseCode();
 			switch(code){
 				case 200:
+					REPLAYED.put(topicId, 0);
 					in = connection.getInputStream();
 					byteArray = new ByteArrayOutputStream();
 					int ch;
@@ -273,8 +289,7 @@ public class C {
 				try {
 					byteArray.close();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					System.err.println(e1);
 				}
 			}
 			
@@ -287,7 +302,6 @@ public class C {
 				url = null;
 			}
 			sb = null;
-			e.printStackTrace();
 		}
 	}
 	
@@ -295,7 +309,7 @@ public class C {
 	 * 自动回复功能
 	 *
 	 */
-	public void replayQueueAction(){
+	public synchronized void replayQueueAction(){
 		try{
 			String[] paras = replyQuene.poll(500L, TimeUnit.MILLISECONDS);
 			if(null != paras){
@@ -303,13 +317,13 @@ public class C {
 				final String pid = paras[2].trim();
 				final int rid = new java.util.Random().nextInt(30);
 				String postURL = BBS_POST_URL.replace("{cid}", carId).replace("{pid}", pid);
-				System.out.println("\t>>>>>>"+postURL+"<<<<<<");
+				System.out.println("发帖时间:"+paras[4]);
+				System.out.println(">>>>>>"+postURL+"<<<<<<");
 				doReply(carId,pid,"占个沙发，楼下的来回答吧! <img style=\";\" src=\"http://img.autohome.com.cn/Album/kindeditor/smiles/"+rid+".gif\">");
 				try {
-					Thread.sleep(5*1000L);
+					Thread.sleep(3000L);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.err.println(e);
 				}
 			}
 		}catch(Exception e){
