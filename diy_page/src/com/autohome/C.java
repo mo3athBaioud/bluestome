@@ -34,7 +34,9 @@ import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.tags.CompositeTag;
 import org.htmlparser.util.NodeList;
 
+import com.autohome.json.ReplyJson;
 import com.utils.DateUtils;
+import com.utils.JSONUtils;
 
 public class C {
 	
@@ -65,10 +67,10 @@ public class C {
 							"User-Agent",
 							"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
 			connection.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.8");
-			connection.setRequestProperty("Connection", "close");
+			connection.setRequestProperty("Connection", "keep-alive");
+			connection.setRequestProperty("Cache-Control", "max-age=0");
+			connection.setRequestProperty("Referer", webSite);
 			connection.connect();
-//			System.out.println("\t 连接耗时: "
-//					+ (System.currentTimeMillis() - start) + " ms");
 			start = System.currentTimeMillis();
 			int code = connection.getResponseCode();
 			System.out.println("响应码:" + code);
@@ -99,11 +101,15 @@ public class C {
 			System.err.println(e);
 		} catch (Exception e) {
 			System.err.println(e);
+		} finally{
+			if(null != connection){
+				connection.disconnect();
+			}
 		}
 	}
 
 	public void executorPoll(final String carId,final String page) {
-		final long pollTime = 35 * 1000L;
+		final long pollTime = 25 * 1000L;
 		final long timeout = 500L;
 		final ScheduledExecutorService pool = Executors
 				.newSingleThreadScheduledExecutor();
@@ -185,19 +191,20 @@ public class C {
 					String[] paras = lang.split("\\|");
 					if(paras.length > 0 && paras[1].trim().equals(carId) && paras[3].trim().equals("0")){
 						final String pid = paras[2].trim();
-						synchronized(REPLAYED){
-							if(!REPLAYED.containsKey(pid)){
+						final String uid = paras[6].trim();
+//						synchronized(REPLAYED){
+							if(!REPLAYED.containsKey(pid) && !uid.equals("4212192")){
 								//播放提示音
 								MediaPlayCase.play();
 								final int rid = new java.util.Random().nextInt(30);
 								String postURL = BBS_POST_URL.replace("{cid}", carId).replace("{pid}", pid);
 								System.out.println("发帖时间:"+paras[4]);
 								System.out.println(">>>>>>"+postURL+"<<<<<<");
-								doReply(carId,pid,"占个沙发，楼下的来回答吧! <img style=\";\" src=\"http://img.autohome.com.cn/Album/kindeditor/smiles/"+rid+".gif\">");
+								doReply(carId,pid,"我又来占沙发了.. <img style=\";\" src=\"http://img.autohome.com.cn/Album/kindeditor/smiles/"+rid+".gif\">");
 								System.err.println(">> 新帖子来了 ");
 								c++;
 							}
-						}
+//						}
 					}
 					i++;
 				}while(i<list.size());
@@ -272,6 +279,12 @@ public class C {
 					byteArray.flush();
 					String result = byteArray.toString("GB2312");
 					System.out.println(result);
+					ReplyJson json = (ReplyJson)JSONUtils.json2Object(result,ReplyJson.class);
+					if(json.getSucceed()){
+						System.out.println("回复成功!");
+					}else{
+						System.err.println("回复失败,原因为:"+json.getErrMsg());
+					}
 					break;
 				default:
 					System.err.println(connection.getResponseCode()+":"+connection.getResponseMessage());
@@ -302,6 +315,7 @@ public class C {
 				url = null;
 			}
 			sb = null;
+			e.printStackTrace();
 		}
 	}
 	
@@ -336,12 +350,12 @@ public class C {
 	public static void main(String args[]) {
 		final C c = new C();
 		c.executorPoll("2001","1");
-		final ExecutorService taskPool = Executors.newFixedThreadPool(3);
-		taskPool.submit(new Runnable(){
-			public void run(){
-				c.replayQueueAction();
-			}
-		});
+//		final ExecutorService taskPool = Executors.newFixedThreadPool(3);
+//		taskPool.submit(new Runnable(){
+//			public void run(){
+//				c.replayQueueAction();
+//			}
+//		});
 	}
 	
 }
