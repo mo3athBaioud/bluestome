@@ -35,13 +35,16 @@ import org.htmlparser.tags.CompositeTag;
 import org.htmlparser.util.NodeList;
 
 import com.autohome.json.ReplyJson;
+import com.chinamilitary.util.IOUtil;
 import com.utils.DateUtils;
 import com.utils.JSONUtils;
 
 public class C {
 	
+	static String FILE_PATH = "D:\\verycd_replay.txt";
 	static String BSS_URL = "http://club.autohome.com.cn/bbs/forum-c-{id}-{page}.html";
 	static String BBS_POST_URL = "http://club.autohome.com.cn/bbs/thread-c-{cid}-{pid}-1.html";
+	static String contents = IOUtil.readFile(FILE_PATH, "GBK", "txt");
 	BlockingQueue<byte[]> byteQuene = new LinkedBlockingQueue<byte[]>(100);
 	BlockingQueue<String[]> replyQuene = new LinkedBlockingQueue<String[]>(Short.MAX_VALUE);
 
@@ -109,7 +112,7 @@ public class C {
 	}
 
 	public void executorPoll(final String carId,final String page) {
-		final long pollTime = 25 * 1000L;
+		final long pollTime = 30 * 1000L;
 		final long timeout = 500L;
 		final ScheduledExecutorService pool = Executors
 				.newSingleThreadScheduledExecutor();
@@ -196,11 +199,11 @@ public class C {
 							if(!REPLAYED.containsKey(pid) && !uid.equals("4212192")){
 								//播放提示音
 								MediaPlayCase.play();
-								final int rid = new java.util.Random().nextInt(30);
+								final int rid = new java.util.Random().nextInt(302);
 								String postURL = BBS_POST_URL.replace("{cid}", carId).replace("{pid}", pid);
 								System.out.println("发帖时间:"+paras[4]);
 								System.out.println(">>>>>>"+postURL+"<<<<<<");
-								doReply(carId,pid,"我又来占沙发了.. <img style=\";\" src=\"http://img.autohome.com.cn/Album/kindeditor/smiles/"+rid+".gif\">");
+								doReply(carId,pid,"借沙发,发警句:"+getWord(rid)+"\r\n 感谢楼主的宽宏大量!");
 								System.err.println(">> 新帖子来了 ");
 								c++;
 							}
@@ -256,11 +259,13 @@ public class C {
 			sb.append(URLEncoder.encode("bbsid", "UTF-8")+"="+URLEncoder.encode(carId, "UTF-8"));
 			sb.append("&");
 			sb.append(URLEncoder.encode("topicId", "UTF-8")+"="+URLEncoder.encode(topicId, "UTF-8"));
+			//targetReplyid:16143684
+			sb.append("&");
+					sb.append(URLEncoder.encode("targetReplyid", "UTF-8")+"="+URLEncoder.encode(topicId, "UTF-8"));
 			sb.append("&");
 			sb.append(URLEncoder.encode("content", "UTF-8")+"="+URLEncoder.encode(content, "UTF-8"));
 			
 			String requestBody = sb.toString();
-			System.out.println(requestBody);
 			out = connection.getOutputStream();
 			out.write(requestBody.getBytes());
 			out.flush();
@@ -347,15 +352,18 @@ public class C {
 		}
 	}
 	
+	private String getWord(int index){
+		String[] cl = contents.split("\r\n");
+		int len = cl.length;
+		if(index < len){
+			return cl[index];
+		}
+		return null;
+	}
+	
 	public static void main(String args[]) {
 		final C c = new C();
 		c.executorPoll("2001","1");
-//		final ExecutorService taskPool = Executors.newFixedThreadPool(3);
-//		taskPool.submit(new Runnable(){
-//			public void run(){
-//				c.replayQueueAction();
-//			}
-//		});
 	}
 	
 }
