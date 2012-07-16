@@ -26,6 +26,9 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
@@ -47,12 +50,15 @@ public class C {
 	static String contents = IOUtil.readFile(FILE_PATH, "GBK", "txt");
 	BlockingQueue<byte[]> byteQuene = new LinkedBlockingQueue<byte[]>(100);
 	BlockingQueue<String[]> replyQuene = new LinkedBlockingQueue<String[]>(Short.MAX_VALUE);
+	
+	static final String WIN_PATH = "C:\\Documents and Settings\\bluestome.zhang\\Local Settings\\Application Data\\Google\\Chrome\\Application\\chrome.exe";
+	static final String WIN_ID = "Windows";
 
 	static Map<String, Integer> SIZEHASH = new HashMap<String, Integer>();
 	static Map<String, Integer> REPLAYED = new HashMap<String, Integer>();
 	
 	public void timeout(String webSite, Callback call) {
-		System.err.println("执行时间:"+DateUtils.getNow());
+//		System.err.println("执行时间:"+DateUtils.getNow());
 		URL cURL = null;
 		HttpURLConnection connection = null;
 		OutputStream out = null;
@@ -76,7 +82,7 @@ public class C {
 			connection.connect();
 			start = System.currentTimeMillis();
 			int code = connection.getResponseCode();
-			System.out.println("响应码:" + code);
+//			System.out.println("响应码:" + code);
 			switch(code){
 				case 200:
 					start = System.currentTimeMillis();
@@ -89,7 +95,7 @@ public class C {
 					}
 					byteBuffer.flush();
 					int size = byteBuffer.size();
-					System.out.println("输出流大小:"+size);
+//					System.out.println("输出流大小:"+size);
 					if (size > 0) {
 						call.work(byteBuffer.toByteArray());
 					}
@@ -97,6 +103,7 @@ public class C {
 					start = System.currentTimeMillis();
 					break;
 				default:
+					System.err.println("执行时间:"+DateUtils.getNow());
 					System.err.println("错误码:"+code);
 					break;
 			}
@@ -112,7 +119,7 @@ public class C {
 	}
 
 	public void executorPoll(final String carId,final String page) {
-		final long pollTime = 30 * 1000L;
+		final long pollTime = 15 * 1000L;
 		final long timeout = 500L;
 		final ScheduledExecutorService pool = Executors
 				.newSingleThreadScheduledExecutor();
@@ -155,7 +162,7 @@ public class C {
 				} catch (Exception e) {
 					System.err.println(e);
 				}
-				System.out.println("方法执行耗时:"+ (System.currentTimeMillis() - start) + "ms");
+//				System.out.println("方法执行耗时:"+ (System.currentTimeMillis() - start) + "ms");
 			}
 
 		}, 100L, pollTime, TimeUnit.MILLISECONDS);
@@ -191,37 +198,40 @@ public class C {
 				do{
 					CompositeTag tag = (CompositeTag)list.elementAt(i);
 					String lang = tag.getAttribute("lang");
-					String[] paras = lang.split("\\|");
+					final String[] paras = lang.split("\\|");
 					if(paras.length > 0 && paras[1].trim().equals(carId) && paras[3].trim().equals("0")){
 						final String pid = paras[2].trim();
 						final String uid = paras[6].trim();
-//						synchronized(REPLAYED){
-							if(!REPLAYED.containsKey(pid) && !uid.equals("4212192")){
-								//播放提示音
-								MediaPlayCase.play();
-								final int rid = new java.util.Random().nextInt(302);
-								String postURL = BBS_POST_URL.replace("{cid}", carId).replace("{pid}", pid);
-								System.out.println("发帖时间:"+paras[4]);
-								System.out.println(">>>>>>"+postURL+"<<<<<<");
-								doReply(carId,pid,"借沙发,发警句:"+getWord(rid)+"\r\n 感谢楼主的宽宏大量!");
-								System.err.println(">> 新帖子来了 ");
-								c++;
-							}
-//						}
+						if(!REPLAYED.containsKey(pid) && !uid.equals("4212192")){
+	//						final int rid = new java.util.Random().nextInt(302);
+							final String postURL = BBS_POST_URL.replace("{cid}", carId).replace("{pid}", pid);
+							System.out.println("发帖时间:"+paras[4]);
+							System.out.println(postURL);
+							System.err.println(">> 新帖子来了 ");
+	//						doReply(carId,pid,"借沙发,发警句:"+getWord(rid)+"\r\n 感谢楼主的宽宏大量!");
+							new Thread(new Runnable(){
+								public void run(){
+									//播放提示音
+									MediaPlayCase.play();
+									showDocument(postURL);
+								}
+							}).start();
+							c++;
+						}
 					}
 					i++;
 				}while(i<list.size());
-				System.out.println("帖子数:"+c);
 			}else{
+				System.err.println("执行时间:"+DateUtils.getNow());
 				System.err.println("获取列表失败");
 			}
 		}catch(Exception e){
+			System.err.println("执行时间:"+DateUtils.getNow());
 			System.err.println(e);
 		}finally{
 			if(null != p1){
 				p1 = null;
 			}
-			System.out.println("解析页面耗时:"+(System.currentTimeMillis()-start)+"ms");
 		}
 	}
 
@@ -361,17 +371,58 @@ public class C {
 		return null;
 	}
 	
+	/**
+	 * 判断是否为windows平台
+	 * @return
+	 */
+	public boolean isWindowsPlatform() {
+		String os = System.getProperty("os.name");
+		if (os != null && os.startsWith(WIN_ID))
+			return true;
+		else
+			return false;
+	}
+	  
+	/**
+	 * 打开指定的浏览器
+	 * @param url
+	 */
+	 public void showDocument(String url) {
+		if (url == null)
+			return;
+		boolean windows = isWindowsPlatform();
+		String cmd = null;
+		try {
+			if (windows) {
+				cmd = WIN_PATH + " " + url;
+				Process p = Runtime.getRuntime().exec(cmd);
+				p.getErrorStream();
+			} else {
+				System.out.println("非Windows系统");
+			}
+		} catch (IOException io) {
+			io.printStackTrace();
+		}
+	}
+	   
 	public static void main(String args[]) {
 		final C c = new C();
 		c.executorPoll("2001","1");
+//		播放音频文件
+//		new Thread(new Runnable(){
+//			public void run(){
+//				MediaPlayCase.play();
+//			}
+//		}).start();
 	}
 	
 }
 
 /**
  * 播放音频文件
+ * 
  * @author Bluestome.Zhang
- *
+ * 
  */
 class MediaPlayCase{
 	static void play() {
@@ -381,14 +432,7 @@ class MediaPlayCase{
 					// From file
 					AudioInputStream stream = AudioSystem
 							.getAudioInputStream(new File(
-									"D:\\projects\\sky2.0\\qunke2\\diy_page\\src\\com\\autohome\\notify.wav"));
-
-					// From URL
-					// stream = AudioSystem.getAudioInputStream(new URL(
-					// "http://hostname/audiofile"));
-
-					// At present, ALAW and ULAW encodings must be converted
-					// to PCM_SIGNED before it can be played
+									"D:\\notify.wav"));
 					AudioFormat format = stream.getFormat();
 					if (format.getEncoding() != AudioFormat.Encoding.PCM_SIGNED) {
 						format = new AudioFormat(
@@ -409,16 +453,19 @@ class MediaPlayCase{
 									.getFrameSize()));
 					Clip clip = (Clip) AudioSystem.getLine(info);
 
-					// This method does not return until the audio file is
-					// completely loaded
+					// 打开文件流
 					clip.open(stream);
 
 					// Start playing
 					clip.start();
 					
-					Thread.sleep(2*1000L);
+					// Wait for playing
+					Thread.sleep(500L);
 					
+					// Stop playing
 					clip.stop();
+					
+					// Reset clip
 					clip = null;
 				} catch (MalformedURLException e) {
 					System.err.println(e);
