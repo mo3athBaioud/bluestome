@@ -2,6 +2,7 @@ package com.p163;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.htmlparser.NodeFilter;
@@ -14,6 +15,7 @@ import org.htmlparser.util.NodeList;
 
 import com.chinamilitary.bean.Article;
 import com.chinamilitary.bean.LinkBean;
+import com.chinamilitary.bean.ResultBean;
 import com.chinamilitary.bean.WebsiteBean;
 import com.chinamilitary.dao.ArticleDao;
 import com.chinamilitary.dao.ImageDao;
@@ -91,7 +93,18 @@ public class IndexParser {
 									System.err.println(" >> 站点["+website.getName()+"|"+website.getUrl()+"]添加成功!");
 								}
 							}else{
-								System.err.println("站点["+link.getLink()+"]已存在");
+								System.err.println("站点["+link.getLinkText()+"|"+link.getLink()+"]已存在");
+								ResultBean result = hasPaging(link.getLink(),"class","bar_page");
+								if(result.isBool()){
+									Iterator it = result.getMap().keySet().iterator();
+									while(it.hasNext()){
+										String key = (String)it.next();
+										LinkBean value = result.getMap().get(key);
+										if(null != value){
+											System.out.println(key);
+										}
+									}
+								}
 							}
 						}
 					}
@@ -110,10 +123,78 @@ public class IndexParser {
 		if (null != parser)
 			parser = null;
 	}
+	
+	/**
+	 * 获取分类下的分页信息
+	 * 
+	 * @param url
+	 * @param attribute
+	 * @param value
+	 * @return
+	 * @throws Exception
+	 */
+	static ResultBean hasPaging(String url, String cls, String value)
+			throws Exception {
+		ResultBean result = new ResultBean();
+		Parser parser = new Parser();
+		parser.setURL(url);
+		parser.setEncoding("GB2312");
+		// 获取指定ID的DIV内容
+		NodeFilter filter = new NodeClassFilter(Div.class);
+		NodeList list = parser.extractAllNodesThatMatch(filter)
+				.extractAllNodesThatMatch(new HasAttributeFilter(cls, value));
+		if (list != null && list.size() > 0) {
+			Parser p2 = new Parser();
+			p2.setInputHTML(list.toHtml());
+			NodeFilter filter2 = new NodeClassFilter(LinkTag.class);
+			NodeList list2 = p2.extractAllNodesThatMatch(filter2);
+			if (null != list2 && list2.size() > 0) {
+				for(int i=0;i<list2.size();i++){
+					LinkTag lt = (LinkTag)list2.elementAt(i);
+					if(null != lt && lt.getLink().startsWith("http://")){
+						LinkBean l1 = new LinkBean();
+						l1.setLink(lt.getLink());
+						l1.setTitle(lt.getLinkText());
+						result.put(lt.getLink(), l1);
+					}
+				}
+			} else {
+				LinkBean l1 = new LinkBean();
+				l1.setLink(url);
+				result.put(url, l1);
+			}
+
+			if (null != p2)
+				p2 = null;
+		}
+		LinkBean l1 = new LinkBean();
+		l1.setLink(url);
+		result.put(url, l1);
+		result.setBool(true);
+		return result;
+	}
+	
+	
 
 	public static void main(String args[]){
 		try{
-			catalog(URL);
+			List<WebsiteBean> list = webSiteDao.findByParentId(D_WEB_ID);
+			for(WebsiteBean bean:list){
+				System.out.println(""+bean.getName()+"|"+bean.getUrl());
+				ResultBean result = hasPaging(bean.getUrl(),"class","bar_page");
+				//TODO 因为类型不一样，需要根据不同的网站结构指定不同的页面解析器
+				//TODO 例如：大事件图片报道,摄影界 页面中子内容中的界面结构就不一样，需要分别解析。
+				if(result.isBool()){
+					Iterator it = result.getMap().keySet().iterator();
+					while(it.hasNext()){
+						String key = (String)it.next();
+						LinkBean value = result.getMap().get(key);
+						if(null != value){
+							System.out.println(key);
+						}
+					}
+				}
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
