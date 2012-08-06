@@ -62,4 +62,12 @@ public interface WebSiteDao extends ICommonDao{
 	 * @throws Exception
 	 */
 	Map<String,WebsiteBean> findUrlList(String url) throws Exception;
+	
+	/**
+	 * 检查站点是否被添加过了
+	 * @param url 被添加的站点
+	 * @return true: 添加过 false: 未被添加
+	 * @throws Exception
+	 */
+	boolean checkURL(String url) throws Exception;
 }
