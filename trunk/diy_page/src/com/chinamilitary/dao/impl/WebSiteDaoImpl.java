@@ -13,7 +13,7 @@ import com.chinamilitary.db.CommonDB;
 
 public class WebSiteDaoImpl extends CommonDB implements WebSiteDao {
 	
-	private final static String INSERT_SQL = "insert into tbl_web_site (d_parent_id,d_web_url,d_web_name,d_modifytime,d_modifytime,d_remarks,d_status) values (?,?,?,'',current_timestamp,?,1) ";
+	private final static String INSERT_SQL = "insert into tbl_web_site (d_parent_id,d_web_url,d_web_name,d_modifytime,d_createtime,d_remarks,d_status) values (?,?,?,current_timestamp,current_timestamp,?,1) ";
 	private final static String UPDATE_SQL = "update tbl_web_site set d_parent_id = ?,d_web_url=?,d_web_name=?,d_modifytime=current_timestamp ,d_lastmodified_time = ?,d_status=? where d_id = ? ";
 	private final static String QUERY_SQL = "select * from tbl_web_site";
 	private final static String COUNT_SQL = "select count(*) from tbl_web_site where d_status = 1";
@@ -75,6 +75,20 @@ public class WebSiteDaoImpl extends CommonDB implements WebSiteDao {
 			b = true;
 		}
 		return b;
+	}
+	
+	/**
+	 * 检查站点是否被添加过了
+	 * @param url 被添加的站点
+	 * @return true: 添加过 false: 未被添加
+	 * @throws Exception
+	 */
+	public boolean checkURL(String url) throws Exception{
+		String sql = "select count(*) from tbl_web_site where d_web_url = '"+url+"' ";
+		if(getCount(sql) > 0){
+			return true;
+		}
+		return false;
 	}
 	
 	/**
