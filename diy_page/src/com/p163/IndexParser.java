@@ -304,6 +304,10 @@ public class IndexParser {
 		try{
 			int complete = 0;
 			for(String[] img:result){
+				if(null == img[0] || null == img[1] || null == img[2] || null == img[3] ||
+						img[0].equals("") || img[1].equals("") || img[2].equals("") || img[3].equals("")){
+					continue;
+				}
 				imgBean = new ImageBean();
 				imgBean.setArticleId(article.getId());
 				imgBean.setHttpUrl(img[2]);
@@ -416,15 +420,14 @@ public class IndexParser {
 		return b;
 	}
 	
-	public static void main(String args[]){
+	private static void update(){
 		try{
-//			test();
 			List<WebsiteBean> list = webSiteDao.findByParentId(D_WEB_ID);
 			for(WebsiteBean bean:list){
-//				String lastModify = HttpClientUtils.getLastModifiedByUrl(bean.getUrl());
-//				if(null != bean.getLastModifyTime() && !"".equals(bean.getLastModifyTime()) && bean.getLastModifyTime().equals(lastModify)){
-//					continue;
-//				}
+				String lastModify = HttpClientUtils.getLastModifiedByUrl(bean.getUrl());
+				if(null != bean.getLastModifyTime() && !"".equals(bean.getLastModifyTime()) && bean.getLastModifyTime().equals(lastModify)){
+					continue;
+				}
 				ResultBean result = hasPaging(bean.getUrl(),"class","bar_page");
 				//TODO 因为类型不一样，需要根据不同的网站结构指定不同的页面解析器
 				//TODO 例如：大事件图片报道,摄影界 页面中子内容中的界面结构就不一样，需要分别解析。
@@ -436,17 +439,24 @@ public class IndexParser {
 						}
 					}
 				}
-//				if(lastModify != null && !"".equals(lastModify) ){
-//					if(null == bean.getLastModifyTime() || "".equals(bean.getLastModifyTime()) || !bean.getLastModifyTime().equals(lastModify)){
-//						bean.setLastModifyTime(lastModify);
-//						if(webSiteDao.update(bean)){
-//							System.err.println(" >> 更新网站["+bean.getName()+"|"+bean.getUrl()+"]最后时间["+lastModify+"]成功!");
-//						}
-//					}
-//				}
+				if(lastModify != null && !"".equals(lastModify) ){
+					if(null == bean.getLastModifyTime() || "".equals(bean.getLastModifyTime()) || !bean.getLastModifyTime().equals(lastModify)){
+						bean.setLastModifyTime(lastModify);
+						if(webSiteDao.update(bean)){
+							System.err.println(" >> 更新网站["+bean.getName()+"|"+bean.getUrl()+"]最后时间["+lastModify+"]成功!");
+						}
+					}
+				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();
+		}
+	}
+	public static void main(String args[]){
+		try{
+			
+		}catch(Exception e){
+			
 		}
 	}
 	
