@@ -8,21 +8,31 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
-
-import com.utils.ByteUtils;
+import org.htmlparser.NodeFilter;
+import org.htmlparser.Parser;
+import org.htmlparser.filters.HasAttributeFilter;
+import org.htmlparser.filters.NodeClassFilter;
+import org.htmlparser.tags.Span;
+import org.htmlparser.util.NodeList;
+import org.htmlparser.util.ParserException;
 
 public class HttpClientUtils {
 
 	//HTTP响应头中的文件大小描述
 	public static String CONTENTLENGTH = "Content-Length";
+    private static ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 	
 	public static boolean validationURL(String url) {
 		boolean success = false;
@@ -90,7 +100,7 @@ public class HttpClientUtils {
 	 * @param url
 	 * @return
 	 */
-	static HashMap<String, String> getHttpHeaderResponse(String url) {
+	public static HashMap<String, String> getHttpHeaderResponse(String url) {
 		HashMap<String, String> result = new HashMap<String, String>();
 		URL urlO = null;
 		HttpURLConnection http = null;
@@ -507,6 +517,7 @@ public class HttpClientUtils {
 			if (code == HttpURLConnection.HTTP_OK) {
 				int length = http.getContentLength();
 				if (length > 0) {
+					System.out.println("网页内容大小:"+length);
 					out = new ByteArrayOutputStream();
 					is = http.getInputStream();
 					int ch;
@@ -533,6 +544,103 @@ public class HttpClientUtils {
 		return result;
 	}
 
+	/**
+	 * 获取响应体
+	 * 
+	 * @param refence
+	 *            引用的地址
+	 * @param cookie
+	 *            页面保存的信息
+	 * @param url
+	 * @return
+	 */
+	public static HttpObject request2URL(Map<String,String> requestHeader,
+			String url) {
+		HttpObject object = null;
+		byte[] result = null;
+		URL urlO = null;
+		HttpURLConnection http = null;
+		InputStream is = null;
+		ByteArrayOutputStream out = null;
+		try {
+			urlO = new URL(url);
+			http = (HttpURLConnection) urlO.openConnection();
+			if (null != requestHeader) {
+				if(requestHeader.size() > 0){
+		    		Iterator it = requestHeader.keySet().iterator();
+		    		while(it.hasNext()){
+		    			String key = (String)it.next();
+		    			String value = (String)requestHeader.get(key);
+		    			http.addRequestProperty(key, value);
+		    		}
+				}
+			}
+			
+			http.addRequestProperty("Cache-Control", "no-cache");
+			http.addRequestProperty("Connection", "keep-alive");
+			http.setConnectTimeout(10*1000);
+			http.setReadTimeout(15*1000);
+			http.connect();
+			int code = http.getResponseCode();
+			if (code == HttpURLConnection.HTTP_OK) {
+				object = new HttpObject();
+				Map<String, List<String>> responseHeader = http.getHeaderFields();
+				Set<String> keySet = responseHeader.keySet();
+				Iterator iterator = keySet.iterator();
+				while(iterator.hasNext()){
+					String key = (String)iterator.next();
+					if(null != key){
+						List<String> valueList = responseHeader.get(key);
+						for(String value:valueList){
+							object.getHeader().put(key, value);
+						}
+					}
+				}
+				
+				int length = http.getContentLength();
+				if (length > 0) {
+					out = new ByteArrayOutputStream();
+					is = http.getInputStream();
+					int ch;
+					while ((ch = is.read()) != -1) {
+						out.write(ch);
+					}
+					out.flush();
+					result = out.toByteArray();
+					object.setBody(result);
+				}
+			}
+		} catch (Exception e) {
+			System.err.println(e);
+		} finally {
+			if (null != http) {
+				http.disconnect();
+			}
+			if (null != out) {
+				try {
+					out.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		return object;
+	}
+	
+    /**
+     * 合并两个字节串
+     *
+     * @param bytes1       字节串1
+     * @param bytes2       字节串2
+     * @param sizeOfBytes2 需要从 bytes2 中取出的长度
+     *
+     * @return bytes1 和 bytes2 中的前 sizeOfBytes2 个字节合并后的结果
+     */
+    private static byte[] concatByteArrays(byte[] bytes1, byte[] bytes2, int sizeOfBytes2) {
+        byte[] result = Arrays.copyOf(bytes1, (bytes1.length + sizeOfBytes2));
+        System.arraycopy(bytes2, 0, result, bytes1.length, sizeOfBytes2);
+        return result;
+    }
+    
 	/**
 	 * 获取页面的最后修改时间
 	 * @param url
@@ -567,23 +675,59 @@ public class HttpClientUtils {
 	public static void main(String args[]) {
 		try {
 			//这个URL是一个验证码地址
-			byte[] body = getResponseBodyAsByte(null,null,"http://www.hzti.com/government/CreateCheckCode.aspx?d="+System.currentTimeMillis());
-			if(null != body){
-				String print = ByteUtils.bytesAsHexString(body, Short.MAX_VALUE);
-				System.out.println(print);
-			}else{
-				System.out.println("没有返回内容");
-			}
+//			byte[] body = getResponseBodyAsByte(null,null,"http://www.hzti.com/government/CreateCheckCode.aspx?d="+System.currentTimeMillis());
+			exec.scheduleWithFixedDelay(new Runnable(){
+				public void run(){
+					long start = System.currentTimeMillis();
+					byte[] body = getResponseBodyAsByte("http://i.autohome.com.cn/home.html",null,"http://club.autohome.com.cn/bbs/thread-c-2001-15822375-1.html");
+					long spend = System.currentTimeMillis() - start;
+					if(null != body){
+						Parser p1 = null;
+						try {
+							p1 = new Parser();
+							p1.setInputHTML(new String(body));
+							NodeFilter filter = new NodeClassFilter(Span.class);
+							NodeList list = p1.extractAllNodesThatMatch(filter).extractAllNodesThatMatch(new HasAttributeFilter("class", "fr fon12"));
+							if(null != list && list.size() > 0){
+								Span tag = (Span)list.elementAt(0);
+								System.out.println("\t>>>>>> 获取页面耗时:["+spend+"]ms \t点击数:"+tag.toHtml());
+							}
+							list = null;
+							filter = null;
+						} catch (ParserException e) {
+							e.printStackTrace();
+						} finally{
+							if(null != p1){
+								p1 = null;
+							}
+						}
+					}else{
+						System.out.println("没有返回内容");
+					}
+//					try {
+//						long start = System.currentTimeMillis();
+//						System.out.println("线程ID:"+Thread.currentThread().getId());
+//						Thread.sleep(15*1000L);
+//						System.out.println("耗时:"+(System.currentTimeMillis()-start));
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+				}
+			}, 5*1000L,10*1000L, TimeUnit.MILLISECONDS);
 			
+			/**
 			body = getResponseBodyAsByte(null, null, "http://www.hzti.com/service/qry/violation_veh.aspx?type=2&node=249");
 			if(null != body){
+				String print = ByteUtils.bytesAsHexString(body, Short.MAX_VALUE);
+				System.out.println("页面内容大小:"+print);
 				System.out.println("页面内容大小:"+body.length);
 			}else{
 				System.out.println("没有返回内容");
 			}
+			**/
 		} catch (Exception e) {
 			System.err.println(e);
-		} finally {
 		}
 	}
 
