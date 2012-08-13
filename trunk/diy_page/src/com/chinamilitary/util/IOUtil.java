@@ -137,7 +137,7 @@ public class IOUtil {
 		OutputStream out = null;
 		try{
 			try{
-				file = new File(fileName+ext);
+				file = new File(filePath);
 				if(!file.exists()){
 					file.getParentFile().mkdirs();
 				}
