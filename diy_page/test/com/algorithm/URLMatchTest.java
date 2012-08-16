@@ -1,13 +1,17 @@
 package com.algorithm;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import com.chinamilitary.bean.WebsiteBean;
+import com.chinamilitary.util.HttpClientUtils;
 
 public class URLMatchTest {
 
@@ -15,6 +19,8 @@ public class URLMatchTest {
 	private List<String> resultList = new ArrayList<String>();
 	String[] stringarray = {};
 	static String URL = "http://www.zhuoku.com/zhuomianbizhi/movie-oumei/20111006134002.htm";
+    static ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+	static Integer lastTotal = 0;
 	@Before
 	public void init(){
 		urlList.add("http://www.9ku.com/");
@@ -40,7 +46,6 @@ public class URLMatchTest {
 		
 	}
 	
-	@Test
 	public void run(){
 		int i=0;
 		for(String url:urlList){
@@ -58,8 +63,55 @@ public class URLMatchTest {
 			}
 			
 			sort(stringarray);
-			System.out.println(stringarray[0]);
+			for(String tmp:stringarray){
+				System.out.println(tmp);
+			}
 		}
+	}
+	
+	public static void main(String args[]){
+		//17963
+	    exec.scheduleWithFixedDelay(new Runnable(){
+	    	public void run() {
+	    		try{
+					long start = System.currentTimeMillis();
+					byte[] body = HttpClientUtils
+							.getResponseBodyAsByte(
+									"http://yc.jxcdc.cn/default.aspx",
+									"ASPSESSIONIDCABADTTC=EIFDIDLADCPBMEGLINAJJMBP; CNZZDATA1544465=cnzz_eid=66762208-1344928683-http%253A%252F%252Fyc.jxcdc.cn%252F&ntime=1344928683&cnzz_a=7&retime=1344929753213&sin=&ltime=1344929753213&rtime=0",
+									"http://count.knowsky.com/count1/count.asp?id=54956&sx=1&ys=9");
+					if(null == body){
+						System.out.println("\t内容为空!");
+					}
+					System.out.println("\t>> 耗时:"
+							+ (System.currentTimeMillis() - start));
+					try {
+						String ct = new String(body,"GBK");
+						int s = ct.lastIndexOf("累计访问：");
+						int e = ct.lastIndexOf("&#10;");
+						if(s != 0 && e != 0){
+							String total = ct.substring(s+"累计访问：".length(),e);
+							Integer tmpTotal = 0;
+							try{
+								tmpTotal = Integer.parseInt(total);
+							}catch(Exception e2){
+								System.err.println("字符串转成数字失败!");
+							}
+							int offset = tmpTotal-lastTotal; 
+							if(offset > 1){
+								System.out.println("有其他人访问，访问数量为:"+offset);
+							}
+							lastTotal = tmpTotal;
+						}
+						System.out.println("累计访问量为:"+lastTotal);
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+	    		}catch(Exception e){
+	    			e.printStackTrace();
+	    		}
+			}
+	    }, 5*1000L,5*1000L, TimeUnit.MILLISECONDS);
 	}
 	
 	/**
