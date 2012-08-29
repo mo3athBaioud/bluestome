@@ -2,33 +2,13 @@ package com.taksoon.bluestome.test.dao;
 
 import java.util.List;
 
-import org.apache.xbean.spring.context.ClassPathXmlApplicationContext;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 
 import com.takesoon.oms.ssi.entity.PictureFile;
-import com.takesoon.oms.ssi.json.DateJsonValueProcessor;
-import com.takesoon.oms.ssi.service.PictureFileManager;
 import com.takesoon.oms.ssi.utils.ExtUtil;
 
-public class PictureFileTest {
+public class PictureFileTest extends AbstractTestCase{
 
-	private PictureFileManager pictureFileManager;
-	
-	@Before
-	public void init(){
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		pictureFileManager = (PictureFileManager)context.getBean("pictureFileManager");
-	}
-	
-	@After
-	public void destory(){
-		if(null != pictureFileManager)
-			pictureFileManager = null;
-	}
-	
 	public void test(){
 		PictureFile entity = new PictureFile();
 		entity.setId(135);

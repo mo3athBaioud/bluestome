@@ -2,33 +2,13 @@ package com.taksoon.bluestome.test.dao;
 
 import java.util.List;
 
-import org.apache.xbean.spring.context.ClassPathXmlApplicationContext;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 
 import com.takesoon.oms.ssi.entity.Article;
-import com.takesoon.oms.ssi.json.DateJsonValueProcessor;
-import com.takesoon.oms.ssi.service.ArticleManager;
 import com.takesoon.oms.ssi.utils.ExtUtil;
 
-public class ArticleTest {
+public class ArticleTest extends AbstractTestCase{
 
-	private ArticleManager articleManager;
-	
-	@Before
-	public void init(){
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		articleManager = (ArticleManager)context.getBean("articleManager");
-	}
-	
-	@After
-	public void destory(){
-		if(null != articleManager)
-			articleManager = null;
-	}
-	
 	public void test(){
 		Article entity = new Article();
 		entity.setId(135);
@@ -60,6 +40,7 @@ public class ArticleTest {
 		System.out.println(" > t:" + t);
 	}
 	
+	@Test
 	public void buildCountSQL(){
 		Article entity = new Article();
 //		entity.setId(13);
@@ -89,5 +70,18 @@ public class ArticleTest {
 		
 		System.out.println(" > list.size:" + list.size());
 		System.out.println(" > count:" + c);
+	}
+	
+	@Test
+	public void findByWebId(){
+		Article entity = new Article();
+		int webid = 915;
+		entity.setWebId(webid);
+		List<Article> list = articleManager.getList(entity, 0, 200);
+		StringBuffer sb = new StringBuffer();
+		for(Article art:list){
+			sb.append("insert into tbl_album(type_id,album_name,album_cover) values (1,'"+art.getTitle()+"','"+art.getActicleXmlUrl()+"');").append("\r\n");
+		}
+		System.out.println(sb.toString());
 	}
 }
