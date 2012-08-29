@@ -9,10 +9,9 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 
 import com.takesoon.oms.ssi.entity.Website;
-import com.takesoon.oms.ssi.service.ArticleManager;
 import com.takesoon.oms.ssi.service.WebsiteManager;
 
-public class WebsiteTest {
+public class WebsiteTest extends AbstractTestCase{
 
 	private WebsiteManager websiteManager;
 	

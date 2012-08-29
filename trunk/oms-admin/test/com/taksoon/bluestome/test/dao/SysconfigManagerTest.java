@@ -2,34 +2,13 @@ package com.taksoon.bluestome.test.dao;
 
 import java.util.List;
 
-import org.apache.xbean.spring.context.ClassPathXmlApplicationContext;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 
 import com.takesoon.oms.ssi.common.NativeCache;
 import com.takesoon.oms.ssi.entity.SystemConfig;
-import com.takesoon.oms.ssi.service.ArticleDocManager;
-import com.takesoon.oms.ssi.service.SystemConfigManager;
 
-public class SysconfigManagerTest {
+public class SysconfigManagerTest extends AbstractTestCase{
 
-	private SystemConfigManager systemConfigManager;
-	
-	@Before
-	public void init(){
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		systemConfigManager = (SystemConfigManager)context.getBean("systemConfigManager");
-	}
-	
-	@After
-	public void destory(){
-		if(null != systemConfigManager){
-			systemConfigManager = null;
-		}
-	}
-	
 	public void test(){
 		if(null != systemConfigManager){
 			System.out.println(" > systemConfigManager is not null!");

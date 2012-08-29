@@ -2,32 +2,13 @@ package com.taksoon.bluestome.test.dao;
 
 import java.util.List;
 
-import org.apache.xbean.spring.context.ClassPathXmlApplicationContext;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 
 import com.takesoon.oms.ssi.entity.ArticleDoc;
-import com.takesoon.oms.ssi.service.ArticleDocManager;
 import com.takesoon.oms.ssi.utils.ExtUtil;
 
-public class ArticleDocTest {
+public class ArticleDocTest extends AbstractTestCase{
 
-	private ArticleDocManager articleDocManager;
-	
-	@Before
-	public void init(){
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		articleDocManager = (ArticleDocManager)context.getBean("articleDocManager");
-	}
-	
-	@After
-	public void destory(){
-		if(null != articleDocManager)
-			articleDocManager = null;
-	}
-	
 	public void test(){
 		ArticleDoc entity = new ArticleDoc();
 		entity.setId(10010);
