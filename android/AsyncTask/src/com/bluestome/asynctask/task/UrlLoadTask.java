@@ -59,9 +59,10 @@ public class UrlLoadTask extends AsyncTask<String, Integer, Integer> {
                 is = connection.getInputStream();
                 int total = connection.getContentLength();
                 int c;
+                byte[] tmp = new byte[2048];
                 pb.setMax(total);
-                while((c = is.read()) != -1){
-                    baos.write(c);
+                while((c = is.read(tmp)) != -1){
+                    baos.write(tmp, 0, c);
                     pb.setProgress(baos.size());
                     publishProgress(baos.size(),total);
                 }
@@ -83,29 +84,30 @@ public class UrlLoadTask extends AsyncTask<String, Integer, Integer> {
         java.text.NumberFormat percentFormat =java.text.NumberFormat.getPercentInstance();
         percentFormat.setMaximumFractionDigits(2);
         Float pres = (float)progress[0]/(float)progress[1];
-        activity.setTitle("正在执行..."+percentFormat.format(pres));
+//        activity.setTitle("正在执行..."+percentFormat.format(pres));
+        tv.setText("正在执行..."+percentFormat.format(pres));
     }
 
     @Override
     protected void onPostExecute(Integer result) {
         switch(result){
             case 200:
-                activity.setTitle("成功");
+                tv.setText(tv.getText()+".....成功!");
                 download.setEnabled(true);
                 pb.setVisibility(View.GONE);
                 Toast.makeText(activity, "下载文件成功", Toast.LENGTH_SHORT).show();
                 if(null != baos && baos.size() > 0){
                     byte[] body = baos.toByteArray();
-                    Bitmap bitMap = BitmapFactory.decodeByteArray(body, 0, body.length);
-                    ImageView imageView = ((ImageView)activity.findViewById(R.id.image_view));
-                    imageView.setVisibility(View.VISIBLE);
-                    imageView.setImageBitmap(bitMap);
+//                    Bitmap bitMap = BitmapFactory.decodeByteArray(body, 0, body.length);
+//                    ImageView imageView = ((ImageView)activity.findViewById(R.id.image_view));
+//                    imageView.setVisibility(View.VISIBLE);
+//                    imageView.setImageBitmap(bitMap);
                     baos.reset();
                     baos = null;
                 }
                 break;
             default:
-                activity.setTitle("失败");
+                tv.setText(tv.getText()+".....失败!");
                 download.setEnabled(true);
                 pb.setVisibility(View.GONE);
                 Toast.makeText(activity, "下载文件失败", Toast.LENGTH_SHORT).show();
