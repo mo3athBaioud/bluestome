@@ -1,20 +1,17 @@
+
 package com.bluestome.asynctask.task;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bluestome.asynctask.R;
-
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -24,95 +21,133 @@ import java.net.URL;
  * @author Bluestome.Zhang
  * @date 2012-9-19 上午11:37:21
  */
-public class UrlLoadTask extends AsyncTask<String, Integer, Integer> {
-    
-    
+public class UrlLoadTask extends AsyncTask<String, Float, Float> {
+
     private Button download;
     private TextView tv;
     private Activity activity;
     private ProgressBar pb;
     private ByteArrayOutputStream baos = null;
 
-    public UrlLoadTask(Activity activity,Button download,TextView tv,ProgressBar pb){
+    public UrlLoadTask(Activity activity, Button download, TextView tv, ProgressBar pb) {
         this.activity = activity;
         this.tv = tv;
         this.download = download;
         this.pb = pb;
     }
-    
+
     @Override
-    protected Integer doInBackground(String... params) {
-        int result = 400;
+    protected Float doInBackground(String... params) {
+        Float result = 0.0F;
         URL url = null;
         HttpURLConnection connection = null;
         InputStream is = null;
-        try{
+        try {
             url = new URL(params[0]);
-            connection = (HttpURLConnection)url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-            connection.setRequestProperty("Connection","keep-alive");
-            connection.setRequestProperty("User-Agent","Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
+            connection.setRequestProperty("Connection", "keep-alive");
+            connection.setConnectTimeout(10 * 1000);
+            connection
+                    .setRequestProperty(
+                            "User-Agent",
+                            "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
             connection.connect();
-            result = connection.getResponseCode();
-            if(result == HttpURLConnection.HTTP_OK){
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 baos = new ByteArrayOutputStream();
                 is = connection.getInputStream();
+                long start = System.currentTimeMillis();
                 int total = connection.getContentLength();
                 int c;
                 byte[] tmp = new byte[2048];
                 pb.setMax(total);
-                while((c = is.read(tmp)) != -1){
+                while ((c = is.read(tmp)) != -1) {
                     baos.write(tmp, 0, c);
-                    pb.setProgress(baos.size());
-                    publishProgress(baos.size(),total);
+                    float size = baos.size();
+                    long now = (System.currentTimeMillis() - start);
+                    pb.setProgress((int) size);
+                    publishProgress(size, (float) total, (float) now);
                 }
+                result = (float) baos.size();
                 baos.flush();
                 baos.close();
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally{
-            if(null != connection)
+        } finally {
+            if (null != connection)
                 connection.disconnect();
         }
         return result;
     }
-    
+
+    /**
+     * 第一个参数 当前下载大小 第二个参数 文件总大小 第三个参数 当前消耗时间
+     */
     @Override
-    protected void onProgressUpdate(Integer... progress) {
-        //转成百分比
-        java.text.NumberFormat percentFormat =java.text.NumberFormat.getPercentInstance();
+    protected void onProgressUpdate(Float... progress) {
+        float size = progress[0];
+        float total = progress[1];
+        float now = progress[2];
+
+        float size2 = size / 1024;
+        float times = now / 1000;
+        float show = size2 / times;
+
+        // 转成百分比
+        java.text.NumberFormat percentFormat = java.text.NumberFormat.getPercentInstance();
         percentFormat.setMaximumFractionDigits(2);
-        Float pres = (float)progress[0]/(float)progress[1];
-//        activity.setTitle("正在执行..."+percentFormat.format(pres));
-        tv.setText("正在执行..."+percentFormat.format(pres));
+        Float pres = progress[0] / progress[1];
+        // activity.setTitle("正在执行..."+percentFormat.format(pres));
+        tv.setText(round(show, 2, BigDecimal.ROUND_UP) + "kb/s\t"
+                + percentFormat.format(pres));
     }
 
     @Override
-    protected void onPostExecute(Integer result) {
-        switch(result){
-            case 200:
-                tv.setText(tv.getText()+".....成功!");
-                download.setEnabled(true);
-                pb.setVisibility(View.GONE);
-                Toast.makeText(activity, "下载文件成功", Toast.LENGTH_SHORT).show();
-                if(null != baos && baos.size() > 0){
-                    byte[] body = baos.toByteArray();
-//                    Bitmap bitMap = BitmapFactory.decodeByteArray(body, 0, body.length);
-//                    ImageView imageView = ((ImageView)activity.findViewById(R.id.image_view));
-//                    imageView.setVisibility(View.VISIBLE);
-//                    imageView.setImageBitmap(bitMap);
-                    baos.reset();
-                    baos = null;
-                }
-                break;
-            default:
-                tv.setText(tv.getText()+".....失败!");
-                download.setEnabled(true);
-                pb.setVisibility(View.GONE);
-                Toast.makeText(activity, "下载文件失败", Toast.LENGTH_SHORT).show();
-                break;
+    protected void onPostExecute(Float result) {
+        if (result > 0) {
+            tv.setText(tv.getText() + ".....下载成功!");
+            download.setEnabled(true);
+            // pb.setVisibility(View.GONE);
+            Toast.makeText(activity, "下载文件成功", Toast.LENGTH_SHORT).show();
+            if (null != baos && baos.size() > 0) {
+                byte[] body = baos.toByteArray();
+                // Bitmap bitMap = BitmapFactory.decodeByteArray(body, 0,
+                // body.length);
+                // ImageView imageView =
+                // ((ImageView)activity.findViewById(R.id.image_view));
+                // imageView.setVisibility(View.VISIBLE);
+                // imageView.setImageBitmap(bitMap);
+                baos.reset();
+                baos = null;
+            }
+        } else {
+            tv.setText(tv.getText() + ".....失败!");
+            download.setEnabled(true);
+            pb.setVisibility(View.GONE);
+            Toast.makeText(activity, "下载文件失败", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * 对double数据进行取精度.
+     * <p>
+     * For example: <br>
+     * double value = 100.345678; <br>
+     * double ret = round(value,4,BigDecimal.ROUND_HALF_UP); <br>
+     * ret为100.3457 <br>
+     * 
+     * @param value double数据.
+     * @param scale 精度位数(保留的小数位数).
+     * @param roundingMode 精度取值方式.
+     * @return 精度计算后的数据.
+     */
+    private double round(double value, int scale, int roundingMode) {
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(scale, roundingMode);
+        double d = bd.doubleValue();
+        bd = null;
+        return d;
     }
 
     /**
@@ -171,7 +206,4 @@ public class UrlLoadTask extends AsyncTask<String, Integer, Integer> {
         this.pb = pb;
     }
 
-
-
-    
 }
