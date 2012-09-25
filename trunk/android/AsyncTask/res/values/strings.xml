@@ -4,7 +4,7 @@
     <string name="hello_world">Hello!</string>
     <string name="hi_blog">Hello , Welcome to My Blog!</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">异步下载</string>
     <string name="show_progress">显示当前进度</string>
     <string name="download">Download</string>
 
