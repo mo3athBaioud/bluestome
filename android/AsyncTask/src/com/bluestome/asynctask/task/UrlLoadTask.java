@@ -104,7 +104,7 @@ public class UrlLoadTask extends AsyncTask<String, Float, Float> {
                 tv.setText(connection.getResponseCode());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            tv.setText("下载文件失败:" + e.getMessage());
         } finally {
             if (null != connection)
                 connection.disconnect();
