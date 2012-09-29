@@ -41,7 +41,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,24 +49,40 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Device Boot completed receiver -->
+        <receiver android:name=".broadcast.DeviceBootReceiver" >
+            <intent-filter android:priority="2147483647" >
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name=".service.DeviceService"
+            android:enabled="true"
+             >
+            <intent-filter>
+                <action android:name="android.bluestome.deviceservice" />
+            </intent-filter>
+        </service>
         <activity
-            android:name=".SensorActivity"
+            android:name=".activity.SensorActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CameraActivity"
+        	android:name=".activity.CameraActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MultiSimActivity"
+            android:name=".activity.MultiSimActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".NetworkActivity"
+            android:name=".activity.NetworkActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AboutActivity"
+            android:name=".activity.AboutActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait" />
         </application>
