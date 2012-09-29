@@ -1,5 +1,5 @@
 
-package com.example.devinfodemo;
+package com.example.devinfodemo.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -19,6 +19,10 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import com.example.devinfodemo.R;
+import com.example.devinfodemo.R.id;
+import com.example.devinfodemo.R.layout;
 
 import java.io.BufferedReader;
 import java.io.File;

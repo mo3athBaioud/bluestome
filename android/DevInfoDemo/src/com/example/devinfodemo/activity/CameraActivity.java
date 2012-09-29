@@ -1,11 +1,15 @@
 
-package com.example.devinfodemo;
+package com.example.devinfodemo.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.example.devinfodemo.R;
+import com.example.devinfodemo.R.id;
+import com.example.devinfodemo.R.layout;
 
 /**
  * 要照顾到低版本的手机系统

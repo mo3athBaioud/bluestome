@@ -1,5 +1,5 @@
 
-package com.example.devinfodemo;
+package com.example.devinfodemo.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +7,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.example.devinfodemo.R;
+import com.example.devinfodemo.R.id;
+import com.example.devinfodemo.R.layout;
 
 import java.util.List;
 

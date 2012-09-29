@@ -1,11 +1,15 @@
 
-package com.example.devinfodemo;
+package com.example.devinfodemo.activity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.widget.TextView;
+
+import com.example.devinfodemo.R;
+import com.example.devinfodemo.R.id;
+import com.example.devinfodemo.R.layout;
 
 /**
  * @ClassName: MultiSimActivity
