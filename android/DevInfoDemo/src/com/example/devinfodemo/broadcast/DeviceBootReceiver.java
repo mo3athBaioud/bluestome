@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.devinfodemo.service.DeviceService;
 
@@ -41,6 +42,7 @@ public class DeviceBootReceiver extends BroadcastReceiver {
             Log.e(TAG, "DeviceBootReceiver broadcast is receiver");
             mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DELAY_START_SERVICE, context),
                     DELAY_MILLIS);
+            Toast.makeText(context, "启动完成...", Toast.LENGTH_LONG).show();
         }
     }
 }
