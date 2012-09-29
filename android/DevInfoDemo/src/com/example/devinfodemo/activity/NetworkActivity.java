@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.devinfodemo.R;
-import com.example.devinfodemo.R.id;
-import com.example.devinfodemo.R.layout;
 
 /**
  * @ClassName: NetworkActivity
@@ -35,6 +33,10 @@ public class NetworkActivity extends Activity {
         ConnectivityManager mgr = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = mgr.getActiveNetworkInfo();
+        if (null == networkInfo) {
+            tx1.setText("当前使用的网络类型:TYPE_UNKNOW");
+            return;
+        }
         int type = networkInfo.getType();
         switch (type) {
             case ConnectivityManager.TYPE_MOBILE:
