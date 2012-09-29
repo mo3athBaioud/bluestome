@@ -11,9 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.devinfodemo.R;
-import com.example.devinfodemo.R.id;
-import com.example.devinfodemo.R.layout;
-import com.example.devinfodemo.R.menu;
+import com.example.devinfodemo.service.DeviceService;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -21,6 +19,13 @@ public class MainActivity extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        // 启动服务
+        Intent intentService = new Intent(this, DeviceService.class);
+        startService(intentService);
+
+        DeviceService.getInstance();
+
         Button btnSersor = (Button) findViewById(R.id.btn_sensor);
         btnSersor.setOnClickListener(this);
 
