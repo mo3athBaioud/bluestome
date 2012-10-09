@@ -48,6 +48,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/abount" />
+
+        <Button
+            android:id="@+id/btn_json"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/json" />
+
     </LinearLayout>
 
 </LinearLayout>

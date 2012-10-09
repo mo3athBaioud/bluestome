@@ -10,5 +10,6 @@
     <string name="multi_sim">多卡手机</string>
     <string name="network">网络相关</string>
     <string name="abount">关于</string>
+    <string name="json">JSON</string>
 
 </resources>
