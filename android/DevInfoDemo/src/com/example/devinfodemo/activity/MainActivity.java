@@ -12,6 +12,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StatFs;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
@@ -43,6 +45,20 @@ import java.util.List;
 
 public class MainActivity extends Activity implements OnClickListener {
     private final static String TAG = "MainActivity";
+
+    private final Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            String json = "";
+            if (null != msg) {
+                json = (String) msg.obj;
+            }
+            Toast.makeText(getContext(), "生成JSONOK,长度:" + json.getBytes().length,
+                    Toast.LENGTH_SHORT).show();
+        }
+
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -247,6 +263,9 @@ public class MainActivity extends Activity implements OnClickListener {
         String json = gson.toJson(phone);
         Log.d(TAG, "JSON长度:" + json.length());
         Log.d(TAG, json.toString());
+        Message msg = new Message();
+        msg.obj = json;
+        mHandler.sendMessage(msg);
     }
 
     @TargetApi(9)
