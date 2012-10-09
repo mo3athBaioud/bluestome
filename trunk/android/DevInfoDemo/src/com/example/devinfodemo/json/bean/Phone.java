@@ -1,6 +1,8 @@
 
 package com.example.devinfodemo.json.bean;
 
+import java.util.HashMap;
+
 public class Phone extends BaseJson implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -8,6 +10,8 @@ public class Phone extends BaseJson implements java.io.Serializable {
     private Hardware hardware;
     // 客户端软件信息
     private Software software;
+    // 异常信息
+    private HashMap<String, String> exceptions = new HashMap<String, String>();
 
     public Hardware getHardware() {
         return hardware;
@@ -23,6 +27,20 @@ public class Phone extends BaseJson implements java.io.Serializable {
 
     public void setSoftware(Software software) {
         this.software = software;
+    }
+
+    /**
+     * @return the exceptions
+     */
+    public HashMap<String, String> getExceptions() {
+        return exceptions;
+    }
+
+    /**
+     * @param exceptions the exceptions to set
+     */
+    public void setExceptions(HashMap<String, String> exceptions) {
+        this.exceptions = exceptions;
     }
 
 }

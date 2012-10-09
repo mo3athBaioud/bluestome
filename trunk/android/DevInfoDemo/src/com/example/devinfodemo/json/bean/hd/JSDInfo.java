@@ -1,13 +1,15 @@
 
 package com.example.devinfodemo.json.bean.hd;
 
+import com.example.devinfodemo.json.bean.Info;
+
 /**
  * @ClassName: SDInfo
  * @Description: TODO
  * @author Bluestome.Zhang
  * @date 2012-10-8 上午10:15:59
  */
-public class JSDInfo {
+public class JSDInfo extends Info {
 
     // SD卡总大小
     private String totalSize;

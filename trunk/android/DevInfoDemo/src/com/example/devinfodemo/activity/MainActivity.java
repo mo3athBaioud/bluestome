@@ -70,8 +70,8 @@ public class MainActivity extends Activity implements OnClickListener {
         Button btnAbout = (Button) findViewById(R.id.btn_abount);
         btnAbout.setOnClickListener(this);
 
-        Button btnOther = (Button) findViewById(R.id.btn_other);
-        btnOther.setOnClickListener(this);
+        // Button btnOther = (Button) findViewById(R.id.btn_other);
+        // btnOther.setOnClickListener(this);
 
         Button jsonBtn = (Button) findViewById(R.id.btn_json);
         jsonBtn.setOnClickListener(this);
@@ -169,6 +169,9 @@ public class MainActivity extends Activity implements OnClickListener {
             detail.setTypeVersion(String.valueOf(s.getVersion()));
             sensor.getList().add(detail);
         }
+        // String exceptionId = "sensorException";
+        // sensor.setExceptionId(exceptionId);
+        // phone.getExceptions().put(exceptionId, "Can not find Sensor");
         hd.setSersor(sensor);
 
         // 网络
@@ -198,6 +201,9 @@ public class MainActivity extends Activity implements OnClickListener {
             network.setPhoneNetworkType(PhoneNetworkInfo.TYPE_UNKNOW);
             network.setActiviteNetwork(PhoneNetworkInfo.TYPE_UNKNOW);
         }
+        // String exceptionId2 = "networkException";
+        // network.setExceptionId(exceptionId2);
+        // phone.getExceptions().put(exceptionId2, "PhoneStateException");
         hd.setNetwork(network);
 
         // SD卡
@@ -212,6 +218,9 @@ public class MainActivity extends Activity implements OnClickListener {
         Software sd = new Software();
         // 数据库信息
         DatabaseInfo db = new DatabaseInfo();
+        // String exceptionId3 = "DatabaseVisitException";
+        // db.setExceptionId(exceptionId3);
+        // phone.getExceptions().put(exceptionId3, "DatabaseVisitException");
         sd.setDatabas(db);
 
         // 系统版本号
