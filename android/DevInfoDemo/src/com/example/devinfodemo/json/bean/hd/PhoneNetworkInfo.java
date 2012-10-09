@@ -1,13 +1,15 @@
 
 package com.example.devinfodemo.json.bean.hd;
 
+import com.example.devinfodemo.json.bean.Info;
+
 /**
  * @ClassName: PhoneNetworkInfo
  * @Description: TODO
  * @author Bluestome.Zhang
  * @date 2012-10-8 上午10:13:54
  */
-public class PhoneNetworkInfo {
+public class PhoneNetworkInfo extends Info {
 
     public static final String TYPE_UNKNOW = "TYPE_UNKNOW";
     private String activiteNetwork;

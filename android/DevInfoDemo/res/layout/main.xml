@@ -6,6 +6,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:orientation="horizontal">
 
         <Button
@@ -31,17 +34,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/network" />
-
+	<!-- 
         <Button
             android:id="@+id/btn_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/other" />
+             -->
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:orientation="horizontal">
         <Button
             android:id="@+id/btn_abount"

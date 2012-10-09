@@ -1,13 +1,15 @@
 
 package com.example.devinfodemo.json.bean.sd;
 
+import com.example.devinfodemo.json.bean.Info;
+
 /**
  * @ClassName: DatabaseInfo
  * @Description: TODO
  * @author Bluestome.Zhang
  * @date 2012-10-8 上午10:19:06
  */
-public class DatabaseInfo {
+public class DatabaseInfo extends Info {
 
     private boolean isLanuncher;
     private boolean isContactOk;

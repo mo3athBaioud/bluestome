@@ -21,8 +21,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.devinfodemo.R;
-import com.example.devinfodemo.R.id;
-import com.example.devinfodemo.R.layout;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -69,9 +67,9 @@ public class AboutActivity extends Activity {
 
         long[] sds = getSDCardMemory();
         sb.append("\n总大小:").append(formatSize(sds[0])).append(",剩余大小:").append(formatSize(sds[1]));
-
         sb.append("\n内部存储:").append(formatSize(getTotalInternalMemorySize()));
-
+        sb.append("\n厂商:").append(android.os.Build.MANUFACTURER);
+        sb.append("\n机型:").append(android.os.Build.MODEL);
         tx1.setText(sb.toString());
 
     }
@@ -166,7 +164,7 @@ public class AboutActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             int level = intent.getIntExtra("level", 0);
             // level加%就是当前电量了
-            tx1.setText(sb.toString() + "\n电池电量" + level + "%");
+            tx1.setText(sb.toString() + "\n" + "\n电池电量" + level + "%");
         }
     };
 

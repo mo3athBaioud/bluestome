@@ -8,8 +8,6 @@ import android.telephony.TelephonyManager;
 import android.widget.TextView;
 
 import com.example.devinfodemo.R;
-import com.example.devinfodemo.R.id;
-import com.example.devinfodemo.R.layout;
 
 /**
  * @ClassName: MultiSimActivity
@@ -37,10 +35,10 @@ public class MultiSimActivity extends Activity {
         final TextView tx1 = (TextView) findViewById(R.id.TextView01);
         initIsDoubleTelephone(this);
         initNetworkType(this);
-        tx1.setText("当前手机卡参数:\n\t是否为双卡手机：" + isDouble + "\n\tIMSI:" + imsi + "\nIMEI:" + imei
-                + "\n\tsimSerialNumber:"
+        tx1.setText("当前手机卡参数:" + "\n\tIMSI:" + imsi + "\n\tIMEI:" + imei
+                + "\n\t手机卡串号:"
                 + simSerialNumber
-                + "\n\tnetworkType:" + networkType);
+                + "\n\t手机网络类型:" + networkType);
     }
 
     public void initIsDoubleTelephone(Context context) {

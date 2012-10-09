@@ -1,6 +1,8 @@
 
 package com.example.devinfodemo.json.bean.hd;
 
+import com.example.devinfodemo.json.bean.Info;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,7 @@ import java.util.List;
  * @author Bluestome.Zhang
  * @date 2012-10-8 上午10:07:18
  */
-public class JSensor {
+public class JSensor extends Info {
 
     private int total = 0;
     private List<JSensorDetail> list = new ArrayList<JSensorDetail>();
