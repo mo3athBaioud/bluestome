@@ -9,7 +9,7 @@ import com.example.devinfodemo.json.bean.Info;
  * @author Bluestome.Zhang
  * @date 2012-10-8 上午10:13:54
  */
-public class PhoneNetworkInfo extends Info {
+public class JNetwork extends Info {
 
     public static final String TYPE_UNKNOW = "TYPE_UNKNOW";
     private String activiteNetwork;
