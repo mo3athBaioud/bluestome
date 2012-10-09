@@ -51,6 +51,13 @@ public class AboutActivity extends Activity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        unregisterReceiver(batteryReceiver);
+    }
+
     @TargetApi(9)
     private void builderInfo() {
         // 系统版本号
