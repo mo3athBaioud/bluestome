@@ -1,35 +1,22 @@
 
 package com.example.devinfodemo.json.bean;
 
-import com.example.devinfodemo.json.bean.hd.PhoneNetworkInfo;
+import com.example.devinfodemo.json.bean.hd.JCamera;
 import com.example.devinfodemo.json.bean.hd.JSDInfo;
 import com.example.devinfodemo.json.bean.hd.JSensor;
+import com.example.devinfodemo.json.bean.hd.JNetwork;
 
 public class Hardware {
 
     // 基本配置信息
-    private int cameraNum = 0;
     private String imsi = "0000000000000000";
     private String imei = "0000000000000000";
 
     // 硬件信息
     private JSensor sersor;
-    private PhoneNetworkInfo network;
+    private JCamera camera;
     private JSDInfo sdInfo;
-
-    /**
-     * @return the cameraNum
-     */
-    public int getCameraNum() {
-        return cameraNum;
-    }
-
-    /**
-     * @param cameraNum the cameraNum to set
-     */
-    public void setCameraNum(int cameraNum) {
-        this.cameraNum = cameraNum;
-    }
+    private JNetwork network;
 
     /**
      * @return the imsi
@@ -74,16 +61,30 @@ public class Hardware {
     }
 
     /**
+     * @return the camera
+     */
+    public JCamera getCamera() {
+        return camera;
+    }
+
+    /**
+     * @param camera the camera to set
+     */
+    public void setCamera(JCamera camera) {
+        this.camera = camera;
+    }
+
+    /**
      * @return the network
      */
-    public PhoneNetworkInfo getNetwork() {
+    public JNetwork getNetwork() {
         return network;
     }
 
     /**
      * @param network the network to set
      */
-    public void setNetwork(PhoneNetworkInfo network) {
+    public void setNetwork(JNetwork network) {
         this.network = network;
     }
 

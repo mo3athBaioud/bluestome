@@ -29,16 +29,16 @@ import com.example.devinfodemo.R;
 import com.example.devinfodemo.json.bean.Hardware;
 import com.example.devinfodemo.json.bean.Phone;
 import com.example.devinfodemo.json.bean.Software;
+import com.example.devinfodemo.json.bean.hd.JCamera;
 import com.example.devinfodemo.json.bean.hd.JSDInfo;
 import com.example.devinfodemo.json.bean.hd.JSensor;
 import com.example.devinfodemo.json.bean.hd.JSensorDetail;
-import com.example.devinfodemo.json.bean.hd.PhoneNetworkInfo;
+import com.example.devinfodemo.json.bean.hd.JNetwork;
 import com.example.devinfodemo.json.bean.sd.DatabaseInfo;
 import com.example.devinfodemo.service.DeviceService;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
@@ -150,111 +150,160 @@ public class MainActivity extends Activity implements OnClickListener {
         int version = android.os.Build.VERSION.SDK_INT;
 
         Phone phone = new Phone();
-        JSONObject jhd = new JSONObject();
         Hardware hd = new Hardware();
+
         // 摄像头
-        if (version > 8) {
-            int cameraNum = getCameraNum();
-            hd.setCameraNum(cameraNum);
-            jhd.put("camera", cameraNum);
+        JCamera camera = new JCamera();
+        try {
+            if (version > 8) {
+                int cameraNum = getCameraNum();
+                camera.setCameraCount(cameraNum);
+            } else {
+                String exceptionId = String.valueOf(System.currentTimeMillis());
+                camera.setExceptionId(exceptionId);
+                phone.getExceptions().put(exceptionId, "当前手机系统版本号低于可以运行获取摄像头数量的API的最低系统版本[9]");
+            }
+        } catch (Exception e) {
+            String exceptionId = String.valueOf(System.currentTimeMillis());
+            camera.setExceptionId(exceptionId);
+            phone.getExceptions().put(exceptionId, "当前手机系统版本号低于可以运行获取摄像头数量的API的最低系统版本[9]");
         }
+        hd.setCamera(camera);
+
         TelephonyManager tm = (TelephonyManager) getContext()
                 .getSystemService(Context.TELEPHONY_SERVICE);
 
-        // IMSI
-        if (null != tm.getSubscriberId()) {
-            hd.setImsi(tm.getSubscriberId());
+        try {
+            // IMSI
+            if (null != tm.getSubscriberId()) {
+                hd.setImsi(tm.getSubscriberId());
+            }
+        } catch (Exception e) {
+            String exceptionId = String.valueOf(System.currentTimeMillis());
+            camera.setExceptionId(exceptionId);
+            hd.setImsi(exceptionId);
+            phone.getExceptions().put(exceptionId, "获取手机IMSI异常,");
+
         }
-        // IMEI
-        if (null != tm.getDeviceId()) {
-            hd.setImei(tm.getDeviceId());
+
+        try {
+            // IMEI
+            if (null != tm.getDeviceId()) {
+                hd.setImei(tm.getDeviceId());
+            }
+        } catch (Exception e) {
+            String exceptionId = String.valueOf(System.currentTimeMillis());
+            hd.setImei(exceptionId);
+            phone.getExceptions().put(exceptionId, "获取手机IMEI异常,");
+
         }
 
         // 传感器
         // 从系统服务中获得传感器管理器
-        SensorManager sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        // 从传感器管理器中获得全部的传感器列表
-        List<Sensor> allSensors = sm.getSensorList(Sensor.TYPE_ALL);
         JSensor sensor = new JSensor();
-        sensor.setTotal(allSensors.size());
-        // 显示每个传感器的具体信息
-        for (Sensor s : allSensors) {
-            JSensorDetail detail = new JSensorDetail();
-            detail.setTypeId(s.getType());
-            detail.setTypeName(s.getName());
-            detail.setTypeVersion(String.valueOf(s.getVersion()));
-            sensor.getList().add(detail);
+        try {
+            SensorManager sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+            // 从传感器管理器中获得全部的传感器列表
+            List<Sensor> allSensors = sm.getSensorList(Sensor.TYPE_ALL);
+            sensor.setTotal(allSensors.size());
+            // 显示每个传感器的具体信息
+            for (Sensor s : allSensors) {
+                JSensorDetail detail = new JSensorDetail();
+                detail.setTypeId(s.getType());
+                detail.setTypeName(s.getName());
+                detail.setTypeVersion(String.valueOf(s.getVersion()));
+                sensor.getList().add(detail);
+            }
+        } catch (Exception e) {
+            String exceptionId = String.valueOf(System.currentTimeMillis());
+            sensor.setExceptionId(exceptionId);
+            phone.getExceptions().put(exceptionId, "获取手机终端传感器异常,");
         }
-        // String exceptionId = "sensorException";
-        // sensor.setExceptionId(exceptionId);
-        // phone.getExceptions().put(exceptionId, "Can not find Sensor");
         hd.setSersor(sensor);
 
         // 网络
-        ConnectivityManager mgr = (ConnectivityManager) getContext()
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = mgr.getActiveNetworkInfo();
-        PhoneNetworkInfo network = new PhoneNetworkInfo();
-        if (null != networkInfo) {
-            int type = networkInfo.getType();
-            switch (type) {
-                case ConnectivityManager.TYPE_MOBILE:
-                    network.setActiviteNetwork("TYPE_MOBILE");
-                    break;
-                case ConnectivityManager.TYPE_WIFI:
-                    network.setActiviteNetwork("TYPE_WIFI");
-                    break;
-                case ConnectivityManager.TYPE_WIMAX:
-                    network.setActiviteNetwork("TYPE_WIMAX");
-                    break;
-                default:
-                    network.setActiviteNetwork("TYPE_" + type);
-                    break;
+        JNetwork network = new JNetwork();
+        try {
+            ConnectivityManager mgr = (ConnectivityManager) getContext()
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = mgr.getActiveNetworkInfo();
+            if (null != networkInfo) {
+                int type = networkInfo.getType();
+                switch (type) {
+                    case ConnectivityManager.TYPE_MOBILE:
+                        network.setActiviteNetwork("TYPE_MOBILE");
+                        break;
+                    case ConnectivityManager.TYPE_WIFI:
+                        network.setActiviteNetwork("TYPE_WIFI");
+                        break;
+                    case ConnectivityManager.TYPE_WIMAX:
+                        network.setActiviteNetwork("TYPE_WIMAX");
+                        break;
+                    default:
+                        network.setActiviteNetwork("TYPE_" + type);
+                        break;
+                }
+                String networkType = getPhoneNetworkType(getContext());
+                network.setPhoneNetworkType(networkType);
+            } else {
+                network.setPhoneNetworkType(JNetwork.TYPE_UNKNOW);
+                network.setActiviteNetwork(JNetwork.TYPE_UNKNOW);
             }
-            String networkType = getPhoneNetworkType(getContext());
-            network.setPhoneNetworkType(networkType);
-        } else {
-            network.setPhoneNetworkType(PhoneNetworkInfo.TYPE_UNKNOW);
-            network.setActiviteNetwork(PhoneNetworkInfo.TYPE_UNKNOW);
+        } catch (Exception e) {
+            String exceptionId = String.valueOf(System.currentTimeMillis());
+            network.setExceptionId(exceptionId);
+            phone.getExceptions().put(exceptionId, "获取手机网络状态异常,");
         }
-        // String exceptionId2 = "networkException";
-        // network.setExceptionId(exceptionId2);
-        // phone.getExceptions().put(exceptionId2, "PhoneStateException");
         hd.setNetwork(network);
 
         // SD卡
-        long[] sds = getSDCardMemory();
         JSDInfo sdi = new JSDInfo();
-        sdi.setTotalSize(String.valueOf(formatSize(sds[0])));
-        sdi.setAvailableSize(String.valueOf(formatSize(sds[1])));
-        sdi.setInternalMemorySize(String.valueOf(formatSize(getTotalInternalMemorySize())));
+        try {
+            long[] sds = getSDCardMemory();
+            sdi.setTotalSize(String.valueOf(formatSize(sds[0])));
+            sdi.setAvailableSize(String.valueOf(formatSize(sds[1])));
+            sdi.setInternalMemorySize(String.valueOf(formatSize(getTotalInternalMemorySize())));
+        } catch (Exception e) {
+            String exceptionId = String.valueOf(System.currentTimeMillis());
+            sdi.setExceptionId(exceptionId);
+            phone.getExceptions().put(exceptionId, "获取手机SD卡异常,");
+        }
         hd.setSdInfo(sdi);
 
         phone.setHardware(hd);
         Software sd = new Software();
         // 数据库信息
         DatabaseInfo db = new DatabaseInfo();
-        // String exceptionId3 = "DatabaseVisitException";
-        // db.setExceptionId(exceptionId3);
-        // phone.getExceptions().put(exceptionId3, "DatabaseVisitException");
+        try {
+
+        } catch (Exception e) {
+            String exceptionId = String.valueOf(System.currentTimeMillis());
+            db.setExceptionId(exceptionId);
+            phone.getExceptions().put(exceptionId, "获取手机数据库异常,");
+        }
         sd.setDatabas(db);
 
-        // 系统版本号
-        sd.setSysVersion(String.valueOf(version));
+        try {
+            // 系统版本号
+            sd.setSysVersion(String.valueOf(version));
 
-        // 厂商
-        sd.setHsman(android.os.Build.MANUFACTURER);
+            // 厂商
+            sd.setHsman(android.os.Build.MANUFACTURER);
 
-        // 机型
-        sd.setHstype(android.os.Build.MODEL);
+            // 机型
+            sd.setHstype(android.os.Build.MODEL);
 
-        // 屏幕大小
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager wmgr = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        wmgr.getDefaultDisplay().getMetrics(dm);
-        int screenWidth = dm.widthPixels;
-        int screenHeight = dm.heightPixels;
-        sd.setScreenSize(screenWidth + "x" + screenHeight);
+            // 屏幕大小
+            DisplayMetrics dm = new DisplayMetrics();
+            WindowManager wmgr = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+            wmgr.getDefaultDisplay().getMetrics(dm);
+            int screenWidth = dm.widthPixels;
+            int screenHeight = dm.heightPixels;
+            sd.setScreenSize(screenWidth + "x" + screenHeight);
+        } catch (Exception e) {
+            String exceptionId = String.valueOf(System.currentTimeMillis());
+            phone.getExceptions().put(exceptionId, "获取手机基本信息异常,");
+        }
 
         phone.setSoftware(sd);
         // JSONObject json;
