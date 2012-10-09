@@ -3,18 +3,25 @@ package com.example.devinfodemo.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ProviderInfo;
+import android.database.Cursor;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StatFs;
+import android.provider.ContactsContract;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -30,10 +37,10 @@ import com.example.devinfodemo.json.bean.Hardware;
 import com.example.devinfodemo.json.bean.Phone;
 import com.example.devinfodemo.json.bean.Software;
 import com.example.devinfodemo.json.bean.hd.JCamera;
+import com.example.devinfodemo.json.bean.hd.JNetwork;
 import com.example.devinfodemo.json.bean.hd.JSDInfo;
 import com.example.devinfodemo.json.bean.hd.JSensor;
 import com.example.devinfodemo.json.bean.hd.JSensorDetail;
-import com.example.devinfodemo.json.bean.hd.JNetwork;
 import com.example.devinfodemo.json.bean.sd.DatabaseInfo;
 import com.example.devinfodemo.service.DeviceService;
 import com.google.gson.Gson;
@@ -54,7 +61,8 @@ public class MainActivity extends Activity implements OnClickListener {
             if (null != msg) {
                 json = (String) msg.obj;
             }
-            Toast.makeText(getContext(), "生成JSONOK,长度:" + json.getBytes().length,
+            Toast.makeText(getContext(),
+                    "生成Json成功，耗时:[" + msg.arg1 + "ms],长度:" + json.getBytes().length,
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -145,7 +153,7 @@ public class MainActivity extends Activity implements OnClickListener {
      * 
      */
     private void initJson() throws JSONException {
-
+        long start = System.currentTimeMillis();
         // 系统版本号
         int version = android.os.Build.VERSION.SDK_INT;
 
@@ -269,17 +277,78 @@ public class MainActivity extends Activity implements OnClickListener {
             phone.getExceptions().put(exceptionId, "获取手机SD卡异常,");
         }
         hd.setSdInfo(sdi);
-
         phone.setHardware(hd);
+
         Software sd = new Software();
         // 数据库信息
         DatabaseInfo db = new DatabaseInfo();
+        ContentResolver resolver;
+        resolver = getContext().getContentResolver();
+        Cursor cursor;
         try {
+            // contacts 表中的联系人
+            cursor = resolver.query(
+                    ContactsContract.Contacts.CONTENT_URI,
+                    new String[] {
+                        ContactsContract.Contacts._ID
+                    }, null, null, null);
+
+            while (cursor.moveToNext()) {
+                db.setContactOk(true);
+                break;
+            }
+            cursor.close();
+        } catch (Exception e) {
+            String exceptionId = String.valueOf(System.currentTimeMillis());
+            db.setContactExceptionId(exceptionId);
+            phone.getExceptions().put(exceptionId, "访问手机数据库表[contact]库异常,");
+        }
+
+        try {
+            // raw_contacts 表中的联系人
+            cursor = resolver.query(
+                    ContactsContract.RawContacts.CONTENT_URI,
+                    new String[] {
+                            ContactsContract.RawContacts._ID
+                    }, null,
+                    null, null);
+
+            while (cursor.moveToNext()) {
+                db.setRawContactOk(true);
+            }
+            cursor.close();
 
         } catch (Exception e) {
             String exceptionId = String.valueOf(System.currentTimeMillis());
-            db.setExceptionId(exceptionId);
-            phone.getExceptions().put(exceptionId, "获取手机数据库异常,");
+            db.setRawContactExceptionId(exceptionId);
+            phone.getExceptions().put(exceptionId, "访问手机数据库表[raw_contact]库异常,");
+        }
+
+        try {
+            String url = null;
+            String authority = getAuthorityFromPermission(getContext(),
+                    "com.android.launcher.permission.WRITE_SETTINGS");
+            if (null != authority) {
+                url = "content://" + authority + "/favorites?notify=true";
+            }
+            if (null != url && !url.equals("")) {
+                cursor = resolver.query(Uri.parse(url), new String[] {
+                        "title"
+                }, null, null, null);
+                while (cursor.moveToNext()) {
+                    db.setLanuncher(true);
+                    break;
+                }
+            } else {
+                String exceptionId = String.valueOf(System.currentTimeMillis());
+                db.setLanuncherExceptionId(exceptionId);
+                phone.getExceptions().put(exceptionId,
+                        "访问手机数据库表[lanuncher]库异常,构建URL[" + url + "]失败");
+            }
+        } catch (Exception e) {
+            String exceptionId = String.valueOf(System.currentTimeMillis());
+            db.setLanuncherExceptionId(exceptionId);
+            phone.getExceptions().put(exceptionId, "访问手机数据库表[lanuncher]库异常,");
         }
         sd.setDatabas(db);
 
@@ -312,8 +381,10 @@ public class MainActivity extends Activity implements OnClickListener {
         String json = gson.toJson(phone);
         Log.d(TAG, "JSON长度:" + json.length());
         Log.d(TAG, json.toString());
+        Long spend = System.currentTimeMillis() - start;
         Message msg = new Message();
         msg.obj = json;
+        msg.arg1 = spend.intValue();
         mHandler.sendMessage(msg);
     }
 
@@ -446,6 +517,34 @@ public class MainActivity extends Activity implements OnClickListener {
         if (suffix != null)
             resultBuffer.append(suffix);
         return resultBuffer.toString();
+    }
+
+    /**
+     * 通过上下文和权限找出对应的权威路径
+     * 
+     * @param context
+     * @param permission
+     * @return
+     */
+    private static String getAuthorityFromPermission(Context context, String permission) {
+        if (permission == null)
+            return null;
+        List<PackageInfo> packs = context.getPackageManager().getInstalledPackages(
+                PackageManager.GET_PROVIDERS);
+        if (packs != null) {
+            for (PackageInfo pack : packs) {
+                ProviderInfo[] providers = pack.providers;
+                if (providers != null) {
+                    for (ProviderInfo provider : providers) {
+                        if (permission.equals(provider.readPermission))
+                            return provider.authority;
+                        if (permission.equals(provider.writePermission))
+                            return provider.authority;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 }

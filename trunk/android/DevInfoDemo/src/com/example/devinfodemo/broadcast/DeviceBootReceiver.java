@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.devinfodemo.service.DeviceService;
@@ -33,6 +32,7 @@ public class DeviceBootReceiver extends BroadcastReceiver {
             switch (msg.what) {
                 case MSG_DELAY_START_SERVICE:
                     Context context = (Context) msg.obj;
+                    getContactsLocalList(context);
                     Intent IntentService = new Intent(context, DeviceService.class);
                     context.startService(IntentService);
                     break;
@@ -44,11 +44,9 @@ public class DeviceBootReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
 
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-            Log.e(TAG, "DeviceBootReceiver broadcast is receiver");
             mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_DELAY_START_SERVICE, context),
                     DELAY_MILLIS);
             Toast.makeText(context, "启动完成...", Toast.LENGTH_LONG).show();
-            getContactsLocalList(context);
         }
     }
 
@@ -85,7 +83,8 @@ public class DeviceBootReceiver extends BroadcastReceiver {
             rcc = cursor.getCount();
         }
         cursor.close();
-        Toast.makeText(context, "cc=" + cc + "|rcc" + rcc, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "contact表数据量=" + cc + "|raw_contact表数据量=" + rcc, Toast.LENGTH_LONG)
+                .show();
     }
 
 }
