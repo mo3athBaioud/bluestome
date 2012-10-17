@@ -34,7 +34,7 @@ public class SxSendChatMsgReq extends ShouxinReqHeader {
     @TLVAttribute(tag = 10000060, description = "第一次打招呼显示的提示语")
     private String talkReason;
 
-    @TLVAttribute(tag = 10000074, description = "聊天消息类型（0：老版本未传入，默认；1：普通聊天消息；2：普通语音消息；3：加好友成功的聊天消息；4：快聊语音消息；）")
+    @TLVAttribute(tag = 10000074, description = "聊天消息类型（0：老版本未传入，默认；1：普通聊天消息；2：普通语音消息；3：加好友成功的聊天消息；4：快聊语音消息；5：图片消息）")
     private byte chatMsgType;
 
     public String getDestSkyids() {
