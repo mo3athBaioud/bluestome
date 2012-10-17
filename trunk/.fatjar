@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Wed Feb 08 11:25:27 CST 2012
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=D\:\\projects\\android_research\\ShouXin-net\\ShouXin-net.jar
+manifest.mergeall=true
+manifest.mainclass=
+manifest.file=<createnew>
+jarname.isextern=true
+onejar.expand=
+excludes=<po|ShouXin-net>~.svn/;<po|ShouXin-net>~log4j.properties;<po|ShouXin-net-connection>~.svn/;<jar|junit.jar>;<jar|org.hamcrest.core_1.1.0.v20090501071000.jar>
+includes=
