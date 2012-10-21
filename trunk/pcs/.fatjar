@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Sun Oct 21 11:35:10 CST 2012
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=pcs.jar
+manifest.mergeall=true
+manifest.mainclass=org.bluestome.pcs.main.Main
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<po|pcs>~config.properties;<po|pcs>~db.properties
+includes=
