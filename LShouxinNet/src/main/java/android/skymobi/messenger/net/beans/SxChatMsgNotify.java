@@ -2,6 +2,7 @@
 package android.skymobi.messenger.net.beans;
 
 import android.skymobi.messenger.net.beans.commons.Audio;
+import android.skymobi.messenger.net.beans.commons.Image;
 import android.skymobi.messenger.net.beans.header.ShouxinRespHeader;
 
 import com.skymobi.android.bean.esb.annotation.EsbSignal;
@@ -37,6 +38,9 @@ public class SxChatMsgNotify extends ShouxinRespHeader {
 
     @TLVAttribute(tag = 10000074, description = "聊天消息类型（0：老版本未传入，默认；1：普通聊天消息；2：普通语音消息；3：加好友成功的聊天消息；4：快聊语音消息；5：图片消息）")
     private byte chatMsgType;
+
+    @TLVAttribute(tag = 20000021, description = "图片内容")
+    private Image image;
 
     @Override
     public int getSeqid() {
@@ -108,6 +112,20 @@ public class SxChatMsgNotify extends ShouxinRespHeader {
      */
     public void setChatMsgType(byte chatMsgType) {
         this.chatMsgType = chatMsgType;
+    }
+
+    /**
+     * @return the image
+     */
+    public Image getImage() {
+        return image;
+    }
+
+    /**
+     * @param image the image to set
+     */
+    public void setImage(Image image) {
+        this.image = image;
     }
 
 }
