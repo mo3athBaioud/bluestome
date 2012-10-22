@@ -193,15 +193,15 @@ public class BIZHIParser {
 								}
 								article.setTitle(imgTag.getAttribute("alt")); // NT:No
 							}
+							logger.info(" > a:"+article.getTitle() + "\t|"+ url);
 							int key = articleDao.insert(article);
 							if (key > 0) {
 								article.setId(key);
-								logger.debug(" > a:"+article.getTitle() + "\t|"+ url);
 								client.add(url, url);
 								if (getImage(article)) {
 									article.setText("FD");
 									if (articleDao.update(article)) {
-										logger.debug("更新记录[" + article.getTitle() + "]成功");
+										logger.info("> a:"+article.getTitle() + "\t|"+ url+" 更新记录成功,ID为:"+key);
 									}
 								}
 							}
@@ -231,12 +231,17 @@ public class BIZHIParser {
 		ResultBean result = hasPaging2(article.getArticleUrl());
 		if (result.isBool()) {
 			Iterator it = result.getMap().keySet().iterator();
+			int i=0;
 			while (it.hasNext()) {
 				String key = (String) it.next();
 				logger.debug(article.getTitle()+"|"+key);
 				LinkBean link = result.getMap().get(key);
 				b = getImage(link, article.getId());
+				if(b)
+					i++;
 			}
+			if(i>0)
+				logger.info(" > a:"+article.getTitle() + " 有["+ i+"]长图片");
 		}
 		logger.debug("\t getImage(耗时):"+(System.currentTimeMillis()-start));
 		return b;
@@ -525,10 +530,11 @@ public class BIZHIParser {
 	public static void update() throws Exception {
 		List<WebsiteBean> webList = webSiteDao.findByParentId(D_PARENT_ID);
 		for (WebsiteBean bean : webList) {
-			
+			logger.info("正在处理站点["+bean.getId()+"|"+bean.getName()+"|"+bean.getUrl()+"]");
 			
 			String lastModify = HttpClientUtils.getLastModifiedByUrl(bean.getUrl());
 			if(null != bean.getLastModifyTime() && !"".equals(bean.getLastModifyTime()) && bean.getLastModifyTime().equals(lastModify)){
+				logger.info("站点["+bean.getId()+"|"+bean.getName()+"|"+bean.getUrl()+"]的最后更新时间没有变更，不需要更新.");
 				continue;
 			}
 			
@@ -550,7 +556,7 @@ public class BIZHIParser {
 					if(null == bean.getLastModifyTime() || "".equals(bean.getLastModifyTime()) || !bean.getLastModifyTime().equals(lastModify)){
 						bean.setLastModifyTime(lastModify);
 						if(webSiteDao.update(bean)){
-							logger.debug(" >> 更新网站["+bean.getName()+"|"+bean.getUrl()+"]最后时间["+lastModify+"]成功!");
+							logger.info(" >> 更新网站["+bean.getId()+"|"+bean.getName()+"|"+bean.getUrl()+"]]最后时间["+lastModify+"]成功!");
 						}
 					}
 				}

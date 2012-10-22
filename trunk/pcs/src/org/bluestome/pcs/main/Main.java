@@ -49,7 +49,6 @@ public class Main {
 			public void run() {
 				try {
 					BIZHIParser.update();
-					BIZHIParser.loadImg();
 				} catch (Exception e) {
 				}
 			}
