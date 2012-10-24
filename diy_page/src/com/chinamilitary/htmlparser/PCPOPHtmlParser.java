@@ -573,15 +573,34 @@ public class PCPOPHtmlParser {
 				if(null == author){
 					author = author2(bean.getUrl());
 				}
+                if(null == author){
+                    author = author3(bean.getUrl());
+                }
 				if(null == author){
 					logger.debug(" > url:["+bean.getUrl()+"] get author is null!");
 					continue;
 				}
-				String tmp1 = author.substring(author.lastIndexOf("作者")+3,author.lastIndexOf("编辑")-1);
-				String tmp2 = author.substring(0,author.indexOf(":")-2);
-				if(null == tmp1 || null ==  tmp2){
-					break;
-				}
+                
+                String tmp1 = null;
+                String tmp2 = null;
+                if(author.indexOf("</a>") != -1){
+                    //新样式处理
+                    /**
+                     * <div class="cen01">2012年10月24日 00:11&nbsp;出处：<a title="转到泡泡网首页!" href="http://www.pcpop.com/">泡泡网</a>&nbsp;【原创】 作者:张伟伟 编辑:张伟伟</div>
+                     */
+                    tmp2 = author.substring(0,author.indexOf("&nbsp;"));
+                    String atmp = author.substring(author.indexOf("</a>")+4);
+                    tmp1 = atmp.substring(atmp.lastIndexOf("作者")+3,atmp.lastIndexOf("编辑")-1);
+                    logger.info("新版:\t"+bean.getUrl()+"|作者:"+tmp1+"|发布时间:"+tmp2);
+                }else{
+    				tmp1 = author.substring(author.lastIndexOf("作者")+3,author.lastIndexOf("编辑")-1);
+    				tmp2 = author.substring(0,author.indexOf(":")-2);
+    				if(null == tmp1 || null ==  tmp2){
+                        logger.error("文章的作者或者发布时间为空!");
+    					break;
+    				}
+    				logger.info("老板:\t"+bean.getUrl()+"|作者:"+tmp1+"|发布时间:"+tmp2);
+                }
 				bean.setAuthor(tmp1);
 				bean.setPublishTime(tmp2);
 				bean.setStatus(2);
@@ -663,6 +682,52 @@ public class PCPOPHtmlParser {
 		return author;
 	}
 	
+    /**
+     * 
+     * @param url
+     * @return
+     * @throws Exception
+     */
+    static String author3(String url) throws Exception{
+        Parser parser = new Parser();
+        parser.setURL(url);
+        parser.setEncoding("GB2312");
+
+        NodeFilter fileter = new NodeClassFilter(Div.class);
+        NodeList list = parser.extractAllNodesThatMatch(fileter).extractAllNodesThatMatch(
+                new HasAttributeFilter("class", "otb14"));
+        String author = null;
+        if (list != null && list.size() > 0) {
+            Div div = (Div)list.elementAt(0);
+            String tmp = div.getStringText();
+            author = tmp;
+        }
+        
+        if(null == author){
+            parser = new Parser();
+            parser.setURL(url);
+            parser.setEncoding("GB2312");
+            
+            NodeFilter fileter1 = new NodeClassFilter(Div.class);
+            NodeList list1 = parser.extractAllNodesThatMatch(fileter1).extractAllNodesThatMatch(
+                    new HasAttributeFilter("class", "cen01"));
+            if(null != list1 && list1.size() > 0){
+                Div div = (Div)list1.elementAt(1);
+                if(null == div){
+                    div = (Div)list1.elementAt(0);
+                }
+                if(null == div){
+                    return null;
+                }
+                String tmp = div.getStringText();
+//                author = tmp.substring(tmp.indexOf("</a>")+4);
+                author = tmp;
+                logger.debug("author:"+author);
+            }
+        }
+        return author;
+    }
+    
 	/**
 	 * 获取文章作者，发布时间等数据
 	 *
