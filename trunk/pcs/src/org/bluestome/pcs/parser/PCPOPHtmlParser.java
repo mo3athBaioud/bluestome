@@ -1,8 +1,25 @@
 package org.bluestome.pcs.parser;
 
+import org.bluestome.pcs.bean.ArticleDoc;
+import org.bluestome.pcs.bean.LinkBean;
+import org.bluestome.pcs.bean.WebsiteBean;
+import org.bluestome.pcs.common.factory.DAOFactory;
+import org.bluestome.pcs.dao.ArticleDocDao;
+import org.bluestome.pcs.dao.WebSiteDao;
+import org.bluestome.pcs.memcache.MemcacheClient;
+import org.bluestome.pcs.utils.DateUtils;
+import org.htmlparser.NodeFilter;
+import org.htmlparser.Parser;
+import org.htmlparser.filters.HasAttributeFilter;
+import org.htmlparser.filters.NodeClassFilter;
+import org.htmlparser.tags.Div;
+import org.htmlparser.tags.LinkTag;
+import org.htmlparser.util.NodeList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -13,26 +30,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import org.bluestome.pcs.bean.ArticleDoc;
-import org.bluestome.pcs.bean.LinkBean;
-import org.bluestome.pcs.bean.WebsiteBean;
-import org.bluestome.pcs.common.Constants;
-import org.bluestome.pcs.common.factory.DAOFactory;
-import org.bluestome.pcs.dao.ArticleDocDao;
-import org.bluestome.pcs.dao.WebSiteDao;
-import org.bluestome.pcs.memcache.MemcacheClient;
-import org.bluestome.pcs.utils.DateUtils;
-import org.bluestome.pcs.utils.StringUtils;
-import org.htmlparser.NodeFilter;
-import org.htmlparser.Parser;
-import org.htmlparser.filters.HasAttributeFilter;
-import org.htmlparser.filters.NodeClassFilter;
-import org.htmlparser.tags.Div;
-import org.htmlparser.tags.LinkTag;
-import org.htmlparser.util.NodeList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PCPOPHtmlParser {
 	
@@ -462,15 +459,34 @@ public class PCPOPHtmlParser {
 				if(null == author){
 					author = author2(bean.getUrl());
 				}
+                if(null == author){
+                    author = author3(bean.getUrl());
+                }
 				if(null == author){
 					logger.debug(" > url:["+bean.getUrl()+"] get author is null!");
 					continue;
 				}
-				String tmp1 = author.substring(author.lastIndexOf("作者")+3,author.lastIndexOf("编辑")-1);
-				String tmp2 = author.substring(0,author.indexOf(":")-2);
-				if(null == tmp1 || null ==  tmp2){
-					break;
-				}
+                String tmp1 = null;
+                String tmp2 = null;
+                if(author.indexOf("</a>") != -1){
+                    //新样式处理
+                    /**
+                     * <div class="cen01">2012年10月24日 00:11&nbsp;出处：<a title="转到泡泡网首页!" href="http://www.pcpop.com/">泡泡网</a>&nbsp;【原创】 作者:张伟伟 编辑:张伟伟</div>
+                     */
+                    tmp2 = author.substring(0,author.indexOf("&nbsp;"));
+                    String atmp = author.substring(author.indexOf("</a>")+4);
+                    tmp1 = atmp.substring(atmp.lastIndexOf("作者")+3,atmp.lastIndexOf("编辑")-1);
+                    logger.info("新版:\t"+bean.getUrl()+"|作者:"+tmp1+"|发布时间:"+tmp2);
+                }else{
+                    tmp1 = author.substring(author.lastIndexOf("作者")+3,author.lastIndexOf("编辑")-1);
+                    tmp2 = author.substring(0,author.indexOf(":")-2);
+                    if(null == tmp1 || null ==  tmp2){
+                        logger.error("文章的作者或者发布时间为空!");
+                        break;
+                    }
+                    logger.info("老板:\t"+bean.getUrl()+"|作者:"+tmp1+"|发布时间:"+tmp2);
+                }
+                logger.info("> doc:\t"+bean.getUrl()+"|"+tmp1+"|"+tmp2);
 				bean.setAuthor(tmp1);
 				bean.setPublishTime(tmp2);
 				bean.setStatus(2);
@@ -498,14 +514,11 @@ public class PCPOPHtmlParser {
 			}catch(Exception e){
 				bean.setStatus(11);
 				bean.setContent(e.getMessage());
-//				ResourceQueneUpdate.getInstance().setElement(bean);
-				e.printStackTrace();
 				if(!articleDocDao.update(bean)){
-					logger.error("更新作者和文章发布时间失败:"+bean.getUrl());
+					logger.error("更新作者和文章发布时间失败:"+bean.getUrl()+"|"+e.getMessage());
 				}else{
 					logger.error("["+bean.getId()+"]更新记录状态为11[其他异常情况]:"+bean.getUrl());
 				}
-				logger.error(" > Error:"+bean.getUrl());
 				continue;
 			}
 		}
@@ -534,7 +547,6 @@ public class PCPOPHtmlParser {
 		}
 		
 		if(null == author){
-//			logger.debug("重新解析作者栏");
 			parser = new Parser();
 			parser.setURL(url);
 			parser.setEncoding("GB2312");
@@ -552,6 +564,44 @@ public class PCPOPHtmlParser {
 		return author;
 	}
 	
+    /**
+     * 
+     * @param url
+     * @return
+     * @throws Exception
+     */
+    static String author3(String url) throws Exception{
+        Parser parser = new Parser();
+        parser.setURL(url);
+        parser.setEncoding("GB2312");
+
+        NodeFilter fileter = new NodeClassFilter(Div.class);
+        NodeList list = parser.extractAllNodesThatMatch(fileter).extractAllNodesThatMatch(
+                new HasAttributeFilter("class", "cen01"));
+        String author = null;
+        if (list != null && list.size() > 0) {
+            Div div = (Div)list.elementAt(0);
+            String tmp = div.getStringText();
+            author = tmp;
+        }
+        
+        if(null == author){
+            parser = new Parser();
+            parser.setURL(url);
+            parser.setEncoding("GB2312");
+            
+            NodeFilter fileter1 = new NodeClassFilter(Div.class);
+            NodeList list1 = parser.extractAllNodesThatMatch(fileter1).extractAllNodesThatMatch(
+                    new HasAttributeFilter("class", "title"));
+            if(null != list1 && list1.size() > 0){
+                Div div = (Div)list1.elementAt(1);
+                String tmp = div.getStringText();
+                author = tmp;
+            }
+        }
+        return author;
+    }
+    
 	/**
 	 * 获取文章作者，发布时间等数据
 	 *
@@ -563,11 +613,9 @@ public class PCPOPHtmlParser {
 			if(!bean.getUrl().startsWith("http://www.pcpop.com/doc/")){
 				continue;
 			}
-//			logger.debug("获取文章数据");
 			//更新文章的作者和发布时间
 			try{
 				String author = author(bean.getUrl());
-//				logger.debug("author:"+author);
 				String tmp1 = author.substring(author.lastIndexOf("作者")+3,author.lastIndexOf("编辑")-1);
 				String tmp2 = author.substring(0,author.indexOf(":")-2);
 				if(null == tmp1 || null ==  tmp2){
@@ -576,7 +624,6 @@ public class PCPOPHtmlParser {
 				bean.setAuthor(tmp1);
 				bean.setPublishTime(tmp2);
 				bean.setStatus(2);
-//				ResourceQueneUpdate.getInstance().setElement(bean);
 				if(!articleDocDao.update(bean)){
 					logger.error("更新作者失败:"+bean.getUrl());
 				}else{
@@ -584,7 +631,6 @@ public class PCPOPHtmlParser {
 				}
 			}catch(java.io.FileNotFoundException e){
 				bean.setStatus(10);
-//				ResourceQueneUpdate.getInstance().setElement(bean);
 				if(!articleDocDao.update(bean)){
 					logger.error("更新作者失败:"+bean.getUrl());
 				}else{
@@ -593,7 +639,6 @@ public class PCPOPHtmlParser {
 				continue;
 			}catch(org.htmlparser.util.ParserException e){
 				bean.setStatus(10);
-//				ResourceQueneUpdate.getInstance().setElement(bean);
 				if(!articleDocDao.update(bean)){
 					logger.error("更新作者失败:"+bean.getUrl());
 				}else{
@@ -603,7 +648,6 @@ public class PCPOPHtmlParser {
 			}catch(Exception e){
 				bean.setStatus(11);
 				bean.setContent(e.getMessage());
-//				ResourceQueneUpdate.getInstance().setElement(bean);
 				if(!articleDocDao.update(bean)){
 					logger.error("更新作者和文章发布时间失败:"+bean.getUrl());
 				}else{
@@ -615,43 +659,6 @@ public class PCPOPHtmlParser {
 	}
 	
 	static void processWithDoc() throws Exception{
-//		Iterator hit = HTMLHASH.keySet().iterator();
-//		while(hit.hasNext()){
-//			String key = (String) hit.next();
-//			logger.debug("key:"+key);
-//			String[] keys = key.split(":");
-//			String content = (String) HTMLHASH.get(key);
-//			try{
-//				docByHTML(content, "http://www.pcpop.com/doc/");
-//				Iterator it = LINKHASH.keySet().iterator();
-//				ArticleDoc doc = null;
-//				while (it.hasNext()) {
-//					String key1 = (String) it.next();
-//					if(null == client.get(getKey(key1))){
-//						LinkBean link = (LinkBean) LINKHASH.get(key1);
-//						doc = new ArticleDoc();
-//						doc.setTitle(link.getName());
-//						doc.setUrl(link.getLink());
-//						doc.setWebId(Integer.valueOf(keys[0]));
-//						int id = articleDocDao.insert(doc);
-//						if(!(id>0)){
-//							logger.debug("失败，\t链接名称：" + link.getName() + "\n链接地址："+ link.getLink());
-//						}else{
-//							doc.setId(id);
-//							doc.setStatus(1);
-//							client.add(getKey(doc.getUrl()), doc);
-//							logger.debug("Memcached now store this object");
-//						}
-//					}
-//				}
-//				LINKHASH.clear();
-//				}catch(Exception e){
-//					logger.debug("解析异常，跳过:"+key+"\tException:"+e.getMessage());
-//					continue;
-//				}
-//		}
-		
-		//1584
 		List<ArticleDoc> list = articleDocDao.findAll(1);
 		for(ArticleDoc bean : list){
 			
