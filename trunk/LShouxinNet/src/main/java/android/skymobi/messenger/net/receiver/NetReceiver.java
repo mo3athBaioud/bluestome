@@ -13,6 +13,8 @@ import android.skymobi.messenger.net.beans.SxBindChangeNotify;
 import android.skymobi.messenger.net.beans.SxCalcFriendsReq;
 import android.skymobi.messenger.net.beans.SxCalcFriendsResp;
 import android.skymobi.messenger.net.beans.SxChatMsgNotify;
+import android.skymobi.messenger.net.beans.SxCompareTerminalUIDReq;
+import android.skymobi.messenger.net.beans.SxCompareTerminalUIDResp;
 import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsReq;
 import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsResp;
 import android.skymobi.messenger.net.beans.SxCreateFastTalkNotify;
@@ -636,6 +638,12 @@ public class NetReceiver implements Receiver {
                                             bindChangeNotify.getFlags(),
                                             bindChangeNotify.getSrcESBAddr());
                                     notify.bindChangeNotify(bindChangeNotify);
+                                    break;
+                                case ResponseCodeConstants.COMPARE_TERMINAL_UID:
+                                    // 比较终端UID
+                                    SxCompareTerminalUIDResp compareTerminalUidResp = (SxCompareTerminalUIDResp) signal;
+                                    ShareBlock.add(SxCompareTerminalUIDReq.class,
+                                            compareTerminalUidResp);
                                     break;
                                 default:
                                     logger.debug("\t>>>> 没有定义具体处理方法:[" + fixedHdr.getMsgCode()

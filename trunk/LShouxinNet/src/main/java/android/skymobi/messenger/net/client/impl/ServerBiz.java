@@ -11,6 +11,8 @@ import android.skymobi.messenger.net.beans.SxApplyFastTalkReq;
 import android.skymobi.messenger.net.beans.SxApplyFastTalkResp;
 import android.skymobi.messenger.net.beans.SxCalcFriendsReq;
 import android.skymobi.messenger.net.beans.SxCalcFriendsResp;
+import android.skymobi.messenger.net.beans.SxCompareTerminalUIDReq;
+import android.skymobi.messenger.net.beans.SxCompareTerminalUIDResp;
 import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsReq;
 import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsResp;
 import android.skymobi.messenger.net.beans.SxDelBlackReq;
@@ -1837,6 +1839,7 @@ public class ServerBiz implements IServerBiz {
      * @param request
      * @return
      */
+    @Override
     public SxCompleteDeleteContactsResp completeDeleteContacts(SxCompleteDeleteContactsReq request) {
         SxCompleteDeleteContactsResp response = null;
         if (connection.isConnect()) {
@@ -1864,6 +1867,44 @@ public class ServerBiz implements IServerBiz {
             } else {
                 // 联网失败
                 logger.debug(" >>>> completeDeleteContacts server no response");
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 比较终端UID
+     * 
+     * @param request
+     */
+    @Override
+    public SxCompareTerminalUIDResp compareTerminalUID(SxCompareTerminalUIDReq request) {
+        SxCompareTerminalUIDResp response = null;
+        if (connection.isConnect()) {
+            boolean isOk = false;
+            int status = connection.send(request);
+            long start = System.currentTimeMillis();
+            if (status == 200) {
+                while (!isOk) {
+                    long end = System.currentTimeMillis() - start;
+                    if (end <= timeOut) {
+                        Object obj = ShareBlock.get(SxCompareTerminalUIDReq.class);
+                        if (null != obj) {
+                            if (obj instanceof SxCompareTerminalUIDResp) {
+                                response = (SxCompareTerminalUIDResp) obj;
+                                isOk = true;
+                                return response;
+                            }
+                        }
+                    } else {
+                        // timeout 标记超时
+                        logger.debug(" >>>> 比较终端UID接口调用失败");
+                        break;
+                    }
+                }
+            } else {
+                // 联网失败
+                logger.debug(" >>>> compareTerminalUID server no response");
             }
         }
         return null;
