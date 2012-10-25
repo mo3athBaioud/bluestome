@@ -143,6 +143,9 @@ public class ResponseCodeConstants {
     // 绑定解绑通知
     public final static int BIND_CHANGE_NOTIFY = 0xB809;
 
+    // 比较终端UID
+    public final static int COMPARE_TERMINAL_UID = 0xA880;
+
     // PPA消息
     // 注册代码响应码
     public final static int PPA_REGISTER_CODE = 0xC202;

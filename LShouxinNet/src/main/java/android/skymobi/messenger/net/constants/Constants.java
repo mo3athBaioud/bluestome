@@ -4,6 +4,8 @@ package android.skymobi.messenger.net.constants;
 import android.skymobi.messenger.net.beans.SxApplyFastTalkReq;
 import android.skymobi.messenger.net.beans.SxApplyFastTalkResp;
 import android.skymobi.messenger.net.beans.SxBindChangeNotify;
+import android.skymobi.messenger.net.beans.SxCompareTerminalUIDReq;
+import android.skymobi.messenger.net.beans.SxCompareTerminalUIDResp;
 import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsReq;
 import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsResp;
 import android.skymobi.messenger.net.beans.SxCreateFastTalkNotify;
@@ -229,7 +231,9 @@ public class Constants {
         xipTypeMetainfoSet.add(SxCompleteDeleteContactsResp.class);
         // 2012-10-25 解绑通知
         xipTypeMetainfoSet.add(SxBindChangeNotify.class);
-
+        // 2012-10-25 比较终端UID
+        xipTypeMetainfoSet.add(SxCompareTerminalUIDReq.class);
+        xipTypeMetainfoSet.add(SxCompareTerminalUIDResp.class);
         // PPA业务对象
         xipTypeMetainfoSet.add(android.skymobi.messenger.net.beans.ppa.LoginPhoneRequest.class);
         xipTypeMetainfoSet.add(android.skymobi.messenger.net.beans.ppa.LoginPhoneResponse.class);

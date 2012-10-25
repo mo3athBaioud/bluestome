@@ -118,4 +118,5 @@ public interface IServerNotify extends INetClientNotify {
      * @param notify
      */
     void bindChangeNotify(SxBindChangeNotify notify);
+
 }

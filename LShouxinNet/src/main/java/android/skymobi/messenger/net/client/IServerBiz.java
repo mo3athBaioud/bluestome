@@ -11,6 +11,8 @@ import android.skymobi.messenger.net.beans.SxApplyFastTalkReq;
 import android.skymobi.messenger.net.beans.SxApplyFastTalkResp;
 import android.skymobi.messenger.net.beans.SxCalcFriendsReq;
 import android.skymobi.messenger.net.beans.SxCalcFriendsResp;
+import android.skymobi.messenger.net.beans.SxCompareTerminalUIDReq;
+import android.skymobi.messenger.net.beans.SxCompareTerminalUIDResp;
 import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsReq;
 import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsResp;
 import android.skymobi.messenger.net.beans.SxDelBlackReq;
@@ -502,4 +504,13 @@ public interface IServerBiz {
      * @return
      */
     SxCompleteDeleteContactsResp completeDeleteContacts(SxCompleteDeleteContactsReq request);
+
+    /**
+     * 比较终端的UID
+     * 
+     * @param request
+     * @return
+     */
+    SxCompareTerminalUIDResp compareTerminalUID(SxCompareTerminalUIDReq request);
+
 }

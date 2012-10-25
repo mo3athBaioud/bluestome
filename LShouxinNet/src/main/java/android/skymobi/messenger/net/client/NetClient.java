@@ -11,6 +11,10 @@ import android.skymobi.messenger.net.beans.SxApplyFastTalkReq;
 import android.skymobi.messenger.net.beans.SxApplyFastTalkResp;
 import android.skymobi.messenger.net.beans.SxCalcFriendsReq;
 import android.skymobi.messenger.net.beans.SxCalcFriendsResp;
+import android.skymobi.messenger.net.beans.SxCompareTerminalUIDReq;
+import android.skymobi.messenger.net.beans.SxCompareTerminalUIDResp;
+import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsReq;
+import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsResp;
 import android.skymobi.messenger.net.beans.SxDelBlackReq;
 import android.skymobi.messenger.net.beans.SxDelBlackResp;
 import android.skymobi.messenger.net.beans.SxGetBlackListReq;
@@ -66,8 +70,6 @@ import android.skymobi.messenger.net.beans.SxSetUserinfoReq;
 import android.skymobi.messenger.net.beans.SxSetUserinfoResp;
 import android.skymobi.messenger.net.beans.SxSyncContactsReq;
 import android.skymobi.messenger.net.beans.SxSyncContactsResp;
-import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsReq;
-import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsResp;
 import android.skymobi.messenger.net.beans.commons.Audio;
 import android.skymobi.messenger.net.beans.commons.ConfigInfo;
 import android.skymobi.messenger.net.beans.commons.Contacts;
@@ -122,6 +124,7 @@ import android.skymobi.messenger.net.client.bean.NetBlackResponse;
 import android.skymobi.messenger.net.client.bean.NetCalcFriendsResponse;
 import android.skymobi.messenger.net.client.bean.NetChatRequest;
 import android.skymobi.messenger.net.client.bean.NetChatResponse;
+import android.skymobi.messenger.net.client.bean.NetCompareTerminalUIDResp;
 import android.skymobi.messenger.net.client.bean.NetContacts;
 import android.skymobi.messenger.net.client.bean.NetContactsPhone;
 import android.skymobi.messenger.net.client.bean.NetContactsResultInfo;
@@ -3899,12 +3902,14 @@ public class NetClient implements INetClient {
         return response;
     }
 
-	/**
-	 * 彻底删除联系人
-	 * @param restoreIds 可恢复联系人ID
-	 * @return
-	 */
-	public NetResponse completeDeleteContacts(ArrayList<Integer> restoreIds){
+    /**
+     * 彻底删除联系人
+     * 
+     * @param restoreIds 可恢复联系人ID
+     * @return
+     */
+    @Override
+    public NetResponse completeDeleteContacts(ArrayList<Integer> restoreIds) {
         NetResponse response = new NetResponse();
         SxCompleteDeleteContactsReq request = new SxCompleteDeleteContactsReq();
         request.setRestoreIds(restoreIds);
@@ -3917,5 +3922,32 @@ public class NetClient implements INetClient {
         }
         return response;
 
-	}
+    }
+
+    /**
+     * 比较终端的UID
+     * 
+     * @param tuid
+     * @return
+     */
+    public NetCompareTerminalUIDResp compareTerminalUID(byte[] tuid) {
+        NetCompareTerminalUIDResp response = new NetCompareTerminalUIDResp();
+        SxCompareTerminalUIDReq request = new SxCompareTerminalUIDReq();
+        request.setTuid(tuid);
+        setDstModuleId(request, ESBAddrConstatns.SHOUXIN_ADDRESS);
+        SxCompareTerminalUIDResp resp = serverBiz.compareTerminalUID(request);
+        if (null != resp) {
+            response.setResult(resp.getResponseCode(), resp.getResponseMsg());
+            switch (resp.getResponseCode()) {
+                case 200:
+                    response.setResult(resp.getCompareResult());
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            response.setNetError();
+        }
+        return response;
+    }
 }
