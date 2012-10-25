@@ -1,28 +1,5 @@
 package com.chinamilitary.htmlparser;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-//import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.htmlparser.NodeFilter;
-import org.htmlparser.Parser;
-import org.htmlparser.filters.HasAttributeFilter;
-import org.htmlparser.filters.NodeClassFilter;
-import org.htmlparser.filters.OrFilter;
-import org.htmlparser.tags.Div;
-import org.htmlparser.tags.ImageTag;
-import org.htmlparser.tags.LinkTag;
-import org.htmlparser.tags.SelectTag;
-import org.htmlparser.tags.OptionTag;
-import org.htmlparser.tags.TableTag;
-import org.htmlparser.util.NodeList;
-
 import com.chinamilitary.bean.Article;
 import com.chinamilitary.bean.ImageBean;
 import com.chinamilitary.bean.LinkBean;
@@ -35,21 +12,40 @@ import com.chinamilitary.dao.PicFileDao;
 import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.factory.DAOFactory;
 import com.chinamilitary.memcache.MemcacheClient;
-import com.chinamilitary.threadpool.RequestRecordThread;
 import com.chinamilitary.threadpool.ThreadPoolManager;
 import com.chinamilitary.util.CacheUtils;
 import com.chinamilitary.util.HttpClientUtils;
 import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
 import com.common.Constants;
-import com.message.RequestRecordQuene;
-import com.thread.ResourceQueneInsert;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.spi.LoggerFactory;
+import org.htmlparser.NodeFilter;
+import org.htmlparser.Parser;
+import org.htmlparser.filters.HasAttributeFilter;
+import org.htmlparser.filters.NodeClassFilter;
+import org.htmlparser.filters.OrFilter;
+import org.htmlparser.tags.Div;
+import org.htmlparser.tags.ImageTag;
+import org.htmlparser.tags.LinkTag;
+import org.htmlparser.tags.OptionTag;
+import org.htmlparser.tags.SelectTag;
+import org.htmlparser.tags.TableTag;
+import org.htmlparser.util.NodeList;
+import org.slf4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 //import com.chinamilitary.util.StringUtils;
 
 public class WallcooParser {
 
-	private static Log log = LogFactory.getLog(WallcooParser.class);
+    static Log logger = LogFactory.getLog(WallcooParser.class);
 	
 	static final String PIC_SAVE_PATH = Constants.FILE_SERVER;
 	
@@ -196,11 +192,8 @@ public class WallcooParser {
 		if (list != null && list.size() > 0) {
 			Div div = (Div) list.elementAt(0);
 			String tmp = div.getStringText().substring(0,div.getStringText().length());
-//			String tmp = div.getStringText().substring(0,
-//					div.getStringText().indexOf("页"));
 			int pageSize = Integer.valueOf(tmp.substring(tmp.indexOf("/") + 1,
 					tmp.indexOf("]")));
-			System.out.println(" >> pageSize:"+pageSize);
 			LinkBean l1 = null;
 			for (int i = 1; i < pageSize + 1; i++) {
 				l1 = new LinkBean();
@@ -257,7 +250,6 @@ public class WallcooParser {
 							Article article = null;
 							if (cnl.elementAt(1) instanceof ImageTag) {
 								String url = URL_ + nl.getLink();
-//								if(null == client.get(url)){
 									article = new Article();
 									article.setWebId(webId);
 									article.setArticleUrl(url);
@@ -267,15 +259,25 @@ public class WallcooParser {
 									article.setIntro(getArticleText(url));
 									int key = articleDao.insert(article);
 									if (key > 0) {
-										System.out.println(" >> add Wallcoo record ["+url+"] success !");
-//										client.add(url, url);
+									    article.setId(key);
+                                        try{
+                                            ResultBean result = hasPagingWithArticleSelectTag(article.getArticleUrl());
+                                            if(result.isBool()){
+                                                logger.info(">a :正在解析["+article.getId()+"|"+article.getArticleUrl()+"],分页数量为:"+result.getList().size());
+                                                for(LinkBean lb:result.getList()){
+                                                    getPicUrlAndThum(article.getId(),lb.getLink());
+                                                }
+                                                article.setText("FD");
+                                            }
+                                        }catch(Exception e){
+                                            article.setText("NED");
+                                        }
+                                        if(!articleDao.update(article)){
+                                            logger.debug(" >> 站点:["+article.getWebId()+"],更新记录"+article.getTitle()+"失败");
+                                        }
 									} else {
-										System.out.println(" >> add Wallcoo record ["+url+"] failure !");
-//										LINKHASH.put(link.getLink(), link);
+                                        logger.error("Add Article["+article.getArticleUrl()+"] Failure!");
 									}
-//								}else{
-//									System.out.println(">> 已存在相同的内容 ["+nl.getLinkText()+"]");
-//								}
 							}
 						}
 					}
@@ -491,14 +493,15 @@ public class WallcooParser {
 	 * @param url
 	 */
 	static boolean getPicUrlAndThum(int articleId, String url) throws Exception { // String
+		long start = System.currentTimeMillis();
 		// url
 		boolean b = true;
 		if (articleId < 0) {
-			System.out.println("条件:articleID不满足，退出");
+			logger.error("条件:文章ID["+articleId+"]不满足，退出");
 			return false;
 		}
 		if (null == url) { //StringUtils.isEmpty(url)
-			System.out.println("条件:地址不满足，退出");
+            logger.error("条件:地址["+url+"]不满足，退出");
 			return false;
 		}
 			Parser parser = null;
@@ -512,7 +515,7 @@ public class WallcooParser {
 							new HasAttributeFilter("id", "thums"));
 
 			if (list != null) {
-
+				logger.debug("\t解析网页:"+(System.currentTimeMillis()-start));
 				NodeFilter linkFilter = new NodeClassFilter(LinkTag.class);
 				NodeFilter imageFilter = new NodeClassFilter(ImageTag.class);
 				OrFilter lastFilter = new OrFilter();
@@ -528,6 +531,7 @@ public class WallcooParser {
 				if (list2 != null && list2.size() > 0) {
 					for (int i = 0; i < list2.size(); i++) {
 						if (list2.elementAt(i) instanceof LinkTag) {
+							start = System.currentTimeMillis();
 							LinkTag nl = (LinkTag) list2.elementAt(i);
 							NodeList cnl = nl.getChildren();
 							if (cnl != null && cnl.size() > 0) {
@@ -548,24 +552,21 @@ public class WallcooParser {
 									imageBean.setImgUrl(imgUrl);
 									imageBean.setLink(picUrl); //picUrl
 									imageBean.setArticleId(articleId);
+									start = System.currentTimeMillis();
 									if (!getPicUrl(imageBean)) {
 										b = false;
 										// break;
 									}
+									logger.debug("\t>>>> getPicUrlAndThum.getPicUrl.end:"+(System.currentTimeMillis()-start));
 								}
 							}
+							logger.debug("\t>>>> getPicUrlAndThum.end:"+(System.currentTimeMillis()-start));
 						}
 
 					}
 				}
 
 			}
-//		} catch (Exception e) {
-//			b = false;
-//			log.error("getPicUrlAndThum:\tarticleId:" + articleId
-//					+ "\tException" + e);
-//		}
-		// return b;
 		return true;
 	}
 
@@ -605,12 +606,6 @@ public class WallcooParser {
 									if (list5.elementAt(0) instanceof LinkTag) {
 										LinkTag nl1 = (LinkTag) list5
 												.elementAt(0);
-										String tmp = nl1.getLink().replace(
-												"../../", "");
-//										String picUrl = url.substring(0, url
-//												.lastIndexOf("/"))
-//												+ tmp.substring(tmp
-//														.indexOf("/") + 1);
 										image.setOrderId(k);
 										image.setName(nl1.getLinkText());
 										if (!getPic(image, url)) {
@@ -660,8 +655,7 @@ public class WallcooParser {
 						if(null == client.get(nl.getImageURL())){
 							int key = imageDao.insert(image);
 							if (key > 0) {
-								System.out.println("添加成功!!!" + COUNT);
-								COUNT++;
+								logger.debug("添加图片记录" + (COUNT++)+"\t成功!");
 							} else {
 								b = false;
 							}
@@ -682,15 +676,12 @@ public class WallcooParser {
 						.extractAllNodesThatMatch(filter)
 						.extractAllNodesThatMatch(
 								new HasAttributeFilter("id", "download-images")); // download-images
-				// wallpaper-images
-
 				if (list != null) {
 					Div div = (Div) list.elementAt(0);
 					if (null != div) {
 						LinkTag link = (LinkTag)div.getChild(0);
 						if(null != link){
 							ImageTag nl = (ImageTag) link.getChild(0);
-	//						if(null == client.get(nl.getImageURL())){
 								image
 										.setCommentshowurl(nl.getAttribute("width") == null ? ""
 												: nl.getAttribute("width"));
@@ -701,13 +692,11 @@ public class WallcooParser {
 								image.setLink("NED");
 								int key = imageDao.insert(image);
 								if (key > 0) {
-									System.out.println("添加成功!!!" + COUNT);
+                                    logger.debug("在异常中执行的解析策略,添加图片记录" + (COUNT++)+"\t成功!");
 									client.add(nl.getImageURL(), nl.getImageURL());
-									COUNT++;
 								} else {
 									b = false;
 								}
-	//						}
 						}
 					} else {
 						b = false;
@@ -864,13 +853,8 @@ public class WallcooParser {
 						if (pageList != null && pageList.size() > 0) {
 							for (LinkBean link : pageList) {
 								try {
-									System.out.println(" >> link:"+link.getLink());
+									logger.debug(" >> link:"+link.getLink());
 									secondURL(link, bean.getId());
-//									break;
-//								} catch (org.htmlparser.util.EncodingChangeException e) {
-//									e.printStackTrace();
-//									LINKHASH.put(link.getLink(), link);
-//									continue;
 								} catch(Exception e){
 									continue;
 								}
@@ -881,7 +865,7 @@ public class WallcooParser {
 							if(null == bean.getLastModifyTime() || "".equals(bean.getLastModifyTime()) || !bean.getLastModifyTime().equals(lastModify)){
 								bean.setLastModifyTime(lastModify);
 								if(wesiteDao.update(bean)){
-									System.out.println(" >> 更新网站["+bean.getName()+"|"+bean.getUrl()+"]最后时间["+lastModify+"]成功!");
+                                    logger.info(" >> 更新网站["+bean.getName()+"|"+bean.getUrl()+"]最后时间["+lastModify+"]成功!");
 								}
 							}
 						}
@@ -904,26 +888,7 @@ public class WallcooParser {
 //			catelogy("http://www.wallcoo.net/");
 			
 			//初始化数据到缓存中
-//			init2cache();
-			new Thread(new Runnable(){
-				private boolean isRun = true;
-				public void run() {
-					while(isRun){
-						try{
-							update();
-							loadImg();
-							imgDownload();
-							isRun = false;
-							System.exit(-1);
-							//休眠半小时
-							Thread.sleep(80000000);
-						}catch(Exception e){
-							e.printStackTrace();
-							isRun = false;
-						}
-					}
-				}
-			 }).start();
+			update();
 			
 			
 			
@@ -936,7 +901,7 @@ public class WallcooParser {
 //			}
 			
 //			patchIcon();
-			} catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -1044,41 +1009,42 @@ public class WallcooParser {
 
 	static void loadImg() throws Exception{
 		List<WebsiteBean> webList = wesiteDao.findByParentId(D_PARENT_ID);
+		long start = System.currentTimeMillis();
 		for (WebsiteBean bean : webList) {
 			List<Article> list = articleDao.findByWebId(bean.getId(), "NED");
-			System.out.println(">> 网站["+bean.getName()+"]|"+bean.getUrl()+"还有"+list.size()+"条记录未解析");
-//			if(list.size() > 0){
-				for(Article article:list){
-					try{
-						int count = articleDao.getCount("select count(*) from tbl_image where d_article_id = "+article.getId());
-						if(count > 0){
-							System.out.println(" >> ["+article.getTitle()+"|"+article.getId()+"]文章下有"+count+"条图片");
-							article.setText("FD");
-							if(!articleDao.update(article)){
-								System.err.println(" >> 站点:["+article.getWebId()+"],更新记录"+article.getTitle()+"失败");
-							}
-							continue;
+			logger.info(">> 网站["+bean.getName()+"]|"+bean.getUrl()+"还有"+list.size()+"条记录未解析"+(System.currentTimeMillis()-start)+"ms");
+			for(Article article:list){
+				try{
+					start = System.currentTimeMillis();
+					int count = articleDao.getCount("select count(*) from tbl_image where d_article_id = "+article.getId());
+					System.out.println("\t>>>>> 文章总数:"+count + (System.currentTimeMillis()-start) + "ms");
+					if(count > 0){
+						System.out.println(" >> ["+article.getTitle()+"|"+article.getId()+"]文章下有"+count+"条图片");
+						article.setText("FD");
+						if(!articleDao.update(article)){
+							System.err.println(" >> 站点:["+article.getWebId()+"],更新记录"+article.getTitle()+"失败");
 						}
-						ResultBean result = hasPagingWithArticleSelectTag(article.getArticleUrl());
-						if(result.isBool()){
-							for(LinkBean link:result.getList()){
-								getPicUrlAndThum(article.getId(),link.getLink());
-							}
-							article.setText("FD");
+						continue;
+					}
+					start = System.currentTimeMillis();
+					ResultBean result = hasPagingWithArticleSelectTag(article.getArticleUrl());
+					System.out.println("\t hasPagingWithArticleSelectTag:"+(System.currentTimeMillis()-start)+"ms");
+					if(result.isBool()){
+						for(LinkBean link:result.getList()){
+							start = System.currentTimeMillis();
+							getPicUrlAndThum(article.getId(),link.getLink());
+							System.out.println("\t getPicUrlAndThum:"+(System.currentTimeMillis()-start)+"ms");
 						}
-					}catch(Exception e){
-						e.printStackTrace();
-						article.setText("ENED");
-					}finally{
-//						if(articleDao.update(article)){
-//							System.out.println(">> 更新记录状态为["+article.getText()+"] 成功!");
-//						}
+						article.setText("FD");
 					}
-					if(!articleDao.update(article)){
-						System.err.println(" >> 站点:["+article.getWebId()+"],更新记录"+article.getTitle()+"失败");
-					}
+				}catch(Exception e){
+					e.printStackTrace();
+					article.setText("ENED");
 				}
-//			}
+				if(!articleDao.update(article)){
+					System.err.println(" >> 站点:["+article.getWebId()+"],更新记录"+article.getTitle()+"失败");
+				}
+			}
 		}
 	}
 	static void imgDownload() throws Exception {
