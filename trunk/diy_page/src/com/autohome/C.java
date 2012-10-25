@@ -154,7 +154,7 @@ public class C {
 						}
 					}
 				} catch (Exception e) {
-					System.err.println(e);
+					logger.error(e.getMessage());
 				}
 			}
 
@@ -283,16 +283,16 @@ public class C {
 					}
 					byteArray.flush();
 					String result = byteArray.toString("GB2312");
-					System.out.println(result);
+					logger.debug(result);
 					ReplyJson json = (ReplyJson)JSONUtils.json2Object(result,ReplyJson.class);
 					if(json.getSucceed()){
-						System.out.println("回复成功!");
+						logger.debug("回复成功!");
 					}else{
-						System.err.println("回复失败,原因为:"+json.getErrMsg());
+						logger.error("回复失败,原因为:"+json.getErrMsg());
 					}
 					break;
 				default:
-					System.err.println(connection.getResponseCode()+":"+connection.getResponseMessage());
+					logger.error(connection.getResponseCode()+":"+connection.getResponseMessage());
 					break;
 			}
 			
@@ -307,7 +307,7 @@ public class C {
 				try {
 					byteArray.close();
 				} catch (IOException e1) {
-					System.err.println(e1);
+					logger.error(e1.getMessage());
 				}
 			}
 			
@@ -336,13 +336,13 @@ public class C {
 				final String pid = paras[2].trim();
 				final int rid = new java.util.Random().nextInt(30);
 				String postURL = BBS_POST_URL.replace("{cid}", carId).replace("{pid}", pid);
-				System.out.println("发帖时间:"+paras[4]);
-				System.out.println(">>>>>>"+postURL+"<<<<<<");
+				logger.debug("发帖时间:"+paras[4]);
+				logger.debug(">>>>>>"+postURL+"<<<<<<");
 				doReply(carId,pid,"占个沙发，楼下的来回答吧! <img style=\";\" src=\"http://img.autohome.com.cn/Album/kindeditor/smiles/"+rid+".gif\">");
 				try {
 					Thread.sleep(3000L);
 				} catch (InterruptedException e) {
-					System.err.println(e);
+					logger.error(e.getMessage());
 				}
 			}
 		}catch(Exception e){
@@ -393,7 +393,7 @@ public class C {
 				p.getErrorStream();
                 OPENLIST.put(url, 0);
 			} else {
-				System.out.println("非Windows系统");
+				logger.error("非Windows系统");
 			}
 		} catch (IOException io) {
 			io.printStackTrace();
@@ -419,6 +419,7 @@ public class C {
  * 
  */
 class MediaPlayCase{
+    private static Logger logger = LoggerFactory.getLogger(MediaPlayCase.class);
 	static void play() {
 		new Thread(new Runnable(){
 			public void run() {
@@ -462,15 +463,15 @@ class MediaPlayCase{
 					// Reset clip
 					clip = null;
 				} catch (MalformedURLException e) {
-					System.err.println(e);
+					logger.error(e.getMessage());
 				} catch (IOException e) {
-					System.err.println(e);
+					logger.error(e.getMessage());
 				} catch (LineUnavailableException e) {
-					System.err.println(e);
+					logger.error(e.getMessage());
 				} catch (UnsupportedAudioFileException e) {
-					System.err.println(e);
+					logger.error(e.getMessage());
 				} catch (Exception e){
-					System.err.println(e);
+					logger.error(e.getMessage());
 				}
 			}
 		}).start();
