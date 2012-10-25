@@ -1,5 +1,19 @@
 package com.autohome;
 
+import com.autohome.json.ReplyJson;
+import com.chinamilitary.util.IOUtil;
+import com.utils.DateUtils;
+import com.utils.JSONUtils;
+
+import org.htmlparser.NodeFilter;
+import org.htmlparser.Parser;
+import org.htmlparser.filters.HasAttributeFilter;
+import org.htmlparser.filters.NodeClassFilter;
+import org.htmlparser.tags.CompositeTag;
+import org.htmlparser.util.NodeList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -26,50 +40,35 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-
-import org.htmlparser.NodeFilter;
-import org.htmlparser.Parser;
-import org.htmlparser.filters.HasAttributeFilter;
-import org.htmlparser.filters.NodeClassFilter;
-import org.htmlparser.tags.CompositeTag;
-import org.htmlparser.util.NodeList;
-
-import com.autohome.json.ReplyJson;
-import com.chinamilitary.util.IOUtil;
-import com.utils.DateUtils;
-import com.utils.JSONUtils;
 
 public class C {
 	
+    private static Logger logger = LoggerFactory.getLogger(C.class);
 	static String FILE_PATH = "D:\\verycd_replay.txt";
 	static String BSS_URL = "http://club.autohome.com.cn/bbs/forum-c-{id}-{page}.html";
 	static String BBS_POST_URL = "http://club.autohome.com.cn/bbs/thread-c-{cid}-{pid}-1.html";
 	static String contents = IOUtil.readFile(FILE_PATH, "GBK", "txt");
 	BlockingQueue<byte[]> byteQuene = new LinkedBlockingQueue<byte[]>(100);
 	BlockingQueue<String[]> replyQuene = new LinkedBlockingQueue<String[]>(Short.MAX_VALUE);
+    int BROWSER_MAX_COUNT = 100;
 	
 	static final String WIN_PATH = "C:\\Documents and Settings\\bluestome.zhang\\Local Settings\\Application Data\\Google\\Chrome\\Application\\chrome.exe";
 	static final String WIN_ID = "Windows";
 
 	static Map<String, Integer> SIZEHASH = new HashMap<String, Integer>();
 	static Map<String, Integer> REPLAYED = new HashMap<String, Integer>();
+    static Map<String, Integer> OPENLIST = new HashMap<String, Integer>();
 	
 	public void timeout(String webSite, Callback call) {
-//		System.err.println("执行时间:"+DateUtils.getNow());
 		URL cURL = null;
 		HttpURLConnection connection = null;
-		OutputStream out = null;
 		InputStream in = null;
-		long start = System.currentTimeMillis();
 		try {
 			cURL = new URL(webSite);
 			connection = (HttpURLConnection) cURL.openConnection();
 			// 获取输出流
 			connection.setDoOutput(true);
-			connection.setConnectTimeout(10 * 1000);
+			connection.setConnectTimeout(9 * 1000);
 			connection.setReadTimeout(10 * 1000);
 			connection
 					.addRequestProperty(
@@ -80,12 +79,10 @@ public class C {
 			connection.setRequestProperty("Cache-Control", "max-age=0");
 			connection.setRequestProperty("Referer", webSite);
 			connection.connect();
-			start = System.currentTimeMillis();
 			int code = connection.getResponseCode();
-//			System.out.println("响应码:" + code);
+			logger.debug(webSite+"\t"+DateUtils.getNow()+"\t响应码:" + code);
 			switch(code){
 				case 200:
-					start = System.currentTimeMillis();
 					connection.setReadTimeout(60*1000);
 					in = connection.getInputStream();
 					ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
@@ -95,22 +92,19 @@ public class C {
 					}
 					byteBuffer.flush();
 					int size = byteBuffer.size();
-//					System.out.println("输出流大小:"+size);
 					if (size > 0) {
 						call.work(byteBuffer.toByteArray());
 					}
 					byteBuffer.close();
-					start = System.currentTimeMillis();
 					break;
 				default:
-					System.err.println("执行时间:"+DateUtils.getNow());
-					System.err.println("错误码:"+code);
+                    logger.error("执行时间:"+DateUtils.getNow()+"\t错误码:"+code+"|"+connection.getResponseMessage());
 					break;
 			}
 		} catch (IOException e) {
-			System.err.println(e);
+			logger.error(e.getMessage());
 		} catch (Exception e) {
-			System.err.println(e);
+			logger.error(e.getMessage());
 		} finally{
 			if(null != connection){
 				connection.disconnect();
@@ -119,7 +113,7 @@ public class C {
 	}
 
 	public void executorPoll(final String carId,final String page) {
-		final long pollTime = 15 * 1000L;
+		final long pollTime = 10 * 1000L;
 		final long timeout = 500L;
 		final ScheduledExecutorService pool = Executors
 				.newSingleThreadScheduledExecutor();
@@ -155,14 +149,13 @@ public class C {
 									});
 							isOk = true;
 						} else {
-							System.err.println("超时:["+ (pollTime / 1000) + "s]");
+							logger.debug("超时:["+ (pollTime / 1000) + "s]");
 							break;
 						}
 					}
 				} catch (Exception e) {
 					System.err.println(e);
 				}
-//				System.out.println("方法执行耗时:"+ (System.currentTimeMillis() - start) + "ms");
 			}
 
 		}, 100L, pollTime, TimeUnit.MILLISECONDS);
@@ -174,7 +167,6 @@ public class C {
 	 * @param carId
 	 */
 	private void parserBbs(String content,final String carId){
-		long start = System.currentTimeMillis();
 		Parser p1 = null;
 		try{
 			p1 = new Parser();
@@ -203,31 +195,29 @@ public class C {
 						final String pid = paras[2].trim();
 						final String uid = paras[6].trim();
 						if(!REPLAYED.containsKey(pid) && !uid.equals("4212192")){
-	//						final int rid = new java.util.Random().nextInt(302);
 							final String postURL = BBS_POST_URL.replace("{cid}", carId).replace("{pid}", pid);
-							System.out.println("发帖时间:"+paras[4]);
-							System.out.println(postURL);
-							System.err.println(">> 新帖子来了 ");
-	//						doReply(carId,pid,"借沙发,发警句:"+getWord(rid)+"\r\n 感谢楼主的宽宏大量!");
+                            logger.info("发帖时间:"+paras[4]+"|\t现在时间:"+DateUtils.getNow()+"\t"+postURL);
 							new Thread(new Runnable(){
 								public void run(){
 									//播放提示音
 									MediaPlayCase.play();
-									showDocument(postURL);
+                                    if(!OPENLIST.containsKey(postURL)){
+                                        showDocument(postURL);
+                                    }
 								}
 							}).start();
 							c++;
 						}
 					}
 					i++;
-				}while(i<list.size());
+				}while(i<list.size() && c < 3);
 			}else{
-				System.err.println("执行时间:"+DateUtils.getNow());
-				System.err.println("获取列表失败");
+				logger.error("执行时间:"+DateUtils.getNow());
+                logger.error("获取列表失败");
 			}
 		}catch(Exception e){
-			System.err.println("执行时间:"+DateUtils.getNow());
-			System.err.println(e);
+            logger.error("执行时间:"+DateUtils.getNow());
+            e.printStackTrace();
 		}finally{
 			if(null != p1){
 				p1 = null;
@@ -362,7 +352,7 @@ public class C {
 		}
 	}
 	
-	private String getWord(int index){
+	String getWord(int index){
 		String[] cl = contents.split("\r\n");
 		int len = cl.length;
 		if(index < len){
@@ -375,7 +365,7 @@ public class C {
 	 * 判断是否为windows平台
 	 * @return
 	 */
-	public boolean isWindowsPlatform() {
+	boolean isWindowsPlatform() {
 		String os = System.getProperty("os.name");
 		if (os != null && os.startsWith(WIN_ID))
 			return true;
@@ -390,6 +380,10 @@ public class C {
 	 public void showDocument(String url) {
 		if (url == null)
 			return;
+        if(OPENLIST.size() > BROWSER_MAX_COUNT ){
+            logger.info("清理OPENLIST中的数据，因为OPENLIST的数据量已经超过100了");
+            OPENLIST.clear();
+        }
 		boolean windows = isWindowsPlatform();
 		String cmd = null;
 		try {
@@ -397,6 +391,7 @@ public class C {
 				cmd = WIN_PATH + " " + url;
 				Process p = Runtime.getRuntime().exec(cmd);
 				p.getErrorStream();
+                OPENLIST.put(url, 0);
 			} else {
 				System.out.println("非Windows系统");
 			}
@@ -408,7 +403,6 @@ public class C {
 	public static void main(String args[]) {
 		final C c = new C();
 		c.executorPoll("2001","1");
-//		播放音频文件
 //		new Thread(new Runnable(){
 //			public void run(){
 //				MediaPlayCase.play();
