@@ -469,10 +469,26 @@ public interface INetClient extends INetBiz, IFSBiz, IImageBiz, ISupBiz, ILcs {
      */
     NetResponse leaveFastChat(int destSkyid);
 
-	/**
-	 * 彻底删除联系人
-	 * @param restoreIds 可恢复联系人ID
-	 *
-	 */
-	NetResponse completeDeleteContacts(ArrayList<Integer> restoreIds);
+    /**
+     * 彻底删除联系人
+     * 
+     * @param restoreIds 可恢复联系人ID
+     */
+    NetResponse completeDeleteContacts(ArrayList<Integer> restoreIds);
+
+    /**
+     * 上传终端ID
+     * 
+     * @param tuid
+     * @return
+     */
+    NetResponse uploadTerminalUID(byte[] tuid);
+
+    /**
+     * 上传终端能力值
+     * 
+     * @param request
+     * @return
+     */
+    NetResponse uploadAbility(int ability);
 }

@@ -76,6 +76,10 @@ import android.skymobi.messenger.net.beans.SxSyncContactsReq;
 import android.skymobi.messenger.net.beans.SxSyncContactsResp;
 import android.skymobi.messenger.net.beans.SxSysMsgNotify;
 import android.skymobi.messenger.net.beans.SxTLVNotifyAck;
+import android.skymobi.messenger.net.beans.SxUploadAbilityReq;
+import android.skymobi.messenger.net.beans.SxUploadAbilityResp;
+import android.skymobi.messenger.net.beans.SxUploadTerminalUIDReq;
+import android.skymobi.messenger.net.beans.SxUploadTerminalUIDResp;
 import android.skymobi.messenger.net.beans.SxVCardNotify;
 import android.skymobi.messenger.net.beans.commons.ChangeStatNotify;
 import android.skymobi.messenger.net.beans.commons.ChangeStateAck;
@@ -640,10 +644,22 @@ public class NetReceiver implements Receiver {
                                     notify.bindChangeNotify(bindChangeNotify);
                                     break;
                                 case ResponseCodeConstants.COMPARE_TERMINAL_UID:
-                                    // 比较终端UID
+                                    // 比较终端UID响应
                                     SxCompareTerminalUIDResp compareTerminalUidResp = (SxCompareTerminalUIDResp) signal;
                                     ShareBlock.add(SxCompareTerminalUIDReq.class,
                                             compareTerminalUidResp);
+                                    break;
+                                case ResponseCodeConstants.UPLOAD_TERMINAL_UID:
+                                    // 上传终端UID响应
+                                    SxUploadTerminalUIDResp uploadTerminalUIDResp = (SxUploadTerminalUIDResp) signal;
+                                    ShareBlock.add(SxUploadTerminalUIDReq.class,
+                                            uploadTerminalUIDResp);
+                                    break;
+                                case ResponseCodeConstants.UPLOAD_ABILITY:
+                                    // 上传终端能力值响应
+                                    SxUploadAbilityResp uploadAbilityResp = (SxUploadAbilityResp) signal;
+                                    ShareBlock.add(SxUploadAbilityReq.class,
+                                            uploadAbilityResp);
                                     break;
                                 default:
                                     logger.debug("\t>>>> 没有定义具体处理方法:[" + fixedHdr.getMsgCode()

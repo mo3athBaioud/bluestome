@@ -18,6 +18,10 @@ import android.skymobi.messenger.net.beans.SxLeaveFastTalkReq;
 import android.skymobi.messenger.net.beans.SxLeaveFastTalkResp;
 import android.skymobi.messenger.net.beans.SxRestoreContactsReq;
 import android.skymobi.messenger.net.beans.SxRestoreContactsResp;
+import android.skymobi.messenger.net.beans.SxUploadAbilityReq;
+import android.skymobi.messenger.net.beans.SxUploadAbilityResp;
+import android.skymobi.messenger.net.beans.SxUploadTerminalUIDReq;
+import android.skymobi.messenger.net.beans.SxUploadTerminalUIDResp;
 import android.skymobi.messenger.net.beans.commons.ConfigInfo;
 import android.skymobi.messenger.net.beans.commons.RestorableContacts;
 import android.skymobi.messenger.net.beans.lcs.LcsAndroidComplexRequest;
@@ -234,6 +238,13 @@ public class Constants {
         // 2012-10-25 比较终端UID
         xipTypeMetainfoSet.add(SxCompareTerminalUIDReq.class);
         xipTypeMetainfoSet.add(SxCompareTerminalUIDResp.class);
+        // 2012-10-25 上传终端UID
+        xipTypeMetainfoSet.add(SxUploadTerminalUIDReq.class);
+        xipTypeMetainfoSet.add(SxUploadTerminalUIDResp.class);
+        // 2012-10-25 上传终端能力值
+        xipTypeMetainfoSet.add(SxUploadAbilityReq.class);
+        xipTypeMetainfoSet.add(SxUploadAbilityResp.class);
+
         // PPA业务对象
         xipTypeMetainfoSet.add(android.skymobi.messenger.net.beans.ppa.LoginPhoneRequest.class);
         xipTypeMetainfoSet.add(android.skymobi.messenger.net.beans.ppa.LoginPhoneResponse.class);

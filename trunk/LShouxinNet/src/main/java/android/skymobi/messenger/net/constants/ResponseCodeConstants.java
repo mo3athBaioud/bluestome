@@ -146,6 +146,12 @@ public class ResponseCodeConstants {
     // 比较终端UID
     public final static int COMPARE_TERMINAL_UID = 0xA880;
 
+    // 上传终端UID
+    public final static int UPLOAD_TERMINAL_UID = 0xA878;
+
+    // 上传终端能力值
+    public final static int UPLOAD_ABILITY = 0xA876;
+
     // PPA消息
     // 注册代码响应码
     public final static int PPA_REGISTER_CODE = 0xC202;
