@@ -9,9 +9,12 @@ import android.skymobi.messenger.net.beans.SxAddFriendReq;
 import android.skymobi.messenger.net.beans.SxAddFriendResp;
 import android.skymobi.messenger.net.beans.SxApplyFastTalkReq;
 import android.skymobi.messenger.net.beans.SxApplyFastTalkResp;
+import android.skymobi.messenger.net.beans.SxBindChangeNotify;
 import android.skymobi.messenger.net.beans.SxCalcFriendsReq;
 import android.skymobi.messenger.net.beans.SxCalcFriendsResp;
 import android.skymobi.messenger.net.beans.SxChatMsgNotify;
+import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsReq;
+import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsResp;
 import android.skymobi.messenger.net.beans.SxCreateFastTalkNotify;
 import android.skymobi.messenger.net.beans.SxDelBlackReq;
 import android.skymobi.messenger.net.beans.SxDelBlackResp;
@@ -618,6 +621,21 @@ public class NetReceiver implements Receiver {
                                     // 复合日志响应
                                     LcsAndroidComplexResponse complexResp = (LcsAndroidComplexResponse) signal;
                                     ShareBlock.add(LcsAndroidComplexRequest.class, complexResp);
+                                    break;
+                                case ResponseCodeConstants.COMPLETE_DELETE_CONTACTS:
+                                    // 彻底删除联系人响应逻辑
+                                    SxCompleteDeleteContactsResp completeDeleteContactsResp = (SxCompleteDeleteContactsResp) signal;
+                                    ShareBlock.add(SxCompleteDeleteContactsReq.class,
+                                            completeDeleteContactsResp);
+                                    break;
+                                case ResponseCodeConstants.BIND_CHANGE_NOTIFY:
+                                    // 绑定/解绑通知
+                                    SxBindChangeNotify bindChangeNotify = (SxBindChangeNotify) signal;
+                                    sendAck(bindChangeNotify.getSeqid(),
+                                            bindChangeNotify.getDstESBAddr(),
+                                            bindChangeNotify.getFlags(),
+                                            bindChangeNotify.getSrcESBAddr());
+                                    notify.bindChangeNotify(bindChangeNotify);
                                     break;
                                 default:
                                     logger.debug("\t>>>> 没有定义具体处理方法:[" + fixedHdr.getMsgCode()

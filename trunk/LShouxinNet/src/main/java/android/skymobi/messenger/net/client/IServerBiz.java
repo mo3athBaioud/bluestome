@@ -11,6 +11,8 @@ import android.skymobi.messenger.net.beans.SxApplyFastTalkReq;
 import android.skymobi.messenger.net.beans.SxApplyFastTalkResp;
 import android.skymobi.messenger.net.beans.SxCalcFriendsReq;
 import android.skymobi.messenger.net.beans.SxCalcFriendsResp;
+import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsReq;
+import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsResp;
 import android.skymobi.messenger.net.beans.SxDelBlackReq;
 import android.skymobi.messenger.net.beans.SxDelBlackResp;
 import android.skymobi.messenger.net.beans.SxGetBlackListReq;
@@ -492,4 +494,12 @@ public interface IServerBiz {
      * @return
      */
     LcsAndroidComplexResponse complexMessage(LcsAndroidComplexRequest request);
+
+    /**
+     * 彻底删除联系人
+     * 
+     * @param request
+     * @return
+     */
+    SxCompleteDeleteContactsResp completeDeleteContacts(SxCompleteDeleteContactsReq request);
 }
