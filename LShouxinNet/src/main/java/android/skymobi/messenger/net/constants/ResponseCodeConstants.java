@@ -137,6 +137,12 @@ public class ResponseCodeConstants {
     // 离开快聊响应码
     public final static int LEAVE_FASTCHAT_CODE = 0xA870;
 
+    // 彻底删除联系人响应码
+    public final static int COMPLETE_DELETE_CONTACTS = 0xA882;
+
+    // 绑定解绑通知
+    public final static int BIND_CHANGE_NOTIFY = 0xB809;
+
     // PPA消息
     // 注册代码响应码
     public final static int PPA_REGISTER_CODE = 0xC202;

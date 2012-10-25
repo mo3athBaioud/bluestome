@@ -1,6 +1,7 @@
 
 package android.skymobi.messenger.net.notify;
 
+import android.skymobi.messenger.net.beans.SxBindChangeNotify;
 import android.skymobi.messenger.net.beans.SxChatMsgNotify;
 import android.skymobi.messenger.net.beans.SxCreateFastTalkNotify;
 import android.skymobi.messenger.net.beans.SxFriendsMsgNotify;
@@ -110,4 +111,11 @@ public interface IServerNotify extends INetClientNotify {
      * @param notify
      */
     void leaveFastChatNotify(SxLeaveFastTalkNotify notify);
+
+    /**
+     * 绑定/解绑通知
+     * 
+     * @param notify
+     */
+    void bindChangeNotify(SxBindChangeNotify notify);
 }

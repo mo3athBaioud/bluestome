@@ -1,6 +1,7 @@
 
 package android.skymobi.messenger.net.notify.impl;
 
+import android.skymobi.messenger.net.beans.SxBindChangeNotify;
 import android.skymobi.messenger.net.beans.SxChatMsgNotify;
 import android.skymobi.messenger.net.beans.SxCreateFastTalkNotify;
 import android.skymobi.messenger.net.beans.SxFriendsMsgNotify;
@@ -203,6 +204,11 @@ public class ServerNotify implements IServerNotify {
         ftn.setSuccess(true);
         ftn.setDestSkyid(notify.getDestSkyid());
         netListener.leaveFastChatNotify(ftn);
+    }
+
+    @Override
+    public void bindChangeNotify(SxBindChangeNotify notify) {
+
     }
 
     /**

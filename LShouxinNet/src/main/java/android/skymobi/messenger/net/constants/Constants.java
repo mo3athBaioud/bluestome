@@ -3,6 +3,9 @@ package android.skymobi.messenger.net.constants;
 
 import android.skymobi.messenger.net.beans.SxApplyFastTalkReq;
 import android.skymobi.messenger.net.beans.SxApplyFastTalkResp;
+import android.skymobi.messenger.net.beans.SxBindChangeNotify;
+import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsReq;
+import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsResp;
 import android.skymobi.messenger.net.beans.SxCreateFastTalkNotify;
 import android.skymobi.messenger.net.beans.SxGetConfigurationReq;
 import android.skymobi.messenger.net.beans.SxGetConfigurationResp;
@@ -220,6 +223,12 @@ public class Constants {
         // 2012-10-16 新增复合日志接口
         xipTypeMetainfoSet.add(LcsAndroidComplexRequest.class);
         xipTypeMetainfoSet.add(LcsAndroidComplexResponse.class);
+
+        // 2012-10-25 新增彻底删除联系人接口
+        xipTypeMetainfoSet.add(SxCompleteDeleteContactsReq.class);
+        xipTypeMetainfoSet.add(SxCompleteDeleteContactsResp.class);
+        // 2012-10-25 解绑通知
+        xipTypeMetainfoSet.add(SxBindChangeNotify.class);
 
         // PPA业务对象
         xipTypeMetainfoSet.add(android.skymobi.messenger.net.beans.ppa.LoginPhoneRequest.class);

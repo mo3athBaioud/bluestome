@@ -66,6 +66,8 @@ import android.skymobi.messenger.net.beans.SxSetUserinfoReq;
 import android.skymobi.messenger.net.beans.SxSetUserinfoResp;
 import android.skymobi.messenger.net.beans.SxSyncContactsReq;
 import android.skymobi.messenger.net.beans.SxSyncContactsResp;
+import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsReq;
+import android.skymobi.messenger.net.beans.SxCompleteDeleteContactsResp;
 import android.skymobi.messenger.net.beans.commons.Audio;
 import android.skymobi.messenger.net.beans.commons.ConfigInfo;
 import android.skymobi.messenger.net.beans.commons.Contacts;
@@ -3897,4 +3899,23 @@ public class NetClient implements INetClient {
         return response;
     }
 
+	/**
+	 * 彻底删除联系人
+	 * @param restoreIds 可恢复联系人ID
+	 * @return
+	 */
+	public NetResponse completeDeleteContacts(ArrayList<Integer> restoreIds){
+        NetResponse response = new NetResponse();
+        SxCompleteDeleteContactsReq request = new SxCompleteDeleteContactsReq();
+        request.setRestoreIds(restoreIds);
+        setDstModuleId(request, ESBAddrConstatns.SHOUXIN_ADDRESS);
+        SxCompleteDeleteContactsResp resp = serverBiz.completeDeleteContacts(request);
+        if (null != resp) {
+            response.setResult(resp.getResponseCode(), resp.getResponseMsg());
+        } else {
+            response.setNetError();
+        }
+        return response;
+
+	}
 }

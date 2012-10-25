@@ -468,4 +468,11 @@ public interface INetClient extends INetBiz, IFSBiz, IImageBiz, ISupBiz, ILcs {
      * @return
      */
     NetResponse leaveFastChat(int destSkyid);
+
+	/**
+	 * 彻底删除联系人
+	 * @param restoreIds 可恢复联系人ID
+	 *
+	 */
+	NetResponse completeDeleteContacts(ArrayList<Integer> restoreIds);
 }
