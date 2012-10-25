@@ -70,6 +70,10 @@ import android.skymobi.messenger.net.beans.SxSetUserinfoReq;
 import android.skymobi.messenger.net.beans.SxSetUserinfoResp;
 import android.skymobi.messenger.net.beans.SxSyncContactsReq;
 import android.skymobi.messenger.net.beans.SxSyncContactsResp;
+import android.skymobi.messenger.net.beans.SxUploadAbilityReq;
+import android.skymobi.messenger.net.beans.SxUploadAbilityResp;
+import android.skymobi.messenger.net.beans.SxUploadTerminalUIDReq;
+import android.skymobi.messenger.net.beans.SxUploadTerminalUIDResp;
 import android.skymobi.messenger.net.beans.commons.Audio;
 import android.skymobi.messenger.net.beans.commons.ConfigInfo;
 import android.skymobi.messenger.net.beans.commons.Contacts;
@@ -3950,4 +3954,47 @@ public class NetClient implements INetClient {
         }
         return response;
     }
+
+    /**
+     * 上传终端ID
+     * 
+     * @param tuid
+     * @return
+     */
+    @Override
+    public NetResponse uploadTerminalUID(byte[] tuid) {
+        NetResponse response = new NetResponse();
+        SxUploadTerminalUIDReq request = new SxUploadTerminalUIDReq();
+        request.setTuid(tuid);
+        setDstModuleId(request, ESBAddrConstatns.SHOUXIN_ADDRESS);
+        SxUploadTerminalUIDResp resp = serverBiz.uploadTerminalUID(request);
+        if (null != resp) {
+            response.setResult(resp.getResponseCode(), resp.getResponseMsg());
+        } else {
+            response.setNetError();
+        }
+        return response;
+    }
+
+    /**
+     * 上传终端能力值
+     * 
+     * @param request
+     * @return
+     */
+    @Override
+    public NetResponse uploadAbility(int ability) {
+        NetResponse response = new NetResponse();
+        SxUploadAbilityReq request = new SxUploadAbilityReq();
+        request.setAbility(ability);
+        setDstModuleId(request, ESBAddrConstatns.SHOUXIN_ADDRESS);
+        SxUploadAbilityResp resp = serverBiz.uploadAbility(request);
+        if (null != resp) {
+            response.setResult(resp.getResponseCode(), resp.getResponseMsg());
+        } else {
+            response.setNetError();
+        }
+        return response;
+    }
+
 }

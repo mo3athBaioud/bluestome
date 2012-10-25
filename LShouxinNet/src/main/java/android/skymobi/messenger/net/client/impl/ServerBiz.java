@@ -71,6 +71,10 @@ import android.skymobi.messenger.net.beans.SxSetUserinfoReq;
 import android.skymobi.messenger.net.beans.SxSetUserinfoResp;
 import android.skymobi.messenger.net.beans.SxSyncContactsReq;
 import android.skymobi.messenger.net.beans.SxSyncContactsResp;
+import android.skymobi.messenger.net.beans.SxUploadAbilityReq;
+import android.skymobi.messenger.net.beans.SxUploadAbilityResp;
+import android.skymobi.messenger.net.beans.SxUploadTerminalUIDReq;
+import android.skymobi.messenger.net.beans.SxUploadTerminalUIDResp;
 import android.skymobi.messenger.net.beans.lcs.LcsAndroidComplexRequest;
 import android.skymobi.messenger.net.beans.lcs.LcsAndroidComplexResponse;
 import android.skymobi.messenger.net.beans.lcs.LcsLogStatisticsRequest;
@@ -1905,6 +1909,83 @@ public class ServerBiz implements IServerBiz {
             } else {
                 // 联网失败
                 logger.debug(" >>>> compareTerminalUID server no response");
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 上传终端UID
+     * 
+     * @param request
+     * @return
+     */
+    @Override
+    public SxUploadTerminalUIDResp uploadTerminalUID(SxUploadTerminalUIDReq request) {
+        SxUploadTerminalUIDResp response = null;
+        if (connection.isConnect()) {
+            boolean isOk = false;
+            int status = connection.send(request);
+            long start = System.currentTimeMillis();
+            if (status == 200) {
+                while (!isOk) {
+                    long end = System.currentTimeMillis() - start;
+                    if (end <= timeOut) {
+                        Object obj = ShareBlock.get(SxUploadTerminalUIDReq.class);
+                        if (null != obj) {
+                            if (obj instanceof SxUploadTerminalUIDResp) {
+                                response = (SxUploadTerminalUIDResp) obj;
+                                isOk = true;
+                                return response;
+                            }
+                        }
+                    } else {
+                        // timeout 标记超时
+                        logger.debug(" >>>> 上传终端UID接口调用失败");
+                        break;
+                    }
+                }
+            } else {
+                // 联网失败
+                logger.debug(" >>>> uploadTerminalUID server no response");
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 上传终端能力值
+     * 
+     * @param request
+     * @return
+     */
+    public SxUploadAbilityResp uploadAbility(SxUploadAbilityReq request) {
+        SxUploadAbilityResp response = null;
+        if (connection.isConnect()) {
+            boolean isOk = false;
+            int status = connection.send(request);
+            long start = System.currentTimeMillis();
+            if (status == 200) {
+                while (!isOk) {
+                    long end = System.currentTimeMillis() - start;
+                    if (end <= timeOut) {
+                        Object obj = ShareBlock.get(SxUploadAbilityReq.class);
+                        if (null != obj) {
+                            if (obj instanceof SxUploadAbilityResp) {
+                                response = (SxUploadAbilityResp) obj;
+                                isOk = true;
+                                return response;
+                            }
+                        }
+                    } else {
+                        // timeout 标记超时
+                        logger.debug(" >>>> 上传终端能力值接口调用失败");
+                        break;
+                    }
+                }
+            } else {
+                // 联网失败
+                logger.debug(" >>>> uploadAbility server no response");
             }
         }
         return null;

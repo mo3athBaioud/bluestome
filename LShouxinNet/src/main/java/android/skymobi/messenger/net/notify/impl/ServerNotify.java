@@ -208,7 +208,7 @@ public class ServerNotify implements IServerNotify {
 
     @Override
     public void bindChangeNotify(SxBindChangeNotify notify) {
-
+        // TODO　绑定/解绑通知
     }
 
     /**

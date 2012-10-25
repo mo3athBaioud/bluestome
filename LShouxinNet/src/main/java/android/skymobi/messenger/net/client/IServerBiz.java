@@ -71,6 +71,10 @@ import android.skymobi.messenger.net.beans.SxSetUserinfoReq;
 import android.skymobi.messenger.net.beans.SxSetUserinfoResp;
 import android.skymobi.messenger.net.beans.SxSyncContactsReq;
 import android.skymobi.messenger.net.beans.SxSyncContactsResp;
+import android.skymobi.messenger.net.beans.SxUploadAbilityReq;
+import android.skymobi.messenger.net.beans.SxUploadAbilityResp;
+import android.skymobi.messenger.net.beans.SxUploadTerminalUIDReq;
+import android.skymobi.messenger.net.beans.SxUploadTerminalUIDResp;
 import android.skymobi.messenger.net.beans.lcs.LcsAndroidComplexRequest;
 import android.skymobi.messenger.net.beans.lcs.LcsAndroidComplexResponse;
 import android.skymobi.messenger.net.beans.lcs.LcsLogStatisticsRequest;
@@ -512,5 +516,21 @@ public interface IServerBiz {
      * @return
      */
     SxCompareTerminalUIDResp compareTerminalUID(SxCompareTerminalUIDReq request);
+
+    /**
+     * 上传终端UID
+     * 
+     * @param request
+     * @return
+     */
+    SxUploadTerminalUIDResp uploadTerminalUID(SxUploadTerminalUIDReq request);
+
+    /**
+     * 上传终端能力值
+     * 
+     * @param request
+     * @return
+     */
+    SxUploadAbilityResp uploadAbility(SxUploadAbilityReq request);
 
 }
