@@ -58,6 +58,7 @@ public class C {
 	static Map<String, Integer> SIZEHASH = new HashMap<String, Integer>();
 	static Map<String, Integer> REPLAYED = new HashMap<String, Integer>();
     static Map<String, Integer> OPENLIST = new HashMap<String, Integer>();
+    static Map<String, Integer> TOPREPLYLIST = new HashMap<String, Integer>();
 	
 	public void timeout(String webSite, Callback call) {
 		URL cURL = null;
@@ -113,8 +114,8 @@ public class C {
 	}
 
 	public void executorPoll(final String carId,final String page) {
-		final long pollTime = 10 * 1000L;
-		final long timeout = 500L;
+		final long pollTime = 20 * 1000L;
+		final long timeout = 1000L;
 		final ScheduledExecutorService pool = Executors
 				.newSingleThreadScheduledExecutor();
 		final ExecutorService taskPool = Executors.newFixedThreadPool(3);
@@ -196,7 +197,7 @@ public class C {
 						final String uid = paras[6].trim();
 						if(!REPLAYED.containsKey(pid) && !uid.equals("4212192")){
 							final String postURL = BBS_POST_URL.replace("{cid}", carId).replace("{pid}", pid);
-                            logger.info("发帖时间:"+paras[4]+"|\t现在时间:"+DateUtils.getNow()+"\t"+postURL);
+                            logger.info("\t发帖时间:"+paras[4]+"|\t现在时间:"+DateUtils.getNow()+"\t"+postURL);
 							new Thread(new Runnable(){
 								public void run(){
 									//播放提示音
@@ -209,6 +210,16 @@ public class C {
 							c++;
 						}
 					}
+                    // 统计沙发的回帖时间
+                    if(paras[3].trim().equals("1")){
+                        final String pid = paras[2].trim();
+                        final String postURL = BBS_POST_URL.replace("{cid}", carId).replace("{pid}", pid);
+                        String key = paras[7].trim()+":"+postURL;
+                        if(null == TOPREPLYLIST.get(key) && !TOPREPLYLIST.containsKey(key)){
+                            logger.info("\t\t\t\t沙发的跟帖时间:"+paras[5]+"|\t现在时间:"+DateUtils.getNow()+"\t"+postURL+"\t"+key);
+                            TOPREPLYLIST.put(key, 1);
+                        }
+                    }
 					i++;
 				}while(i<list.size() && c < 3);
 			}else{
