@@ -14,7 +14,7 @@ public interface ImageDao extends ICommonDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public int insert(ImageBean bean) throws Exception;
+	int insert(ImageBean bean) throws Exception;
 	
 	/**
 	 * 查找所有记录
@@ -100,4 +100,14 @@ public interface ImageDao extends ICommonDao {
 	 */
 	boolean update(ImageBean bean) throws Exception;
 	
+	/**
+	 * 根据图片大小分页获取数据
+	 * @param x 文件大小
+	 * @param offset 偏移量
+	 * @param limit 最大数量
+	 * @return
+	 * @throws Exception
+	 */
+	List<ImageBean> findImageByFilesizeEqualX(Integer x,Integer offset,Integer limit) throws Exception;	
+
 }
