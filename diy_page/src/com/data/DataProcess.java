@@ -10,7 +10,6 @@ import com.chinamilitary.dao.WebSiteDao;
 import com.chinamilitary.factory.DAOFactory;
 import com.chinamilitary.memcache.MemcacheClient;
 import com.chinamilitary.util.HttpClientUtils;
-import com.zhuoku.ZHUOKUParser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,15 +22,25 @@ import java.util.concurrent.TimeUnit;
 
 public class DataProcess {
     
-    private static String TAG = DataProcess.class.getSimpleName();
+    String TAG = DataProcess.class.getSimpleName();
 
-    static Logger logger = LoggerFactory.getLogger(ZHUOKUParser.class);
+    Logger logger = LoggerFactory.getLogger(DataProcess.class);
 
-    static MemcacheClient client = MemcacheClient.getInstance();
+    MemcacheClient client = MemcacheClient.getInstance();
     
-    static BlockingQueue<Integer> blockQueue = new LinkedBlockingQueue<Integer>(1000); 
+    BlockingQueue<Integer> blockQueue = new LinkedBlockingQueue<Integer>(1000); 
 
-    private static void patchImageFileSize() {
+    BlockingQueue<Integer> backupQueue = new LinkedBlockingQueue<Integer>(1000); 
+    
+    private static DataProcess instance = null;
+    
+    public static DataProcess getInstance(){
+        if(null == instance)
+            instance = new DataProcess();
+        return instance;
+    }
+    
+    private void patchImageFileSize() {
         ImageDao imageDao = DAOFactory.getInstance().getImageDao();
         ArticleDao articleDao = DAOFactory.getInstance().getArticleDao();
         List<ImageBean> list = null;
@@ -42,7 +51,7 @@ public class DataProcess {
                     String key = genKey(b.getArticleId());
                     String aUrl = (String) client.get(key);
                     if (null == aUrl) {
-                        logger.error(genKey(b.getArticleId()) + "\t在缓存中没有记录");
+                        System.err.println(genKey(b.getArticleId()) + "\t在缓存中没有记录");
                         Article a = articleDao.findById(b.getArticleId());
                         if(null == a){
                             continue;
@@ -55,6 +64,11 @@ public class DataProcess {
                             }
                         }
                     }
+                    //临时过滤掉china.com的图片大小，因为该网站图片比较多都是返回-1,为了不耽误其他图片的处理时间，先将china.com的数据搁置
+                    if(null != b.getHttpUrl() && b.getHttpUrl().toLowerCase().contains("china.com/")){
+                        System.out.println("\t不处理该站点[china.com]图片:"+b.getHttpUrl());
+                        return;
+                    }
                     if(null == aUrl)
                         return;
                     String len = HttpClientUtils.getHttpConentLength(aUrl, null, b.getHttpUrl());
@@ -63,27 +77,32 @@ public class DataProcess {
                         if (length > 0) {
                             b.setFileSize(Long.valueOf(length));
                             if (imageDao.update(b)) {
-                                System.out.println(key + "|" + b.getId() + "|" + b.getArticleId()
-                                        + "|" + b.getHttpUrl() + "|\t获取图片大小成功，大小为:" + length + "!");
+                                logger.info("S|" + b.getId() + "|" + b.getArticleId()
+                                        + "|" + b.getHttpUrl() + "|" + length + "");
                             }
                         }
                     } else {
-                        blockQueue.add(b.getArticleId());
-                        logger.info(key + "|" + b.getId() + "|" + b.getArticleId() + "|"
-                                + b.getHttpUrl() + "|" + b.getStatus() + "|\t获取图片大小失败!");
+                        if(blockQueue.size() < 1000 ){
+                            blockQueue.add(b.getArticleId());
+                        }else{
+                            System.err.println(TAG+"\t*********向备用队列中添加数据["+b.getArticleId()+"]*********");
+                            backupQueue.add(b.getArticleId());
+                        }
                         b.setFileSize(-1L);
                         // 经过处理发现图片大小获取不到
                         b.setStatus(-3);
                         imageDao.update(b);
+                        logger.info("F|" + b.getId() + "|" + b.getArticleId() + "|"
+                                + b.getHttpUrl() + "|" + b.getStatus()+"|"+b.getFileSize());
                     }
                 }
             } catch (Exception e) {
-                logger.error(e.getMessage());
+                System.err.println(e.getMessage());
             }
         } while (null != list && list.size() > 0);
     }
 
-    private static void initArticle2Cache() {
+    private void initArticle2Cache() {
         WebSiteDao wesiteDao = DAOFactory.getInstance().getWebSiteDao();
         ArticleDao articleDao = DAOFactory.getInstance().getArticleDao();
         List<WebsiteBean> list = null; 
@@ -112,7 +131,7 @@ public class DataProcess {
      * 检查文章站点是否可用
      *
      */
-    private static void patchArticleAvailable(){
+    private void patchArticleAvailable(){
         WebSiteDao wesiteDao = DAOFactory.getInstance().getWebSiteDao();
         ArticleDao articleDao = DAOFactory.getInstance().getArticleDao();
         List<WebsiteBean> list = null; 
@@ -136,33 +155,36 @@ public class DataProcess {
         }
     }
     
-    private static String genKey(Object key){
+    private String genKey(Object key){
         return TAG+File.separator+"Article"+File.separator+key;
     }
     
-    private static void testURL(){
+    private void testURL(){
         String length = HttpClientUtils.getHttpConentLength("http://tuku.news.china.com/history/html/2010-01-05/135216.htm",
                 null, "http://images2.china.com/news/zh_cn/historygallery/11127886/20121031/17502229_2012103109350296689800.jpg");
         System.out.println(length);
     }
-
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        final byte[] lock = new byte[0];
+    
+    
+    public void process(){
         final ArticleDao articleDao = DAOFactory.getInstance().getArticleDao();
         new Thread(new Runnable(){
-            public void run(){
+            public synchronized void run(){
                 while (true) {
+                    Integer aid = null;
                     try {
-                        Integer aid = blockQueue.poll(100L, TimeUnit.MILLISECONDS);
+                        
+                        aid = blockQueue.poll(100L, TimeUnit.MILLISECONDS);
+                        if(null != aid){
+                            //从备用队列中获取数据
+                            aid = backupQueue.poll(100L, TimeUnit.MILLISECONDS);
+                        }
                         if (null != aid && aid > 0) {
                             String key = genKey(aid);
                             String aUrl = (String) client.get(key);
                             // TODO 检查网站是否可用，如果不可用，则更新为EOF状态
                             if (!HttpClientUtils.urlValidation(aUrl)) {
-                                System.out.println("\t aid:"+aid+"|"+aUrl+"\t访问失败!");
+                                System.err.println("\t aid:"+aid+"|"+aUrl+"\t访问失败!");
                                 try {
                                     Article a = articleDao.findById(aid);
                                     if (null == a)
@@ -171,15 +193,12 @@ public class DataProcess {
                                         return;
                                     }
                                     a.setText("EOF");
-                                    synchronized(lock){
-                                        if (articleDao.update(a)) {
-                                            System.err.println("更新当前文章[" + a.getId() + "|"
-                                                    + a.getArticleUrl() + "]为不可用状态[EOF]");
-                                        }
+                                    if (articleDao.update(a)) {
+                                        System.out.println("更新当前文章[" + a.getId() + "|"
+                                                + a.getArticleUrl() + "]为不可用状态[EOF]");
                                     }
                                 } catch (Exception e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
+                                    System.err.println(TAG+"\t"+e.getMessage());
                                 }
                             }
                         }
