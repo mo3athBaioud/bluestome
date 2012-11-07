@@ -66,10 +66,16 @@ public class DataProcess {
                     //临时过滤掉china.com的图片大小，因为该网站图片比较多都是返回-1,为了不耽误其他图片的处理时间，先将china.com的数据搁置
                     if(null != b.getHttpUrl() && b.getHttpUrl().toLowerCase().contains("china.com/")){
                         System.out.println("\t不处理该站点[china.com]图片:"+b.getHttpUrl());
-                        return;
+                        b.setFileSize(-1L);
+                        // 经过处理发现图片大小获取不到
+                        b.setStatus(-3);
+                        imageDao.update(b);
+                        logger.info("F|" + b.getId() + "|" + b.getArticleId() + "|"
+                                + b.getHttpUrl() + "|" + b.getStatus()+"|"+b.getFileSize());
+                        continue;
                     }
                     if(null == aUrl)
-                        return;
+                        continue;
                     String len = HttpClientUtils.getHttpConentLength(aUrl, null, b.getHttpUrl());
                     if (null != len && !len.equals("0") && b.getStatus() != -3) {
                         int length = Integer.valueOf(len);
