@@ -173,6 +173,44 @@ public class HttpClientUtils {
 		return result;
 	}
 	
+    /**
+     * 调用HttpURLConnection获取文件大小
+     * @param url
+     * @return
+     */
+    public static String getHttpConentLength(String refener,String cookie,String url){
+        long start = System.currentTimeMillis();
+        String result = "0";
+        URL urlc = null;
+        HttpURLConnection conn = null;
+        try{
+            urlc = new URL(url);
+            conn = (HttpURLConnection)urlc.openConnection();
+            conn.setDoInput(true);
+            if (null != refener) {
+                conn.addRequestProperty("Referer", refener);
+            }
+            if (null != cookie) {
+                conn.addRequestProperty("Cookie", cookie);
+            }
+            conn.addRequestProperty("Cache-Control", "no-cache");
+            conn.addRequestProperty("Connection", "keep-alive");
+            conn.setConnectTimeout(5*1000);
+            conn.setReadTimeout(15*1000);
+            conn.connect();
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+                result = String.valueOf(conn.getContentLength());
+            }
+        }catch(Exception e){
+            System.err.println(" > ERROR:"+e);
+        }finally{
+            logger.debug(" > 获取文件大小耗时:["+(System.currentTimeMillis()-start)+"]ms");
+            if(null != conn){
+                conn.disconnect();
+            }
+        }
+        return result;
+    }
 	
 	/**
 	 * 从url中获取响应头的内容
