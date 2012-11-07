@@ -504,4 +504,46 @@ public class ImageDaoImpl extends CommonDB implements ImageDao {
 		return b;
 	}
 
+    /**
+     * 根据图片大小分页获取数据
+     * @param x 文件大小
+     * @param offset 偏移量
+     * @param limit 最大数量
+     * @return
+     * @throws Exception
+     */
+    public List<ImageBean> findImageByFilesizeEqualX(Integer x,Integer offset,Integer limit) throws Exception{
+        List<ImageBean> list = new ArrayList<ImageBean>();
+        ImageBean bean = null;
+        pstmt = conn.prepareStatement(QUERY_SQL+" where d_filesize = ? order by d_id limit ?,?");
+        pstmt.setInt(1, x);
+        pstmt.setInt(2, offset);
+        pstmt.setInt(3, limit);
+        rs = pstmt.executeQuery();
+        while(rs.next()){
+            bean = new ImageBean();
+            bean.setId(rs.getInt("d_id"));
+            bean.setArticleId(rs.getInt("d_article_id"));
+            bean.setTitle(rs.getString("d_title"));
+            bean.setName(rs.getString("d_name"));
+            bean.setImgUrl(rs.getString("d_imgurl"));
+            bean.setHttpUrl(rs.getString("d_httpurl"));
+            bean.setOrderId(rs.getInt("d_orderid"));
+            bean.setTime(rs.getString("d_time"));
+            bean.setIntro(rs.getString("d_intro"));
+            bean.setCommentsuburl(rs.getString("d_commentsuburl"));
+            bean.setCommentshowurl(rs.getString("d_commentshowurl"));
+            bean.setLink(rs.getString("d_link"));
+            bean.setCreatetime(rs.getDate("d_createtime"));
+            bean.setStatus(rs.getInt("d_status"));
+            bean.setFileSize(rs.getLong("d_filesize"));
+            list.add(bean);
+        }
+        if(pstmt != null)
+            pstmt.close();
+        if(rs != null)
+            rs.close();
+        return list;
+    }
+
 }
