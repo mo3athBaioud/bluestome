@@ -64,8 +64,14 @@ public class DataProcess {
                         }
                     }
                     //临时过滤掉china.com的图片大小，因为该网站图片比较多都是返回-1,为了不耽误其他图片的处理时间，先将china.com的数据搁置
-                    if(null != b.getHttpUrl() && b.getHttpUrl().toLowerCase().contains("china.com/")){
-                        System.out.println("\t不处理该站点[china.com]图片:"+b.getHttpUrl());
+                    if(null != b.getHttpUrl() 
+                            || b.getHttpUrl().toLowerCase().contains("china.com/")
+                            || b.getHttpUrl().toLowerCase().contains("qwpp.net/")
+                            || b.getHttpUrl().toLowerCase().contains(".php/")
+                            || b.getHttpUrl().toLowerCase().contains(".jsp/")
+                            || b.getHttpUrl().toLowerCase().contains(".asp/")
+                            || b.getHttpUrl().toLowerCase().contains(".aspx/")){
+                        System.out.println("\t不处理该站点的图片:"+b.getHttpUrl());
                         b.setFileSize(-1L);
                         // 经过处理发现图片大小获取不到
                         b.setStatus(-3);
