@@ -1,3 +1,4 @@
+
 package android.skymobi.messenger.net.beans.ppa;
 
 import android.skymobi.messenger.net.beans.header.PPAResponseHeader;
@@ -15,7 +16,7 @@ public class LoginPhoneResponse extends PPAResponseHeader {
     @TLVAttribute(tag = 11010014, description = "授权令牌")
     private String token;
 
-    @TLVAttribute(tag = 11010010,description = "第一次登录则返回初始密码明文 否则为空")
+    @TLVAttribute(tag = 11010010, description = "第一次登录则返回初始密码明文 否则为空")
     private String passwd;
 
     @TLVAttribute(tag = 11010004, description = "用于终端自动登录")
@@ -27,7 +28,7 @@ public class LoginPhoneResponse extends PPAResponseHeader {
     @TLVAttribute(tag = 11010024, description = "标识用户上一次登录的身份")
     private byte identity;
 
-    @TLVAttribute(tag = 11010065,description = "验证码编号（连续错误尝试次数等于或超过N次时返回）")
+    @TLVAttribute(tag = 11010065, description = "验证码编号（连续错误尝试次数等于或超过N次时返回）")
     private String authCodeId;
 
     @TLVAttribute(tag = 11010067, description = "验证码图片（连续错误尝试次数等于或超过N次时返回）")
@@ -39,11 +40,14 @@ public class LoginPhoneResponse extends PPAResponseHeader {
     @TLVAttribute(tag = 11600002, description = "企信通号码")
     private String recvsmsmobile;
 
-    @TLVAttribute(tag = 11600001,description = "发给企信通的短信内容")
+    @TLVAttribute(tag = 11600001, description = "发给企信通的短信内容")
     private String smscontent;
 
     @TLVAttribute(tag = 11020003, description = "")
     private LoginUserInfo userInfo;
+
+    @TLVAttribute(tag = 11010093)
+    private int verifyUUID = -1;
 
     public int getSkyId() {
         return skyId;
@@ -140,4 +144,26 @@ public class LoginPhoneResponse extends PPAResponseHeader {
     public void setSmscontent(String smscontent) {
         this.smscontent = smscontent;
     }
+
+    /**
+     * @return the verifyUUID
+     */
+    public int getVerifyUUID() {
+        return verifyUUID;
+    }
+
+    /**
+     * @param verifyUUID the verifyUUID to set
+     */
+    public void setVerifyUUID(int verifyUUID) {
+        this.verifyUUID = verifyUUID;
+    }
+
+    /**
+     * @param secretQTag the secretQTag to set
+     */
+    public void setSecretQTag(Integer secretQTag) {
+        this.secretQTag = secretQTag;
+    }
+
 }
