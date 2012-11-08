@@ -1,30 +1,5 @@
 package com.chinamilitary.htmlparser;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.htmlparser.NodeFilter;
-import org.htmlparser.Parser;
-import org.htmlparser.filters.HasAttributeFilter;
-import org.htmlparser.filters.NodeClassFilter;
-import org.htmlparser.tags.Div;
-import org.htmlparser.tags.LinkTag;
-import org.htmlparser.util.NodeList;
-
 import com.chinamilitary.bean.ArticleDoc;
 import com.chinamilitary.bean.LinkBean;
 import com.chinamilitary.bean.WebsiteBean;
@@ -36,6 +11,29 @@ import com.chinamilitary.util.DateUtils;
 import com.chinamilitary.util.IOUtil;
 import com.chinamilitary.util.StringUtils;
 import com.common.Constants;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.htmlparser.NodeFilter;
+import org.htmlparser.Parser;
+import org.htmlparser.filters.HasAttributeFilter;
+import org.htmlparser.filters.NodeClassFilter;
+import org.htmlparser.tags.Div;
+import org.htmlparser.tags.LinkTag;
+import org.htmlparser.util.NodeList;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class PCPOPHtmlParser {
 	
@@ -373,19 +371,15 @@ public class PCPOPHtmlParser {
 		try{
 			//指定父ID下的网站列表
 			final List<WebsiteBean> weblist = webSiteDao.findByParentId(166);
-			EXEC_THREAD.schedule(new Runnable(){
-					public void run(){
-						for(WebsiteBean bean:weblist){
-							initHTML(bean);
-							try {
-								processAuthor(bean.getId());
-							} catch (Exception e) {
-								e.printStackTrace();
-								logger.error(e);
-							}
-						}
-					}
-			}, 2000l, TimeUnit.MILLISECONDS);
+			for(WebsiteBean bean:weblist){
+				initHTML(bean);
+				try {
+					processAuthor(bean.getId());
+				} catch (Exception e) {
+					e.printStackTrace();
+					logger.error(e);
+				}
+			}
 			logger.info(" >> End Of One Parser PCPOP " +DateUtils.getNow()+",GET "+UCOUNT+" Articles");
 		}catch(Exception e){
 			e.printStackTrace();
@@ -594,7 +588,14 @@ public class PCPOPHtmlParser {
                     logger.info("新版:\t"+bean.getUrl()+"|作者:"+tmp1+"|发布时间:"+tmp2);
                 }else{
     				tmp1 = author.substring(author.lastIndexOf("作者")+3,author.lastIndexOf("编辑")-1);
-    				tmp2 = author.substring(0,author.indexOf(":")-2);
+                    if(author.indexOf("：") != -1){
+                        tmp2 = author.substring(0,author.indexOf("：")-2);
+                        logger.info("author.indexOf(\"：\")\t"+tmp2);
+                    }
+                    if(author.indexOf(":") != -1){
+                        tmp2 = author.substring(0,author.indexOf(":")-2);
+                        logger.info("author.indexOf(\":\")\t"+tmp2);
+                    }
     				if(null == tmp1 || null ==  tmp2){
                         logger.error("文章的作者或者发布时间为空!");
     					break;
