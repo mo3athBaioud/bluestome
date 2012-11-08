@@ -11,5 +11,4 @@ import com.skymobi.android.bean.esb.annotation.EsbSignal;
  */
 @EsbSignal(messageCode = 0x9823)
 public class GenerateUniqueIDReq extends AbstractEsbT2ASignal {
-
 }

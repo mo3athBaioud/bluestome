@@ -186,6 +186,9 @@ public class ResponseCodeConstants {
     // 根据SKYID获取用户名
     public final static int PPA_GET_USERNAME_BY_SKYID_CODE = 0xC21A;
 
+    // 服务端返回的UID响应码
+    public final static int ACCESS_APPLY_UID_CODE = 0x9824;
+
     /**
      * LCS
      */

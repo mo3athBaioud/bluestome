@@ -125,6 +125,8 @@ import com.skymobi.android.transport.TCPConnector;
 import com.skymobi.android.transport.codec.AccessSignalCodecUtils;
 import com.skymobi.android.transport.protocol.esb.AccessFixedHeader;
 import com.skymobi.android.transport.protocol.esb.signal.EsbAccess2TerminalSignal;
+import com.skymobi.android.transport.protocol.esb.signal.GenerateUniqueIDReq;
+import com.skymobi.android.transport.protocol.esb.signal.GenerateUniqueIDResp;
 import com.skymobi.android.transport.protocol.esb.signal.HeartbeatToAccessResp;
 import com.skymobi.android.transport.protocol.esb.signal.RegisterToAccessRedirectResp;
 import com.skymobi.android.transport.protocol.esb.signal.RegisterToAccessResp;
@@ -315,6 +317,11 @@ public class NetReceiver implements Receiver {
                                         // 修改重连返回的参数
                                         notify.onNetStateNotify(Integer.valueOf(2));
                                     }
+                                    break;
+                                case ResponseCodeConstants.ACCESS_APPLY_UID_CODE:
+                                    // 向服务端申请UID响应
+                                    GenerateUniqueIDResp uidResp = (GenerateUniqueIDResp) signal;
+                                    endPoint.applyUID(uidResp);
                                     break;
                                 case 0x9815:
                                     logger.info("\t>>>>>>> 服务端踢人通知");

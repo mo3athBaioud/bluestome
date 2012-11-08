@@ -29,6 +29,9 @@ import android.skymobi.messenger.net.beans.lcs.LcsAndroidComplexResponse;
 import android.skymobi.messenger.net.beans.lcs.LcsLogStatisticsRequest;
 import android.skymobi.messenger.net.beans.lcs.LcsLogStatisticsResponse;
 
+import com.skymobi.android.transport.protocol.esb.signal.GenerateUniqueIDReq;
+import com.skymobi.android.transport.protocol.esb.signal.GenerateUniqueIDResp;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -244,6 +247,9 @@ public class Constants {
         // 2012-10-25 上传终端能力值
         xipTypeMetainfoSet.add(SxUploadAbilityReq.class);
         xipTypeMetainfoSet.add(SxUploadAbilityResp.class);
+        // 2012-11-08 向服务端申请UID
+        xipTypeMetainfoSet.add(GenerateUniqueIDReq.class);
+        xipTypeMetainfoSet.add(GenerateUniqueIDResp.class);
 
         // PPA业务对象
         xipTypeMetainfoSet.add(android.skymobi.messenger.net.beans.ppa.LoginPhoneRequest.class);

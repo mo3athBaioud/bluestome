@@ -209,6 +209,11 @@ public class ServerNotify implements IServerNotify {
     @Override
     public void bindChangeNotify(SxBindChangeNotify notify) {
         // TODO　绑定/解绑通知
+        if (null != notify) {
+            logger.info(" > bindChangeNotify:" + notify.getResponseCode() + "|"
+                    + notify.getResponseMsg() + "|" + notify.getPhone() + "|" + notify.getSkyid());
+        }
+
     }
 
     /**
