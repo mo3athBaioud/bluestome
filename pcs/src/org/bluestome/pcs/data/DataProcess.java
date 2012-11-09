@@ -63,7 +63,8 @@ public class DataProcess {
                             }
                         }
                     }
-                    //临时过滤掉china.com的图片大小，因为该网站图片比较多都是返回-1,为了不耽误其他图片的处理时间，先将china.com的数据搁置
+                    // 临时过滤掉china.com的图片大小，因为该网站图片比较多都是返回-1,为了不耽误其他图片的处理时间，先将china.com的数据搁置
+					// 规则部分，对目前已知的影响性能的条件进行限制，即不处理这部分URL
                     if(null != b.getHttpUrl() 
                             || b.getHttpUrl().toLowerCase().contains("china.com/")
                             || b.getHttpUrl().toLowerCase().contains("qwpp.net/")
