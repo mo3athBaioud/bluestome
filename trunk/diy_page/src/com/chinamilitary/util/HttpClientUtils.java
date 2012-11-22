@@ -1,5 +1,7 @@
 package com.chinamilitary.util;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,16 +19,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.io.IOUtils;
-import org.htmlparser.NodeFilter;
-import org.htmlparser.Parser;
-import org.htmlparser.filters.HasAttributeFilter;
-import org.htmlparser.filters.NodeClassFilter;
-import org.htmlparser.tags.Span;
-import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
 
 public class HttpClientUtils {
 
@@ -41,11 +33,10 @@ public class HttpClientUtils {
 		try {
 			sUrl = new URL(url);
 			conn = (HttpURLConnection)sUrl.openConnection();
-			conn.setConnectTimeout(5*1000);
 			conn.addRequestProperty("Cache-Control", "no-cache");
 			conn.addRequestProperty("Connection", "keep-alive");
-			conn.setConnectTimeout(10*1000);
-			conn.setReadTimeout(15*1000);
+			conn.setConnectTimeout(5*1000);
+			conn.setReadTimeout(10*1000);
 			conn.connect();
 			long ss = System.currentTimeMillis();
 			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
@@ -72,11 +63,10 @@ public class HttpClientUtils {
 		try {
 			sUrl = new URL(url);
 			conn = (HttpURLConnection)sUrl.openConnection();
-			conn.setConnectTimeout(5*1000);
 			conn.addRequestProperty("Cache-Control", "no-cache");
 			conn.addRequestProperty("Connection", "keep-alive");
-			conn.setConnectTimeout(10*1000);
-			conn.setReadTimeout(15*1000);
+			conn.setConnectTimeout(5*1000);
+			conn.setReadTimeout(10*1000);
 			conn.connect();
 			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
 				success = true;
@@ -109,8 +99,8 @@ public class HttpClientUtils {
 			http = (HttpURLConnection)urlO.openConnection();
 			http.addRequestProperty("Cache-Control", "no-cache");
 			http.addRequestProperty("Connection", "keep-alive");
-			http.setConnectTimeout(10*1000);
-			http.setReadTimeout(15*1000);
+			http.setConnectTimeout(5*1000);
+			http.setReadTimeout(10*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if(code == HttpURLConnection.HTTP_OK){
@@ -153,8 +143,8 @@ public class HttpClientUtils {
 			conn.setDoInput(true);
 			conn.addRequestProperty("Cache-Control", "no-cache");
 			conn.addRequestProperty("Connection", "keep-alive");
-			conn.setConnectTimeout(10*1000);
-			conn.setReadTimeout(15*1000);
+			conn.setConnectTimeout(5*1000);
+			conn.setReadTimeout(10*1000);
 			conn.connect();
 			if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
 				result = String.valueOf(conn.getContentLength());
@@ -170,6 +160,45 @@ public class HttpClientUtils {
 		return result;
 	}
 	
+    /**
+     * 调用HttpURLConnection获取文件大小
+     * @param url
+     * @return
+     */
+    public static String getHttpConentLength(String refener,String cookie,String url){
+        long start = System.currentTimeMillis();
+        String result = "0";
+        URL urlc = null;
+        HttpURLConnection conn = null;
+        try{
+            urlc = new URL(url);
+            conn = (HttpURLConnection)urlc.openConnection();
+            conn.setDoInput(true);
+            if (null != refener) {
+                conn.addRequestProperty("Referer", refener);
+            }
+            if (null != cookie) {
+                conn.addRequestProperty("Cookie", cookie);
+            }
+            conn.addRequestProperty("Cache-Control", "no-cache");
+            conn.addRequestProperty("Connection", "keep-alive");
+            conn.setConnectTimeout(5*1000);
+            conn.setReadTimeout(10*1000);
+            conn.connect();
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+                result = String.valueOf(conn.getContentLength());
+            }
+        }catch(Exception e){
+            System.err.println(" > ERROR:"+e);
+        }finally{
+            System.out.println(" > 获取文件大小耗时:["+(System.currentTimeMillis()-start)+"]ms");
+            if(null != conn){
+                conn.disconnect();
+            }
+        }
+        return result;
+    }
+    
 	
 	/**
 	 * 从url中获取响应头的内容
@@ -187,8 +216,8 @@ public class HttpClientUtils {
 			http = (HttpURLConnection)urlO.openConnection();
 			http.addRequestProperty("Cache-Control", "no-cache");
 			http.addRequestProperty("Connection", "keep-alive");
-			http.setConnectTimeout(10*1000);
-			http.setReadTimeout(15*1000);
+			http.setConnectTimeout(5*1000);
+			http.setReadTimeout(10*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if(code == HttpURLConnection.HTTP_OK){
@@ -276,8 +305,8 @@ public class HttpClientUtils {
 			http = (HttpURLConnection)urlO.openConnection();
 			http.addRequestProperty("Cache-Control", "no-cache");
 			http.addRequestProperty("Connection", "keep-alive");
-			http.setConnectTimeout(10*1000);
-			http.setReadTimeout(15*1000);
+			http.setConnectTimeout(5*1000);
+			http.setReadTimeout(10*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if(code == HttpURLConnection.HTTP_OK){
@@ -368,8 +397,8 @@ public class HttpClientUtils {
 			connection.setDoOutput(true);
 			connection.addRequestProperty("Cache-Control", "no-cache");
 			connection.addRequestProperty("Connection", "keep-alive");
-			connection.setConnectTimeout(10*1000);
-			connection.setReadTimeout(15*1000);
+			connection.setConnectTimeout(5*1000);
+			connection.setReadTimeout(10*1000);
 			connection.connect();
 			
 			value = connection.getContentLength();
@@ -396,8 +425,8 @@ public class HttpClientUtils {
 			//获取输出流
 			connection.setDoOutput(true);
 			connection.addRequestProperty(header, headerValue);
-			connection.setConnectTimeout(10*1000);
-			connection.setReadTimeout(15*1000);
+			connection.setConnectTimeout(5*1000);
+			connection.setReadTimeout(10*1000);
 			connection.connect();
 			
 			value = connection.getContentLength();
@@ -424,10 +453,9 @@ public class HttpClientUtils {
 			connection = cURL.openConnection();
 			//获取输出流
 			connection.setDoOutput(true);
-			connection.setConnectTimeout(5*1000);
 			connection.addRequestProperty(headerName, headerValue);
-			connection.setConnectTimeout(10*1000);
-			connection.setReadTimeout(15*1000);
+			connection.setConnectTimeout(5*1000);
+			connection.setReadTimeout(10*1000);
 			connection.connect();
 			int length = connection.getContentLength();
 			is = connection.getInputStream();
@@ -459,12 +487,11 @@ public class HttpClientUtils {
 			connection = cURL.openConnection();
 			//获取输出流
 			connection.setDoOutput(true);
-			connection.setConnectTimeout(10*1000);
 //			connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
 			connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Linux; U; Android 4.0.3; de-ch; HTC Sensation Build/IML74K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
 			connection.addRequestProperty("Cache-Control", "no-cache");
 			connection.addRequestProperty("Connection", "keep-alive");
-			connection.setConnectTimeout(10*1000);
+			connection.setConnectTimeout(5*1000);
 			connection.setReadTimeout(15*1000);
 			connection.connect();
 			int length = connection.getContentLength();
@@ -510,7 +537,7 @@ public class HttpClientUtils {
 			}
 			http.addRequestProperty("Cache-Control", "no-cache");
 			http.addRequestProperty("Connection", "keep-alive");
-			http.setConnectTimeout(10*1000);
+			http.setConnectTimeout(5*1000);
 			http.setReadTimeout(15*1000);
 			http.connect();
 			int code = http.getResponseCode();
@@ -576,10 +603,8 @@ public class HttpClientUtils {
 				}
 			}
 			
-			http.addRequestProperty("Cache-Control", "no-cache");
-			http.addRequestProperty("Connection", "keep-alive");
-			http.setConnectTimeout(10*1000);
-			http.setReadTimeout(15*1000);
+			http.setConnectTimeout(5*1000);
+			http.setReadTimeout(10*1000);
 			http.connect();
 			int code = http.getResponseCode();
 			if (code == HttpURLConnection.HTTP_OK) {
@@ -655,8 +680,8 @@ public class HttpClientUtils {
 			//获取输出流
 			connection.setDoOutput(true);
 			connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7");
-			connection.setConnectTimeout(10*1000);
-			connection.setReadTimeout(15*1000);
+			connection.setConnectTimeout(5*1000);
+			connection.setReadTimeout(10*1000);
 			connection.connect();
 			
 			String time = connection.getHeaderField("Last-Modified");
@@ -675,46 +700,50 @@ public class HttpClientUtils {
 	public static void main(String args[]) {
 		try {
 			//这个URL是一个验证码地址
-//			byte[] body = getResponseBodyAsByte(null,null,"http://www.hzti.com/government/CreateCheckCode.aspx?d="+System.currentTimeMillis());
-			exec.scheduleWithFixedDelay(new Runnable(){
-				public void run(){
-					long start = System.currentTimeMillis();
-					byte[] body = getResponseBodyAsByte("http://i.autohome.com.cn/home.html",null,"http://club.autohome.com.cn/bbs/thread-c-2001-15822375-1.html");
-					long spend = System.currentTimeMillis() - start;
-					if(null != body){
-						Parser p1 = null;
-						try {
-							p1 = new Parser();
-							p1.setInputHTML(new String(body));
-							NodeFilter filter = new NodeClassFilter(Span.class);
-							NodeList list = p1.extractAllNodesThatMatch(filter).extractAllNodesThatMatch(new HasAttributeFilter("class", "fr fon12"));
-							if(null != list && list.size() > 0){
-								Span tag = (Span)list.elementAt(0);
-								System.out.println("\t>>>>>> 获取页面耗时:["+spend+"]ms \t点击数:"+tag.toHtml());
-							}
-							list = null;
-							filter = null;
-						} catch (ParserException e) {
-							e.printStackTrace();
-						} finally{
-							if(null != p1){
-								p1 = null;
-							}
-						}
-					}else{
-						System.out.println("没有返回内容");
-					}
-//					try {
-//						long start = System.currentTimeMillis();
-//						System.out.println("线程ID:"+Thread.currentThread().getId());
-//						Thread.sleep(15*1000L);
-//						System.out.println("耗时:"+(System.currentTimeMillis()-start));
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
+            long start = System.currentTimeMillis();
+			byte[] body = getResponseBodyAsByte(null,null,"http://www.wallcoo.com/nature/index.htm");
+            System.out.println("页面大小["+body.length+"] byte,以及页面展现耗时:"+(System.currentTimeMillis()-start)+" ms");
+//			exec.scheduleWithFixedDelay(new Runnable(){
+//				public void run(){
+//					long start = System.currentTimeMillis();
+//					byte[] body = getResponseBodyAsByte("http://yc.jxcdc.cn/default.aspx",null,"http://yc.jxcdc.cn/default.aspx");
+//					long spend = System.currentTimeMillis() - start;
+//					if(null != body){
+//						Parser p1 = null;
+//						try {
+//							p1 = new Parser();
+//							p1.setInputHTML(new String(body));
+//							NodeFilter filter = new NodeClassFilter(Div.class);
+//							NodeList list = p1.extractAllNodesThatMatch(filter).extractAllNodesThatMatch(new HasAttributeFilter("id", "footer"));
+//							if(null != list && list.size() > 0){
+//								String body2 = list.toHtml();
+//								System.out.println(body2);
+//								
+//								//获取__EVENTTARGET 参数
+//								p1 = new Parser();
+//								p1.setInputHTML(body2);
+//								filter = new NodeClassFilter(LinkTag.class);
+//								NodeList list2 = p1.extractAllNodesThatMatch(filter).extractAllNodesThatMatch(new HasAttributeFilter("href", "http://count.knowsky.com"));
+//								if(null != list2 && list2.size() > 0){
+//									System.out.println("连接数量:"+list2.size());
+//								}
+//								list = null;
+//								filter = null;
+//							}
+//							list = null;
+//							filter = null;
+//						} catch (ParserException e) {
+//							e.printStackTrace();
+//						} finally{
+//							if(null != p1){
+//								p1 = null;
+//							}
+//						}
+//					}else{
+//						System.out.println("没有返回内容");
 //					}
-				}
-			}, 5*1000L,10*1000L, TimeUnit.MILLISECONDS);
+//				}
+//			}, 5*1000L,10*1000L, TimeUnit.MILLISECONDS);
 			
 			/**
 			body = getResponseBodyAsByte(null, null, "http://www.hzti.com/service/qry/violation_veh.aspx?type=2&node=249");
