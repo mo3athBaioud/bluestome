@@ -44,6 +44,7 @@ import com.example.devinfodemo.json.bean.hd.JSensorDetail;
 import com.example.devinfodemo.json.bean.sd.DatabaseInfo;
 import com.example.devinfodemo.service.DeviceService;
 import com.google.gson.Gson;
+import com.skymobi.devicelog.DeviceLog;
 
 import org.json.JSONException;
 
@@ -99,6 +100,9 @@ public class MainActivity extends Activity implements OnClickListener {
 
         Button jsonBtn = (Button) findViewById(R.id.btn_json);
         jsonBtn.setOnClickListener(this);
+
+        DeviceLog log = DeviceLog.getInstance();
+        System.out.println(log.getTerminalInfo4Json(this));
     }
 
     @Override
@@ -174,7 +178,8 @@ public class MainActivity extends Activity implements OnClickListener {
         } catch (Exception e) {
             String exceptionId = String.valueOf(System.currentTimeMillis());
             camera.setExceptionId(exceptionId);
-            phone.getExceptions().put(exceptionId, "当前手机系统版本号低于可以运行获取摄像头数量的API的最低系统版本[9]");
+            phone.getExceptions().put(exceptionId,
+                    "当前手机系统版本号低于可以运行获取摄像头数量的API的最低系统版本[9],Exception:" + e.getMessage());
         }
         hd.setCamera(camera);
 
@@ -190,7 +195,7 @@ public class MainActivity extends Activity implements OnClickListener {
             String exceptionId = String.valueOf(System.currentTimeMillis());
             camera.setExceptionId(exceptionId);
             hd.setImsi(exceptionId);
-            phone.getExceptions().put(exceptionId, "获取手机IMSI异常,");
+            phone.getExceptions().put(exceptionId, "获取手机IMSI异常,Exception:" + e.getMessage());
 
         }
 
@@ -202,7 +207,7 @@ public class MainActivity extends Activity implements OnClickListener {
         } catch (Exception e) {
             String exceptionId = String.valueOf(System.currentTimeMillis());
             hd.setImei(exceptionId);
-            phone.getExceptions().put(exceptionId, "获取手机IMEI异常,");
+            phone.getExceptions().put(exceptionId, "获取手机IMEI异常,Exception:" + e.getMessage());
 
         }
 
@@ -225,7 +230,7 @@ public class MainActivity extends Activity implements OnClickListener {
         } catch (Exception e) {
             String exceptionId = String.valueOf(System.currentTimeMillis());
             sensor.setExceptionId(exceptionId);
-            phone.getExceptions().put(exceptionId, "获取手机终端传感器异常,");
+            phone.getExceptions().put(exceptionId, "获取手机终端传感器异常,Exception:" + e.getMessage());
         }
         hd.setSersor(sensor);
 
@@ -260,7 +265,7 @@ public class MainActivity extends Activity implements OnClickListener {
         } catch (Exception e) {
             String exceptionId = String.valueOf(System.currentTimeMillis());
             network.setExceptionId(exceptionId);
-            phone.getExceptions().put(exceptionId, "获取手机网络状态异常,");
+            phone.getExceptions().put(exceptionId, "获取手机网络状态异常,Exception:" + e.getMessage());
         }
         hd.setNetwork(network);
 
@@ -274,7 +279,7 @@ public class MainActivity extends Activity implements OnClickListener {
         } catch (Exception e) {
             String exceptionId = String.valueOf(System.currentTimeMillis());
             sdi.setExceptionId(exceptionId);
-            phone.getExceptions().put(exceptionId, "获取手机SD卡异常,");
+            phone.getExceptions().put(exceptionId, "获取手机SD卡异常,Exception:" + e.getMessage());
         }
         hd.setSdInfo(sdi);
         phone.setHardware(hd);
@@ -301,7 +306,8 @@ public class MainActivity extends Activity implements OnClickListener {
         } catch (Exception e) {
             String exceptionId = String.valueOf(System.currentTimeMillis());
             db.setContactExceptionId(exceptionId);
-            phone.getExceptions().put(exceptionId, "访问手机数据库表[contact]库异常,");
+            phone.getExceptions().put(exceptionId,
+                    "访问手机数据库表[contact]库异常,Exception:" + e.getMessage());
         }
 
         try {
@@ -321,7 +327,8 @@ public class MainActivity extends Activity implements OnClickListener {
         } catch (Exception e) {
             String exceptionId = String.valueOf(System.currentTimeMillis());
             db.setRawContactExceptionId(exceptionId);
-            phone.getExceptions().put(exceptionId, "访问手机数据库表[raw_contact]库异常,");
+            phone.getExceptions().put(exceptionId,
+                    "访问手机数据库表[raw_contact]库异常,Exception:" + e.getMessage());
         }
 
         try {
@@ -348,7 +355,8 @@ public class MainActivity extends Activity implements OnClickListener {
         } catch (Exception e) {
             String exceptionId = String.valueOf(System.currentTimeMillis());
             db.setLanuncherExceptionId(exceptionId);
-            phone.getExceptions().put(exceptionId, "访问手机数据库表[lanuncher]库异常,");
+            phone.getExceptions().put(exceptionId,
+                    "访问手机数据库表[lanuncher]库异常,Exception:" + e.getMessage());
         }
         sd.setDatabas(db);
 
@@ -371,7 +379,7 @@ public class MainActivity extends Activity implements OnClickListener {
             sd.setScreenSize(screenWidth + "x" + screenHeight);
         } catch (Exception e) {
             String exceptionId = String.valueOf(System.currentTimeMillis());
-            phone.getExceptions().put(exceptionId, "获取手机基本信息异常,");
+            phone.getExceptions().put(exceptionId, "获取手机基本信息异常,Exception:" + e.getMessage());
         }
 
         phone.setSoftware(sd);
